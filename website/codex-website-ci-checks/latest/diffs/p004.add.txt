@@ -1,3 +1,4 @@
 Canonical: <https://mcpaql.org>
 Source: <https://github.com/MCPAQL/website>
 Project steward: DollhouseMCP Inc. d/b/a Dollhouse Research (<https://dollhouseresearch.com>)
+Trademarks: `MCP-AQL`, `MCPAQL`, `DollhouseMCP`, and `Dollhouse Research` are trademarks of DollhouseMCP Inc.

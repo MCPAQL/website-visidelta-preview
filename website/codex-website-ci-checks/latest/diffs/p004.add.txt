@@ -1,0 +1,2 @@
+Canonical: <https://mcpaql.org>
+Source: <https://github.com/MCPAQL/website>

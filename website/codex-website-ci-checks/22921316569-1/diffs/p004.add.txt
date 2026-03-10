@@ -1,0 +1,5 @@
+Copyright (c) 2025-2026 Dollhouse MCP Incorporated.
+Canonical: <https://mcpaql.org>
+Source: <https://github.com/MCPAQL/website>
+Project steward: DollhouseMCP Inc. d/b/a Dollhouse Research (<https://dollhouseresearch.com>)
+Trademarks: `MCP-AQL`, `MCPAQL`, `DollhouseMCP`, and `Dollhouse Research` are trademarks of Dollhouse MCP Incorporated.

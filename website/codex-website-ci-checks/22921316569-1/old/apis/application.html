@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="MCP-AQL application integration guidance.">
+    <title>Application Integration | MCP-AQL</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <a class="logo" href="../index.html"><span class="logo-mark"></span>MCP-AQL</a>
+                <ul class="nav-links">
+                    <li><a href="../index.html#overview">Overview</a></li>
+                    <li><a href="../index.html#flow">How It Works</a></li>
+                    <li><a href="../index.html#readiness">Readiness</a></li>
+                    <li><a href="../index.html#repos">Repositories</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="api-layout">
+        <div class="container">
+            <section class="hero api-hero">
+                <div class="hero-inner">
+                    <span class="status-pill">DRAFT GUIDANCE - NO PUBLIC ADAPTER YET</span>
+                    <h1>Application API Patterns</h1>
+                    <p class="lede">Desktop and mobile app adapters benefit from operation consolidation when feature surfaces are broad and evolve rapidly.</p>
+                    <p class="callout">This is conceptual guidance. A public application adapter reference is not published yet.</p>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">Design Guidance</h2>
+                <div class="grid cols-2">
+                    <article class="card">
+                        <h3>Modeling</h3>
+                        <ul>
+                            <li>Expose user-facing actions as named operations.</li>
+                            <li>Prefer explicit parameter schemas over opaque payload blobs.</li>
+                            <li>Use introspection for dynamic capability discovery.</li>
+                        </ul>
+                    </article>
+                    <article class="card">
+                        <h3>Runtime Behavior</h3>
+                        <ul>
+                            <li>Document operation side effects clearly.</li>
+                            <li>Normalize validation and error handling across endpoints.</li>
+                            <li>Add idempotency semantics where retries are expected.</li>
+                        </ul>
+                    </article>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">Conceptual Example</h2>
+                <div class="card">
+                    <pre class="code-box">{
+  "operation": "create_ticket",
+  "params": {
+    "title": "Spec website gap",
+    "priority": "high"
+  }
+}</pre>
+                </div>
+            </section>
+
+            <section>
+                <a class="btn btn-secondary" href="../index.html">&larr; Back to portal</a>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.</p>
+            <div class="footer-links">
+                <a href="https://github.com/MCPAQL">MCPAQL Organization</a>
+                <a href="https://github.com/MCPAQL/spec/issues">Spec Issues</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,57 @@
+MCP-AQL Docs | Library
+Launch Checklist
+Adapter Patterns
+Search MCP-AQL docs
+DOCUMENTATION LIBRARY
+Browse MCP-AQL By Domain
+This library organizes source material from the MCPAQL repositories into a protocol-site shape: core specification,
+security model, conformance expectations, implementation profiles, and ecosystem roadmap.
+Protocol Core
+Security Model
+Conformance
+Core Documentation Tracks
+Each track is mapped to canonical source repositories and intended launch visibility.
+Required
+Normative request/response model, endpoint semantics, introspection contract, and operation model.
+Site summary page
+Normative source
+Gatekeeper boundaries, confirmation tokens, danger handling, and safety-loop alignment.
+Canonical security docs
+In progress
+Compatibility baseline, validation posture, and planned validator tooling.
+Canonical conformance doc
+Implementation Profiles
+Boundary between canonical specification and practical production profile behavior.
+Reference runtime repo
+Public planning
+Phase-based protocol and ecosystem trajectory with current focus areas.
+Spec issue tracker source
+Public control
+Public-facing readiness checklist and launch-scope guardrails.
+Checklist page
+Canonical checklist source
+Repository Source Matrix
+The site intentionally reflects all primary MCPAQL repositories and their documentation role.
+Repository
+Website Role
+Primary Surface
+MCPAQL/spec
+Normative authority
+Protocol definitions and conformance requirements
+MCPAQL/mcpaql-adapter
+Reference implementation guidance
+Architecture, runtime, plugin, and dispatch documentation
+MCPAQL/examples
+Example patterns
+Reference adapter configuration examples
+MCPAQL/adapter-generator
+Generation policy
+Output licensing and provenance constraints
+MCPAQL/tools
+Validator/tooling track
+Conformance CLI and on-spec validator workstream
+MCPAQL/website
+Public docs delivery
+Readable/searchable protocol website
+&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
+Portal Home

@@ -59,4 +59,7 @@ Operation design guide
 Structured error model
 &copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
 Docs Library
-Canonical Spec Repo
+Portal Home
+MCPAQL Organization
+Dollhouse Research
+DollhouseMCP Production Profile

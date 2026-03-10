@@ -49,3 +49,7 @@ Avoid hidden dependencies on private issue trackers for public comprehension.
 Provide direct, readable status language for what is available now vs still in progress.
 &copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
 Docs Library
+Portal Home
+MCPAQL Organization
+Dollhouse Research
+DollhouseMCP Production Profile

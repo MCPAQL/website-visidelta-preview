@@ -73,3 +73,4 @@ Draft guidance External API adaptation with quota and resilience posture.
 Website Pattern
 Draft guidance Web retrieval and action orchestration guidance.
 Documentation Library
+Dollhouse Research

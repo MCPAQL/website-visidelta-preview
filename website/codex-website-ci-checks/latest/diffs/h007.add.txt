@@ -44,3 +44,6 @@ Publish examples as they become available and keep status explicit (draft vs pro
 &copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
 Docs Library
 Portal Home
+MCPAQL Organization
+Dollhouse Research
+DollhouseMCP Production Profile

@@ -54,4 +54,8 @@ MCPAQL/website
 Public docs delivery
 Readable/searchable protocol website
 &copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
+Docs Library
 Portal Home
+MCPAQL Organization
+Dollhouse Research
+DollhouseMCP Production Profile

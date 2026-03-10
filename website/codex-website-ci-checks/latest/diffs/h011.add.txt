@@ -37,4 +37,7 @@ Structured error surface consistency
 Conformance coverage for security and safety behaviors
 &copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
 Docs Library
-Conformance Status
+Portal Home
+MCPAQL Organization
+Dollhouse Research
+DollhouseMCP Production Profile

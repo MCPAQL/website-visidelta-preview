@@ -1,7 +1,9 @@
 MCP-AQL Docs | Conformance
-Protocol Core
+Launch Checklist
+Adapter Patterns
 Search MCP-AQL docs
 In This Library
+Protocol Core
 Security Model
 CONFORMANCE
 Implementation Profiles
@@ -37,4 +39,3 @@ and an MVP profile specifically targeting "on-spec" checks for third-party MCP-A
 Public messaging should avoid implying final certification until validator and conformance tracks are complete.
 &copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
 Docs Library
-Launch Checklist

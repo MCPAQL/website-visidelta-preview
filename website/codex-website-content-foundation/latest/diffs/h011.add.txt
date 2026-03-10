@@ -1,9 +1,11 @@
 MCP-AQL Docs | Security Model
-Protocol Core
-Conformance
+Launch Checklist
+Adapter Patterns
 Search MCP-AQL docs
 In This Library
+Protocol Core
 SECURITY MODEL
+Conformance
 Implementation Profiles
 Trust And Safety Controls
 MCP-AQL security is designed around operation risk, trust-level mediation, and explicit confirmation for dangerous actions.

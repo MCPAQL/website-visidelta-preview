@@ -1,4 +1,5 @@
-Conformance
+Launch Checklist
+Adapter Patterns
 Search MCP-AQL docs
 PRELIMINARY PUBLIC DRAFT
 Public launch readiness should be explicit, auditable, and understandable without private tracker access.

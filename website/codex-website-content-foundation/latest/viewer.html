@@ -147,6 +147,8 @@
       function normalizeRoute(path) {
         if (!path) return "/";
         const withLeading = path.startsWith("/") ? path : `/${path}`;
+        if (withLeading === "/") return "/";
+        if (withLeading.endsWith(".html")) return withLeading;
         return withLeading.endsWith("/") ? withLeading : `${withLeading}/`;
       }
 

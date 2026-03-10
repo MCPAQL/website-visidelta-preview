@@ -1,10 +1,11 @@
 MCP-AQL Docs | Roadmap
-Conformance
 Launch Checklist
+Adapter Patterns
 Search MCP-AQL docs
 In This Library
 Protocol Core
 Security Model
+Conformance
 Implementation Profiles
 Launch And Post-Launch Trajectory
 MCP-AQL development is staged across protocol quality, adapter maturity, examples, validator tooling, and ecosystem adoption.

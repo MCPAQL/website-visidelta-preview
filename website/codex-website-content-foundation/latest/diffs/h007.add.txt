@@ -1,7 +1,9 @@
 MCP-AQL Docs | Implementation Profiles
-Protocol Core
+Launch Checklist
+Adapter Patterns
 Search MCP-AQL docs
 In This Library
+Protocol Core
 Security Model
 Conformance
 IMPLEMENTATION PROFILES

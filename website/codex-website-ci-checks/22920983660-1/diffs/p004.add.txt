@@ -1,0 +1,3 @@
+Canonical: <https://mcpaql.org>
+Source: <https://github.com/MCPAQL/website>
+Project steward: DollhouseMCP Inc. d/b/a Dollhouse Research (<https://dollhouseresearch.com>)

@@ -1,0 +1,7 @@
+[
+  {"id":"p001","file":"CLA.md","route":"/CLA/"},
+  {"id":"p002","file":"COMMERCIAL-LICENSE.md","route":"/COMMERCIAL-LICENSE/"},
+  {"id":"p003","file":"CONTRIBUTING.md","route":"/CONTRIBUTING/"},
+  {"id":"p004","file":"NOTICE.md","route":"/NOTICE/"},
+  {"id":"p005","file":"TRADEMARKS.md","route":"/TRADEMARKS/"}
+]

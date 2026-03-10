@@ -1,0 +1,44 @@
+MCP-AQL Docs | Implementation Profiles
+Protocol Core
+Search MCP-AQL docs
+In This Library
+Security Model
+Conformance
+IMPLEMENTATION PROFILES
+Canonical Spec vs Practical Profiles
+MCP-AQL intentionally separates normative protocol authority from practical, evolving reference profiles.
+This boundary prevents implementation details from being mistaken as protocol law.
+Canonical Spec Source
+Dollhouse Practical Profile
+Boundary Model
+Authority
+Normative protocol text
+spec repository
+Defines conformance requirements and behavior contracts
+Reference runtime guidance
+mcpaql-adapter repository
+Implementation architecture and plugin/runtime patterns
+Example mappings
+Examples repository
+Domain adaptation patterns for API surfaces
+Practical production profile
+DollhouseMCP production server
+Large real-world validation of protocol viability
+Reference Repositories
+Implementation Guidance
+Architecture overview
+Runtime model
+Plugin system
+Development guide
+Example And Tooling Tracks
+GitHub adapter example
+Generator output policy
+Validator tools repository
+Public Messaging Guidance
+State clearly that spec is canonical and implementation profiles are practical references.
+Describe practical profiles as evidence of viability, not as normative definition.
+Call out known-open areas as launch-draft scope, not hidden debt.
+Publish examples as they become available and keep status explicit (draft vs production).
+&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
+Docs Library
+Portal Home

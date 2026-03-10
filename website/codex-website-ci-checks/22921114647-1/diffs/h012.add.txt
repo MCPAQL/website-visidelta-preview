@@ -1,0 +1,76 @@
+MCP-AQL | Protocol Documentation Portal
+Adapter Patterns
+Search MCP-AQL docs
+MCP-AQL Protocol Website
+This site is the browse-first documentation surface for MCP-AQL. It tracks canonical protocol definitions,
+implementation profiles, conformance expectations, and launch readiness in one readable structure.
+Open Documentation Library
+Canonical Spec Repository
+Public Launch Checklist
+Start Here
+If you are new to MCP-AQL, this sequence gives you the protocol baseline and the implementation context without repo spelunking.
+1. Read The Normative Draft
+The protocol authority starts with the versioned specification and core endpoint semantics.
+Specification v1.0.0-draft
+CRUDE Pattern
+Introspection
+2. Understand Profiles
+MCP-AQL separates canonical protocol requirements from practical implementation profiles.
+Canonical vs Practical Profiles
+DollhouseMCP Production Profile
+3. Validate Readiness
+Use the conformance and launch pages to track what is publish-ready versus explicitly in-progress.
+Conformance and Validator Status
+Protocol Roadmap
+Protocol Coverage
+Website coverage is organized to mirror how production protocol sites are typically navigated: core, security, validation, implementation, ecosystem.
+Core Protocol Surface
+Request and response contract model
+CRUDE and single-endpoint operation routing
+Runtime introspection for discoverability
+Type, warning, and structured-error framing
+Open Protocol Core
+Security And Safety Surface
+Gatekeeper trust-level mediation
+Danger-level and confirmation token flows
+Execution loop controls and safety boundaries
+Batch/resource exhaustion protections
+Open Security Model
+Conformance And Tooling Surface
+Required behavior for claiming MCP-AQL compatibility
+Current conformance test and validator status
+MVP "on-spec" validator roadmap in tools repo
+Open Conformance Guide
+Implementation And Ecosystem Surface
+Reference runtime and plugin architecture docs
+Example adapter strategy and launch candidates
+Generator/output-policy and provenance requirements
+Open Implementation Profiles
+Each repository has a distinct role in launch readiness. The website summarizes and links all of them in one public path.
+Canonical
+Normative protocol text, schemas, and versioned draft authority.
+Open Repository
+Reference Runtime
+Schema-driven dispatch, runtime architecture, and plugin contracts in practice.
+Reference Adapters
+Pattern examples and candidate public adapters for launch-phase demonstration.
+Generator Track
+Output policy, provenance, and generation constraints for derived adapters.
+Validation Track
+Conformance CLI and on-spec validator workstream for third-party implementations.
+Documentation Portal
+Public-facing browse and search layer for protocol launch and post-launch evolution.
+Adapter Pattern Pages
+Pattern pages remain draft guidance until concrete public adapters are published.
+MCP Server Pattern
+Draft guidance Native MCP server consolidation patterns.
+Operating System Pattern
+Draft guidance Permission-aware local execution boundaries.
+Application Pattern
+Draft guidance Application APIs mapped into semantic operations.
+Cloud Service Pattern
+Draft guidance External API adaptation with quota and resilience posture.
+Website Pattern
+Draft guidance Web retrieval and action orchestration guidance.
+Documentation Library
+Dollhouse Research

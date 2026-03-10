@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="MCP-AQL operating system integration guidance.">
+    <title>Operating System Integration | MCP-AQL</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <a class="logo" href="../index.html"><span class="logo-mark"></span>MCP-AQL</a>
+                <ul class="nav-links">
+                    <li><a href="../index.html#overview">Overview</a></li>
+                    <li><a href="../index.html#flow">How It Works</a></li>
+                    <li><a href="../index.html#readiness">Readiness</a></li>
+                    <li><a href="../index.html#repos">Repositories</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="api-layout">
+        <div class="container">
+            <section class="hero api-hero">
+                <div class="hero-inner">
+                    <span class="status-pill">DRAFT GUIDANCE - NO PUBLIC ADAPTER YET</span>
+                    <h1>Operating System Operations</h1>
+                    <p class="lede">OS-adjacent adapters should treat safety boundaries as first-class protocol concerns, especially for write and execute flows.</p>
+                    <p class="callout">This page describes a design pattern. A public operating-system adapter is not published yet.</p>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">Design Guidance</h2>
+                <div class="grid cols-2">
+                    <article class="card">
+                        <h3>Operation Grouping</h3>
+                        <ul>
+                            <li>Separate read-only file queries from mutating file actions.</li>
+                            <li>Use explicit execute operations for process starts/stops.</li>
+                            <li>Document required permissions in introspection metadata.</li>
+                        </ul>
+                    </article>
+                    <article class="card">
+                        <h3>Safety Model</h3>
+                        <ul>
+                            <li>Add batch/resource limits for potentially expensive scans.</li>
+                            <li>Require confirmations for destructive operations.</li>
+                            <li>Expose machine-readable error codes for policy engines.</li>
+                        </ul>
+                    </article>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">Conceptual Example</h2>
+                <div class="card">
+                    <pre class="code-box">{
+  "operation": "list_files",
+  "params": {
+    "path": "/workspace",
+    "limit": 100
+  }
+}</pre>
+                    <p class="callout">Keep high-risk operations (delete, execute) policy-gated and auditable by default.</p>
+                </div>
+            </section>
+
+            <section>
+                <a class="btn btn-secondary" href="../index.html">&larr; Back to portal</a>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.</p>
+            <div class="footer-links">
+                <a href="https://github.com/MCPAQL">MCPAQL Organization</a>
+                <a href="https://github.com/MCPAQL/spec/issues">Spec Issues</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,45 @@
+MCP-AQL Docs | Conformance
+Launch Checklist
+Adapter Patterns
+Search MCP-AQL docs
+In This Library
+Protocol Core
+Security Model
+CONFORMANCE
+Implementation Profiles
+Compatibility And Validation
+MCP-AQL conformance is currently defined by normative behavior requirements in the specification and an in-progress validation track.
+This page clarifies what can be asserted today versus what is still being built.
+Conformance Doc
+Validator Tooling Repo
+Baseline Requirements
+Implement runtime introspection for operation discovery
+Expose CRUDE or single-endpoint mode routing
+Return discriminated success/error response unions
+Document operation contracts in introspection output
+Current Validation Posture
+Available Now
+Normative spec-backed conformance requirements
+Schema validation workflows in specification repo
+Manual profile review against spec requirements
+In Progress
+Active workstream
+Dedicated conformance validator CLI
+MVP "on-spec" validator profile for third-party servers
+Expanded semantic evaluation and usability-focused tests
+Launch Guidance
+For preliminary public launch, implementations should be positioned as draft-compatible with transparent known gaps.
+The site should distinguish between:
+Normative requirements (must follow to claim compatibility)
+Operational maturity signals (what testing and tooling already exists)
+Remaining hardening work (what is explicitly not final yet)
+Validator Track
+The validator track is being developed in MCPAQL/tools . Current planning includes both a general conformance CLI
+and an MVP profile specifically targeting "on-spec" checks for third-party MCP-AQL implementations.
+Public messaging should avoid implying final certification until validator and conformance tracks are complete.
+&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
+Docs Library
+Portal Home
+MCPAQL Organization
+Dollhouse Research
+DollhouseMCP Production Profile

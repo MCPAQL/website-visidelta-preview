@@ -1,0 +1,62 @@
+MCP-AQL Docs | Protocol Core
+Launch Checklist
+Adapter Patterns
+Search MCP-AQL docs
+In This Library
+PROTOCOL CORE
+Security Model
+Conformance
+Implementation Profiles
+Normative Foundations
+MCP-AQL defines a protocol layer for operation consolidation and runtime discovery. Canonical authority is the
+versioned specification in MCPAQL/spec ; this page is a readable map of the same core requirements.
+Normative Spec
+Spec Docs Index
+Protocol Scope
+MCP-AQL specifies wire-level operation request/response behavior, endpoint semantics, introspection shape,
+and operation classification guidance. It intentionally does not prescribe domain-specific operation sets.
+Authority source: versioned specification document
+Informative docs: support design and implementation choices
+Adapter-specific operations: declared by each implementation
+CRUDE Endpoint Model
+Endpoint
+Safety posture
+Additive operations creating new state
+Non-destructive
+Safe queries without side effects
+Read-only
+Operations modifying existing state
+Mutating
+Removal operations
+Destructive
+Runtime lifecycle and side-effectful flows
+Stateful / non-idempotent
+Endpoint Modes
+CRUDE Mode (5 endpoints)
+Semantic separation by operation effect category. Maximizes explicit routing intent.
+mcp_aql_create
+mcp_aql_read
+mcp_aql_update
+mcp_aql_delete
+mcp_aql_execute
+Single Mode (1 endpoint)
+One entrypoint for all operations, with internal routing based on operation metadata.
+Request And Response Contract
+Request Shape
+"operation": "introspect",
+"params": { "query": "operations" }
+Public parameter names are snake_case. Runtime values are passed in params and aligned to
+introspection-declared parameter definitions.
+Response Shape
+{ "success": true, "data": { ... } }
+{ "success": false, "error": { ... } }
+Conforming implementations use discriminated response unions so clients can branch behavior predictably.
+Runtime Discovery
+The introspection system is required for runtime capability discovery and is central to reducing up-front tool-definition token load.
+Clients query operations, parameters, and element types on demand instead of loading static schema sprawl into context.
+Introspection specification
+Operation design guide
+Structured error model
+&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
+Docs Library
+Canonical Spec Repo

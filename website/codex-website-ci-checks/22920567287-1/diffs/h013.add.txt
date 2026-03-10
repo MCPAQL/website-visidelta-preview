@@ -1,0 +1,41 @@
+Launch Checklist
+Adapter Patterns
+Search MCP-AQL docs
+PRELIMINARY PUBLIC DRAFT
+Public launch readiness should be explicit, auditable, and understandable without private tracker access.
+This checklist reflects what is available now, what is actively in progress, and what remains pre-final.
+Readiness Tracks
+Track A: Spec Core
+MCP capability alignment audit
+Batch/resource safeguard clarity
+Conformance framework formalization
+Track B: Practical Profiles
+Dollhouse profile documentation refinement
+Security loop documentation hardening
+Error and batch behavior alignment
+Profile-to-spec boundary clarity
+Track C: Public Website
+Active delivery
+Browse-first documentation library
+Searchable protocol and profile pages
+Launch and roadmap visibility pages
+Draft adapter pattern guidance pages
+Publish-Now vs Publish-Later
+Publish In Preliminary Draft
+Normative protocol draft and core semantics
+Security and safety model overview
+Practical profile framing and boundaries
+Conformance posture with known-open work clearly labeled
+Hold For Final Certification Posture
+Full validator-backed compatibility claims
+Comprehensive public adapter catalog
+Closure of all robustness and validation hardening tracks
+Finalized certification governance language
+Checklist Controls
+Never blur canonical protocol with one implementation profile.
+Never hide known-open work in private references only.
+Always label public pages with draft/final status.
+Keep validator and conformance maturity language precise.
+This checklist is intentionally for a preliminary public draft launch. It is not a final compliance certification declaration.
+&larr; Back to Portal Home
+Documentation Library

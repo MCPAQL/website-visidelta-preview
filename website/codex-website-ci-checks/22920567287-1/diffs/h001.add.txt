@@ -1,0 +1,3 @@
+Launch Checklist
+Adapter Patterns
+Documentation Library

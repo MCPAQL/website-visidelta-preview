@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="MCP-AQL roadmap and launch readiness trajectory across protocol, adapters, examples, tooling, and website delivery.">
+  <title>MCP-AQL Docs | Roadmap</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <a class="logo" href="../index.html"><span class="logo-mark"></span>MCP-AQL</a>
+        <ul class="nav-links">
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="index.html">Docs</a></li>
+          <li><a href="conformance.html">Conformance</a></li>
+          <li><a href="../launch-checklist.html">Launch Checklist</a></li>
+        </ul>
+        <form class="site-search" data-search-form data-index-url="../data/search-index.json" role="search">
+          <label class="sr-only" for="site-search-input">Search MCP-AQL docs</label>
+          <input id="site-search-input" data-search-input type="search" placeholder="Search roadmap topics...">
+          <span class="search-count" data-search-count></span>
+          <ul class="search-results" data-search-results hidden></ul>
+        </form>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container docs-shell">
+      <aside class="docs-side">
+        <h2>In This Library</h2>
+        <ul>
+          <li><a href="protocol-core.html">Protocol Core</a></li>
+          <li><a href="security-model.html">Security Model</a></li>
+          <li><a href="conformance.html">Conformance</a></li>
+          <li><a href="implementation-profiles.html">Implementation Profiles</a></li>
+          <li><a href="roadmap.html">Roadmap</a></li>
+        </ul>
+      </aside>
+
+      <article class="docs-main">
+        <section class="hero docs-hero">
+          <div class="hero-inner">
+            <span class="status-pill">ROADMAP</span>
+            <h1>Launch And Post-Launch Trajectory</h1>
+            <p class="lede">
+              MCP-AQL development is staged across protocol quality, adapter maturity, examples, validator tooling, and ecosystem adoption.
+              This page translates those tracks into a public roadmap view.
+            </p>
+          </div>
+        </section>
+
+        <section>
+          <h2 class="section-title">Phase Model</h2>
+          <div class="card table-card">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Phase</th>
+                  <th>Focus</th>
+                  <th>Public Draft Relevance</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Phase 0</td>
+                  <td>Infrastructure and repository foundations</td>
+                  <td>Completed baseline</td>
+                </tr>
+                <tr>
+                  <td>Phase 1</td>
+                  <td>Core protocol semantics and endpoint model</td>
+                  <td>Core of current public draft</td>
+                </tr>
+                <tr>
+                  <td>Phase 2</td>
+                  <td>Quality, conformance, and testing depth</td>
+                  <td>Primary in-progress launch hardening</td>
+                </tr>
+                <tr>
+                  <td>Phase 3</td>
+                  <td>Adapter specs and interface maturation</td>
+                  <td>Reference profile stabilization</td>
+                </tr>
+                <tr>
+                  <td>Phase 4+</td>
+                  <td>Advanced features and ecosystem expansion</td>
+                  <td>Post-launch expansion track</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section>
+          <h2 class="section-title">Current Active Focus</h2>
+          <div class="grid cols-2">
+            <article class="card">
+              <h3>Spec Readiness</h3>
+              <span class="state-chip pending">Active</span>
+              <ul>
+                <li>MCP capability alignment audit</li>
+                <li>Batch/resource safeguard clarity</li>
+                <li>Structured error alignment and consistency</li>
+                <li>Conformance framework formalization</li>
+              </ul>
+            </article>
+            <article class="card">
+              <h3>Validation And Tooling</h3>
+              <span class="state-chip pending">Active</span>
+              <ul>
+                <li>Conformance validator CLI track</li>
+                <li>MVP on-spec validator profile for third-party servers</li>
+                <li>Expanded semantic evaluation for discoverability/usability</li>
+              </ul>
+            </article>
+            <article class="card">
+              <h3>Examples And Adapter Surface</h3>
+              <span class="state-chip pending">Active</span>
+              <ul>
+                <li>Identify high-value adapter candidates</li>
+                <li>Publish representative integration surfaces</li>
+                <li>Harden reference runtime docs and examples</li>
+              </ul>
+            </article>
+            <article class="card">
+              <h3>Website Maturity</h3>
+              <span class="state-chip live">Under delivery</span>
+              <ul>
+                <li>Browse-first documentation structure</li>
+                <li>Searchable protocol and implementation pages</li>
+                <li>Public launch readiness framing and checklist</li>
+              </ul>
+            </article>
+          </div>
+        </section>
+
+        <section>
+          <h2 class="section-title">Public Draft Scope Guardrails</h2>
+          <div class="card">
+            <ul>
+              <li>Publish clearly as preliminary draft, not final certification baseline.</li>
+              <li>Keep canonical-vs-profile boundaries explicit in every major page.</li>
+              <li>Avoid hidden dependencies on private issue trackers for public comprehension.</li>
+              <li>Provide direct, readable status language for what is available now vs still in progress.</li>
+            </ul>
+          </div>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.</p>
+      <div class="footer-links">
+        <a href="../launch-checklist.html">Launch Checklist</a>
+        <a href="index.html">Docs Library</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../js/search.js"></script>
+</body>
+</html>

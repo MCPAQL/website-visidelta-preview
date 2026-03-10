@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="MCP-AQL documentation portal for protocol specification, implementation profiles, conformance guidance, and launch readiness.">
+  <title>MCP-AQL | Protocol Documentation Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <a class="logo" href="index.html"><span class="logo-mark"></span>MCP-AQL</a>
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="docs/index.html">Docs</a></li>
+          <li><a href="launch-checklist.html">Launch Checklist</a></li>
+          <li><a href="apis/mcp-server.html">Adapter Patterns</a></li>
+        </ul>
+        <form class="site-search" data-search-form data-index-url="data/search-index.json" role="search">
+          <label class="sr-only" for="site-search-input">Search MCP-AQL docs</label>
+          <input id="site-search-input" data-search-input type="search" placeholder="Search docs, features, and repos...">
+          <span class="search-count" data-search-count></span>
+          <ul class="search-results" data-search-results hidden></ul>
+        </form>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <section class="hero">
+        <div class="hero-inner">
+          <span class="status-pill">PRELIMINARY PUBLIC DRAFT</span>
+          <h1>MCP-AQL Protocol Website</h1>
+          <p class="lede">
+            This site is the browse-first documentation surface for MCP-AQL. It tracks canonical protocol definitions,
+            implementation profiles, conformance expectations, and launch readiness in one readable structure.
+          </p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="docs/index.html">Open Documentation Library</a>
+            <a class="btn btn-secondary" href="https://github.com/MCPAQL/spec">Canonical Spec Repository</a>
+            <a class="btn btn-secondary" href="launch-checklist.html">Public Launch Checklist</a>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">Start Here</h2>
+        <p class="section-subtitle">
+          If you are new to MCP-AQL, this sequence gives you the protocol baseline and the implementation context without repo spelunking.
+        </p>
+        <div class="grid cols-3">
+          <article class="card">
+            <h3>1. Read The Normative Draft</h3>
+            <p>The protocol authority starts with the versioned specification and core endpoint semantics.</p>
+            <ul>
+              <li><a href="https://github.com/MCPAQL/spec/blob/main/docs/versions/v1.0.0-draft.md">Specification v1.0.0-draft</a></li>
+              <li><a href="https://github.com/MCPAQL/spec/blob/main/docs/crude-pattern.md">CRUDE Pattern</a></li>
+              <li><a href="https://github.com/MCPAQL/spec/blob/main/docs/introspection.md">Introspection</a></li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>2. Understand Profiles</h3>
+            <p>MCP-AQL separates canonical protocol requirements from practical implementation profiles.</p>
+            <ul>
+              <li><a href="docs/implementation-profiles.html">Canonical vs Practical Profiles</a></li>
+              <li><a href="https://github.com/DollhouseMCP/mcp-server">DollhouseMCP Production Profile</a></li>
+              <li><a href="https://dollhouseresearch.com">Dollhouse Research Context</a></li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>3. Validate Readiness</h3>
+            <p>Use the conformance and launch pages to track what is publish-ready versus explicitly in-progress.</p>
+            <ul>
+              <li><a href="docs/conformance.html">Conformance and Validator Status</a></li>
+              <li><a href="docs/roadmap.html">Protocol Roadmap</a></li>
+              <li><a href="launch-checklist.html">Public Launch Checklist</a></li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">Protocol Coverage</h2>
+        <p class="section-subtitle">Website coverage is organized to mirror how production protocol sites are typically navigated: core, security, validation, implementation, ecosystem.</p>
+        <div class="grid cols-2">
+          <article class="card">
+            <h3>Core Protocol Surface</h3>
+            <ul>
+              <li>Request and response contract model</li>
+              <li>CRUDE and single-endpoint operation routing</li>
+              <li>Runtime introspection for discoverability</li>
+              <li>Type, warning, and structured-error framing</li>
+            </ul>
+            <a href="docs/protocol-core.html">Open Protocol Core</a>
+          </article>
+          <article class="card">
+            <h3>Security And Safety Surface</h3>
+            <ul>
+              <li>Gatekeeper trust-level mediation</li>
+              <li>Danger-level and confirmation token flows</li>
+              <li>Execution loop controls and safety boundaries</li>
+              <li>Batch/resource exhaustion protections</li>
+            </ul>
+            <a href="docs/security-model.html">Open Security Model</a>
+          </article>
+          <article class="card">
+            <h3>Conformance And Tooling Surface</h3>
+            <ul>
+              <li>Required behavior for claiming MCP-AQL compatibility</li>
+              <li>Current conformance test and validator status</li>
+              <li>MVP "on-spec" validator roadmap in tools repo</li>
+            </ul>
+            <a href="docs/conformance.html">Open Conformance Guide</a>
+          </article>
+          <article class="card">
+            <h3>Implementation And Ecosystem Surface</h3>
+            <ul>
+              <li>Reference runtime and plugin architecture docs</li>
+              <li>Example adapter strategy and launch candidates</li>
+              <li>Generator/output-policy and provenance requirements</li>
+            </ul>
+            <a href="docs/implementation-profiles.html">Open Implementation Profiles</a>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">Repository Map</h2>
+        <p class="section-subtitle">Each repository has a distinct role in launch readiness. The website summarizes and links all of them in one public path.</p>
+        <div class="grid cols-3 repo-list">
+          <article class="card">
+            <h3>spec</h3>
+            <span class="state-chip live">Canonical</span>
+            <p>Normative protocol text, schemas, and versioned draft authority.</p>
+            <a href="https://github.com/MCPAQL/spec">Open Repository</a>
+          </article>
+          <article class="card">
+            <h3>mcpaql-adapter</h3>
+            <span class="state-chip pending">Reference Runtime</span>
+            <p>Schema-driven dispatch, runtime architecture, and plugin contracts in practice.</p>
+            <a href="https://github.com/MCPAQL/mcpaql-adapter">Open Repository</a>
+          </article>
+          <article class="card">
+            <h3>examples</h3>
+            <span class="state-chip pending">Reference Adapters</span>
+            <p>Pattern examples and candidate public adapters for launch-phase demonstration.</p>
+            <a href="https://github.com/MCPAQL/examples">Open Repository</a>
+          </article>
+          <article class="card">
+            <h3>adapter-generator</h3>
+            <span class="state-chip pending">Generator Track</span>
+            <p>Output policy, provenance, and generation constraints for derived adapters.</p>
+            <a href="https://github.com/MCPAQL/adapter-generator">Open Repository</a>
+          </article>
+          <article class="card">
+            <h3>tools</h3>
+            <span class="state-chip pending">Validation Track</span>
+            <p>Conformance CLI and on-spec validator workstream for third-party implementations.</p>
+            <a href="https://github.com/MCPAQL/tools">Open Repository</a>
+          </article>
+          <article class="card">
+            <h3>website</h3>
+            <span class="state-chip live">Documentation Portal</span>
+            <p>Public-facing browse and search layer for protocol launch and post-launch evolution.</p>
+            <a href="https://github.com/MCPAQL/website">Open Repository</a>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">Adapter Pattern Pages</h2>
+        <p class="section-subtitle">Pattern pages remain draft guidance until concrete public adapters are published.</p>
+        <div class="grid cols-3">
+          <a class="card" href="apis/mcp-server.html"><h3>MCP Server Pattern</h3><span class="state-chip pending">Draft guidance</span><p>Native MCP server consolidation patterns.</p></a>
+          <a class="card" href="apis/operating-system.html"><h3>Operating System Pattern</h3><span class="state-chip pending">Draft guidance</span><p>Permission-aware local execution boundaries.</p></a>
+          <a class="card" href="apis/application.html"><h3>Application Pattern</h3><span class="state-chip pending">Draft guidance</span><p>Application APIs mapped into semantic operations.</p></a>
+          <a class="card" href="apis/cloud-service.html"><h3>Cloud Service Pattern</h3><span class="state-chip pending">Draft guidance</span><p>External API adaptation with quota and resilience posture.</p></a>
+          <a class="card" href="apis/website.html"><h3>Website Pattern</h3><span class="state-chip pending">Draft guidance</span><p>Web retrieval and action orchestration guidance.</p></a>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.</p>
+      <div class="footer-links">
+        <a href="docs/index.html">Documentation Library</a>
+        <a href="https://github.com/MCPAQL">MCPAQL Organization</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/search.js"></script>
+</body>
+</html>

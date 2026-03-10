@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="MCP-AQL integration guide for MCP Server adapters.">
+    <title>MCP Server Integration | MCP-AQL</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <a class="logo" href="../index.html"><span class="logo-mark"></span>MCP-AQL</a>
+                <ul class="nav-links">
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="../docs/index.html">Docs</a></li>
+                    <li><a href="../launch-checklist.html">Launch Checklist</a></li>
+                    <li><a href="../docs/implementation-profiles.html">Profiles</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="api-layout">
+        <div class="container">
+            <section class="hero api-hero">
+                <div class="hero-inner">
+                    <span class="status-pill">DRAFT GUIDANCE - NO PUBLIC ADAPTER YET</span>
+                    <h1>MCP Server Adapter Pattern</h1>
+                    <p class="lede">
+                        MCP-AQL is primarily designed to consolidate and expose MCP server operations through a consistent query contract with runtime introspection.
+                    </p>
+                    <p class="callout">Public MCP server adapter examples are planned, but not yet published.</p>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">Recommended Baseline</h2>
+                <div class="grid cols-2">
+                    <article class="card">
+                        <h3>Protocol Shape</h3>
+                        <ul>
+                            <li>Expose <code>introspect</code> as mandatory discovery entrypoint.</li>
+                            <li>Route operations via CRUDE endpoints or single mode.</li>
+                            <li>Return discriminated union responses: success/data or success/error.</li>
+                            <li>Keep operation metadata and execution behavior aligned.</li>
+                        </ul>
+                    </article>
+                    <article class="card">
+                        <h3>Safety & Runtime</h3>
+                        <ul>
+                            <li>Validate unknown parameters explicitly.</li>
+                            <li>Apply structured error codes for machine readability.</li>
+                            <li>Bound batch sizes and execution resource usage.</li>
+                            <li>Optionally enforce policy modules (gatekeeper/danger-zone style).</li>
+                        </ul>
+                    </article>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">Conceptual Example</h2>
+                <div class="card">
+                    <pre class="code-box">{
+  "operation": "get_element",
+  "params": {
+    "element_name": "api-architecture-expert"
+  }
+}</pre>
+                    <p class="callout">
+                        The operation name and parameters are adapter-defined; clients should discover valid operations via <code>introspect</code> before execution. This page is guidance, not a published adapter implementation.
+                    </p>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">Related Sources</h2>
+                <div class="grid cols-2">
+                    <article class="card">
+                        <h3>Spec</h3>
+                        <ul>
+                            <li><a href="https://github.com/MCPAQL/spec/blob/main/docs/versions/v1.0.0-draft.md">Normative draft</a></li>
+                            <li><a href="https://github.com/MCPAQL/spec/blob/main/docs/introspection.md">Introspection model</a></li>
+                            <li><a href="https://github.com/MCPAQL/spec/blob/main/docs/operations.md">Operation guidance</a></li>
+                        </ul>
+                    </article>
+                    <article class="card">
+                        <h3>Practical Profile</h3>
+                        <ul>
+                            <li><a href="https://github.com/DollhouseMCP/mcp-server">DollhouseMCP production server</a></li>
+                            <li><a href="https://dollhouseresearch.com">Dollhouse research site</a></li>
+                        </ul>
+                    </article>
+                </div>
+            </section>
+
+            <section>
+                <a class="btn btn-secondary" href="../index.html">&larr; Back to portal</a>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.</p>
+            <div class="footer-links">
+                <a href="https://github.com/MCPAQL">MCPAQL Organization</a>
+                <a href="../docs/index.html">Documentation Library</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

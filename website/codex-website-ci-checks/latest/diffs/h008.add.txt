@@ -1,58 +1,44 @@
-MCP-AQL Docs | Library
+MCP-AQL Docs | Error Model
 Launch Checklist
 Adapter Patterns
 Search MCP-AQL docs
-DOCUMENTATION LIBRARY
-Browse MCP-AQL By Domain
-This library organizes source material from the MCPAQL repositories into a protocol-site shape: core specification,
-security model, conformance expectations, implementation profiles, and ecosystem roadmap.
+In This Library
+Getting Started
 Protocol Core
+ERROR MODEL
 Security Model
 Conformance
-Core Documentation Tracks
-Each track is mapped to canonical source repositories and intended launch visibility.
-Required
-Normative request/response model, endpoint semantics, introspection contract, and operation model.
-Site summary page
-Normative source
-Gatekeeper boundaries, confirmation tokens, danger handling, and safety-loop alignment.
-Canonical security docs
-In progress
-Compatibility baseline, validation posture, and planned validator tooling.
-Canonical conformance doc
+Adapter Contracts
 Implementation Profiles
-Boundary between canonical specification and practical production profile behavior.
-Reference runtime repo
-Public planning
-Phase-based protocol and ecosystem trajectory with current focus areas.
-Spec issue tracker source
-Public control
-Public-facing readiness checklist and launch-scope guardrails.
-Checklist page
-Canonical checklist source
-Repository Source Matrix
-The site intentionally reflects all primary MCPAQL repositories and their documentation role.
-Repository
-Website Role
-Primary Surface
-MCPAQL/spec
-Normative authority
-Protocol definitions and conformance requirements
-MCPAQL/mcpaql-adapter
-Reference implementation guidance
-Architecture, runtime, plugin, and dispatch documentation
-MCPAQL/examples
-Example patterns
-Reference adapter configuration examples
-MCPAQL/adapter-generator
-Generation policy
-Output licensing and provenance constraints
-MCPAQL/tools
-Validator/tooling track
-Conformance CLI and on-spec validator workstream
-MCPAQL/website
-Public docs delivery
-Readable/searchable protocol website
+Release Notes
+Machine-readable failures are part of the public contract
+MCP-AQL uses a discriminated success/error envelope and a structured error object so clients can distinguish validation problems,
+missing resources, permissions, and server failures without parsing free-form text.
+Error Codes Spec
+Issue #199
+Canonical response envelope
+"success": true,
+"data": { ... }
+"success": false,
+"error": {
+"code": "VALIDATION_MISSING_PARAM",
+"message": "Missing required parameter 'owner'"
+Why the code field matters
+LLMs and client code can tell "fix your request" failures from "server-side problem" failures.
+Adapters can map target-system failures into a predictable registry.
+Monitoring and analytics can group failures by category instead of message text.
+Localized or rewritten human messages do not break programmatic recovery.
+Current draft focus
+Defined today
+Structured error.code and error.message fields
+MVP registry with validation, not-found, permission, and internal categories
+Optional details object for additional context
+Still being aligned
+Implementation surfaces that still emit string-only failures
+Exact schema and prose alignment across all response definitions
+Conformance checks that validate machine-readable error surfacing
+Live spec issue #199 tracks the remaining alignment work between the error-code registry,
+response envelope requirements, and implementation-facing schemas.
 &copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
 Docs Library
 Portal Home

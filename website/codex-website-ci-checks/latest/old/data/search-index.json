@@ -12,22 +12,10 @@
     "keywords": ["docs", "documentation", "library", "spec map", "reference"]
   },
   {
-    "title": "Getting Started",
-    "url": "/docs/getting-started.html",
-    "excerpt": "Quick-start overview of MCP-AQL, token efficiency, request shape, and reading order for the draft.",
-    "keywords": ["getting started", "overview", "quickstart", "token efficiency", "intro"]
-  },
-  {
     "title": "Protocol Core",
     "url": "/docs/protocol-core.html",
     "excerpt": "Normative foundations: CRUDE model, endpoint modes, request and response contracts, introspection, and operation routing.",
     "keywords": ["crude", "single mode", "request", "response", "introspect", "operation"]
-  },
-  {
-    "title": "Error Model",
-    "url": "/docs/error-model.html",
-    "excerpt": "Structured error envelopes, machine-readable codes, and the current draft work to align error surfaces.",
-    "keywords": ["error", "structured error", "code", "message", "details", "issue 199"]
   },
   {
     "title": "Security Model",
@@ -42,12 +30,6 @@
     "keywords": ["conformance", "validator", "validation", "testing", "compliance", "on-spec"]
   },
   {
-    "title": "Adapter Contracts",
-    "url": "/docs/adapter-contracts.html",
-    "excerpt": "Adapter schema, plugin contracts, generator outputs, and implementation expectations across the MCP-AQL stack.",
-    "keywords": ["adapter contracts", "plugin", "element type", "generator", "schema", "runtime"]
-  },
-  {
     "title": "Implementation Profiles",
     "url": "/docs/implementation-profiles.html",
     "excerpt": "Canonical protocol vs practical profile boundaries across spec, adapter runtime, examples, and production references.",
@@ -58,12 +40,6 @@
     "url": "/docs/roadmap.html",
     "excerpt": "Protocol and ecosystem roadmap with current execution focus and phased delivery tracks.",
     "keywords": ["roadmap", "phase", "launch", "readiness", "ecosystem", "timeline"]
-  },
-  {
-    "title": "Release Notes",
-    "url": "/docs/release-notes.html",
-    "excerpt": "Recent draft changes and launch-relevant notes distilled from the MCP-AQL specification changelog.",
-    "keywords": ["release notes", "changelog", "draft changes", "launch", "issue 194"]
   },
   {
     "title": "Launch Checklist",

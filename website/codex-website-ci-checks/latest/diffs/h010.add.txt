@@ -1,55 +1,8 @@
-MCP-AQL Docs | Roadmap
-Launch Checklist
-Adapter Patterns
-Search MCP-AQL docs
-In This Library
-Protocol Core
-Security Model
-Conformance
-Implementation Profiles
-Launch And Post-Launch Trajectory
-MCP-AQL development is staged across protocol quality, adapter maturity, examples, validator tooling, and ecosystem adoption.
-This page translates those tracks into a public roadmap view.
-Phase Model
-Public Draft Relevance
-Infrastructure and repository foundations
-Completed baseline
-Core protocol semantics and endpoint model
-Core of current public draft
-Quality, conformance, and testing depth
-Primary in-progress launch hardening
-Adapter specs and interface maturation
-Reference profile stabilization
-Phase 4+
-Advanced features and ecosystem expansion
-Post-launch expansion track
-Current Active Focus
-Spec Readiness
-MCP capability alignment audit
-Batch/resource safeguard clarity
-Structured error alignment and consistency
-Conformance framework formalization
-Validation And Tooling
-Conformance validator CLI track
-MVP on-spec validator profile for third-party servers
-Expanded semantic evaluation for discoverability/usability
-Examples And Adapter Surface
-Identify high-value adapter candidates
-Publish representative integration surfaces
-Harden reference runtime docs and examples
-Website Maturity
-Under delivery
-Browse-first documentation structure
-Searchable protocol and implementation pages
-Public launch readiness framing and checklist
-Public Draft Scope Guardrails
-Publish clearly as preliminary draft, not final certification baseline.
-Keep canonical-vs-profile boundaries explicit in every major page.
-Avoid hidden dependencies on private issue trackers for public comprehension.
-Provide direct, readable status language for what is available now vs still in progress.
-&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
-Docs Library
-Portal Home
-MCPAQL Organization
-Dollhouse Research
-DollhouseMCP Production Profile
+Getting Started
+Error Model
+Adapter Contracts
+Release Notes
+Where to look next
+Contract details
+Generator specification
+Launch and release context

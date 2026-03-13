@@ -1,114 +1,142 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Public launch checklist for MCP-AQL draft readiness.">
-    <title>Launch Checklist | MCP-AQL</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Public-facing launch checklist for MCP-AQL preliminary draft readiness.">
+  <title>Launch Checklist | MCP-AQL</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <header>
-        <div class="container">
-            <nav>
-                <a class="logo" href="index.html"><span class="logo-mark"></span>MCP-AQL</a>
-                <ul class="nav-links">
-                    <li><a href="index.html#overview">Overview</a></li>
-                    <li><a href="index.html#flow">How It Works</a></li>
-                    <li><a href="index.html#readiness">Readiness</a></li>
-                    <li><a href="index.html#repos">Repositories</a></li>
-                </ul>
-            </nav>
+  <header>
+    <div class="container">
+      <nav>
+        <a class="logo" href="index.html"><span class="logo-mark"></span>MCP-AQL</a>
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="docs/index.html">Docs</a></li>
+          <li><a href="launch-checklist.html">Launch Checklist</a></li>
+          <li><a href="apis/mcp-server.html">Adapter Patterns</a></li>
+        </ul>
+        <form class="site-search" data-search-form data-index-url="data/search-index.json" role="search">
+          <label class="sr-only" for="site-search-input">Search MCP-AQL docs</label>
+          <input id="site-search-input" data-search-input type="search" placeholder="Search launch topics...">
+          <span class="search-count" data-search-count></span>
+          <ul class="search-results" data-search-results hidden></ul>
+        </form>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <section class="hero">
+        <div class="hero-inner">
+          <span class="status-pill">PRELIMINARY PUBLIC DRAFT</span>
+          <h1>MCP-AQL Launch Checklist</h1>
+          <p class="lede">
+            Public launch readiness should be explicit, auditable, and understandable without private tracker access.
+            This checklist reflects what is available now, what is actively in progress, and what remains pre-final.
+          </p>
         </div>
-    </header>
+      </section>
 
-    <main>
-        <div class="container">
-            <section class="hero">
-                <div class="hero-inner">
-                    <span class="status-pill">PUBLIC DRAFT CHECKLIST</span>
-                    <h1>MCP-AQL Launch Checklist</h1>
-                    <p class="lede">
-                        This page is the public-facing summary of launch readiness. It is designed for implementers, reviewers, and ecosystem partners tracking draft maturity.
-                    </p>
-                </div>
-            </section>
-
-            <section>
-                <h2 class="section-title">Checklist Status</h2>
-                <p class="section-subtitle">Current status is based on active public tracking in the spec and production-profile repositories.</p>
-                <div class="grid cols-3">
-                    <article class="card">
-                        <h3>Track A: Spec Draft Core</h3>
-                        <span class="state-chip pending">In progress</span>
-                        <ul>
-                            <li><a href="https://github.com/MCPAQL/spec/issues/193">MCP capability audit</a></li>
-                            <li><a href="https://github.com/MCPAQL/spec/issues/197">Batch/resource safeguards</a></li>
-                            <li><a href="https://github.com/MCPAQL/spec/issues/199">Structured error alignment</a></li>
-                            <li><a href="https://github.com/MCPAQL/spec/issues/194">Draft release epic</a></li>
-                        </ul>
-                    </article>
-                    <article class="card">
-                        <h3>Track B: Practical Profile</h3>
-                        <span class="state-chip pending">In progress</span>
-                        <ul>
-                            <li>Dollhouse production profile docs are being tightened for launch.</li>
-                            <li>Machine-readable error behavior remains active work.</li>
-                            <li>Batch safety boundaries remain active work.</li>
-                        </ul>
-                    </article>
-                    <article class="card">
-                        <h3>Track C: Public Docs Surface</h3>
-                        <span class="state-chip pending">In progress</span>
-                        <ul>
-                            <li>This website now hosts public launch/readiness context.</li>
-                            <li>Integration pages are currently draft guidance only.</li>
-                            <li>Public adapter examples are not yet published.</li>
-                        </ul>
-                    </article>
-                </div>
-            </section>
-
-            <section>
-                <h2 class="section-title">What This Means For Visitors</h2>
-                <div class="grid cols-2">
-                    <article class="card">
-                        <h3>Safe To Use For</h3>
-                        <ul>
-                            <li>Understanding protocol direction and architecture.</li>
-                            <li>Early implementation experiments and feedback loops.</li>
-                            <li>Evaluating token-efficiency and introspection model tradeoffs.</li>
-                        </ul>
-                    </article>
-                    <article class="card">
-                        <h3>Not Yet Finalized</h3>
-                        <ul>
-                            <li>Finalized conformance-grade launch criteria.</li>
-                            <li>Published public reference adapters.</li>
-                            <li>Complete closure of robustness and error-surface work.</li>
-                        </ul>
-                    </article>
-                </div>
-                <p class="callout">This checklist intentionally reflects a preliminary public draft state, not a final certification state.</p>
-            </section>
-
-            <section>
-                <a class="btn btn-secondary" href="index.html">&larr; Back to portal</a>
-            </section>
+      <section>
+        <h2 class="section-title">Readiness Tracks</h2>
+        <div class="grid cols-3">
+          <article class="card">
+            <h3>Track A: Spec Core</h3>
+            <span class="state-chip pending">In progress</span>
+            <ul>
+              <li>MCP capability alignment audit</li>
+              <li>Batch/resource safeguard clarity</li>
+              <li>Structured error alignment</li>
+              <li>Conformance framework formalization</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Track B: Practical Profiles</h3>
+            <span class="state-chip pending">In progress</span>
+            <ul>
+              <li>Dollhouse profile documentation refinement</li>
+              <li>Security loop documentation hardening</li>
+              <li>Error and batch behavior alignment</li>
+              <li>Profile-to-spec boundary clarity</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Track C: Public Website</h3>
+            <span class="state-chip live">Active delivery</span>
+            <ul>
+              <li>Browse-first documentation library</li>
+              <li>Searchable protocol and profile pages</li>
+              <li>Launch and roadmap visibility pages</li>
+              <li>Draft adapter pattern guidance pages</li>
+            </ul>
+          </article>
         </div>
-    </main>
+      </section>
 
-    <footer>
-        <div class="container">
-            <p>&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.</p>
-            <div class="footer-links">
-                <a href="https://github.com/MCPAQL">MCPAQL Organization</a>
-                <a href="https://github.com/MCPAQL/spec/issues">Spec Issues</a>
-            </div>
+      <section>
+        <h2 class="section-title">Publish-Now vs Publish-Later</h2>
+        <div class="grid cols-2">
+          <article class="card">
+            <h3>Publish In Preliminary Draft</h3>
+            <ul>
+              <li>Normative protocol draft and core semantics</li>
+              <li>Security and safety model overview</li>
+              <li>Practical profile framing and boundaries</li>
+              <li>Conformance posture with known-open work clearly labeled</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Hold For Final Certification Posture</h3>
+            <ul>
+              <li>Full validator-backed compatibility claims</li>
+              <li>Comprehensive public adapter catalog</li>
+              <li>Closure of all robustness and validation hardening tracks</li>
+              <li>Finalized certification governance language</li>
+            </ul>
+          </article>
         </div>
-    </footer>
+      </section>
+
+      <section>
+        <h2 class="section-title">Checklist Controls</h2>
+        <div class="card">
+          <ul>
+            <li>Never blur canonical protocol with one implementation profile.</li>
+            <li>Never hide known-open work in private references only.</li>
+            <li>Always label public pages with draft/final status.</li>
+            <li>Keep validator and conformance maturity language precise.</li>
+          </ul>
+          <p class="callout">
+            This checklist is intentionally for a preliminary public draft launch. It is not a final compliance certification declaration.
+          </p>
+        </div>
+      </section>
+
+      <section>
+        <a class="btn btn-secondary" href="index.html">&larr; Back to Portal Home</a>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.</p>
+      <div class="footer-links">
+        <a href="docs/index.html">Documentation Library</a>
+        <a href="https://github.com/MCPAQL">MCPAQL Organization</a>
+        <a href="https://dollhouseresearch.com">Dollhouse Research</a>
+        <a href="https://github.com/DollhouseMCP/mcp-server">DollhouseMCP Production Profile</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/search.js"></script>
 </body>
 </html>

@@ -1,62 +1,47 @@
-MCP-AQL Docs | Protocol Core
+MCP-AQL Docs | Getting Started
 Launch Checklist
 Adapter Patterns
 Search MCP-AQL docs
 In This Library
-PROTOCOL CORE
+GETTING STARTED
+Protocol Core
+Error Model
 Security Model
 Conformance
+Adapter Contracts
 Implementation Profiles
-Normative Foundations
-MCP-AQL defines a protocol layer for operation consolidation and runtime discovery. Canonical authority is the
-versioned specification in MCPAQL/spec ; this page is a readable map of the same core requirements.
-Normative Spec
-Spec Docs Index
-Protocol Scope
-MCP-AQL specifies wire-level operation request/response behavior, endpoint semantics, introspection shape,
-and operation classification guidance. It intentionally does not prescribe domain-specific operation sets.
-Authority source: versioned specification document
-Informative docs: support design and implementation choices
-Adapter-specific operations: declared by each implementation
-CRUDE Endpoint Model
-Endpoint
-Safety posture
-Additive operations creating new state
-Non-destructive
-Safe queries without side effects
-Read-only
-Operations modifying existing state
-Mutating
-Removal operations
-Destructive
-Runtime lifecycle and side-effectful flows
-Stateful / non-idempotent
-Endpoint Modes
-CRUDE Mode (5 endpoints)
-Semantic separation by operation effect category. Maximizes explicit routing intent.
-mcp_aql_create
-mcp_aql_read
-mcp_aql_update
-mcp_aql_delete
-mcp_aql_execute
-Single Mode (1 endpoint)
-One entrypoint for all operations, with internal routing based on operation metadata.
-Request And Response Contract
-Request Shape
+Release Notes
+What MCP-AQL is, why it exists, and what to read first
+MCP-AQL consolidates many discrete MCP tools into a small semantic endpoint surface while preserving runtime discovery.
+The result is less registration overhead, clearer routing, and a more scalable contract for agent-driven systems.
+Spec README
+Normative Draft
+The one-paragraph version
+MCP-AQL is a protocol specification and implementation toolkit for exposing adapter operations through either five CRUDE endpoints
+or a single routed endpoint. It keeps introspect mandatory, treats the versioned spec as canonical, and positions
+production profiles like DollhouseMCP as practical references rather than the definition of the protocol.
+Why teams look at it
+Lower token overhead
+Instead of loading dozens of tool definitions, clients can register five semantic endpoints or one unified endpoint.
+Runtime discovery
+Clients discover operations, parameters, and types on demand with introspect .
+Better public contracts
+CRUDE classification, structured responses, and spec-linked docs make compatibility claims easier to inspect.
+Quick-start request shape
+Discover operations
 "operation": "introspect",
 "params": { "query": "operations" }
-Public parameter names are snake_case. Runtime values are passed in params and aligned to
-introspection-declared parameter definitions.
-Response Shape
-{ "success": true, "data": { ... } }
-{ "success": false, "error": { ... } }
-Conforming implementations use discriminated response unions so clients can branch behavior predictably.
-Runtime Discovery
-The introspection system is required for runtime capability discovery and is central to reducing up-front tool-definition token load.
-Clients query operations, parameters, and element types on demand instead of loading static schema sprawl into context.
-Introspection specification
-Operation design guide
-Structured error model
+Call a discovered operation
+"operation": "create_user",
+"params": {
+"email": "alice@example.com",
+"name": "Alice"
+The second example is schematic. Real operation names and parameters are adapter-defined and should be discovered first.
+Suggested reading order
+Read the versioned draft for the canonical rules.
+Use Protocol Core for routing, request shape, and endpoint semantics.
+Use Error Model and Security Model for operational expectations.
+Use Conformance and Launch Checklist to understand current draft maturity.
 &copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
 Docs Library
 Portal Home

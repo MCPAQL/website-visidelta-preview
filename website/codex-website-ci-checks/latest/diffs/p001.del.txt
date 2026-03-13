@@ -1,1 +1,1 @@
-- https://github.com/MCPAQL/spec/blob/main/CLA.md
+Thank you for your interest in contributing to MCP-AQL.

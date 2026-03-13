@@ -1,43 +1,41 @@
+MCP-AQL Docs | Release Notes
 Launch Checklist
 Adapter Patterns
 Search MCP-AQL docs
-PRELIMINARY PUBLIC DRAFT
-Public launch readiness should be explicit, auditable, and understandable without private tracker access.
-This checklist reflects what is available now, what is actively in progress, and what remains pre-final.
-Readiness Tracks
-Track A: Spec Core
-MCP capability alignment audit
-Batch/resource safeguard clarity
-Conformance framework formalization
-Track B: Practical Profiles
-Dollhouse profile documentation refinement
-Security loop documentation hardening
-Error and batch behavior alignment
-Profile-to-spec boundary clarity
-Track C: Public Website
-Active delivery
-Browse-first documentation library
-Searchable protocol and profile pages
-Launch and roadmap visibility pages
-Draft adapter pattern guidance pages
-Publish-Now vs Publish-Later
-Publish In Preliminary Draft
-Normative protocol draft and core semantics
-Security and safety model overview
-Practical profile framing and boundaries
-Conformance posture with known-open work clearly labeled
-Hold For Final Certification Posture
-Full validator-backed compatibility claims
-Comprehensive public adapter catalog
-Closure of all robustness and validation hardening tracks
-Finalized certification governance language
-Checklist Controls
-Never blur canonical protocol with one implementation profile.
-Never hide known-open work in private references only.
-Always label public pages with draft/final status.
-Keep validator and conformance maturity language precise.
-This checklist is intentionally for a preliminary public draft launch. It is not a final compliance certification declaration.
-&larr; Back to Portal Home
-Documentation Library
+In This Library
+Getting Started
+Protocol Core
+Error Model
+Security Model
+Conformance
+Adapter Contracts
+Implementation Profiles
+RELEASE NOTES
+Recent draft changes that affect public understanding
+These notes summarize the most launch-relevant items from the spec changelog so the public website can reflect what changed
+without requiring readers to scan the entire repository history.
+Full Changelog
+Release plan issue
+Recent highlights
+Launch framing clarified
+README and draft status language now explicitly frame MCP-AQL as a preliminary public draft.
+Normative versus informative document boundaries were tightened across the spec docs.
+A coordinated preliminary launch checklist was added for spec and reference-profile messaging.
+Safety model expanded
+Execution safety loop, safety-dongle model, autonomy evaluator, and out-of-band verification are now documented.
+Section 9 compliance mappings were expanded to better align informative safety docs to normative requirements.
+Issue #216 remains the audit record for that alignment work.
+Operational contracts hardened
+Unknown parameter rejection and structured error examples were added to reduce LLM ambiguity.
+Canonical operation verbs and session lifecycle guidance were made more explicit.
+Batch confirmation behavior and payload-size constraints were documented.
+Still open for draft launch
+#193 MCP capability audit
+#197 batch size and resource protections
+#199 structured error surface alignment
+&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
+Docs Library
+Portal Home
+MCPAQL Organization
 Dollhouse Research
 DollhouseMCP Production Profile

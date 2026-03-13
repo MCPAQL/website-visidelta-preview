@@ -1,6 +1,6 @@
 [
   {
-    "id": "h012",
+    "id": "h016",
     "file": "public/index.html",
     "route": "/"
   },
@@ -31,62 +31,62 @@
   },
   {
     "id": "p001",
-    "file": "CLA.md",
-    "route": "/CLA/"
-  },
-  {
-    "id": "p002",
-    "file": "COMMERCIAL-LICENSE.md",
-    "route": "/COMMERCIAL-LICENSE/"
-  },
-  {
-    "id": "p003",
     "file": "CONTRIBUTING.md",
     "route": "/CONTRIBUTING/"
   },
   {
     "id": "h006",
+    "file": "public/docs/adapter-contracts.html",
+    "route": "/docs/adapter-contracts.html"
+  },
+  {
+    "id": "h007",
     "file": "public/docs/conformance.html",
     "route": "/docs/conformance.html"
   },
   {
-    "id": "h007",
+    "id": "h008",
+    "file": "public/docs/error-model.html",
+    "route": "/docs/error-model.html"
+  },
+  {
+    "id": "h009",
+    "file": "public/docs/getting-started.html",
+    "route": "/docs/getting-started.html"
+  },
+  {
+    "id": "h010",
     "file": "public/docs/implementation-profiles.html",
     "route": "/docs/implementation-profiles.html"
   },
   {
-    "id": "h008",
+    "id": "h011",
     "file": "public/docs/index.html",
     "route": "/docs/index.html"
   },
   {
-    "id": "h009",
+    "id": "h012",
     "file": "public/docs/protocol-core.html",
     "route": "/docs/protocol-core.html"
   },
   {
-    "id": "h010",
+    "id": "h013",
+    "file": "public/docs/release-notes.html",
+    "route": "/docs/release-notes.html"
+  },
+  {
+    "id": "h014",
     "file": "public/docs/roadmap.html",
     "route": "/docs/roadmap.html"
   },
   {
-    "id": "h011",
+    "id": "h015",
     "file": "public/docs/security-model.html",
     "route": "/docs/security-model.html"
   },
   {
-    "id": "h013",
+    "id": "h017",
     "file": "public/launch-checklist.html",
     "route": "/launch-checklist.html"
-  },
-  {
-    "id": "p004",
-    "file": "NOTICE.md",
-    "route": "/NOTICE/"
-  },
-  {
-    "id": "p005",
-    "file": "TRADEMARKS.md",
-    "route": "/TRADEMARKS/"
   }
 ]

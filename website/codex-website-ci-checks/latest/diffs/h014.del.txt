@@ -1,0 +1,4 @@
+MCP capability alignment audit
+Batch/resource safeguard clarity
+Structured error alignment and consistency
+Conformance framework formalization

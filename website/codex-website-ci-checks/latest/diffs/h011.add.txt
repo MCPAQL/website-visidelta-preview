@@ -1,43 +1,31 @@
-MCP-AQL Docs | Security Model
-Launch Checklist
-Adapter Patterns
-Search MCP-AQL docs
-In This Library
-Protocol Core
-SECURITY MODEL
-Conformance
-Implementation Profiles
-Trust And Safety Controls
-MCP-AQL security is designed around operation risk, trust-level mediation, and explicit confirmation for dangerous actions.
-This page maps the current security model used in draft protocol and practical profiles.
-Gatekeeper Spec
-Confirmation Tokens
-Execution Safety Loop
-Trust-Level Mediation
-Implementations classify requester trust and apply policy gates before operation dispatch. The exact trust taxonomy is adapter-defined,
-but the enforcement pattern is protocol-aligned: low-trust contexts default toward read-only or restricted mutations.
-Trust-level checks happen before execution
-Dangerous operations require stronger policy context
-Policies should be introspectable where feasible
-Danger Classification
-Operation Risk Labels
-Operations can be tagged by danger class to support UI and agent policy decisions. Draft specification work tracks stronger
-requirements for danger metadata alignment with runtime surfaces.
-Confirmation Handshake
-For destructive or high-impact operations, adapters can require a confirmation token round-trip so intent is explicit and auditable.
-Stateful execute flows must support lifecycle controls (start, continue, complete, abort) and maintain safe transitions.
-Session-bound controls should prevent stale token reuse or operation drift across disconnected contexts.
-execute_agent -> record_execution_step -> continue_execution
-\-> pause/confirm -> complete_execution or abort_execution
-Open Security Hardening Tracks
-Public launch posture should explicitly label in-progress hardening work. Current priority categories include batch safeguards,
-structured error alignment, and conformance validation depth for policy-sensitive operations.
-Batch/resource exhaustion protections
-Structured error surface consistency
-Conformance coverage for security and safety behaviors
-&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
-Docs Library
-Portal Home
-MCPAQL Organization
-Dollhouse Research
-DollhouseMCP Production Profile
+quick start, core semantics, structured errors, safety model, conformance, adapter contracts, implementation profiles,
+and release-status context.
+Getting Started
+Error Model
+Adapter Contracts
+Recommended first read
+Overview, quick-start request shape, token efficiency, and reading order for the draft.
+Canonical README
+Structured error envelope, machine-readable codes, and current alignment gaps between draft and implementations.
+Canonical error code doc
+Adapter schema, plugin contract, generator-output, and example-surface expectations across the implementation toolchain.
+Canonical contract docs
+Release Notes
+Change context
+Recent draft changes that affect public messaging, launch framing, and docs coverage priorities.
+Canonical changelog
+Canonical Spec Map
+The website now mirrors the major categories from the spec docs index so public readers can see what exists without opening the repository first.
+Spec source
+Website surface
+What it covers
+overview.md
+Protocol summary, token efficiency, and quick-start framing
+operations.md
+Request shape, endpoint rules, operation semantics, routing
+error-codes.md
+Structured errors, machine-readable codes, current gaps
+plugin-contracts.md
+Plugin responsibilities, schema contracts, generator outputs
+CHANGELOG.md
+Recent draft changes and launch-relevant deltas

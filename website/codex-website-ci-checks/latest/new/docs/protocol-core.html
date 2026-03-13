@@ -36,11 +36,15 @@
       <aside class="docs-side">
         <h2>In This Library</h2>
         <ul>
+          <li><a href="getting-started.html">Getting Started</a></li>
           <li><a href="protocol-core.html">Protocol Core</a></li>
+          <li><a href="error-model.html">Error Model</a></li>
           <li><a href="security-model.html">Security Model</a></li>
           <li><a href="conformance.html">Conformance</a></li>
+          <li><a href="adapter-contracts.html">Adapter Contracts</a></li>
           <li><a href="implementation-profiles.html">Implementation Profiles</a></li>
           <li><a href="roadmap.html">Roadmap</a></li>
+          <li><a href="release-notes.html">Release Notes</a></li>
         </ul>
       </aside>
 
@@ -174,6 +178,28 @@ mcp_aql_execute</pre>
               <li><a href="https://github.com/MCPAQL/spec/blob/main/docs/operations.md">Operation design guide</a></li>
               <li><a href="https://github.com/MCPAQL/spec/blob/main/docs/error-codes.md">Structured error model</a></li>
             </ul>
+          </div>
+        </section>
+
+        <section>
+          <h2 class="section-title">Operational rules readers usually miss</h2>
+          <div class="grid cols-2">
+            <article class="card">
+              <h3>Naming and parameter rules</h3>
+              <ul>
+                <li>Operation names are case-sensitive snake_case identifiers.</li>
+                <li>Public parameter names are snake_case, even if implementations accept aliases internally.</li>
+                <li>Unknown parameters should be rejected instead of ignored so clients can correct requests.</li>
+              </ul>
+            </article>
+            <article class="card">
+              <h3>Batch and payload considerations</h3>
+              <ul>
+                <li>Batch operations are first-class, but launch messaging should still treat resource-limit requirements as in progress.</li>
+                <li>Payload size, encoding, and response shape constraints are part of interoperability, not optional polish.</li>
+                <li><a href="https://github.com/MCPAQL/spec/issues/197">Issue #197</a> tracks the remaining batch-limit hardening work.</li>
+              </ul>
+            </article>
           </div>
         </section>
       </article>

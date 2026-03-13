@@ -36,14 +36,14 @@
       <section class="hero">
         <div class="hero-inner">
           <span class="status-pill">PRELIMINARY PUBLIC DRAFT</span>
-          <h1>MCP-AQL Protocol Website</h1>
+          <h1>MCP-AQL documentation that tracks the draft spec as it exists today</h1>
           <p class="lede">
-            This site is the browse-first documentation surface for MCP-AQL. It tracks canonical protocol definitions,
-            implementation profiles, conformance expectations, and launch readiness in one readable structure.
+            This site is the browse-first public surface for MCP-AQL: what the protocol is, how it routes operations,
+            how it handles safety and errors, what counts as draft-compatible today, and what remains open in the live spec backlog.
           </p>
           <div class="hero-actions">
-            <a class="btn btn-primary" href="docs/index.html">Open Documentation Library</a>
-            <a class="btn btn-secondary" href="https://github.com/MCPAQL/spec">Canonical Spec Repository</a>
+            <a class="btn btn-primary" href="docs/getting-started.html">Start With The Quick Path</a>
+            <a class="btn btn-secondary" href="docs/index.html">Open Documentation Library</a>
             <a class="btn btn-secondary" href="launch-checklist.html">Public Launch Checklist</a>
           </div>
         </div>
@@ -52,30 +52,31 @@
       <section>
         <h2 class="section-title">Start Here</h2>
         <p class="section-subtitle">
-          If you are new to MCP-AQL, this sequence gives you the protocol baseline and the implementation context without repo spelunking.
+          If you are new to MCP-AQL, this sequence gets you from protocol overview to launch reality without repo spelunking.
         </p>
         <div class="grid cols-3">
           <article class="card">
-            <h3>1. Read The Normative Draft</h3>
-            <p>The protocol authority starts with the versioned specification and core endpoint semantics.</p>
+            <h3>1. Understand The Model</h3>
+            <p>Start with the short overview, token-efficiency story, and quick-start request shape before dropping into the full draft.</p>
             <ul>
+              <li><a href="docs/getting-started.html">Getting Started</a></li>
               <li><a href="https://github.com/MCPAQL/spec/blob/main/docs/versions/v1.0.0-draft.md">Specification v1.0.0-draft</a></li>
               <li><a href="https://github.com/MCPAQL/spec/blob/main/docs/crude-pattern.md">CRUDE Pattern</a></li>
               <li><a href="https://github.com/MCPAQL/spec/blob/main/docs/introspection.md">Introspection</a></li>
             </ul>
           </article>
           <article class="card">
-            <h3>2. Understand Profiles</h3>
-            <p>MCP-AQL separates canonical protocol requirements from practical implementation profiles.</p>
+            <h3>2. Learn The Operational Rules</h3>
+            <p>Read the public summaries for routing, structured errors, safety controls, and conformance boundaries.</p>
             <ul>
-              <li><a href="docs/implementation-profiles.html">Canonical vs Practical Profiles</a></li>
-              <li><a href="https://github.com/DollhouseMCP/mcp-server">DollhouseMCP Production Profile</a></li>
-              <li><a href="https://dollhouseresearch.com">Dollhouse Research Context</a></li>
+              <li><a href="docs/protocol-core.html">Protocol Core</a></li>
+              <li><a href="docs/error-model.html">Error Model</a></li>
+              <li><a href="docs/security-model.html">Security Model</a></li>
             </ul>
           </article>
           <article class="card">
-            <h3>3. Validate Readiness</h3>
-            <p>Use the conformance and launch pages to track what is publish-ready versus explicitly in-progress.</p>
+            <h3>3. Track Draft Readiness</h3>
+            <p>Use the launch and roadmap pages to see what is publish-ready versus what is still explicitly open in the spec.</p>
             <ul>
               <li><a href="docs/conformance.html">Conformance and Validator Status</a></li>
               <li><a href="docs/roadmap.html">Protocol Roadmap</a></li>
@@ -95,9 +96,18 @@
               <li>Request and response contract model</li>
               <li>CRUDE and single-endpoint operation routing</li>
               <li>Runtime introspection for discoverability</li>
-              <li>Type, warning, and structured-error framing</li>
+              <li>Canonical verbs, parameter rules, and unknown-param handling</li>
             </ul>
             <a href="docs/protocol-core.html">Open Protocol Core</a>
+          </article>
+          <article class="card">
+            <h3>Error And Response Surface</h3>
+            <ul>
+              <li>Structured error envelope with code and message</li>
+              <li>MVP registry plus phase-1 robustness concerns</li>
+              <li>Current spec alignment work for error surfacing</li>
+            </ul>
+            <a href="docs/error-model.html">Open Error Model</a>
           </article>
           <article class="card">
             <h3>Security And Safety Surface</h3>
@@ -122,10 +132,34 @@
             <h3>Implementation And Ecosystem Surface</h3>
             <ul>
               <li>Reference runtime and plugin architecture docs</li>
-              <li>Example adapter strategy and launch candidates</li>
+              <li>Adapter schema and plugin contract requirements</li>
               <li>Generator/output-policy and provenance requirements</li>
             </ul>
-            <a href="docs/implementation-profiles.html">Open Implementation Profiles</a>
+            <a href="docs/adapter-contracts.html">Open Adapter Contracts</a>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">Current Draft Blockers</h2>
+        <p class="section-subtitle">The website is explicit about the live spec issues that still shape launch messaging.</p>
+        <div class="grid cols-2">
+          <article class="card">
+            <h3>Phase-1 launch gate issues</h3>
+            <ul>
+              <li><a href="https://github.com/MCPAQL/spec/issues/193">#193 MCP 0.20 capability audit</a></li>
+              <li><a href="https://github.com/MCPAQL/spec/issues/197">#197 batch and resource exhaustion protections</a></li>
+              <li><a href="https://github.com/MCPAQL/spec/issues/199">#199 structured error surface alignment</a></li>
+              <li><a href="https://github.com/MCPAQL/spec/issues/194">#194 draft publication release plan</a></li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Why they matter publicly</h3>
+            <ul>
+              <li>They define what the site can honestly call compatible today.</li>
+              <li>They affect batch safety, machine-readable errors, and MCP parity messaging.</li>
+              <li>They keep the draft positioned as real, useful, and still in progress.</li>
+            </ul>
           </article>
         </div>
       </section>

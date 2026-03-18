@@ -1,0 +1,9 @@
+Getting Started
+Error Model
+Adapter Contracts
+Release Notes
+Live conformance-related issues
+#204 conformance validation framework
+#199 structured error surface alignment
+#57 introspection must document handler-supported parameters
+#10 conformance test suite

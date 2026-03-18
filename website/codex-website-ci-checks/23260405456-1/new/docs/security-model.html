@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="MCP-AQL security model: trust levels, gatekeeper controls, confirmation tokens, and execution safety.">
+  <title>MCP-AQL Docs | Security Model</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <a class="logo" href="../index.html"><span class="logo-mark"></span>MCP-AQL</a>
+        <ul class="nav-links">
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="index.html">Docs</a></li>
+          <li><a href="../launch-checklist.html">Launch Checklist</a></li>
+          <li><a href="../apis/mcp-server.html">Adapter Patterns</a></li>
+        </ul>
+        <form class="site-search" data-search-form data-index-url="../data/search-index.json" role="search">
+          <label class="sr-only" for="site-search-input">Search MCP-AQL docs</label>
+          <input id="site-search-input" data-search-input type="search" placeholder="Search security topics...">
+          <span class="search-count" data-search-count></span>
+          <ul class="search-results" data-search-results hidden></ul>
+        </form>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container docs-shell">
+      <aside class="docs-side">
+        <h2>In This Library</h2>
+        <ul>
+          <li><a href="getting-started.html">Getting Started</a></li>
+          <li><a href="protocol-core.html">Protocol Core</a></li>
+          <li><a href="error-model.html">Error Model</a></li>
+          <li><a href="security-model.html">Security Model</a></li>
+          <li><a href="conformance.html">Conformance</a></li>
+          <li><a href="adapter-contracts.html">Adapter Contracts</a></li>
+          <li><a href="implementation-profiles.html">Implementation Profiles</a></li>
+          <li><a href="roadmap.html">Roadmap</a></li>
+          <li><a href="release-notes.html">Release Notes</a></li>
+        </ul>
+      </aside>
+
+      <article class="docs-main">
+        <section class="hero docs-hero">
+          <div class="hero-inner">
+            <span class="status-pill">SECURITY MODEL</span>
+            <h1>Trust And Safety Controls</h1>
+            <p class="lede">
+              MCP-AQL security is designed around operation risk, trust-level mediation, and explicit confirmation for dangerous actions.
+              This page maps the current security model used in draft protocol and practical profiles.
+            </p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="https://github.com/MCPAQL/spec/blob/main/docs/security/gatekeeper.md">Gatekeeper Spec</a>
+              <a class="btn btn-secondary" href="https://github.com/MCPAQL/spec/blob/main/docs/security/confirmation-tokens.md">Confirmation Tokens</a>
+              <a class="btn btn-secondary" href="https://github.com/MCPAQL/spec/blob/main/docs/security/execution-safety-loop.md">Execution Safety Loop</a>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h2 class="section-title">Trust-Level Mediation</h2>
+          <div class="card">
+            <p>
+              Implementations classify requester trust and apply policy gates before operation dispatch. The exact trust taxonomy is adapter-defined,
+              but the enforcement pattern is protocol-aligned: low-trust contexts default toward read-only or restricted mutations.
+            </p>
+            <ul>
+              <li>Trust-level checks happen before execution</li>
+              <li>Dangerous operations require stronger policy context</li>
+              <li>Policies should be introspectable where feasible</li>
+            </ul>
+          </div>
+        </section>
+
+        <section>
+          <h2 class="section-title">Danger Classification</h2>
+          <div class="grid cols-2">
+            <article class="card">
+              <h3>Operation Risk Labels</h3>
+              <p>
+                Operations can be tagged by danger class to support UI and agent policy decisions. Draft specification work tracks stronger
+                requirements for danger metadata alignment with runtime surfaces.
+              </p>
+            </article>
+            <article class="card">
+              <h3>Confirmation Handshake</h3>
+              <p>
+                For destructive or high-impact operations, adapters can require a confirmation token round-trip so intent is explicit and auditable.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <section>
+          <h2 class="section-title">Execution Safety Loop</h2>
+          <div class="card">
+            <p>
+              Stateful execute flows must support lifecycle controls (start, continue, complete, abort) and maintain safe transitions.
+              Session-bound controls should prevent stale token reuse or operation drift across disconnected contexts.
+            </p>
+            <pre class="code-box">execute_agent -> record_execution_step -> continue_execution
+                 \-> pause/confirm -> complete_execution or abort_execution</pre>
+          </div>
+        </section>
+
+        <section>
+          <h2 class="section-title">Open Security Hardening Tracks</h2>
+          <div class="card">
+            <p>
+              Public launch posture should explicitly label in-progress hardening work. Current priority categories include batch safeguards,
+              structured error alignment, and conformance validation depth for policy-sensitive operations.
+            </p>
+            <ul>
+              <li>Batch/resource exhaustion protections</li>
+              <li>Structured error surface consistency</li>
+              <li>Conformance coverage for security and safety behaviors</li>
+            </ul>
+          </div>
+        </section>
+
+        <section>
+          <h2 class="section-title">Source documents behind this summary</h2>
+          <div class="card">
+            <ul>
+              <li><a href="https://github.com/MCPAQL/spec/blob/main/docs/security/gatekeeper.md">Gatekeeper</a></li>
+              <li><a href="https://github.com/MCPAQL/spec/blob/main/docs/security/confirmation-tokens.md">Confirmation Tokens</a></li>
+              <li><a href="https://github.com/MCPAQL/spec/blob/main/docs/security/execution-safety-loop.md">Execution Safety Loop</a></li>
+              <li><a href="https://github.com/MCPAQL/spec/issues/216">Issue #216 safety checklist alignment audit</a></li>
+            </ul>
+          </div>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.</p>
+      <div class="footer-links">
+        <a href="index.html">Docs Library</a>
+        <a href="../index.html">Portal Home</a>
+        <a href="https://github.com/MCPAQL">MCPAQL Organization</a>
+        <a href="https://dollhouseresearch.com">Dollhouse Research</a>
+        <a href="https://github.com/DollhouseMCP/mcp-server">DollhouseMCP Production Profile</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../js/search.js"></script>
+</body>
+</html>

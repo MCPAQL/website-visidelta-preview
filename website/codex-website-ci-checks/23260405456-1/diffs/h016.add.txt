@@ -1,0 +1,34 @@
+MCP-AQL documentation that tracks the draft spec as it exists today
+This site is the browse-first public surface for MCP-AQL: what the protocol is, how it routes operations,
+how it handles safety and errors, what counts as draft-compatible today, and what remains open in the live spec backlog.
+Start With The Quick Path
+If you are new to MCP-AQL, this sequence gets you from protocol overview to launch reality without repo spelunking.
+1. Understand The Model
+Start with the short overview, token-efficiency story, and quick-start request shape before dropping into the full draft.
+Getting Started
+2. Learn The Operational Rules
+Read the public summaries for routing, structured errors, safety controls, and conformance boundaries.
+Protocol Core
+Error Model
+Security Model
+3. Track Draft Readiness
+Use the launch and roadmap pages to see what is publish-ready versus what is still explicitly open in the spec.
+Canonical verbs, parameter rules, and unknown-param handling
+Error And Response Surface
+Structured error envelope with code and message
+MVP registry plus phase-1 robustness concerns
+Current spec alignment work for error surfacing
+Open Error Model
+Adapter schema and plugin contract requirements
+Open Adapter Contracts
+Current Draft Blockers
+The website is explicit about the live spec issues that still shape launch messaging.
+Phase-1 launch gate issues
+#193 MCP 0.20 capability audit
+#197 batch and resource exhaustion protections
+#199 structured error surface alignment
+#194 draft publication release plan
+Why they matter publicly
+They define what the site can honestly call compatible today.
+They affect batch safety, machine-readable errors, and MCP parity messaging.
+They keep the draft positioned as real, useful, and still in progress.

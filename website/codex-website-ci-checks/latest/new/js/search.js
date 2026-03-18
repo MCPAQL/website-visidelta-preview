@@ -49,25 +49,35 @@
 
     if (!input || !resultBox || !indexUrl) return;
 
-    fetch(indexUrl)
-      .then(function (resp) {
-        if (!resp.ok) throw new Error("Search index fetch failed");
-        return resp.json();
-      })
-      .then(function (index) {
-        function closeResults() {
-          resultBox.hidden = true;
-          resultBox.innerHTML = "";
-          if (count) count.textContent = "";
-        }
+    let indexPromise;
 
-        function updateResults() {
-          const query = input.value.trim();
-          if (!query) {
-            closeResults();
-            return;
-          }
+    function closeResults() {
+      resultBox.hidden = true;
+      resultBox.innerHTML = "";
+      if (count) count.textContent = "";
+    }
 
+    function loadIndex() {
+      if (!indexPromise) {
+        indexPromise = fetch(indexUrl)
+          .then(function (resp) {
+            if (!resp.ok) throw new Error("Search index fetch failed");
+            return resp.json();
+          });
+      }
+
+      return indexPromise;
+    }
+
+    function updateResults() {
+      const query = input.value.trim();
+      if (!query) {
+        closeResults();
+        return;
+      }
+
+      loadIndex()
+        .then(function (index) {
           const ranked = index
             .map(function (item) {
               return { item: item, score: scoreItem(item, query) };
@@ -101,27 +111,32 @@
 
           resultBox.hidden = false;
           if (count) count.textContent = ranked.length + " result" + (ranked.length === 1 ? "" : "s");
-        }
-
-        input.addEventListener("input", updateResults);
-        input.addEventListener("focus", updateResults);
-
-        document.addEventListener("click", function (event) {
-          if (!form.contains(event.target)) {
-            closeResults();
-          }
+        })
+        .catch(function () {
+          if (count) count.textContent = "Search unavailable";
         });
+    }
 
-        document.addEventListener("keydown", function (event) {
-          if (event.key === "Escape") {
-            closeResults();
-            input.blur();
-          }
-        });
-      })
-      .catch(function () {
+    input.addEventListener("input", updateResults);
+    input.addEventListener("focus", function () {
+      loadIndex().catch(function () {
         if (count) count.textContent = "Search unavailable";
       });
+    }, { once: true });
+    input.addEventListener("focus", updateResults);
+
+    document.addEventListener("click", function (event) {
+      if (!form.contains(event.target)) {
+        closeResults();
+      }
+    });
+
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape") {
+        closeResults();
+        input.blur();
+      }
+    });
   }
 
   document.addEventListener("DOMContentLoaded", function () {

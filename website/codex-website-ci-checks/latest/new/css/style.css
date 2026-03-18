@@ -568,6 +568,11 @@ footer {
   margin-top: 1.4rem;
 }
 
+.docs-main section:not(.docs-hero) {
+  contain-intrinsic-size: 1px 520px;
+  content-visibility: auto;
+}
+
 .docs-hero {
   margin-top: 0;
 }

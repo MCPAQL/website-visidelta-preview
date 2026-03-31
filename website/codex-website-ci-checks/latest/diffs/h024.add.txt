@@ -1,4 +1,4 @@
-MCP-AQL Spec | Trust Levels Specification
+MCP-AQL Spec | Rate Limiting and Quota Management Specification
 Launch Checklist
 Adapter Patterns
 Search MCP-AQL docs
@@ -51,334 +51,364 @@ ADR-005: GraphQL-Style Introspection System
 ADR-006: Discriminated Response Format
 Architecture Decision Records
 REPO-SYNCED SPEC DOC
-This document defines the trust level system for MCP-AQL adapters. Trust levels indicate the verification and validation status of an adapter, enabling systems to make informed decisions about which operations to permit
+This document defines the rate limiting and quota management system for MCP-AQL adapters. Rate limits enable systems to respect API constraints, prevent runaway costs, and provide graceful degradation under load.
 Support document Draft 1.0.0-draft 2026-01-28
-Source: spec/docs/adapter/trust-levels.md
+Source: spec/docs/adapter/rate-limiting.md
 Open Source Markdown
 Browse Full Spec Reference
 Version: 1.0.0-draft Status: Draft Last Updated: 2026-01-28
 Abstract
-This document defines the trust level system for MCP-AQL adapters. Trust levels indicate the verification and validation status of an adapter, enabling systems to make informed decisions about which operations to permit based on adapter provenance and reliability.
 Table of Contents
 Overview
-Trust Level Enum
-Trust Metadata Schema
-Promotion Rules
-Permission Gating
+Rate Limits Schema
+Quota Management
+Enforcement Behavior
+Error Codes
+Introspection
 Implementation Requirements
 Future Extensions
 1. Overview
 1.1 Purpose
-Adapters can originate from multiple sources with varying reliability guarantees:
-Dynamically generated from API interrogation or OpenAPI specs
-Hand-crafted by developers with domain knowledge
-Community-contributed via collection submissions
-Officially certified by API vendors or trusted authorities
-Trust levels provide a standardized way to communicate adapter reliability, enabling:
-Progressive permission unlocking - Higher trust enables more operations
-Risk-appropriate defaults - New adapters start with minimal permissions
-Audit trail - Track how and when trust was established
-Automated gating - Systems can enforce trust requirements programmatically
+When adapters wrap external APIs:
+APIs have rate limits that must be respected to avoid blocking
+Users want budgets to control costs and usage
+Systems need protection against runaway API calls (especially in autonomous agent loops)
+Graceful degradation is preferable to hard failures
+Rate limiting in MCP-AQL provides:
+API limit awareness - Extract and respect target API constraints
+User-configurable quotas - Budget controls at multiple thresholds
+Progressive enforcement - Warn, pause, and hard stop behaviors
+Cost tracking - Monitor usage for paid APIs
 1.2 Design Principles
-Conservative defaults - Untrusted adapters have minimal permissions
-Earned trust - Higher levels require explicit validation or certification
-Transparent provenance - Trust metadata is auditable
-Graceful degradation - Missing trust info treated as lowest level
-1.3 Relationship to Danger Levels
-Trust levels work in conjunction with danger levels (see Dangerous Operation Classification ):
-Trust levels describe adapter reliability (who vouches for it)
-Danger levels describe operation risk (what harm could occur)
-Gating matrix combines both to determine permission
-2. Trust Level Enum
-2.1 Trust Level Values
-Description
-untested
-Newly created, no validation performed
-generated
-Programmatically generated, basic schema validation passed
-validated
-Passed programmatic test harness
-Community Reviewed
-community_reviewed
-Validated plus community vetting process
-certified
-Official verification by vendor or trusted authority
-2.2 Level Descriptions
-2.2.1 untested
-The adapter has been created but not validated in any way.
-Typical sources:
-Freshly generated from API interrogation
-User-created adapters not yet tested
-Imported from unknown sources
-Characteristics:
-Schema may be malformed
-Operations may not match actual API
-Parameters may be incorrect or missing
-2.2.2 generated
-The adapter was programmatically generated and passes basic schema validation.
-Validation requirements:
-YAML front matter parses correctly
-Required fields present (name, type, version, description)
-Target configuration is valid
-All operations have valid structure
-Schema is structurally correct
-No guarantee operations work at runtime
-May have incorrect parameter types or mappings
-2.2.3 validated
-The adapter has passed automated test harness validation against the target API.
-All generated requirements PLUS:
-Test harness executed against live API
-Read operations return valid responses
-Create operations succeed with valid inputs
-Error handling behaves as documented
-Operations verified to work at time of validation
-May break if API changes
-Validation report available for review
-2.2.4 community_reviewed
-The adapter has been validated and reviewed by the community.
-All validated requirements PLUS:
-Submitted to community collection
-Reviewed by at least N community members (configurable, recommended default: 2)
-No security concerns raised
-Documentation quality verified
-Human eyes have reviewed the adapter
-Security implications considered
-Higher confidence in production use
-2.2.5 certified
-The adapter has official certification from the API vendor or a trusted authority.
-All community_reviewed requirements PLUS:
-Vendor signature or authority attestation
-Formal certification process completed
-Ongoing maintenance commitment
-Highest confidence level
-Official support available
-Production-ready for all operations
-3. Trust Metadata Schema
-3.1 Schema Structure
-The trust block in adapter front matter:
-level : validated
-generated_at : &quot;2026-01-15T10:00:00Z&quot;
-generated_by : &quot;mcpaql-adapter-generator-v1.2.0&quot;
-validated_at : &quot;2026-01-15T12:00:00Z&quot;
-validated_by : &quot;mcpaql-test-harness-v2.0.0&quot;
-validation_report :
-tests_passed : 47
-tests_total : 47
-endpoints_verified : 23
-coverage_percent : 95
-last_api_response : &quot;2026-01-15T12:00:00Z&quot;
-promoted_from : &quot;generated&quot;
-promotion_history :
-- from : &quot;untested&quot;
-to : &quot;generated&quot;
-at : &quot;2026-01-15T10:00:00Z&quot;
-by : &quot;mcpaql-adapter-generator-v1.2.0&quot;
-- from : &quot;generated&quot;
-to : &quot;validated&quot;
-at : &quot;2026-01-15T12:00:00Z&quot;
-by : &quot;mcpaql-test-harness-v2.0.0&quot;
-certification : null
-3.2 Field Definitions
-3.2.1 level (required)
-Type: string (enum) Values: untested , generated , validated , community_reviewed , certified
-The current trust level of the adapter.
-3.2.2 generated_at
-Type: string (ISO 8601 timestamp)
-When the adapter was initially generated or created.
-3.2.3 generated_by
-Type: string
-Identifier of the tool or person that created the adapter.
-3.2.4 validated_at
-When the adapter was last validated against the target API.
-3.2.5 validated_by
-Identifier of the validation tool or process.
-3.2.6 validation_report
-Type: object
-Detailed results from the validation process.
-tests_passed
-Number of tests that passed
-tests_total
-Total number of tests executed
-endpoints_verified
-Number of API endpoints tested
-coverage_percent
-Percentage of operations covered by tests
-last_api_response
-Timestamp of last successful API response
-3.2.7 promoted_from
-Type: string (enum)
-The previous trust level before the most recent promotion.
-3.2.8 promotion_history
-Type: array of promotion records
-Complete history of trust level changes.
-reason : &quot;Schema validation passed&quot;
-Promotion record fields:
-Previous trust level
-New trust level
-ISO 8601 timestamp
-Tool or person identifier
-Optional explanation
-3.2.9 certification
-Type: object or null
-Certification details for certified level adapters.
-certification :
-authority : &quot;GitHub, Inc.&quot;
-signature : &quot;base64-encoded-signature&quot;
-certificate_id : &quot;GH-CERT-2026-001&quot;
-issued_at : &quot;2026-01-20T00:00:00Z&quot;
-expires_at : &quot;2027-01-20T00:00:00Z&quot;
-- &quot;all_operations&quot;
-Certification fields:
-authority
-Certifying organization name
-signature
-Cryptographic signature (base64)
-certificate_id
-Unique certificate identifier
-issued_at
-When certification was granted
-expires_at
-When certification expires
-What the certification covers
-4. Promotion Rules
-4.1 Promotion Path
-Trust levels follow a linear promotion path:
-untested → generated → validated → community_reviewed → certified
-Adapters MUST NOT skip levels during promotion. Each level builds on the requirements of previous levels.
-4.2 Promotion Triggers
-Transition
-Requirements
-untested → generated
-Schema validation
-YAML parses, required fields present, valid structure
-generated → validated
-Test harness pass
-All read ops succeed, representative create/update tested
-validated → community_reviewed
-Community review
-N reviewers approve, no security flags
-community_reviewed → certified
-Vendor attestation
-Signed certificate from recognized authority
-4.3 Demotion Rules
-Trust levels MAY be demoted when:
-Validation failure - Re-validation against API fails
-Security issue - Vulnerability discovered in adapter
-API change - Target API changed, adapter no longer valid
-Certificate expiry - Certification has expired
-Demotion behavior:
-Demotion MUST be recorded in promotion_history with negative transition
-Systems SHOULD notify users when adapter trust is demoted
-Demoted adapters retain their validated_at timestamp for audit purposes
-- from : &quot;validated&quot;
-at : &quot;2026-02-01T08:00:00Z&quot;
-reason : &quot;API endpoint /users deprecated, 3 operations failing&quot;
-4.4 Re-validation
-Adapters SHOULD be periodically re-validated to maintain trust level:
-Trust Level
-Recommended Re-validation
-On each use (schema check)
-Weekly or on API version change
-Per certification terms
-5. Permission Gating
-5.1 Trust-to-Operation Gating
-Systems SHOULD enforce minimum trust levels for operations based on risk:
-Operation Category
-Minimum Trust Level
-Introspection
-Read operations
-Safe create operations
-Update operations
-Delete operations
-Dangerous operations
-5.2 Trust-to-Danger Matrix
-The complete trust-to-danger gating matrix is defined in the Dangerous Operation Classification specification. The matrix determines which operations are allowed, require confirmation, or are denied based on the combination of adapter trust level and operation danger level.
-Behavior summary:
-allow - Operation executes without additional gates
-confirm - Operation requires explicit user confirmation
-deny - Operation blocked with error response
-introspect_only - Only introspection operations permitted; all other operations are blocked
-5.3 Configuration Override
-Systems MAY allow administrators to override default gating:
-# System configuration
-trust_policy :
-minimum_trust_for_writes : validated
-minimum_trust_for_deletes : community_reviewed
-allow_untested_introspection : true
-require_confirmation_below : validated
-5.4 Error Response
-When an operation is denied due to insufficient trust:
+Respect upstream limits - Never exceed API provider constraints
+User control - Configurable quotas override defaults
+Progressive response - Warn before blocking
+Transparent status - Quota state always queryable
+1.3 Scope
+Included:
+Rate limit schema for adapters
+Quota configuration
+Enforcement behaviors
+Error codes for rate limiting
+Introspection of quota status
+Deferred:
+Cross-adapter quota aggregation
+Token-based rate limiting for LLM APIs
+Distributed rate limiting coordination
+2. Rate Limits Schema
+2.1 Schema Structure
+The rate_limits block in adapter front matter:
+rate_limits :
+# API-defined limits (from target API documentation or headers)
+api_limits :
+- scope : global
+limit : 5000
+window : hour
+- scope : endpoint
+endpoint : &quot;POST /search&quot;
+limit : 30
+window : minute
+# User-configurable quotas
+quotas :
+enabled : true
+limits :
+- metric : requests_per_hour
+warn : 4000
+pause : 4800
+hard_stop : 5000
+- metric : cost_per_day
+warn : 5.00
+pause : 10.00
+hard_stop : 50.00
+currency : USD
+# Cost estimation for paid APIs
+model : per_call
+pricing :
+- endpoint : &quot;*&quot;
+cost_per_call : 0.001
+- endpoint : &quot;POST /premium/*&quot;
+cost_per_call : 0.01
+2.2 api_limits Block
+Declares rate limits imposed by the target API.
+interface ApiLimit {
+* Scope of the limit
+* - global: Applies to all operations
+* - endpoint: Applies to specific endpoint
+* - category: Applies to CRUDE category
+scope : &#39;global&#39; | &#39;endpoint&#39; | &#39;category&#39; ;
+* Endpoint pattern (when scope is &#39;endpoint&#39;)
+* Supports wildcards: &quot;GET /users/*&quot;
+endpoint ?: string ;
+* CRUDE category (when scope is &#39;category&#39;)
+category ?: &#39;create&#39; | &#39;read&#39; | &#39;update&#39; | &#39;delete&#39; | &#39;execute&#39; ;
+* Maximum number of requests in the window
+limit : number ;
+* Time window for the limit
+window : &#39;second&#39; | &#39;minute&#39; | &#39;hour&#39; | &#39;day&#39; ;
+* Header name containing remaining requests (for runtime tracking)
+remaining_header ?: string ;
+* Header name containing reset timestamp
+reset_header ?: string ;
+2.3 Common API Limit Patterns
+# GitHub API pattern
+remaining_header : &quot;X-RateLimit-Remaining&quot;
+reset_header : &quot;X-RateLimit-Reset&quot;
+# OpenAI pattern (tokens per minute)
+limit : 90000
+metric : tokens_per_minute
+# Stripe pattern (different limits by CRUDE category)
+- scope : category
+category : read
+limit : 100
+window : second
+category : create
+limit : 25
+3. Quota Management
+3.1 Quotas Block
+User-configurable limits that can be stricter than API limits.
+interface QuotaConfig {
+* Whether quota enforcement is enabled
+enabled : boolean ;
+* Individual quota limits
+limits : QuotaLimit[] ;
+* How to persist quota tracking
+persistence ?: &#39;memory&#39; | &#39;file&#39; | &#39;database&#39; ;
+* When to reset counters
+reset_schedule ?: string ; // Cron expression
+interface QuotaLimit {
+* What is being measured
+metric : QuotaMetric ;
+* Threshold for warning notification
+warn : number ;
+* Threshold for pause (require confirmation to continue)
+pause : number ;
+* Threshold for hard stop (block all requests)
+hard_stop ?: number ;
+* Currency for cost metrics
+currency ?: string ;
+type QuotaMetric =
+| &#39;requests_per_minute&#39;
+| &#39;requests_per_hour&#39;
+| &#39;requests_per_day&#39;
+| &#39;tokens_per_minute&#39;
+| &#39;tokens_per_hour&#39;
+| &#39;tokens_per_day&#39;
+| &#39;cost_per_hour&#39;
+| &#39;cost_per_day&#39;
+| &#39;cost_per_month&#39; ;
+3.2 Threshold Behaviors
+Threshold
+Behavior
+User Experience
+Log warning, continue
+Notification displayed
+Require confirmation
+"Continue?" prompt
+hard_stop
+Block all requests
+Error response
+3.3 Example Quota Configurations
+Conservative (cost-conscious):
+warn : 1.00
+pause : 5.00
+hard_stop : 10.00
+Development (permissive):
+warn : 1000
+pause : 5000
+# No hard_stop - never fully block
+Production (strict):
+- metric : requests_per_minute
+warn : 50
+pause : 80
+hard_stop : 100
+warn : 100.00
+pause : 200.00
+hard_stop : 500.00
+4. Enforcement Behavior
+4.1 Enforcement Flow
+Request → Check API Limits → Check Quotas → Execute or Block
+API blocked? Quota exceeded?
+Wait/Retry Warn/Pause/Stop
+4.2 API Limit Enforcement
+When API rate limit is reached:
+Check remaining - Read from response headers if available
+Predict limit - Track request counts if no headers
+Pre-flight block - Block request before sending if limit would be exceeded
+Retry-After - Respect Retry-After header from API responses
+Pre-flight block response:
 &quot;success&quot; : false ,
 &quot;error&quot; : {
-&quot;code&quot; : &quot;PERMISSION_TRUST_LEVEL_INSUFFICIENT&quot; ,
-&quot;message&quot; : &quot;Operation &#39;delete_user&#39; requires trust level &#39;community_reviewed&#39;, adapter has &#39;validated&#39;&quot; ,
+&quot;code&quot; : &quot;RATE_LIMIT_EXCEEDED&quot; ,
+&quot;message&quot; : &quot;API rate limit would be exceeded&quot; ,
 &quot;details&quot; : {
-&quot;operation&quot; : &quot;delete_user&quot; ,
-&quot;required_trust&quot; : &quot;community_reviewed&quot; ,
-&quot;actual_trust&quot; : &quot;validated&quot; ,
-&quot;danger_level&quot; : 2
-Note: The PERMISSION_TRUST_LEVEL_INSUFFICIENT error code is introduced by this specification and should be added to the Error Codes Specification as a future extension under the PERMISSION_ category.
-6. Implementation Requirements
-6.1 MUST Requirements
-Implementations supporting trust levels MUST:
-Default to untested when trust block is missing
-Validate trust level enum values
-Reject invalid trust metadata gracefully
-Record trust level in audit logs for security operations
-6.2 SHOULD Requirements
-Implementations supporting trust levels SHOULD:
-Enforce the trust-to-operation gating matrix
-Provide introspection of current trust level
-Support trust level promotion workflows
-Preserve promotion history for audit
-6.3 MAY Requirements
-Implementations supporting trust levels MAY:
-Implement custom gating policies
-Support automatic re-validation
-Integrate with external certification authorities
-Provide trust level comparison across adapters
-6.4 Introspection Support
-Trust information SHOULD be available via introspection:
+&quot;limit&quot; : 5000 ,
+&quot;remaining&quot; : 0 ,
+&quot;window&quot; : &quot;hour&quot; ,
+&quot;resets_at&quot; : &quot;2026-01-28T13:00:00Z&quot; ,
+&quot;retry_after_seconds&quot; : 1847
+4.3 Quota Enforcement
+Warnings are included in successful responses via the warnings array. See Warnings Specification for the complete schema and client handling requirements.
+Warning (warn threshold):
+&quot;success&quot; : true ,
+&quot;data&quot; : { ... },
+&quot;warnings&quot; : [
+&quot;code&quot; : &quot;RATE_LIMIT_QUOTA_WARNING&quot; ,
+&quot;message&quot; : &quot;Approaching quota limit&quot; ,
+&quot;metric&quot; : &quot;requests_per_hour&quot; ,
+&quot;current&quot; : 4100 ,
+&quot;warn_threshold&quot; : 4000 ,
+&quot;pause_threshold&quot; : 4800
+Pause (pause threshold):
+&quot;code&quot; : &quot;RATE_LIMIT_QUOTA_PAUSE&quot; ,
+&quot;message&quot; : &quot;Quota pause threshold reached&quot; ,
+&quot;current&quot; : 4850 ,
+&quot;pause_threshold&quot; : 4800 ,
+&quot;hard_stop_threshold&quot; : 5000 ,
+&quot;confirmation_token&quot; : &quot;quota_continue_abc123&quot; ,
+&quot;expires_at&quot; : &quot;2026-01-28T12:05:00Z&quot;
+Hard stop (hard_stop threshold):
+&quot;code&quot; : &quot;RATE_LIMIT_QUOTA_EXHAUSTED&quot; ,
+&quot;message&quot; : &quot;Quota exhausted&quot; ,
+&quot;current&quot; : 5000 ,
+&quot;resets_at&quot; : &quot;2026-01-28T13:00:00Z&quot;
+4.4 Continuing After Pause
+To continue after pause threshold, include the confirmation token from the RATE_LIMIT_QUOTA_PAUSE response. See Confirmation Token Specification for token validation and lifecycle details.
+operation : &quot;get_user&quot; ,
+params : {
+user_id : &quot;alice&quot; ,
+_quota_continue : &quot;quota_continue_abc123&quot;
+5. Error Codes
+5.1 Rate Limit Error Codes
+Description
+Recovery
+RATE_LIMIT_EXCEEDED
+Target API rate limit reached
+Wait for reset
+RATE_LIMIT_QUOTA_PAUSE
+User quota pause threshold
+Confirm to continue
+RATE_LIMIT_QUOTA_EXHAUSTED
+User quota hard stop
+RATE_LIMIT_QUOTA_WARNING
+Approaching limit (in warnings)
+Consider slowing
+5.2 Error Response Schema
+interface RateLimitError {
+code : string ;
+message : string ;
+details : {
+/** What metric triggered the limit */
+metric ?: string ;
+/** Current usage count/amount */
+current ?: number ;
+/** The limit that was exceeded */
+limit ?: number ;
+/** Time window of the limit */
+window ?: string ;
+/** When the limit resets */
+resets_at ?: string ;
+/** Seconds until retry is allowed */
+retry_after_seconds ?: number ;
+/** Token to continue after pause */
+confirmation_token ?: string ;
+/** When confirmation expires */
+expires_at ?: string ;
+6. Introspection
+6.1 Quota Status Query
 operation : &quot;introspect&quot; ,
-params : { query : &quot;adapter_info&quot; }
-// Response
-success : true ,
-data : {
-name : &quot;github-api&quot; ,
-version : &quot;1.0.0&quot; ,
-trust : {
-level : &quot;validated&quot; ,
-validated_at : &quot;2026-01-15T12:00:00Z&quot; ,
-validation_report : {
-tests_passed : 47 ,
-7. Future Extensions
-7.1 Scoped Trust Levels
-Future versions may support per-operation trust levels:
-operation_overrides :
-delete_repo :
-level : certified
-reason : &quot;Destructive operation requires higher trust&quot;
-7.2 Trust Delegation
-Organizations may delegate trust decisions:
-level : community_reviewed
-delegated_from :
-authority : &quot;acme-corp&quot;
-scope : &quot;internal-apis&quot;
-7.3 Composite Trust
-For adapters aggregating multiple APIs:
-composite : true
-components :
-- api : &quot;github&quot;
-- api : &quot;slack&quot;
-effective_level : validated # Minimum of components
-7.4 Trust Attestation Protocol
-A future specification may define a protocol for trust attestation exchange between systems.
+query : &quot;quota_status&quot;
+6.2 Quota Status Response
+&quot;data&quot; : {
+&quot;adapter&quot; : &quot;github-api&quot; ,
+&quot;api_limits&quot; : {
+&quot;global&quot; : {
+&quot;remaining&quot; : 3500 ,
+&quot;quotas&quot; : [
+&quot;current&quot; : 1500 ,
+&quot;warn&quot; : 4000 ,
+&quot;pause&quot; : 4800 ,
+&quot;hard_stop&quot; : 5000 ,
+&quot;status&quot; : &quot;ok&quot;
+&quot;metric&quot; : &quot;cost_per_day&quot; ,
+&quot;current&quot; : 4.50 ,
+&quot;warn&quot; : 5.00 ,
+&quot;pause&quot; : 10.00 ,
+&quot;hard_stop&quot; : 50.00 ,
+&quot;status&quot; : &quot;warn&quot; ,
+&quot;currency&quot; : &quot;USD&quot;
+&quot;next_reset&quot; : &quot;2026-01-28T13:00:00Z&quot;
+6.3 Status Values
+Below warn threshold
+Above warn, below pause
+At pause threshold, confirmation required
+exhausted
+At hard stop, requests blocked
+7. Implementation Requirements
+7.1 MUST Requirements
+Implementations supporting rate limiting MUST:
+Respect api_limits and not exceed target API constraints
+Return proper error codes when limits are reached
+Include retry_after_seconds when blocking requests
+Support introspection of current quota status
+7.2 SHOULD Requirements
+Implementations supporting rate limiting SHOULD:
+Track API response headers for remaining/reset info
+Implement the three-tier quota system (warn/pause/hard_stop)
+Persist quota counters across sessions
+Provide warnings in successful responses when approaching limits
+7.3 MAY Requirements
+Implementations supporting rate limiting MAY:
+Support cost estimation and tracking
+Implement automatic request queuing and retry
+Support per-operation rate limits
+Integrate with external rate limit services
+7.4 Cost Tracking
+For adapters with cost estimation:
+model : per_call # per_call | per_token | per_byte | tiered
+- endpoint : &quot;POST /completions&quot;
+cost_per_call : 0.002
+cost_per_token :
+input : 0.00001
+output : 0.00003
+8. Future Extensions
+8.1 Cross-Adapter Aggregation
+For APIs with shared rate limits across endpoints:
+shared_pools :
+- name : &quot;github_core&quot;
+endpoints :
+- &quot;GET /repos/*&quot;
+- &quot;GET /users/*&quot;
+- &quot;GET /orgs/*&quot;
+8.2 Intelligent Request Scheduling
+Automatic request queuing and batching:
+scheduling :
+max_queue_size : 100
+batch_similar_requests : true
+priority_by_danger_level : true
+8.3 Token-Based Rate Limiting
+For LLM APIs with token-based limits:
+metric : tokens
+count_method : tiktoken # Token counting method
+8.4 Budget Alerts
+External notification integration:
+alerts :
+- trigger : warn
+action : webhook
+url : &quot;https://alerts.example.com/budget&quot;
+- trigger : pause
+action : email
+to : &quot;admin@example.com&quot;
+8.5 Distributed Rate Limiting
+For multi-instance deployments:
+coordination :
+backend : redis
+connection : &quot;${REDIS_URL}&quot;
+key_prefix : &quot;mcpaql:ratelimit:&quot;
 References
 Dangerous Operation Classification
-Rate Limiting Specification
-Security Model: Gatekeeper
 Error Codes Specification
-GitHub Issue: #59
+Warnings Specification
+GitHub Issue: #60
 &copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
 Docs Library
 MCPAQL Organization

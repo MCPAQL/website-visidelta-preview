@@ -1,4 +1,4 @@
-MCP-AQL Spec | Architecture Documentation
+MCP-AQL Spec | Architecture Decision Records
 Launch Checklist
 Adapter Patterns
 Search MCP-AQL docs
@@ -51,28 +51,50 @@ ADR-005: GraphQL-Style Introspection System
 ADR-006: Discriminated Response Format
 Architecture Decision Records
 REPO-SYNCED SPEC DOC
-Implementation architecture documentation has moved to the mcpaql-adapter repository.
-Support document
-Source: spec/docs/architecture/README.md
+This directory contains Architecture Decision Records (ADRs) documenting significant design decisions in the MCP-AQL protocol specification.
+Support document Accepted | Proposed | Deprecated | Superseded
+Source: spec/docs/adr/index.md
 Open Source Markdown
 Browse Full Spec Reference
-Moved Documents
-Former Location
-New Location
-overview.md
-mcpaql-adapter/docs/architecture/overview.md
-adapter-runtime.md
-mcpaql-adapter/docs/architecture/runtime.md
-plugin-interface.md
-Split: normative contracts in plugin-contracts.md , implementation in mcpaql-adapter/docs/architecture/plugin-system.md
-schema-driven-dispatch.md
-mcpaql-adapter/docs/architecture/dispatch.md
-Normative Protocol Documents
-For normative protocol specifications that remain in this repository, see:
-Plugin Interface Contracts - What each plugin type MUST provide
-Core Specification - Protocol wire format and semantics
-Adapter Element Type - Declarative adapter schema format
-Error Codes - Structured error code system
+ADR Index
+CRUDE Pattern
+Accepted
+Extends CRUD with Execute endpoint for runtime operations
+GraphQL-Style Input Objects
+Nested input objects for update operations
+snake_case Parameters
+Standardizes on snake_case for LLM compatibility
+Schema-Driven Operations
+Declarative operation definitions as single source of truth
+Introspection System
+GraphQL-style runtime discovery via introspect operation
+Discriminated Responses
+{ success, data } or { success, error } response format
+ADR Format
+Each ADR follows this structure:
+# ADR-NNN: Title
+**Status:** Accepted | Proposed | Deprecated | Superseded
+**Date:** YYYY-MM-DD
+## Context
+[ Why this decision was needed ]
+## Decision
+[ What was decided, with RFC 2119 language where appropriate ]
+## Consequences
+[ Positive and negative outcomes ]
+## References
+[ Related ADRs or spec sections ]
+Status Definitions
+Proposed : Under discussion, not yet accepted
+Accepted : Approved and in effect
+Deprecated : No longer recommended but still supported
+Superseded : Replaced by a newer ADR (link to replacement)
+Contributing
+When proposing a new ADR:
+Use the next available number (ADR-007, etc.)
+Follow the naming convention: ADR-NNN-short-title.md
+Use RFC 2119 keywords (MUST, SHOULD, MAY) for normative statements
+Focus on protocol-level decisions, not implementation details
+Update this index when adding new ADRs
 &copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
 Docs Library
 MCPAQL Organization

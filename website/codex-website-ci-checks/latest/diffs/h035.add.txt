@@ -1,4 +1,4 @@
-MCP-AQL Spec | MCP-AQL CRUDE Pattern Specification
+MCP-AQL Spec | MCP-AQL Conformance Testing Specification
 Launch Checklist
 Adapter Patterns
 Search MCP-AQL docs
@@ -51,232 +51,343 @@ ADR-005: GraphQL-Style Introspection System
 ADR-006: Discriminated Response Format
 Architecture Decision Records
 REPO-SYNCED SPEC DOC
-Document Status: This document is informative. For normative requirements, see MCP-AQL Specification v1.0.0.
-Support document Draft 1.0.0-draft 2026-02-18
-Source: spec/docs/crude-pattern.md
+Document Status: This document is an informative conformance framework specification aligned to the normative protocol requirements in docs/versions/v1.0.0-draft.md. Implementation Status: The full mcpaql-conformance run
+Support document Draft 1.0.0-draft 2026-03-06
+Source: spec/docs/conformance-testing.md
 Open Source Markdown
 Browse Full Spec Reference
-Version: 1.0.0-draft Status: Draft Last Updated: 2026-02-18
-Document Status: This document is informative . For normative requirements, see MCP-AQL Specification v1.0.0 .
+Version: 1.0.0-draft Status: Draft Last Updated: 2026-03-06
+Document Status: This document is an informative conformance framework specification aligned to the normative protocol requirements in docs/versions/v1.0.0-draft.md .
+Implementation Status: The full mcpaql-conformance runner defined here is not yet published in this repository. Current implemented checks are schema/example validation in scripts/validate-schema-examples.mjs .
 Abstract
-This document specifies the CRUDE (Create, Read, Update, Delete, Execute) endpoint pattern, which extends traditional CRUD semantics with an Execute endpoint for runtime lifecycle operations.
+This document specifies the conformance testing requirements for MCP-AQL implementations. It defines conformance levels, test categories, pass/fail criteria, and evaluation methodologies including LLM-based semantic evaluation.
 Table of Contents
 Introduction
-Endpoint Definitions
-Permission Model
-Endpoint Modes
-Operation Routing
-Classification Guidelines
-Conformance Requirements
+Conformance Levels
+Test Categories
+Test Requirements
+Evaluation Methodology
+Reporting
+Command-Line Interface
 1. Introduction
 1.1 Purpose
-The CRUDE pattern provides semantic grouping of operations by their effect on system state. This grouping enables:
-Permission-based access control at the endpoint level
-Clear separation of read-only, additive, modifying, and destructive operations
-Explicit handling of runtime execution lifecycle operations
-1.2 Rationale for EXECUTE
-Traditional CRUD patterns assume operations are primarily concerned with data persistence. However, many services provide executable functionality (jobs, workflows, tasks, processes) that require:
-Non-idempotent operations - Calling execute_job twice creates two separate executions
-Lifecycle management - Start, monitor, update progress, complete
-Runtime state - Distinct from stored data
-The EXECUTE endpoint addresses these requirements explicitly.
-1.3 Adapter Responsibility
-Each adapter implementing MCP-AQL:
-Defines its own operations
-Classifies each operation into the appropriate CRUDE endpoint
-Documents its operation-to-endpoint mapping via introspection
-2. Endpoint Definitions
-2.1 CREATE Endpoint
-Identifier: CREATE MCP Tool Name: mcp_aql_create
-Operations that add new state without removing or modifying existing state.
+MCP-AQL conformance testing ensures implementations meet the protocol specification and provide consistent, discoverable APIs for LLM interaction. This specification defines:
+What implementations MUST test
+How to evaluate test results
+How to report conformance levels
+1.2 Terminology
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in RFC 2119 .
+1.3 Test Result Classifications
+Test criteria fully satisfied
+Test criteria not met, conformance blocked
+Test criteria partially met, conformance not blocked
+Test not applicable to this implementation
+2. Conformance Levels
+2.1 Level 1: Basic Conformance
+Level 1 conformance establishes the minimum viable MCP-AQL implementation.
+Requirements:
+Requirement
+Description
+Introspect (operations)
+introspect operation with query: "operations" implemented
+Introspect (types)
+introspect operation with query: "types" implemented
+Endpoint routing
+Operations routed to correct CRUDE endpoint
+Response format
+Discriminated union responses ( { success, data } or { success, error } )
+Error handling
+Structured error responses with code and message
+Parameter naming
+snake_case parameter naming convention
+Test Categories Required:
+Introspection Fidelity (MUST PASS)
+Parameter Handling (MUST PASS)
+Error Quality (MUST PASS)
+Round-Trip Integrity (MUST PASS)
+2.2 Level 2: Full Conformance
+Level 2 conformance indicates a complete MCP-AQL implementation with all optional features.
+All Level 1 requirements
+Endpoint modes
+Both CRUDE mode and Single-endpoint mode supported
+Field selection
+fields and preset parameters on READ operations
+Batch operations
+Multi-operation batching with individual results
+Cross-cutting params
+Consistent limit , offset , sort , order support
+All Level 1 test categories
+Constraint Documentation (SHOULD PASS)
+Semantic Evaluation (SHOULD PASS)
+2.3 Conformance Certification
+Implementations MAY claim conformance levels as follows:
+MCP-AQL Level 1 Conformant
+MCP-AQL Level 2 Conformant
+Claims MUST include the specification version tested against.
+3. Test Categories
+3.1 Introspection Fidelity Tests (MUST PASS)
+Verifies that introspection accurately describes the implementation.
+TEST: Introspection Parameter Accuracy
+FOR EACH operation in introspection response:
+1. Extract parameter names and types
+2. Construct a valid request using ONLY introspection guidance
+3. Verify the request succeeds OR fails with a documented error
+PASS: All documented parameters work as described
+FAIL: Following introspection exactly produces unexpected errors
+TEST: Introspection Completeness
+FOR EACH operation in implementation:
+1. Get documented parameters from introspection
+2. Attempt operation with each documented parameter
+3. Attempt operation with known cross-cutting parameters
+4. Compare accepted vs documented parameters
+PASS: All accepted parameters appear in introspection
+FAIL: Operation accepts parameters not in introspection
+WARN: Introspection documents parameters not accepted
+3.2 Parameter Handling Tests (MUST PASS)
+Verifies consistent parameter behavior.
+TEST: Required Parameter Enforcement
+FOR EACH operation with required parameters:
+1. Omit each required parameter in turn
+2. Verify operation fails with clear error
+PASS: Missing required params produce &quot;missing parameter&quot; errors
+FAIL: Operation succeeds without required parameter
+FAIL: Error message does not identify the missing parameter
+TEST: Unknown Parameter Handling
+FOR EACH operation:
+1. Send valid request with one additional unknown parameter
+2. Verify server either:
+a) Accepts request (param ignored with optional warning), OR
+b) Rejects with clear &quot;unknown parameter&quot; error
+PASS: Behavior is explicit (warning OR error)
+FAIL: Unknown parameters silently ignored with no indication
+TEST: Optional Parameter Defaults
+FOR EACH optional parameter with documented default:
+1. Send request without the parameter
+2. Verify response reflects documented default behavior
+PASS: Defaults applied as documented
+FAIL: Behavior differs from documented default
+3.3 Error Quality Tests (MUST PASS)
+Verifies error messages are user-appropriate.
+TEST: No Implementation Leakage
+FOR EACH error condition:
+1. Trigger the error
+2. Verify error message does NOT contain:
+- Programming language artifacts (TypeError, #&lt;Object&gt;, .js:, .ts:)
+- Stack traces (at Function, at Module)
+- Internal paths (/src/, /node_modules/)
+PASS: Error messages are implementation-agnostic
+FAIL: Raw implementation errors exposed
+TEST: Actionable Error Messages
+FOR EACH validation error:
+2. Verify error message includes:
+- What went wrong
+- Which parameter/field is affected
+- Expected type or format (for type errors)
+PASS: Error messages enable self-correction
+WARN: Error messages lack actionable guidance
+Recommended Error Format:
+Missing required parameter &#39;{paramName}&#39;. Expected: {type} ({description})
+3.4 Round-Trip Integrity Tests (MUST PASS)
+Verifies data consistency through create-read cycles.
+TEST: Create-Read Consistency
+FOR EACH element type:
+1. Create element with all documented optional fields
+2. Read element back via get operation
+3. Compare all fields
+PASS: All submitted fields present and unchanged
+FAIL: Data silently dropped during create
+FAIL: Field values modified unexpectedly
+TEST: Update Preservation
+1. Create element with initial values
+2. Update subset of fields
+3. Read element back
+4. Verify non-updated fields unchanged
+PASS: Unmodified fields preserved
+FAIL: Update operation affects non-targeted fields
+3.5 Constraint Documentation Tests (SHOULD PASS)
+Verifies element-specific constraints are discoverable.
+TEST: Read-Only Field Protection
+FOR EACH element type with read-only fields:
+1. Attempt to update a read-only field
+2. Verify operation fails with constraint error
+3. Verify introspection documents the constraint
+PASS: Constraint enforced AND documented
+WARN: Constraint enforced but not in introspection
+FAIL: Read-only field can be modified
+TEST: Append-Only Semantics
+FOR EACH append-only data type (e.g., Memory entries):
+1. Verify content cannot be modified via update
+2. Verify error message explains append-only behavior
+PASS: Append-only enforced AND documented
+WARN: Enforced but not documented
+4. Test Requirements
+4.1 MUST PASS Requirements
+The following test categories MUST pass for Level 1 conformance:
+Category
+Rationale
+Introspection Fidelity
+LLMs must trust introspection
+Parameter Handling
+Consistent behavior across operations
+Error Quality
+Usable error messages
+Round-Trip Integrity
+Data consistency guarantee
+Total MUST PASS tests: 9
+4.2 SHOULD PASS Requirements
+The following test categories SHOULD pass for Level 2 conformance:
+Constraint Documentation
+Discoverable constraints
+Semantic Evaluation
+Per implementation
+LLM discoverability
+Failure in SHOULD PASS tests: Produces WARN, does not block conformance
+5. Evaluation Methodology
+5.1 Two-Tier Evaluation Approach
+Conformance tests SHOULD use a two-tier evaluation approach:
+Tier 1: Structural Validation (Fast, Deterministic)
+Pattern matching for expected response elements
+JSON schema validation for response structure
+Presence checks for required fields
+Regex validation for error message patterns
 Characteristics:
-Non-destructive
-Additive only
-May fail if duplicate state would be created
-Example Operations: | Operation | Description | |-----------|-------------| | create_user | Create a new user account | | upload_file | Upload a new file | | add_comment | Add a comment to a resource | | register_webhook | Register a new webhook |
-2.2 READ Endpoint
-Identifier: READ MCP Tool Name: mcp_aql_read
-Operations that query state without modification.
-Read-only
-No side effects on stored state
-Safe to call repeatedly (idempotent)
-Example Operations: | Operation | Description | |-----------|-------------| | list_users | List users with filtering | | get_document | Retrieve a document by ID | | search | Search across resources | | introspect | Discover available operations | | get_status | Get current system status | | get_execution_status | Query execution progress | | export_data | Export data to portable format |
-Note: Operations that query execution state are READ operations, not EXECUTE. See Section 6.1 for classification guidelines.
-2.3 UPDATE Endpoint
-Identifier: UPDATE MCP Tool Name: mcp_aql_update
-Operations that modify existing state.
-Modifying
-Requires existing state to modify
-May be destructive to prior values
-Example Operations: | Operation | Description | |-----------|-------------| | update_user | Modify user properties | | rename_file | Rename an existing file | | set_config | Update configuration | | move_resource | Move resource to new location |
-2.4 DELETE Endpoint
-Identifier: DELETE MCP Tool Name: mcp_aql_delete
-Operations that remove state permanently.
-Destructive
-Irreversible without backup
-MAY require confirmation
-Example Operations: | Operation | Description | |-----------|-------------| | delete_user | Permanently delete a user | | remove_file | Remove a file | | purge_cache | Clear cached data | | unregister_webhook | Remove a webhook |
-2.5 EXECUTE Endpoint
-Identifier: EXECUTE MCP Tool Name: mcp_aql_execute
-Operations that manage the runtime execution lifecycle.
-Stateful (maintains execution context)
-Non-idempotent (each call may create new state)
-Potentially destructive (may modify external state)
-Lifecycle-oriented
-Example Operations: | Operation | Description | |-----------|-------------| | execute_job | Start a background job | | cancel_task | Cancel a running task | | resume_workflow | Resume a paused workflow | | trigger_build | Trigger a build process |
-Note: Operations that only query execution state (like get_execution_status ) belong to READ, not EXECUTE. See Section 6.1 for classification guidelines.
-For operations that manage long-running processes, see Execution Lifecycle in the normative specification.
-3. Permission Model
-3.1 Endpoint Permissions
-Each endpoint has defined permission characteristics:
-Endpoint Read-Only Destructive
--------- --------- -----------
-CREATE false false
-READ true false
-UPDATE false true
-DELETE false true
-EXECUTE false true
-3.2 Permission Flags
-readOnly:
-true : Operation does not modify any state
-false : Operation may modify state
-destructive:
-true : Operation may remove or irreversibly modify state
-false : Operation only adds or queries state
-3.3 MCP Tool Annotations
-When registering MCP tools, adapters SHOULD include permission hints:
-&quot;name&quot; : &quot;mcp_aql_read&quot; ,
-&quot;annotations&quot; : {
-&quot;readOnlyHint&quot; : true ,
-&quot;destructiveHint&quot; : false
-3.4 Confirmation Requirements
-Implementations MAY require explicit confirmation for:
-All DELETE operations
-EXECUTE operations with external side effects
-UPDATE operations that modify critical data
-4. Endpoint Modes
-4.1 CRUDE Mode
-Exposes five separate MCP tools, one per endpoint:
-mcp_aql_create - CREATE operations
-mcp_aql_read - READ operations
-mcp_aql_update - UPDATE operations
-mcp_aql_delete - DELETE operations
-mcp_aql_execute - EXECUTE operations
-Advantages:
-Endpoint-level permission control
-Client can selectively expose endpoints
-Clear semantic separation
-Platform permission hints
-Typical Token Cost: ~4,300 tokens for tool registration
-4.2 Single Mode
-Exposes one unified MCP tool that routes internally:
-mcp_aql - All operations through single entry point
-Minimal token footprint
-Simpler client integration
-Server-side routing enforcement
-Typical Token Cost: ~1,100 tokens for tool registration
-4.3 Mode Selection
-Implementations MUST support at least one mode. Implementations SHOULD support both modes with runtime configuration.
-The recommended environment variable for mode selection:
-MCP_AQL_ENDPOINT_MODE=crude|single
-5. Operation Routing
-5.1 Routing Rules
-Each operation MUST be routed to exactly one endpoint. Implementations MUST reject operations sent to incorrect endpoints in CRUDE mode.
-5.2 Route Validation
-When an operation is received:
-Extract the operation field from the request
-Look up the correct endpoint for that operation
-If in CRUDE mode, verify the operation was sent to the correct endpoint
-If endpoint mismatch, return an error with the correct endpoint
-Error Response for Route Mismatch:
-&quot;success&quot; : false ,
-&quot;error&quot; : &quot;Operation &#39;create_user&#39; must be called via mcp_aql_create, not mcp_aql_read&quot;
-5.3 Single Mode Routing
-In Single mode, the implementation:
-Accepts all operations through mcp_aql
-Internally routes to the correct handler based on operation
-Enforces the same semantic rules as CRUDE mode
-5.4 Server-Side Authority
-"LLM instructions are suggestions. Adapter policies are enforcement."
-The adapter is authoritative for operation routing. Clients cannot bypass routing rules by sending operations to different endpoints.
-6. Classification Guidelines
-6.1 Classification Principle
-Operations are classified by their effect on state , not by their subject matter .
-An operation that queries the status of an EXECUTE operation (like get_execution_status ) is still a READ operation because it only reads data.
-Examples:
-get_execution_status → READ (queries state, no side effects)
-get_task_log → READ (retrieves execution output, no side effects)
-execute_job → EXECUTE (creates new execution, non-idempotent)
-cancel_task → EXECUTE (modifies execution state)
-pause_execution → EXECUTE (modifies execution state)
-6.2 How to Classify Operations
-When building an adapter, classify each operation by asking:
-Does it only read data? → READ
-Does it add new data without modifying existing? → CREATE
-Does it modify existing data? → UPDATE
-Does it remove data permanently? → DELETE
-Does it manage runtime execution? → EXECUTE
-6.3 Decision Tree
-Does it modify state?
-READ Is it additive only?
-CREATE Does it remove data?
-DELETE Is it runtime/lifecycle?
-EXECUTE UPDATE
-Important: Classification is by effect , not subject. See Section 6.1 for the guiding principle.
-6.4 Edge Cases
-Upsert Operations:
-If creates when not exists, updates when exists: Prefer CREATE
-Document behavior in operation description
-Soft Delete:
-If marks as deleted but doesn't remove: Could be UPDATE
-If removes from normal queries: Prefer DELETE
-Document behavior clearly
-Triggering Actions:
-If triggers external action (email, webhook): EXECUTE
-If just saves data that will trigger later: CREATE
-Import Operations:
-If imports without overwriting: CREATE
-If may overwrite existing: Discuss in operation description
-6.5 Canonical Verbs
-Each endpoint has canonical verbs that adapters SHOULD use for standard operations:
-Endpoint
-Canonical Verb
-Example Operation
-create_user
-get (single), list (multiple)
-get_document , list_users
-update_profile
-delete_account
-execute (initiate), cancel (terminate)
-execute_workflow , cancel_task
-Non-canonical verbs (e.g., upload , search , remove ) MAY be used when domain semantics require it. See Section 8.5 of the normative specification for the full naming grammar.
-6.6 Documentation Requirement
-Adapters MUST document their operation classification via introspection. Each operation's endpoint MUST be discoverable.
-7. Conformance Requirements
-7.1 MUST Requirements
-Conforming implementations MUST:
-Implement all five CRUDE endpoints OR the single unified endpoint
-Route operations to their correct endpoints according to classification
-Return errors for operations sent to incorrect endpoints (CRUDE mode)
-Apply permission flags accurately for each endpoint
-Implement the introspect operation (READ endpoint)
-7.2 SHOULD Requirements
-Conforming implementations SHOULD:
-Support both CRUDE and Single endpoint modes
-Provide configuration for mode selection
-Implement confirmation for destructive operations
-Log EXECUTE operations for audit purposes
-Include MCP tool annotations for permissions
-7.3 MAY Requirements
-Conforming implementations MAY:
-Add additional operations to any endpoint
-Implement additional permission levels
-Provide endpoint-level access control lists
-Support operation-level confirmation requirements
-Implement rate limiting per endpoint
+Fast execution
+Deterministic results
+Catches obvious failures
+Tier 2: Semantic Validation (Comprehensive, AI-Assisted)
+LLM evaluation of response correctness
+Semantic similarity scoring
+Intent classification for operation selection
+Natural language understanding of guidance
+Comprehensive coverage
+Handles natural language variation
+Catches subtle usability issues
+5.2 Semantic Evaluation Requirements
+Tests for LLM discoverability SHOULD use semantic evaluation:
+TEST: API Discoverability
+1. Prompt LLM with discovery task
+2. Capture LLM response and tool calls
+3. Tier 1: Check for expected patterns (fast fail)
+4. Tier 2: If Tier 1 inconclusive, evaluate semantic correctness
+5. Report both structural and semantic results
+PASS: Tier 1 passes AND Tier 2 confirms understanding
+WARN: Tier 1 fails but Tier 2 passes (potential pattern update needed)
+FAIL: Both tiers fail OR Tier 1 passes but Tier 2 fails
+5.3 Test Categories Requiring Semantic Evaluation
+Example Prompt
+Why Semantic Matters
+Introspection Discovery
+"List available operations"
+LLM may describe operations differently
+Field Selection Discovery
+"Does search support field selection?"
+Affirmative answer may use varied phrasing
+Error Understanding
+"Handle this error gracefully"
+Recovery strategies may vary
+Operation Selection
+"Create an element"
+Correct tool choice matters more than exact call format
+5.4 Evaluation Workflow
+graph TD
+A[Run Test] --&gt; B{Tier 1 Pass?}
+B --&gt;|Yes| C{Tier 2 Required?}
+B --&gt;|No| D{Tier 2 Pass?}
+C --&gt;|No| E[PASS]
+C --&gt;|Yes| F{Tier 2 Pass?}
+D --&gt;|Yes| G[WARN: Update patterns]
+D --&gt;|No| H[FAIL]
+F --&gt;|Yes| E
+F --&gt;|No| H
+6. Reporting
+6.1 Conformance Report Format
+Implementations SHOULD generate conformance reports:
+&quot;implementation&quot; : &quot;example-adapter&quot; ,
+&quot;version&quot; : &quot;1.0.0&quot; ,
+&quot;specVersion&quot; : &quot;1.0.0-draft&quot; ,
+&quot;testDate&quot; : &quot;2026-01-29T00:00:00Z&quot; ,
+&quot;conformanceLevel&quot; : 1 ,
+&quot;summary&quot; : {
+&quot;total&quot; : 11 ,
+&quot;passed&quot; : 9 ,
+&quot;warned&quot; : 2 ,
+&quot;failed&quot; : 0 ,
+&quot;skipped&quot; : 0
+&quot;categories&quot; : [
+&quot;name&quot; : &quot;Introspection Fidelity&quot; ,
+&quot;required&quot; : &quot;MUST&quot; ,
+&quot;result&quot; : &quot;PASS&quot; ,
+&quot;tests&quot; : [
+{ &quot;name&quot; : &quot;Parameter Accuracy&quot; , &quot;result&quot; : &quot;PASS&quot; } ,
+{ &quot;name&quot; : &quot;Completeness&quot; , &quot;result&quot; : &quot;PASS&quot; }
+6.2 Badge Format
+Conformant implementations MAY display badges:
+![MCP-AQL Level 1](https://img.shields.io/badge/MCP--AQL-Level%201-green)
+![MCP-AQL Level 2](https://img.shields.io/badge/MCP--AQL-Level%202-blue)
+6.3 Certification Registry
+A future certification registry MAY track conformant implementations.
+7. Command-Line Interface
+7.1 CLI Invocation
+Conformance test runners SHOULD provide a command-line interface:
+mcpaql-conformance &lt; command &gt; [ options ]
+7.2 Commands
+Run conformance tests against an adapter
+mcpaql-conformance test ./adapter
+Generate formatted report from test results file
+mcpaql-conformance report ./results.json
+Print tool version
+mcpaql-conformance version
+Note: The report command takes a JSON results file (produced by test --format json --output results.json ) as input and generates human-readable or markdown output.
+7.3 Test Command Options
+--level , -l
+Conformance level to test (1 or 2)
+--output , -o
+Output file for results
+--format , -f
+Output format ( json , text , markdown )
+--verbose , -v
+Enable verbose output
+Evaluation tier ( 1 , 2 , both )
+--category , -c
+Run specific test category only
+--timeout
+Test timeout in seconds
+7.4 Exit Codes
+All tests passed
+Conformance achieved at requested level
+Tests failed
+One or more MUST PASS tests failed
+Tests warned
+All MUST PASS passed, but SHOULD PASS tests warned
+Configuration error
+Invalid adapter path or configuration
+Tests exceeded timeout limit
+Internal error
+Unexpected error in test runner
+7.5 Example Usage
+Run Level 1 conformance tests:
+mcpaql-conformance test ./generated-adapter --level 1
+Run Level 2 tests with JSON output:
+mcpaql-conformance test ./adapter --level 2 --format json --output results.json
+Run specific test category:
+mcpaql-conformance test ./adapter --category &quot;Introspection Fidelity&quot;
+Verbose output with Tier 2 semantic evaluation:
+mcpaql-conformance test ./adapter --level 2 --tier both --verbose
+Generate markdown report from results:
+mcpaql-conformance report ./results.json --format markdown &gt; CONFORMANCE.md
+7.6 Integration with Generator
+The adapter generator (see Adapter Generator Specification ) SHOULD invoke conformance tests as part of the generation workflow:
+# Generate adapter and run conformance tests
+mcpaql-generate --schema adapter.yaml --target typescript --output ./adapter
+# Test generated adapter
+mcpaql-conformance test ./adapter --level 1
 References
 MCP-AQL Specification v1.0.0-draft
 Introspection Specification
+Operations Specification
+GitHub Issue #10 - Conformance test suite
+GitHub Issue #55 - Conformance test requirements
+GitHub Issue #56 - LLM semantic evaluation
 &copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
 Docs Library
 MCPAQL Organization

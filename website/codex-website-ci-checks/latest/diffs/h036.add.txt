@@ -1,4 +1,4 @@
-MCP-AQL Spec | MCP-AQL Endpoint Modes Specification
+MCP-AQL Spec | MCP-AQL CRUDE Pattern Specification
 Launch Checklist
 Adapter Patterns
 Search MCP-AQL docs
@@ -52,268 +52,230 @@ ADR-006: Discriminated Response Format
 Architecture Decision Records
 REPO-SYNCED SPEC DOC
 Document Status: This document is informative. For normative requirements, see MCP-AQL Specification v1.0.0.
-Support document Draft 1.0.0-draft 2026-01-16
-Source: spec/docs/endpoint-modes.md
+Support document Draft 1.0.0-draft 2026-02-18
+Source: spec/docs/crude-pattern.md
 Open Source Markdown
 Browse Full Spec Reference
-Version: 1.0.0-draft Status: Draft Last Updated: 2026-01-16
+Version: 1.0.0-draft Status: Draft Last Updated: 2026-02-18
 Document Status: This document is informative . For normative requirements, see MCP-AQL Specification v1.0.0 .
 Abstract
-MCP-AQL supports two operational modes for exposing endpoints to clients: CRUDE mode (5 semantic endpoints) and Single mode (1 unified endpoint). This document specifies configuration, routing behavior, security implications, and trade-offs for each mode.
+This document specifies the CRUDE (Create, Read, Update, Delete, Execute) endpoint pattern, which extends traditional CRUD semantics with an Execute endpoint for runtime lifecycle operations.
 Table of Contents
 Introduction
-Mode Comparison
-Configuration
-CRUDE Mode
-Single Mode
-Security Considerations
-Tool Registration
+Endpoint Definitions
+Permission Model
+Endpoint Modes
+Operation Routing
+Classification Guidelines
 Conformance Requirements
 1. Introduction
 1.1 Purpose
-Endpoint modes determine how MCP-AQL operations are exposed to clients. The choice affects:
-Token cost for tool registration
-Client routing complexity
-Permission granularity
-Error message specificity
-1.2 Scope
-This specification covers:
-How each mode exposes operations
-Routing behavior in each mode
-Security enforcement differences
-Implementation requirements
-1.3 Terminology
-Definition
-Five separate MCP tools, one per semantic endpoint
-One unified MCP tool that routes internally
-Endpoint
-An MCP tool registered with the client
-Operation
-A named action within an endpoint
-2. Mode Comparison
-2.1 Summary
-CRUDE mode (5 endpoints)
-Single mode (1 endpoint)
-Endpoints
-5 semantic endpoints
-1 unified endpoint
-Typical Token Cost
-~4,300 tokens
-~1,100 tokens
-Client chooses endpoint
-Server routes internally
-Permission Control
-Endpoint-level granularity
-Operation-level only
-Client Complexity
-Client MUST select correct endpoint
-Simple single entry point
-Error Messages
-Semantic endpoint mismatch errors
-Generic routing errors
-2.2 Visual Comparison
-CRUDE Mode Single Mode
-============ ===========
-Client Client
-+---&gt; mcp_aql_create +---&gt; mcp_aql
-+---&gt; mcp_aql_read v
-| [Internal Router]
-+---&gt; mcp_aql_update |
-| +-----+-----+-----+-----+
-+---&gt; mcp_aql_delete | | | | |
-| C R U D E
-+---&gt; mcp_aql_execute
-2.3 Token Efficiency
-Endpoint consolidation provides significant token reduction compared to discrete tools:
-Reduction
-Discrete tools (e.g., 40+ tools)
-~30,000 tokens
-baseline
-Note: Actual token costs vary based on operation count and description length.
-3. Configuration
-3.1 Mode Selection
-Implementations SHOULD provide runtime configuration for endpoint mode selection.
-Recommended Environment Variable:
-MCP_AQL_ENDPOINT_MODE=crude|single|all
-Values: | Value | Behavior | |-------|----------| | crude | Register 5 semantic endpoints | | single | Register 1 unified endpoint | | all | Register all 6 endpoints |
-3.2 Default Mode
-If no configuration is provided, implementations SHOULD default to CRUDE mode, which provides the best balance of token efficiency and permission granularity.
-3.3 Runtime Configuration
-Implementations MAY support additional configuration methods:
-Configuration files
-Programmatic API
-Environment-specific defaults
-4. CRUDE Mode
-4.1 Endpoint Registration
-In CRUDE mode, five MCP tools are registered:
-Tool Name
-Semantic Category
-Operations
-mcp_aql_create
-Additive, non-destructive
-Create, add, register
-mcp_aql_read
-Safe, read-only
-List, get, search, introspect
-mcp_aql_update
-Modifying
-Edit, modify, update
-mcp_aql_delete
-Destructive
-Delete, remove, clear
-mcp_aql_execute
-Runtime lifecycle
-Run, start, stop, cancel
-4.2 Client Responsibility
-In CRUDE mode, clients MUST select the correct endpoint for each operation. If a client sends an operation to the wrong endpoint, the adapter MUST reject the request.
-Example: Correct Usage
-// Via mcp_aql_read endpoint
-operation : &quot;list_items&quot; ,
-params : { limit : 10 }
-Example: Incorrect Usage
-// Via mcp_aql_create endpoint (WRONG - list_items is a READ operation)
-// Response:
-success : false ,
-error : &quot;Operation &#39;list_items&#39; must be called via mcp_aql_read, not mcp_aql_create&quot;
-4.3 Route Enforcement
-Adapters MUST validate that operations are sent to their assigned endpoint.
-Validation Logic:
-Extract operation name from request
-Look up the correct endpoint for that operation
-Compare with the endpoint that received the request
-If mismatch, return an error specifying the correct endpoint
-4.4 Endpoint Descriptions
-Each endpoint SHOULD include a description listing:
-The semantic category
-Available operations (or a sample with introspection guidance)
-Quick-start examples
-Example Description Format:
-Additive, non-destructive operations.
-Supported operations: create_item, add_entry, register_callback
-These operations add new data without removing or overwriting existing content.
-Quick start example:
-{ operation: &quot;create_item&quot;, params: { name: &quot;example&quot; } }
-Use introspection to discover all available operations:
-{ operation: &quot;introspect&quot;, params: { query: &quot;operations&quot; } }
-5. Single Mode
-5.1 Endpoint Registration
-In Single mode, one MCP tool is registered:
-All operations through unified entry point
-5.2 Server-Side Routing
-The adapter routes operations internally based on their classification:
-Client Request
-mcp_aql endpoint
-[Operation Router]
-+---&gt; Determines correct CRUDE category
-[Appropriate Handler]
-Response
-5.3 Routing Behavior
-In Single mode:
-All operations are accepted through mcp_aql
-The adapter determines the correct handler based on operation classification
-The same semantic rules apply as CRUDE mode
-Permission enforcement occurs server-side
-5.4 Unknown Operations
-If an operation is not recognized:
-error : &quot;Unknown operation: &#39;invalid_op&#39;. Use introspect to discover available operations.&quot;
-5.5 Endpoint Description
-The unified endpoint SHOULD provide:
-Overview of available operation categories
-Guidance to use introspection for discovery
-Example Description:
-Unified MCP-AQL endpoint for all operations.
-Operations are automatically routed based on their semantic category (Create, Read, Update, Delete, Execute).
-Use introspection to discover available operations:
-6. Security Considerations
-6.1 CRUDE Mode Security
-Advantages:
-Endpoint-level permission blocking (e.g., disable mcp_aql_delete entirely)
-Semantic errors help clients self-correct
-Platform-level permission hints via MCP annotations
-Clear audit separation by operation category
+The CRUDE pattern provides semantic grouping of operations by their effect on system state. This grouping enables:
+Permission-based access control at the endpoint level
+Clear separation of read-only, additive, modifying, and destructive operations
+Explicit handling of runtime execution lifecycle operations
+1.2 Rationale for EXECUTE
+Traditional CRUD patterns assume operations are primarily concerned with data persistence. However, many services provide executable functionality (jobs, workflows, tasks, processes) that require:
+Non-idempotent operations - Calling execute_job twice creates two separate executions
+Lifecycle management - Start, monitor, update progress, complete
+Runtime state - Distinct from stored data
+The EXECUTE endpoint addresses these requirements explicitly.
+1.3 Adapter Responsibility
+Each adapter implementing MCP-AQL:
+Defines its own operations
+Classifies each operation into the appropriate CRUDE endpoint
+Documents its operation-to-endpoint mapping via introspection
+2. Endpoint Definitions
+2.1 CREATE Endpoint
+Identifier: CREATE MCP Tool Name: mcp_aql_create
+Operations that add new state without removing or modifying existing state.
 Characteristics:
-Client is responsible for endpoint selection
-Adapter enforces route validation
-Dangerous operations isolated to DELETE/EXECUTE endpoints
-6.2 Single Mode Security
-Smaller attack surface (one endpoint)
-Server-side routing prevents endpoint bypass
-Simpler client implementation reduces error risk
-Cannot block operations by endpoint
-All routing decisions made server-side
-Audit logging requires operation-level granularity
-6.3 Security Trade-offs
-Security Aspect
-Endpoint-level blocking
-Client error prevention
-Better (semantic errors)
-Worse (generic errors)
-Attack surface
-Larger (5 endpoints)
-Smaller (1 endpoint)
-Audit granularity
-Endpoint + Operation
-Operation only
-Bypass resistance
-Client-dependent
-Server-enforced
-6.4 Common Security Enforcement
-Both modes MUST:
-Validate operation parameters
-Enforce the same permission model
-Apply safety tier classifications
-Support confirmation for destructive operations (if implemented)
-7. Tool Registration
-7.1 MCP Tool Annotations
-Adapters SHOULD include MCP tool annotations to hint at operation safety:
-CRUDE Mode Annotations:
+Non-destructive
+Additive only
+May fail if duplicate state would be created
+Example Operations: | Operation | Description | |-----------|-------------| | create_user | Create a new user account | | upload_file | Upload a new file | | add_comment | Add a comment to a resource | | register_webhook | Register a new webhook |
+2.2 READ Endpoint
+Identifier: READ MCP Tool Name: mcp_aql_read
+Operations that query state without modification.
+Read-only
+No side effects on stored state
+Safe to call repeatedly (idempotent)
+Example Operations: | Operation | Description | |-----------|-------------| | list_users | List users with filtering | | get_document | Retrieve a document by ID | | search | Search across resources | | introspect | Discover available operations | | get_status | Get current system status | | get_execution_status | Query execution progress | | export_data | Export data to portable format |
+Note: Operations that query execution state are READ operations, not EXECUTE. See Section 6.1 for classification guidelines.
+2.3 UPDATE Endpoint
+Identifier: UPDATE MCP Tool Name: mcp_aql_update
+Operations that modify existing state.
+Modifying
+Requires existing state to modify
+May be destructive to prior values
+Example Operations: | Operation | Description | |-----------|-------------| | update_user | Modify user properties | | rename_file | Rename an existing file | | set_config | Update configuration | | move_resource | Move resource to new location |
+2.4 DELETE Endpoint
+Identifier: DELETE MCP Tool Name: mcp_aql_delete
+Operations that remove state permanently.
+Destructive
+Irreversible without backup
+MAY require confirmation
+Example Operations: | Operation | Description | |-----------|-------------| | delete_user | Permanently delete a user | | remove_file | Remove a file | | purge_cache | Clear cached data | | unregister_webhook | Remove a webhook |
+2.5 EXECUTE Endpoint
+Identifier: EXECUTE MCP Tool Name: mcp_aql_execute
+Operations that manage the runtime execution lifecycle.
+Stateful (maintains execution context)
+Non-idempotent (each call may create new state)
+Potentially destructive (may modify external state)
+Lifecycle-oriented
+Example Operations: | Operation | Description | |-----------|-------------| | execute_job | Start a background job | | cancel_task | Cancel a running task | | resume_workflow | Resume a paused workflow | | trigger_build | Trigger a build process |
+Note: Operations that only query execution state (like get_execution_status ) belong to READ, not EXECUTE. See Section 6.1 for classification guidelines.
+For operations that manage long-running processes, see Execution Lifecycle in the normative specification.
+3. Permission Model
+3.1 Endpoint Permissions
+Each endpoint has defined permission characteristics:
+Endpoint Read-Only Destructive
+-------- --------- -----------
+CREATE false false
+READ true false
+UPDATE false true
+DELETE false true
+EXECUTE false true
+3.2 Permission Flags
+readOnly:
+true : Operation does not modify any state
+false : Operation may modify state
+destructive:
+true : Operation may remove or irreversibly modify state
+false : Operation only adds or queries state
+3.3 MCP Tool Annotations
+When registering MCP tools, adapters SHOULD include permission hints:
 &quot;name&quot; : &quot;mcp_aql_read&quot; ,
 &quot;annotations&quot; : {
 &quot;readOnlyHint&quot; : true ,
 &quot;destructiveHint&quot; : false
-&quot;name&quot; : &quot;mcp_aql_delete&quot; ,
-&quot;readOnlyHint&quot; : false ,
-&quot;destructiveHint&quot; : true
-Single Mode Annotations:
-&quot;name&quot; : &quot;mcp_aql&quot; ,
-Note: Single mode uses destructiveHint: true because it can route to destructive operations.
-7.2 Input Schema
-Both modes use the same input schema:
-&quot;type&quot; : &quot;object&quot; ,
-&quot;properties&quot; : {
-&quot;operation&quot; : {
-&quot;type&quot; : &quot;string&quot; ,
-&quot;description&quot; : &quot;Operation name to execute&quot;
-&quot;params&quot; : {
-&quot;description&quot; : &quot;Operation parameters&quot;
-&quot;required&quot; : [ &quot;operation&quot; ]
-Adapters MAY extend this schema with additional common properties (e.g., resource_type , fields ).
-8. Conformance Requirements
-8.1 MUST Requirements
+3.4 Confirmation Requirements
+Implementations MAY require explicit confirmation for:
+All DELETE operations
+EXECUTE operations with external side effects
+UPDATE operations that modify critical data
+4. Endpoint Modes
+4.1 CRUDE Mode
+Exposes five separate MCP tools, one per endpoint:
+mcp_aql_create - CREATE operations
+mcp_aql_read - READ operations
+mcp_aql_update - UPDATE operations
+mcp_aql_delete - DELETE operations
+mcp_aql_execute - EXECUTE operations
+Advantages:
+Endpoint-level permission control
+Client can selectively expose endpoints
+Clear semantic separation
+Platform permission hints
+Typical Token Cost: ~4,300 tokens for tool registration
+4.2 Single Mode
+Exposes one unified MCP tool that routes internally:
+mcp_aql - All operations through single entry point
+Minimal token footprint
+Simpler client integration
+Server-side routing enforcement
+Typical Token Cost: ~1,100 tokens for tool registration
+4.3 Mode Selection
+Implementations MUST support at least one mode. Implementations SHOULD support both modes with runtime configuration.
+The recommended environment variable for mode selection:
+MCP_AQL_ENDPOINT_MODE=crude|single
+5. Operation Routing
+5.1 Routing Rules
+Each operation MUST be routed to exactly one endpoint. Implementations MUST reject operations sent to incorrect endpoints in CRUDE mode.
+5.2 Route Validation
+When an operation is received:
+Extract the operation field from the request
+Look up the correct endpoint for that operation
+If in CRUDE mode, verify the operation was sent to the correct endpoint
+If endpoint mismatch, return an error with the correct endpoint
+Error Response for Route Mismatch:
+&quot;success&quot; : false ,
+&quot;error&quot; : &quot;Operation &#39;create_user&#39; must be called via mcp_aql_create, not mcp_aql_read&quot;
+5.3 Single Mode Routing
+In Single mode, the implementation:
+Accepts all operations through mcp_aql
+Internally routes to the correct handler based on operation
+Enforces the same semantic rules as CRUDE mode
+5.4 Server-Side Authority
+"LLM instructions are suggestions. Adapter policies are enforcement."
+The adapter is authoritative for operation routing. Clients cannot bypass routing rules by sending operations to different endpoints.
+6. Classification Guidelines
+6.1 Classification Principle
+Operations are classified by their effect on state , not by their subject matter .
+An operation that queries the status of an EXECUTE operation (like get_execution_status ) is still a READ operation because it only reads data.
+Examples:
+get_execution_status → READ (queries state, no side effects)
+get_task_log → READ (retrieves execution output, no side effects)
+execute_job → EXECUTE (creates new execution, non-idempotent)
+cancel_task → EXECUTE (modifies execution state)
+pause_execution → EXECUTE (modifies execution state)
+6.2 How to Classify Operations
+When building an adapter, classify each operation by asking:
+Does it only read data? → READ
+Does it add new data without modifying existing? → CREATE
+Does it modify existing data? → UPDATE
+Does it remove data permanently? → DELETE
+Does it manage runtime execution? → EXECUTE
+6.3 Decision Tree
+Does it modify state?
+READ Is it additive only?
+CREATE Does it remove data?
+DELETE Is it runtime/lifecycle?
+EXECUTE UPDATE
+Important: Classification is by effect , not subject. See Section 6.1 for the guiding principle.
+6.4 Edge Cases
+Upsert Operations:
+If creates when not exists, updates when exists: Prefer CREATE
+Document behavior in operation description
+Soft Delete:
+If marks as deleted but doesn't remove: Could be UPDATE
+If removes from normal queries: Prefer DELETE
+Document behavior clearly
+Triggering Actions:
+If triggers external action (email, webhook): EXECUTE
+If just saves data that will trigger later: CREATE
+Import Operations:
+If imports without overwriting: CREATE
+If may overwrite existing: Discuss in operation description
+6.5 Canonical Verbs
+Each endpoint has canonical verbs that adapters SHOULD use for standard operations:
+Endpoint
+Canonical Verb
+Example Operation
+create_user
+get (single), list (multiple)
+get_document , list_users
+update_profile
+delete_account
+execute (initiate), cancel (terminate)
+execute_workflow , cancel_task
+Non-canonical verbs (e.g., upload , search , remove ) MAY be used when domain semantics require it. See Section 8.5 of the normative specification for the full naming grammar.
+6.6 Documentation Requirement
+Adapters MUST document their operation classification via introspection. Each operation's endpoint MUST be discoverable.
+7. Conformance Requirements
+7.1 MUST Requirements
 Conforming implementations MUST:
-Support at least one endpoint mode (CRUDE or Single)
-Enforce operation routing validation in CRUDE mode
-Return proper error responses for unknown operations
-Route operations to correct handlers in Single mode
-Apply consistent permission enforcement regardless of mode
-8.2 SHOULD Requirements
+Implement all five CRUDE endpoints OR the single unified endpoint
+Route operations to their correct endpoints according to classification
+Return errors for operations sent to incorrect endpoints (CRUDE mode)
+Apply permission flags accurately for each endpoint
+Implement the introspect operation (READ endpoint)
+7.2 SHOULD Requirements
 Conforming implementations SHOULD:
 Support both CRUDE and Single endpoint modes
-Provide runtime configuration for mode selection
-Include MCP tool annotations for permission hints
-Provide helpful error messages that guide clients to correct usage
-Document available operations via introspection
-8.3 MAY Requirements
+Provide configuration for mode selection
+Implement confirmation for destructive operations
+Log EXECUTE operations for audit purposes
+Include MCP tool annotations for permissions
+7.3 MAY Requirements
 Conforming implementations MAY:
-Support "all" mode exposing all 6 endpoints simultaneously
-Implement per-endpoint access control
-Provide mode-specific audit logging
-Support dynamic mode switching without restart
-Implement custom endpoint naming conventions
+Add additional operations to any endpoint
+Implement additional permission levels
+Provide endpoint-level access control lists
+Support operation-level confirmation requirements
+Implement rate limiting per endpoint
 References
 MCP-AQL Specification v1.0.0-draft
-CRUDE Pattern Specification
-Gatekeeper Security Model
 Introspection Specification
 &copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
 Docs Library

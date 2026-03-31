@@ -1,4 +1,4 @@
-MCP-AQL Spec | ADR-002: GraphQL-Style Input Objects for Updates
+MCP-AQL Spec | ADR-001: CRUDE Pattern (Extending CRUD with Execute)
 Launch Checklist
 Adapter Patterns
 Search MCP-AQL docs
@@ -53,56 +53,52 @@ Architecture Decision Records
 REPO-SYNCED SPEC DOC
 Date: 2026-01-16
 Support document Accepted
-Source: spec/docs/adr/ADR-002-graphql-style-input.md
+Source: spec/docs/adr/ADR-001-crude-pattern.md
 Open Source Markdown
 Browse Full Spec Reference
 Status: Accepted Date: 2026-01-16
-Update operations require a mechanism to specify which fields should be modified. Several approaches exist:
-Flat parameters : All updateable fields at the same level as identifiers
-Patch operations : JSON Patch-style { op, path, value } arrays
-Field-specific operations : Separate operations like set_description , set_metadata
-Full replacement : Send complete resource data, overwriting everything
-Nested input objects : GraphQL-style separation of identifiers from updateable fields
-Flat parameters create ambiguity about which fields are identifiers versus updateable values:
-operation : &quot;edit_element&quot; ,
-params : {
-element_name : &quot;MyPersona&quot; , // Identifier
-element_type : &quot;persona&quot; , // Identifier
-description : &quot;new desc&quot; , // Updateable?
-triggers : [ &quot;new&quot; ] // Updateable?
+Traditional CRUD (Create, Read, Update, Delete) operations are well-suited for managing resource definitions and state. However, MCP-AQL needs to support runtime execution operations that have fundamentally different characteristics:
+Characteristic
+CRUD Operations
+Execution Operations
+Idempotency
+Generally idempotent
+Non-idempotent
+Element definitions
+Runtime state
+Lifecycle
+Discrete operations
+Stateful lifecycle
+Side effects
+Predictable
+Unbounded
+Placing execution operations within existing CRUD endpoints creates semantic confusion. For example, placing execute_agent in the DELETE endpoint because it is "potentially destructive" obscures the operation's true intent.
 Decision
-MCP-AQL adopts GraphQL-aligned nested input objects for update operations.
-Update operations MUST use a nested input object to contain all updateable fields:
-element_type : &quot;persona&quot; ,
-element_name : &quot;MyPersona&quot; ,
-input : {
-description : &quot;new desc&quot; ,
-metadata : {
-triggers : [ &quot;new&quot; , &quot;triggers&quot; ]
-Implementations MUST:
-Clearly separate identifier parameters from updateable fields
-Deep-merge input contents with existing resource state
-Only modify fields explicitly present in input
-Preserve fields not mentioned in input
+MCP-AQL extends traditional CRUD with an EXECUTE endpoint, creating the CRUDE pattern:
+Create - Non-destructive, additive operations
+Read - Safe, read-only operations
+Update - Modifying operations that change existing state
+Delete - Destructive operations that remove state
+Execute - Runtime lifecycle operations (non-idempotent)
+Implementations MUST expose five distinct endpoints corresponding to these categories. Operations MUST be routed to the endpoint matching their semantic intent.
+The EXECUTE endpoint is designated for operations that:
+Manage runtime execution state rather than definitions
+Are inherently non-idempotent
+May have unbounded side effects
+Follow a stateful lifecycle pattern
 Consequences
 Positive
-Clear separation : Identifiers and updateable fields are unambiguous
-Deep merging : Nested structures merge cleanly without explicit field selection
-Partial updates : Only specified fields change; others remain untouched
-Familiar pattern : Aligns with GraphQL mutation conventions
-Extensibility : New updateable fields can be added without breaking changes
+Semantic clarity : Operations are grouped by their actual behavior and intent
+Clear execution boundary : Runtime operations are explicitly separated from definition management
+Permission modeling : Security policies can treat execution operations distinctly
+Future extensibility : The pattern accommodates workflow, pipeline, and agent execution patterns
 Negative
-Increased nesting : Requests are more deeply nested
-Learning curve : Users unfamiliar with GraphQL may find pattern unusual
-Payload size : Slight increase in request size due to input wrapper
-Specification Impact
-This ADR is codified in the normative specification:
-Section 4.5 of MCP-AQL Specification v1.0.0-draft defines the input object structure, deep-merge semantics, field removal via null , and validation rules.
-Section 4 of Operations Reference references the UPDATE input pattern for parameter conventions.
-Implementations MUST follow the normative specification. This ADR provides design rationale only.
+Unfamiliar pattern : CRUDE is not a widely-known acronym like CRUD
+Additional endpoint : Implementations must support five endpoints instead of four
+Learning curve : Developers must understand when to use Execute vs other endpoints
 References
-MCP-AQL Specification v1.0.0-draft — Section 4.5
-Operations Reference
+Protocol Specification: Endpoints
+ADR-004: Schema-Driven Operations
 &copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
 Docs Library
 MCPAQL Organization

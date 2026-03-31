@@ -1,4 +1,4 @@
-MCP-AQL Spec | Plugin Interface Contracts
+MCP-AQL Spec | MCP-AQL Protocol Overview
 Launch Checklist
 Adapter Patterns
 Search MCP-AQL docs
@@ -51,248 +51,184 @@ ADR-005: GraphQL-Style Introspection System
 ADR-006: Discriminated Response Format
 Architecture Decision Records
 REPO-SYNCED SPEC DOC
-This document defines the normative plugin interface contracts for the MCP-AQL adapter system. Plugins provide modular, composable functionality for transport, protocol, authentication, and serialization. This specificat
-Support document Draft (MVP) 1.0.0-draft 2026-01-27
-Source: spec/docs/plugin-contracts.md
+MCP-AQL (Model Context Protocol - Agent Query Language) is a protocol that consolidates discrete MCP tools into 5 CRUDE endpoints (Create, Read, Update, Delete, Execute), providing significant token reduction while maint
+Support document
+Source: spec/docs/overview.md
 Open Source Markdown
 Browse Full Spec Reference
-Version: 1.0.0-draft Status: Draft (MVP) Last Updated: 2026-01-27
-Abstract
-This document defines the normative plugin interface contracts for the MCP-AQL adapter system. Plugins provide modular, composable functionality for transport, protocol, authentication, and serialization. This specification defines what each plugin type MUST provide; implementation details of specific plugins and the composition pipeline are documented in the mcpaql-adapter repository.
+MCP-AQL (Model Context Protocol - Agent Query Language) is a protocol that consolidates discrete MCP tools into 5 CRUDE endpoints (Create, Read, Update, Delete, Execute), providing significant token reduction while maintaining full functionality.
+Document Status: This document is informative . For normative requirements, see MCP-AQL Specification v1.0.0 .
 Table of Contents
-Overview
-Plugin Categories
-Base Plugin Interface
-Transport Plugin Interface
-Protocol Plugin Interface
-Serialization Plugin Interface
-Authentication Plugin Interface
-Error Code Contracts
-1. Overview
-1.1 Purpose
-Plugins enable the universal adapter runtime to support different communication patterns without adapter-specific code. Each adapter schema references plugins declaratively:
-target :
-transport : http # Transport plugin
-protocol : rest # Protocol plugin
-serialization : json # Serialization plugin
-type : bearer # Auth plugin
-The runtime loads and composes these plugins to handle API communication.
-1.2 Design Principles
-Declarative composition - Adapters reference plugins by name, runtime composes them
-Single responsibility - Each plugin handles one concern
-Testable in isolation - Plugins can be unit tested independently
-Built-in only (MVP) - No user-extensible plugins in V1
-Future extensibility - Interfaces designed for later extension
-1.3 MVP Scope
-This specification covers the Minimum Viable Product plugins:
-Included:
-Category
-Transport
-Protocol
-Serialization
-none , api_key , bearer
-Deferred to future specifications:
-Deferred Plugins
-websocket , serial , native-*
-graphql , grpc , jsonrpc , custom
-xml , protobuf , msgpack , form , multipart
-basic , oauth , mtls , aws-sig4
-Pagination
-All pagination plugins (see #37)
-1.4 Requirement Levels
-The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in RFC 2119 .
-2. Plugin Categories
-2.1 Category Summary
-Responsibility
-MVP Plugin
-Communication channel
-Request/response structure
-Data encoding/decoding
-Credential attachment
-2.2 Plugin Resolution
-Plugins are resolved by name at runtime. Implementations:
-MUST check built-in plugins (shipped with runtime)
-MUST return a plugin instance for known names
-MUST fail with PLUGIN_NOT_FOUND error if the plugin name is unknown
-3. Base Plugin Interface
-3.1 Common Interface
-All plugins MUST implement a common base interface:
-interface Plugin {
-* Unique identifier for this plugin
-readonly name : string ;
-* Plugin category
-readonly category : PluginCategory ;
-* Human-readable description
-readonly description : string ;
-* Semantic version of the plugin
-readonly version : string ;
-type PluginCategory = &#39;transport&#39; | &#39;protocol&#39; | &#39;serialization&#39; | &#39;auth&#39; ;
-3.2 Plugin Lifecycle
-Plugins are stateless singletons. The runtime:
-Resolves plugins by name at adapter load time
-Validates plugin compatibility
-Composes plugins into a request pipeline
-Invokes pipeline for each operation
-Plugins MUST NOT maintain request-specific state between calls.
-4. Transport Plugin Interface
-4.1 Purpose
-Transport plugins handle the underlying communication channel between the runtime and target API.
-4.2 Interface
-interface TransportPlugin extends Plugin {
-readonly category : &#39;transport&#39; ;
-* Send a request and receive a response
-* @param request - The prepared request
-* @param options - Transport-specific options
-* @returns The raw response
-send (request : TransportRequest , options : TransportOptions) : Promise &lt; TransportResponse &gt;;
-interface TransportRequest {
-* Full URL including query parameters
-url : string ;
-* HTTP method (for HTTP-based transports)
-method : string ;
-* Request headers
-headers : Record &lt; string , string &gt;;
-* Serialized request body (may be undefined)
-body ?: string | Buffer ;
-interface TransportOptions {
-* Request timeout in milliseconds
-timeout ?: number ;
-* Number of retry attempts
-retries ?: number ;
-* Base delay between retries in milliseconds
-retryDelay ?: number ;
-interface TransportResponse {
-* HTTP status code
-status : number ;
-* Status text (e.g., &quot;OK&quot;, &quot;Not Found&quot;)
-statusText : string ;
-* Response headers
-* Raw response body
-body : string | Buffer ;
-5. Protocol Plugin Interface
-5.1 Purpose
-Protocol plugins translate MCP-AQL operation definitions into protocol-specific requests and parse responses into a standard format.
-5.2 Interface
-interface ProtocolPlugin extends Plugin {
-readonly category : &#39;protocol&#39; ;
-* Build a transport request from an operation definition
-* @param operation - The operation to execute
-* @param params - Resolved parameter values
-* @param config - Target configuration from adapter
-* @returns A request ready for the transport plugin
-buildRequest (
-operation : OperationDefinition ,
-params : Record &lt; string , unknown &gt;,
-config : TargetConfig
-) : TransportRequest ;
-* Parse a transport response into standard format
-* @param response - Raw response from transport
-* @param operation - The operation that was executed
-* @returns Parsed response data
-parseResponse (
-response : TransportResponse ,
-operation : OperationDefinition
-) : ParsedResponse ;
-interface OperationDefinition {
-name : string ;
-maps_to : string ; // e.g., &quot;GET /repos/{owner}/{repo}&quot;
-params ?: Record &lt; string , ParamDefinition &gt;;
-interface TargetConfig {
-base_url : string ;
-transport : string ;
-protocol : string ;
-serialization : string ;
-interface ParsedResponse {
-* Whether the request was successful (2xx status)
-ok : boolean ;
-* Deserialized response data
-data : unknown ;
-* Error information (if not ok)
-error ?: {
-message : string ;
-code ?: string ;
-6. Serialization Plugin Interface
-6.1 Purpose
-Serialization plugins handle encoding request bodies and decoding response bodies.
-6.2 Interface
-interface SerializationPlugin extends Plugin {
-readonly category : &#39;serialization&#39; ;
-* Content-Type header value for this format
-readonly contentType : string ;
-* Serialize data to string/buffer
-* @param data - Data to serialize
-* @returns Serialized string or buffer
-serialize (data : unknown ) : string | Buffer ;
-* Deserialize string/buffer to data
-* @param raw - Raw response body
-* @returns Deserialized data
-deserialize (raw : string | Buffer ) : unknown ;
-7. Authentication Plugin Interface
-7.1 Purpose
-Authentication plugins attach credentials to outgoing requests.
-7.2 Interface
-interface AuthPlugin extends Plugin {
-readonly category : &#39;auth&#39; ;
-* Attach authentication to a request
-* @param request - Request to modify
-* @param config - Auth configuration from adapter
-* @param context - Runtime context for credential resolution
-* @returns Modified request with auth attached
-authenticate (
-request : TransportRequest ,
-config : AuthConfig ,
-context : AuthContext
-interface AuthConfig {
-type : string ;
-// Type-specific fields
-token_env ?: string ; // For bearer
-header_name ?: string ; // For api_key
-key_env ?: string ; // For api_key
-interface AuthContext {
-* Resolve an environment variable
-getEnv (name : string ) : string | undefined ;
-8. Error Code Contracts
-8.1 Error Code Convention
-Plugin errors MUST use a namespaced code format:
-{CATEGORY}_{ERROR_TYPE}
-Examples:
-TRANSPORT_TIMEOUT
-AUTH_CREDENTIAL_MISSING
-SERIALIZATION_PARSE_ERROR
-PROTOCOL_INVALID_MAPPING
-8.2 Error Propagation
-Errors thrown by plugins MUST include:
-interface PluginError extends Error {
-code : string ; // Error code
-plugin : string ; // Plugin name
-category : string ; // Plugin category
-cause ?: Error ; // Underlying error
-8.3 MVP Error Codes
+Protocol Summary
+The CRUDE Pattern
+Endpoint Modes
+Token Efficiency
+Core Concepts
+Request Flow
+Batch Operations
+MCP-AQL defines a schema-driven operation dispatch protocol that:
+Consolidates Operations - Many discrete tools into 5 semantic endpoints
+Enables Discovery - GraphQL-style introspection for runtime operation discovery
+Enforces Safety - Endpoint classification validates operation/endpoint matching
+Supports Flexibility - Implementations MAY offer CRUDE mode (5 endpoints) or Single mode (1 endpoint)
++-------------------+
+| MCP Client |
++--------+----------+
+| MCP-AQL Layer |
+| +-------------+ |
+| | Gatekeeper | | Route Validation
+| +------+------+ |
+| +------v------+ |
+| | Router | | Endpoint Mapping
+| | Schema | | Operation Definitions
+| | Dispatcher | | Handler Resolution
+| Target Handlers |
+MCP-AQL extends traditional CRUD with an EXECUTE endpoint, creating the CRUDE pattern:
+Endpoint
 Description
-PLUGIN_NOT_FOUND
-Requested plugin does not exist
-TRANSPORT_DNS_ERROR
-DNS resolution failed
-TRANSPORT_CONNECTION_REFUSED
-Connection refused
-Request timed out
-TRANSPORT_TLS_ERROR
-TLS/SSL error
-TRANSPORT_NETWORK_ERROR
-General network error
-Invalid maps_to format
-PROTOCOL_MISSING_PARAM
-Path parameter missing
-SERIALIZATION_CIRCULAR_REF
-Circular reference in data
-Failed to parse response
-AUTH_CONFIG_INVALID
-Invalid auth configuration
-Credential not found
-References
-Error Codes Specification
-Plugin System Implementation (implementation details)
-GitHub Issue: #62
+Example Operations
+Non-destructive
+Additive operations that create new state
+create_entity , import_resource
+Read-Only
+Safe operations that query state
+list_entities , get_entity , search , introspect
+Modifying
+Operations that modify existing state
+update_entity , update_resource
+Destructive
+Operations that remove state
+delete_entity , clear
+Lifecycle operations for executable elements
+execute_workflow , cancel_task , resume_workflow
+Permission Characteristics
+Each endpoint MUST have defined permission characteristics:
+Implementations MUST classify operations according to these permission characteristics and MUST NOT allow an operation to be called through an endpoint that does not match its classification.
+Why CRUDE not CRUD?
+The EXECUTE endpoint exists because certain operations:
+Are inherently non-idempotent (calling execute twice creates two separate executions)
+Manage runtime state rather than persistent definitions
+Require lifecycle management (start, update progress, complete, resume)
+CRUD (Resource Definitions) EXECUTE (Runtime Lifecycle)
++--------+ +-------------------+
+| Create |--------------------------&gt;| execute |
++--------+ +--------+----------+
+| Read | |
++--------+ +--------v----------+
+| Update | | get_execution_state|
+| Delete | |
+| update_execution |
++---------------+---------------+
++--------v----------+ +--------v----------+
+| complete_execution| | continue_execution|
++-------------------+ +-------------------+
+Note: This diagram shows a runtime lifecycle flow, not endpoint classification. Operations like get_execution_state that query execution state belong to the READ endpoint, not EXECUTE. See CRUDE Pattern Classification for details.
+MCP-AQL supports two operational modes. Implementations MUST support at least one mode and SHOULD support both:
+CRUDE Mode
+Exposes 5 separate endpoints, each with semantic meaning:
+mcp_aql_create - CREATE operations
+mcp_aql_read - READ operations
+mcp_aql_update - UPDATE operations
+mcp_aql_delete - DELETE operations
+mcp_aql_execute - EXECUTE operations
+Advantages:
+Clear semantic grouping
+Endpoint-level permission control
+Clients MAY choose which endpoints to expose
+Single Mode
+Exposes 1 unified endpoint that routes internally:
+mcp_aql - All operations through single entry point
+Minimal token footprint
+Simpler client integration
+Server-side routing enforcement
+Implementations using Single Mode MUST still enforce endpoint classification internally. An operation classified as DELETE MUST NOT succeed if the implementation would not allow DELETE operations.
+Token Reduction
+The primary motivation for MCP-AQL is reducing the token cost of tool registration. Empirical measurements demonstrate:
+Configuration
+Approximate Token Cost
+Reduction
+Discrete Tools (50+)
+~30,000 tokens
+baseline
+CRUDE Mode (5 endpoints)
+~4,500 tokens
+Single Mode (1 endpoint)
+~1,100 tokens
+Runtime Discovery
+Instead of parsing many tool schemas at registration time, clients use introspection at runtime:
+// Query all available operations
+{ operation : &quot;introspect&quot; , params : { query : &quot;operations&quot; } }
+// Get details for a specific operation
+{ operation : &quot;introspect&quot; , params : { query : &quot;operations&quot; , name : &quot;create_entity&quot; } }
+// Query available types
+{ operation : &quot;introspect&quot; , params : { query : &quot;types&quot; , name : &quot;EntityType&quot; } }
+Implementations MUST support the introspect operation on the READ endpoint.
+Schema-Driven Operations
+Operations SHOULD be defined declaratively with:
+name - The operation identifier
+endpoint - The CRUDE endpoint classification
+description - Human-readable description
+params - Required and optional parameter definitions
+handler - Reference to the implementation handler
+Gatekeeper
+The Gatekeeper component enforces that operations are only callable through their designated endpoints. Implementations MUST validate that:
+The operation exists
+The operation is allowed on the requested endpoint
+Required parameters are present
+Introspection
+MCP-AQL implementations MUST provide GraphQL-style introspection capabilities:
+List all available operations
+Get detailed information about specific operations
+Query available types and enumerations
+Discover parameter requirements
+Standard Request
+1. Client sends { operation, params } to endpoint
+2. Gatekeeper validates operation is allowed on endpoint
+3. Router resolves operation to handler
+4. Schema validates required parameters
+5. Dispatcher invokes handler with mapped parameters
+6. Handler returns result
+7. Response formatted as { success: true, data } or { success: false, error }
+Response Format
+All MCP-AQL operations MUST return discriminated responses:
+Success:
+success : true ,
+data : { /* operation result */ }
+Failure:
+success : false ,
+error : {
+code : &quot;VALIDATION_ERROR&quot; ,
+message : &quot;Required parameter &#39;entity_name&#39; is missing&quot;
+Implementations SHOULD include an error code for programmatic handling and MUST include a human-readable message .
+MCP-AQL implementations MAY support batch operations for executing multiple operations in a single request.
+Batch Request Format
+operations : [
+{ operation : &quot;create_entity&quot; , params : { name : &quot;entity1&quot; } } ,
+{ operation : &quot;create_entity&quot; , params : { name : &quot;entity2&quot; } } ,
+{ operation : &quot;activate_entity&quot; , params : { name : &quot;entity1&quot; } }
+Batch Response Format
+results : [
+{ index : 0 , operation : &quot;create_entity&quot; , result : { success : true , data : { /* ... */ } } } ,
+{ index : 1 , operation : &quot;create_entity&quot; , result : { success : true , data : { /* ... */ } } } ,
+{ index : 2 , operation : &quot;activate_entity&quot; , result : { success : true , data : { /* ... */ } } }
+summary : { total : 3 , succeeded : 3 , failed : 0 }
+When batch operations are supported, implementations:
+MUST process operations in order
+MUST include results for all operations, including failures
+SHOULD continue processing after individual operation failures
+MAY provide a configuration option to stop on first failure
+Conformance
+An MCP-AQL implementation is conformant if it:
+Implements at least one endpoint mode (CRUDE or Single)
+Enforces endpoint classification for all operations
+Provides the introspect operation on the READ endpoint
+Returns discriminated responses for all operations
+Validates required parameters before dispatching
+Related Specifications
+Operations Reference - Complete operation reference
+Introspection - Introspection system specification
+MCP Integration - MCP protocol integration specification
+Response Format - Response format specification
 &copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
 Docs Library
 MCPAQL Organization

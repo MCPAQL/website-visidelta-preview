@@ -1,4 +1,4 @@
-MCP-AQL Spec | ADR-005: GraphQL-Style Introspection System
+MCP-AQL Spec | ADR-004: Schema-Driven Operation Definitions
 Launch Checklist
 Adapter Patterns
 Search MCP-AQL docs
@@ -53,54 +53,66 @@ Architecture Decision Records
 REPO-SYNCED SPEC DOC
 Date: 2026-01-16
 Support document Accepted
-Source: spec/docs/adr/ADR-005-introspection-system.md
+Source: spec/docs/adr/ADR-004-schema-driven-operations.md
 Open Source Markdown
 Browse Full Spec Reference
 Status: Accepted Date: 2026-01-16
-MCP-AQL consolidates many operations into a small number of semantic endpoints, achieving significant token reduction (~96%) compared to discrete tool definitions. However, this consolidation means LLMs cannot rely on tool schemas alone to discover available operations.
-With traditional MCP approaches using 40+ discrete tools, tool schemas can consume ~30,000 tokens of context. LLMs must parse all schemas upfront, leaving limited context for actual work.
-An alternative is needed that allows:
-On-demand discovery of operations
-Minimal upfront token consumption
-Detailed information when needed
-Self-documenting API behavior
+As the number of operations grows, maintaining consistency across routing, validation, introspection, and documentation becomes challenging. Imperative approaches (switch statements, manual dispatch) require updates in multiple locations when adding or modifying operations.
+Adding a new operation traditionally required:
+Adding endpoint routing logic
+Adding dispatch/handler mapping
+Adding parameter definitions for validation
+Adding introspection metadata
+Adding documentation examples
+This distributed approach leads to:
+Inconsistencies between validation and documentation
+Forgotten updates in some locations
+Difficulty maintaining operation metadata
+Duplicated information across files
 Decision
-MCP-AQL implements GraphQL-style introspection via the introspect operation on the READ endpoint.
-Implementations MUST support the introspect operation with the following query types:
-Operations Query
-// List all available operations
-{ operation : &quot;introspect&quot; , params : { query : &quot;operations&quot; } }
-// Get details for a specific operation
-{ operation : &quot;introspect&quot; , params : { query : &quot;operations&quot; , name : &quot;create_element&quot; } }
-Types Query
-// List all types
-{ operation : &quot;introspect&quot; , params : { query : &quot;types&quot; } }
-// Get details for a specific type
-{ operation : &quot;introspect&quot; , params : { query : &quot;types&quot; , name : &quot;ElementType&quot; } }
-Introspection responses MUST include:
-Operation names and descriptions
-Parameter definitions with types and requirements
-Return type information
-Usage examples (when available)
-The introspection workflow enables progressive discovery:
-// Step 1: Quick discovery (~50 tokens)
-// Step 2: Get details for relevant operation (~100 tokens)
-// Step 3: Use the operation with knowledge of parameters
-{ operation : &quot;create_element&quot; , element_type : &quot;persona&quot; , params : { ... } }
+MCP-AQL adopts a schema-driven approach where operations are defined declaratively in a single schema definition.
+Each operation definition MUST include:
+endpoint : The CRUDE endpoint category (CREATE, READ, UPDATE, DELETE, EXECUTE)
+description : Human-readable description of the operation
+params : Parameter definitions with types and requirements
+Each operation definition SHOULD include:
+returns : Return type specification
+examples : Usage examples for documentation and introspection
+Example schema structure:
+browse_collection : {
+endpoint : &quot;READ&quot; ,
+description : &quot;Browse the community collection&quot; ,
+params : {
+section : {
+type : &quot;string&quot; ,
+description : &quot;Collection section to browse&quot;
+type : {
+description : &quot;Element type filter&quot;
+returns : {
+name : &quot;CollectionBrowseResult&quot; ,
+kind : &quot;object&quot;
+examples : [
+&#39;{ operation: &quot;browse_collection&quot;, params: { section: &quot;personas&quot; } }&#39;
+Implementations MUST derive the following from the operation schema:
+Endpoint routing decisions
+Parameter validation rules
+Introspection responses
+Type checking
 Consequences
 Positive
-Token efficiency : LLMs discover operations on-demand rather than parsing all upfront
-Dynamic discovery : Available operations can vary by context or permissions
-Self-documenting : API describes itself without external documentation
-Familiar pattern : GraphQL introspection is a known paradigm
-Graceful degradation : LLMs can work with partial knowledge
+Single source of truth : One location defines all operation metadata
+Auto-generated introspection : Schema powers runtime discovery
+Reduced boilerplate : No manual dispatch code for new operations
+Consistency : Validation, routing, and documentation stay synchronized
+Type safety : Schema definitions enable compile-time checking
 Negative
-Multi-step discovery : LLMs may need multiple requests to understand the API
-Runtime dependency : Discovery requires API availability
-Caching complexity : Clients may need to cache introspection results
-Incomplete discovery : LLMs might miss operations they do not explicitly query
+Schema complexity : Large schemas can be difficult to navigate
+Runtime overhead : Schema lookup adds minor processing cost
+Learning curve : Contributors must understand schema format
+Flexibility limits : Edge cases may require schema extensions
 References
-Introspection Specification
+Operations Reference
+ADR-005: Introspection System
 ADR-001: CRUDE Pattern
 &copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
 Docs Library

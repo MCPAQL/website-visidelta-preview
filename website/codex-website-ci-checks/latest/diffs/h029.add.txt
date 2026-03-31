@@ -1,0 +1,108 @@
+MCP-AQL Spec | ADR-005: GraphQL-Style Introspection System
+Launch Checklist
+Adapter Patterns
+Search MCP-AQL docs
+Repo-Synced Spec
+Generated from MCPAQL/spec so the website carries the deeper protocol material too.
+MCP-AQL Conformance Testing Specification
+MCP-AQL CRUDE Pattern Specification
+MCP-AQL Endpoint Modes Specification
+Structured Error Codes Specification
+MCP-AQL Introspection Specification
+MCP-AQL Licensing Options (Working Notes)
+MCP Integration Specification
+MCP-AQL Operations Specification
+MCP-AQL Protocol Overview
+Plugin Interface Contracts
+MCP-AQL Specification Documentation
+Versions
+MCP-AQL Specification
+Dangerous Operation Classification Specification
+MCP Server Discovery Bundle
+Adapter Element Type Specification
+Adapter Generator Specification
+Rate Limiting and Quota Management Specification
+Trust Levels Specification
+Security
+Confirmation Token Specification
+Execution Safety Loop Specification
+Security Model: Gatekeeper Specification
+Features
+Field Selection Specification
+Cursor-Based Pagination Specification
+Warnings Array Specification
+Protocol Comparison Guide
+Developer Guides
+MCP-AQL Breaking Change Policy
+Preliminary Public Launch Checklist
+RFC Process for MCP-AQL Specification
+Versioning Strategy
+Architecture
+Architecture Documentation
+Research
+Protocol Landscape: MCP vs MCP-AQL vs A2A
+Reference
+Reference Documentation
+ADR-001: CRUDE Pattern (Extending CRUD with Execute)
+ADR-002: GraphQL-Style Input Objects for Updates
+ADR-003: snake_case Parameter Convention
+ADR-004: Schema-Driven Operation Definitions
+ADR-005: GraphQL-Style Introspection System
+ADR-006: Discriminated Response Format
+Architecture Decision Records
+REPO-SYNCED SPEC DOC
+Date: 2026-01-16
+Support document Accepted
+Source: spec/docs/adr/ADR-005-introspection-system.md
+Open Source Markdown
+Browse Full Spec Reference
+Status: Accepted Date: 2026-01-16
+MCP-AQL consolidates many operations into a small number of semantic endpoints, achieving significant token reduction (~96%) compared to discrete tool definitions. However, this consolidation means LLMs cannot rely on tool schemas alone to discover available operations.
+With traditional MCP approaches using 40+ discrete tools, tool schemas can consume ~30,000 tokens of context. LLMs must parse all schemas upfront, leaving limited context for actual work.
+An alternative is needed that allows:
+On-demand discovery of operations
+Minimal upfront token consumption
+Detailed information when needed
+Self-documenting API behavior
+Decision
+MCP-AQL implements GraphQL-style introspection via the introspect operation on the READ endpoint.
+Implementations MUST support the introspect operation with the following query types:
+Operations Query
+// List all available operations
+{ operation : &quot;introspect&quot; , params : { query : &quot;operations&quot; } }
+// Get details for a specific operation
+{ operation : &quot;introspect&quot; , params : { query : &quot;operations&quot; , name : &quot;create_element&quot; } }
+Types Query
+// List all types
+{ operation : &quot;introspect&quot; , params : { query : &quot;types&quot; } }
+// Get details for a specific type
+{ operation : &quot;introspect&quot; , params : { query : &quot;types&quot; , name : &quot;ElementType&quot; } }
+Introspection responses MUST include:
+Operation names and descriptions
+Parameter definitions with types and requirements
+Return type information
+Usage examples (when available)
+The introspection workflow enables progressive discovery:
+// Step 1: Quick discovery (~50 tokens)
+// Step 2: Get details for relevant operation (~100 tokens)
+// Step 3: Use the operation with knowledge of parameters
+{ operation : &quot;create_element&quot; , element_type : &quot;persona&quot; , params : { ... } }
+Consequences
+Positive
+Token efficiency : LLMs discover operations on-demand rather than parsing all upfront
+Dynamic discovery : Available operations can vary by context or permissions
+Self-documenting : API describes itself without external documentation
+Familiar pattern : GraphQL introspection is a known paradigm
+Graceful degradation : LLMs can work with partial knowledge
+Negative
+Multi-step discovery : LLMs may need multiple requests to understand the API
+Runtime dependency : Discovery requires API availability
+Caching complexity : Clients may need to cache introspection results
+Incomplete discovery : LLMs might miss operations they do not explicitly query
+References
+Introspection Specification
+ADR-001: CRUDE Pattern
+&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
+Docs Library
+MCPAQL Organization
+Dollhouse Research

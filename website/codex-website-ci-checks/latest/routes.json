@@ -88,5 +88,215 @@
     "id": "h017",
     "file": "public/launch-checklist.html",
     "route": "/launch-checklist.html"
+  },
+  {
+    "id": "h019",
+    "file": "public/spec/adapter/danger-levels.html",
+    "route": "/spec/adapter/danger-levels.html"
+  },
+  {
+    "id": "h020",
+    "file": "public/spec/adapter/discovery-bundle.html",
+    "route": "/spec/adapter/discovery-bundle.html"
+  },
+  {
+    "id": "h021",
+    "file": "public/spec/adapter/element-type.html",
+    "route": "/spec/adapter/element-type.html"
+  },
+  {
+    "id": "h022",
+    "file": "public/spec/adapter/generator.html",
+    "route": "/spec/adapter/generator.html"
+  },
+  {
+    "id": "h023",
+    "file": "public/spec/adapter/rate-limiting.html",
+    "route": "/spec/adapter/rate-limiting.html"
+  },
+  {
+    "id": "h024",
+    "file": "public/spec/adapter/trust-levels.html",
+    "route": "/spec/adapter/trust-levels.html"
+  },
+  {
+    "id": "h025",
+    "file": "public/spec/adr/ADR-001-crude-pattern.html",
+    "route": "/spec/adr/ADR-001-crude-pattern.html"
+  },
+  {
+    "id": "h026",
+    "file": "public/spec/adr/ADR-002-graphql-style-input.html",
+    "route": "/spec/adr/ADR-002-graphql-style-input.html"
+  },
+  {
+    "id": "h027",
+    "file": "public/spec/adr/ADR-003-snake-case-parameters.html",
+    "route": "/spec/adr/ADR-003-snake-case-parameters.html"
+  },
+  {
+    "id": "h028",
+    "file": "public/spec/adr/ADR-004-schema-driven-operations.html",
+    "route": "/spec/adr/ADR-004-schema-driven-operations.html"
+  },
+  {
+    "id": "h029",
+    "file": "public/spec/adr/ADR-005-introspection-system.html",
+    "route": "/spec/adr/ADR-005-introspection-system.html"
+  },
+  {
+    "id": "h030",
+    "file": "public/spec/adr/ADR-006-discriminated-responses.html",
+    "route": "/spec/adr/ADR-006-discriminated-responses.html"
+  },
+  {
+    "id": "h032",
+    "file": "public/spec/adr/index.html",
+    "route": "/spec/adr/index.html"
+  },
+  {
+    "id": "h031",
+    "file": "public/spec/adr/README.html",
+    "route": "/spec/adr/README.html"
+  },
+  {
+    "id": "h033",
+    "file": "public/spec/architecture/README.html",
+    "route": "/spec/architecture/README.html"
+  },
+  {
+    "id": "h034",
+    "file": "public/spec/conformance-testing.html",
+    "route": "/spec/conformance-testing.html"
+  },
+  {
+    "id": "h035",
+    "file": "public/spec/crude-pattern.html",
+    "route": "/spec/crude-pattern.html"
+  },
+  {
+    "id": "h036",
+    "file": "public/spec/endpoint-modes.html",
+    "route": "/spec/endpoint-modes.html"
+  },
+  {
+    "id": "h037",
+    "file": "public/spec/error-codes.html",
+    "route": "/spec/error-codes.html"
+  },
+  {
+    "id": "h038",
+    "file": "public/spec/features/field-selection.html",
+    "route": "/spec/features/field-selection.html"
+  },
+  {
+    "id": "h039",
+    "file": "public/spec/features/pagination.html",
+    "route": "/spec/features/pagination.html"
+  },
+  {
+    "id": "h040",
+    "file": "public/spec/features/warnings.html",
+    "route": "/spec/features/warnings.html"
+  },
+  {
+    "id": "h042",
+    "file": "public/spec/guides/protocol-comparison.html",
+    "route": "/spec/guides/protocol-comparison.html"
+  },
+  {
+    "id": "h041",
+    "file": "public/spec/guides/README.html",
+    "route": "/spec/guides/README.html"
+  },
+  {
+    "id": "h043",
+    "file": "public/spec/index.html",
+    "route": "/spec/index.html"
+  },
+  {
+    "id": "h044",
+    "file": "public/spec/introspection.html",
+    "route": "/spec/introspection.html"
+  },
+  {
+    "id": "h045",
+    "file": "public/spec/licensing-options.html",
+    "route": "/spec/licensing-options.html"
+  },
+  {
+    "id": "h046",
+    "file": "public/spec/mcp-integration.html",
+    "route": "/spec/mcp-integration.html"
+  },
+  {
+    "id": "h047",
+    "file": "public/spec/operations.html",
+    "route": "/spec/operations.html"
+  },
+  {
+    "id": "h048",
+    "file": "public/spec/overview.html",
+    "route": "/spec/overview.html"
+  },
+  {
+    "id": "h049",
+    "file": "public/spec/plugin-contracts.html",
+    "route": "/spec/plugin-contracts.html"
+  },
+  {
+    "id": "h050",
+    "file": "public/spec/process/breaking-changes.html",
+    "route": "/spec/process/breaking-changes.html"
+  },
+  {
+    "id": "h051",
+    "file": "public/spec/process/preliminary-public-launch-checklist.html",
+    "route": "/spec/process/preliminary-public-launch-checklist.html"
+  },
+  {
+    "id": "h052",
+    "file": "public/spec/process/rfc-process.html",
+    "route": "/spec/process/rfc-process.html"
+  },
+  {
+    "id": "h053",
+    "file": "public/spec/process/versioning.html",
+    "route": "/spec/process/versioning.html"
+  },
+  {
+    "id": "h018",
+    "file": "public/spec/README.html",
+    "route": "/spec/README.html"
+  },
+  {
+    "id": "h054",
+    "file": "public/spec/reference/README.html",
+    "route": "/spec/reference/README.html"
+  },
+  {
+    "id": "h055",
+    "file": "public/spec/research/mcp-vs-mcpaql-vs-a2a.html",
+    "route": "/spec/research/mcp-vs-mcpaql-vs-a2a.html"
+  },
+  {
+    "id": "h056",
+    "file": "public/spec/security/confirmation-tokens.html",
+    "route": "/spec/security/confirmation-tokens.html"
+  },
+  {
+    "id": "h057",
+    "file": "public/spec/security/execution-safety-loop.html",
+    "route": "/spec/security/execution-safety-loop.html"
+  },
+  {
+    "id": "h058",
+    "file": "public/spec/security/gatekeeper.html",
+    "route": "/spec/security/gatekeeper.html"
+  },
+  {
+    "id": "h059",
+    "file": "public/spec/versions/v1.0.0-draft.html",
+    "route": "/spec/versions/v1.0.0-draft.html"
   }
 ]

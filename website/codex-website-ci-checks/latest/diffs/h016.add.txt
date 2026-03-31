@@ -2,6 +2,7 @@ MCP-AQL documentation that tracks the draft spec as it exists today
 This site is the browse-first public surface for MCP-AQL: what the protocol is, how it routes operations,
 how it handles safety and errors, what counts as draft-compatible today, and what remains open in the live spec backlog.
 Start With The Quick Path
+Browse Full Spec Reference
 If you are new to MCP-AQL, this sequence gets you from protocol overview to launch reality without repo spelunking.
 1. Understand The Model
 Start with the short overview, token-efficiency story, and quick-start request shape before dropping into the full draft.
@@ -21,6 +22,16 @@ Current spec alignment work for error surfacing
 Open Error Model
 Adapter schema and plugin contract requirements
 Open Adapter Contracts
+Full Website-Hosted Spec Reference
+The public site now has a repo-synced spec layer generated from the canonical docs, so readers can stay on the website for the deeper protocol material too.
+What changed
+The full reference is generated directly from MCPAQL/spec/docs .
+Versioned drafts, support docs, and topic pages are hosted under the website's own navigation and search.
+Summary pages still help people orient quickly, but the detailed material is no longer repo-only.
+Where to go next
+Open the full repo-synced spec reference
+Read the normative draft on-site
+Use the docs library for guided entry points and summaries
 Current Draft Blockers
 The website is explicit about the live spec issues that still shape launch messaging.
 Phase-1 launch gate issues

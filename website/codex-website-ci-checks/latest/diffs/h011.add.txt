@@ -2,6 +2,7 @@ quick start, core semantics, structured errors, safety model, conformance, adapt
 and release-status context.
 Getting Started
 Error Model
+Full Spec Reference
 Adapter Contracts
 Recommended first read
 Overview, quick-start request shape, token efficiency, and reading order for the draft.
@@ -14,13 +15,24 @@ Release Notes
 Change context
 Recent draft changes that affect public messaging, launch framing, and docs coverage priorities.
 Canonical changelog
+Repo-Synced Full Spec Reference
+The docs library now has a deeper sibling section generated from the canonical spec repo, so the website itself carries the fuller protocol material.
+Use summaries for orientation
+These docs pages still provide fast, curated entry points for launch framing, implementation posture, and topic overviews.
+Start with guided summaries
+Use the spec mirror for depth
+The generated reference mirrors the deeper content from MCPAQL/spec/docs , including versioned drafts and supporting material.
+Browse the full repo-synced reference
 Canonical Spec Map
-The website now mirrors the major categories from the spec docs index so public readers can see what exists without opening the repository first.
+The website now mirrors the major categories from the spec docs index so public readers can browse both summaries and the fuller reference without opening the repository first.
 Spec source
 Website surface
 What it covers
 overview.md
 Protocol summary, token efficiency, and quick-start framing
+spec/docs
+Repo-Synced Spec Reference
+Website-hosted full mirror of versioned and topical specification documents
 operations.md
 Request shape, endpoint rules, operation semantics, routing
 error-codes.md

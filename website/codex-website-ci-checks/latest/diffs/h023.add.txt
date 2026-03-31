@@ -1,0 +1,415 @@
+MCP-AQL Spec | Rate Limiting and Quota Management Specification
+Launch Checklist
+Adapter Patterns
+Search MCP-AQL docs
+Repo-Synced Spec
+Generated from MCPAQL/spec so the website carries the deeper protocol material too.
+MCP-AQL Conformance Testing Specification
+MCP-AQL CRUDE Pattern Specification
+MCP-AQL Endpoint Modes Specification
+Structured Error Codes Specification
+MCP-AQL Introspection Specification
+MCP-AQL Licensing Options (Working Notes)
+MCP Integration Specification
+MCP-AQL Operations Specification
+MCP-AQL Protocol Overview
+Plugin Interface Contracts
+MCP-AQL Specification Documentation
+Versions
+MCP-AQL Specification
+Dangerous Operation Classification Specification
+MCP Server Discovery Bundle
+Adapter Element Type Specification
+Adapter Generator Specification
+Rate Limiting and Quota Management Specification
+Trust Levels Specification
+Security
+Confirmation Token Specification
+Execution Safety Loop Specification
+Security Model: Gatekeeper Specification
+Features
+Field Selection Specification
+Cursor-Based Pagination Specification
+Warnings Array Specification
+Protocol Comparison Guide
+Developer Guides
+MCP-AQL Breaking Change Policy
+Preliminary Public Launch Checklist
+RFC Process for MCP-AQL Specification
+Versioning Strategy
+Architecture
+Architecture Documentation
+Research
+Protocol Landscape: MCP vs MCP-AQL vs A2A
+Reference
+Reference Documentation
+ADR-001: CRUDE Pattern (Extending CRUD with Execute)
+ADR-002: GraphQL-Style Input Objects for Updates
+ADR-003: snake_case Parameter Convention
+ADR-004: Schema-Driven Operation Definitions
+ADR-005: GraphQL-Style Introspection System
+ADR-006: Discriminated Response Format
+Architecture Decision Records
+REPO-SYNCED SPEC DOC
+This document defines the rate limiting and quota management system for MCP-AQL adapters. Rate limits enable systems to respect API constraints, prevent runaway costs, and provide graceful degradation under load.
+Support document Draft 1.0.0-draft 2026-01-28
+Source: spec/docs/adapter/rate-limiting.md
+Open Source Markdown
+Browse Full Spec Reference
+Version: 1.0.0-draft Status: Draft Last Updated: 2026-01-28
+Abstract
+Table of Contents
+Overview
+Rate Limits Schema
+Quota Management
+Enforcement Behavior
+Error Codes
+Introspection
+Implementation Requirements
+Future Extensions
+1. Overview
+1.1 Purpose
+When adapters wrap external APIs:
+APIs have rate limits that must be respected to avoid blocking
+Users want budgets to control costs and usage
+Systems need protection against runaway API calls (especially in autonomous agent loops)
+Graceful degradation is preferable to hard failures
+Rate limiting in MCP-AQL provides:
+API limit awareness - Extract and respect target API constraints
+User-configurable quotas - Budget controls at multiple thresholds
+Progressive enforcement - Warn, pause, and hard stop behaviors
+Cost tracking - Monitor usage for paid APIs
+1.2 Design Principles
+Respect upstream limits - Never exceed API provider constraints
+User control - Configurable quotas override defaults
+Progressive response - Warn before blocking
+Transparent status - Quota state always queryable
+1.3 Scope
+Included:
+Rate limit schema for adapters
+Quota configuration
+Enforcement behaviors
+Error codes for rate limiting
+Introspection of quota status
+Deferred:
+Cross-adapter quota aggregation
+Token-based rate limiting for LLM APIs
+Distributed rate limiting coordination
+2. Rate Limits Schema
+2.1 Schema Structure
+The rate_limits block in adapter front matter:
+rate_limits :
+# API-defined limits (from target API documentation or headers)
+api_limits :
+- scope : global
+limit : 5000
+window : hour
+- scope : endpoint
+endpoint : &quot;POST /search&quot;
+limit : 30
+window : minute
+# User-configurable quotas
+quotas :
+enabled : true
+limits :
+- metric : requests_per_hour
+warn : 4000
+pause : 4800
+hard_stop : 5000
+- metric : cost_per_day
+warn : 5.00
+pause : 10.00
+hard_stop : 50.00
+currency : USD
+# Cost estimation for paid APIs
+model : per_call
+pricing :
+- endpoint : &quot;*&quot;
+cost_per_call : 0.001
+- endpoint : &quot;POST /premium/*&quot;
+cost_per_call : 0.01
+2.2 api_limits Block
+Declares rate limits imposed by the target API.
+interface ApiLimit {
+* Scope of the limit
+* - global: Applies to all operations
+* - endpoint: Applies to specific endpoint
+* - category: Applies to CRUDE category
+scope : &#39;global&#39; | &#39;endpoint&#39; | &#39;category&#39; ;
+* Endpoint pattern (when scope is &#39;endpoint&#39;)
+* Supports wildcards: &quot;GET /users/*&quot;
+endpoint ?: string ;
+* CRUDE category (when scope is &#39;category&#39;)
+category ?: &#39;create&#39; | &#39;read&#39; | &#39;update&#39; | &#39;delete&#39; | &#39;execute&#39; ;
+* Maximum number of requests in the window
+limit : number ;
+* Time window for the limit
+window : &#39;second&#39; | &#39;minute&#39; | &#39;hour&#39; | &#39;day&#39; ;
+* Header name containing remaining requests (for runtime tracking)
+remaining_header ?: string ;
+* Header name containing reset timestamp
+reset_header ?: string ;
+2.3 Common API Limit Patterns
+# GitHub API pattern
+remaining_header : &quot;X-RateLimit-Remaining&quot;
+reset_header : &quot;X-RateLimit-Reset&quot;
+# OpenAI pattern (tokens per minute)
+limit : 90000
+metric : tokens_per_minute
+# Stripe pattern (different limits by CRUDE category)
+- scope : category
+category : read
+limit : 100
+window : second
+category : create
+limit : 25
+3. Quota Management
+3.1 Quotas Block
+User-configurable limits that can be stricter than API limits.
+interface QuotaConfig {
+* Whether quota enforcement is enabled
+enabled : boolean ;
+* Individual quota limits
+limits : QuotaLimit[] ;
+* How to persist quota tracking
+persistence ?: &#39;memory&#39; | &#39;file&#39; | &#39;database&#39; ;
+* When to reset counters
+reset_schedule ?: string ; // Cron expression
+interface QuotaLimit {
+* What is being measured
+metric : QuotaMetric ;
+* Threshold for warning notification
+warn : number ;
+* Threshold for pause (require confirmation to continue)
+pause : number ;
+* Threshold for hard stop (block all requests)
+hard_stop ?: number ;
+* Currency for cost metrics
+currency ?: string ;
+type QuotaMetric =
+| &#39;requests_per_minute&#39;
+| &#39;requests_per_hour&#39;
+| &#39;requests_per_day&#39;
+| &#39;tokens_per_minute&#39;
+| &#39;tokens_per_hour&#39;
+| &#39;tokens_per_day&#39;
+| &#39;cost_per_hour&#39;
+| &#39;cost_per_day&#39;
+| &#39;cost_per_month&#39; ;
+3.2 Threshold Behaviors
+Threshold
+Behavior
+User Experience
+Log warning, continue
+Notification displayed
+Require confirmation
+"Continue?" prompt
+hard_stop
+Block all requests
+Error response
+3.3 Example Quota Configurations
+Conservative (cost-conscious):
+warn : 1.00
+pause : 5.00
+hard_stop : 10.00
+Development (permissive):
+warn : 1000
+pause : 5000
+# No hard_stop - never fully block
+Production (strict):
+- metric : requests_per_minute
+warn : 50
+pause : 80
+hard_stop : 100
+warn : 100.00
+pause : 200.00
+hard_stop : 500.00
+4. Enforcement Behavior
+4.1 Enforcement Flow
+Request → Check API Limits → Check Quotas → Execute or Block
+API blocked? Quota exceeded?
+Wait/Retry Warn/Pause/Stop
+4.2 API Limit Enforcement
+When API rate limit is reached:
+Check remaining - Read from response headers if available
+Predict limit - Track request counts if no headers
+Pre-flight block - Block request before sending if limit would be exceeded
+Retry-After - Respect Retry-After header from API responses
+Pre-flight block response:
+&quot;success&quot; : false ,
+&quot;error&quot; : {
+&quot;code&quot; : &quot;RATE_LIMIT_EXCEEDED&quot; ,
+&quot;message&quot; : &quot;API rate limit would be exceeded&quot; ,
+&quot;details&quot; : {
+&quot;limit&quot; : 5000 ,
+&quot;remaining&quot; : 0 ,
+&quot;window&quot; : &quot;hour&quot; ,
+&quot;resets_at&quot; : &quot;2026-01-28T13:00:00Z&quot; ,
+&quot;retry_after_seconds&quot; : 1847
+4.3 Quota Enforcement
+Warnings are included in successful responses via the warnings array. See Warnings Specification for the complete schema and client handling requirements.
+Warning (warn threshold):
+&quot;success&quot; : true ,
+&quot;data&quot; : { ... },
+&quot;warnings&quot; : [
+&quot;code&quot; : &quot;RATE_LIMIT_QUOTA_WARNING&quot; ,
+&quot;message&quot; : &quot;Approaching quota limit&quot; ,
+&quot;metric&quot; : &quot;requests_per_hour&quot; ,
+&quot;current&quot; : 4100 ,
+&quot;warn_threshold&quot; : 4000 ,
+&quot;pause_threshold&quot; : 4800
+Pause (pause threshold):
+&quot;code&quot; : &quot;RATE_LIMIT_QUOTA_PAUSE&quot; ,
+&quot;message&quot; : &quot;Quota pause threshold reached&quot; ,
+&quot;current&quot; : 4850 ,
+&quot;pause_threshold&quot; : 4800 ,
+&quot;hard_stop_threshold&quot; : 5000 ,
+&quot;confirmation_token&quot; : &quot;quota_continue_abc123&quot; ,
+&quot;expires_at&quot; : &quot;2026-01-28T12:05:00Z&quot;
+Hard stop (hard_stop threshold):
+&quot;code&quot; : &quot;RATE_LIMIT_QUOTA_EXHAUSTED&quot; ,
+&quot;message&quot; : &quot;Quota exhausted&quot; ,
+&quot;current&quot; : 5000 ,
+&quot;resets_at&quot; : &quot;2026-01-28T13:00:00Z&quot;
+4.4 Continuing After Pause
+To continue after pause threshold, include the confirmation token from the RATE_LIMIT_QUOTA_PAUSE response. See Confirmation Token Specification for token validation and lifecycle details.
+operation : &quot;get_user&quot; ,
+params : {
+user_id : &quot;alice&quot; ,
+_quota_continue : &quot;quota_continue_abc123&quot;
+5. Error Codes
+5.1 Rate Limit Error Codes
+Description
+Recovery
+RATE_LIMIT_EXCEEDED
+Target API rate limit reached
+Wait for reset
+RATE_LIMIT_QUOTA_PAUSE
+User quota pause threshold
+Confirm to continue
+RATE_LIMIT_QUOTA_EXHAUSTED
+User quota hard stop
+RATE_LIMIT_QUOTA_WARNING
+Approaching limit (in warnings)
+Consider slowing
+5.2 Error Response Schema
+interface RateLimitError {
+code : string ;
+message : string ;
+details : {
+/** What metric triggered the limit */
+metric ?: string ;
+/** Current usage count/amount */
+current ?: number ;
+/** The limit that was exceeded */
+limit ?: number ;
+/** Time window of the limit */
+window ?: string ;
+/** When the limit resets */
+resets_at ?: string ;
+/** Seconds until retry is allowed */
+retry_after_seconds ?: number ;
+/** Token to continue after pause */
+confirmation_token ?: string ;
+/** When confirmation expires */
+expires_at ?: string ;
+6. Introspection
+6.1 Quota Status Query
+operation : &quot;introspect&quot; ,
+query : &quot;quota_status&quot;
+6.2 Quota Status Response
+&quot;data&quot; : {
+&quot;adapter&quot; : &quot;github-api&quot; ,
+&quot;api_limits&quot; : {
+&quot;global&quot; : {
+&quot;remaining&quot; : 3500 ,
+&quot;quotas&quot; : [
+&quot;current&quot; : 1500 ,
+&quot;warn&quot; : 4000 ,
+&quot;pause&quot; : 4800 ,
+&quot;hard_stop&quot; : 5000 ,
+&quot;status&quot; : &quot;ok&quot;
+&quot;metric&quot; : &quot;cost_per_day&quot; ,
+&quot;current&quot; : 4.50 ,
+&quot;warn&quot; : 5.00 ,
+&quot;pause&quot; : 10.00 ,
+&quot;hard_stop&quot; : 50.00 ,
+&quot;status&quot; : &quot;warn&quot; ,
+&quot;currency&quot; : &quot;USD&quot;
+&quot;next_reset&quot; : &quot;2026-01-28T13:00:00Z&quot;
+6.3 Status Values
+Below warn threshold
+Above warn, below pause
+At pause threshold, confirmation required
+exhausted
+At hard stop, requests blocked
+7. Implementation Requirements
+7.1 MUST Requirements
+Implementations supporting rate limiting MUST:
+Respect api_limits and not exceed target API constraints
+Return proper error codes when limits are reached
+Include retry_after_seconds when blocking requests
+Support introspection of current quota status
+7.2 SHOULD Requirements
+Implementations supporting rate limiting SHOULD:
+Track API response headers for remaining/reset info
+Implement the three-tier quota system (warn/pause/hard_stop)
+Persist quota counters across sessions
+Provide warnings in successful responses when approaching limits
+7.3 MAY Requirements
+Implementations supporting rate limiting MAY:
+Support cost estimation and tracking
+Implement automatic request queuing and retry
+Support per-operation rate limits
+Integrate with external rate limit services
+7.4 Cost Tracking
+For adapters with cost estimation:
+model : per_call # per_call | per_token | per_byte | tiered
+- endpoint : &quot;POST /completions&quot;
+cost_per_call : 0.002
+cost_per_token :
+input : 0.00001
+output : 0.00003
+8. Future Extensions
+8.1 Cross-Adapter Aggregation
+For APIs with shared rate limits across endpoints:
+shared_pools :
+- name : &quot;github_core&quot;
+endpoints :
+- &quot;GET /repos/*&quot;
+- &quot;GET /users/*&quot;
+- &quot;GET /orgs/*&quot;
+8.2 Intelligent Request Scheduling
+Automatic request queuing and batching:
+scheduling :
+max_queue_size : 100
+batch_similar_requests : true
+priority_by_danger_level : true
+8.3 Token-Based Rate Limiting
+For LLM APIs with token-based limits:
+metric : tokens
+count_method : tiktoken # Token counting method
+8.4 Budget Alerts
+External notification integration:
+alerts :
+- trigger : warn
+action : webhook
+url : &quot;https://alerts.example.com/budget&quot;
+- trigger : pause
+action : email
+to : &quot;admin@example.com&quot;
+8.5 Distributed Rate Limiting
+For multi-instance deployments:
+coordination :
+backend : redis
+connection : &quot;${REDIS_URL}&quot;
+key_prefix : &quot;mcpaql:ratelimit:&quot;
+References
+Dangerous Operation Classification
+Error Codes Specification
+Warnings Specification
+GitHub Issue: #60
+&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
+Docs Library
+MCPAQL Organization
+Dollhouse Research

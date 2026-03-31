@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Document Status: This document is an informative conformance framework specification aligned to the normative protocol requirements in docs/versions/v1.0.0-draft.md. Implementation Status: The full mcpaql-conformance run">
+  <title>MCP-AQL Spec | MCP-AQL Conformance Testing Specification</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <a class="logo" href="../index.html"><span class="logo-mark"></span>MCP-AQL</a>
+        <ul class="nav-links">
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="../docs/index.html">Docs</a></li>
+          <li><a href="../launch-checklist.html">Launch Checklist</a></li>
+          <li><a href="../apis/mcp-server.html">Adapter Patterns</a></li>
+        </ul>
+        <form class="site-search" data-search-form data-index-url="../data/search-index.json" role="search">
+          <label class="sr-only" for="site-search-input">Search MCP-AQL docs</label>
+          <input id="site-search-input" data-search-input type="search" placeholder="Search repo-synced spec docs...">
+          <span class="search-count" data-search-count></span>
+          <ul class="search-results" data-search-results hidden></ul>
+        </form>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container docs-shell">
+      <aside class="docs-side">
+        <h2>Repo-Synced Spec</h2>
+        <p class="docs-side-note">Generated from <code>MCPAQL/spec</code> so the website carries the deeper protocol material too.</p>
+        <div class="docs-side-group">
+  <h3>Core</h3>
+  <ul><li><a class="current" href="conformance-testing.html">MCP-AQL Conformance Testing Specification</a></li><li><a href="crude-pattern.html">MCP-AQL CRUDE Pattern Specification</a></li><li><a href="endpoint-modes.html">MCP-AQL Endpoint Modes Specification</a></li><li><a href="error-codes.html">Structured Error Codes Specification</a></li><li><a href="introspection.html">MCP-AQL Introspection Specification</a></li><li><a href="licensing-options.html">MCP-AQL Licensing Options (Working Notes)</a></li><li><a href="mcp-integration.html">MCP Integration Specification</a></li><li><a href="operations.html">MCP-AQL Operations Specification</a></li><li><a href="overview.html">MCP-AQL Protocol Overview</a></li><li><a href="plugin-contracts.html">Plugin Interface Contracts</a></li><li><a href="README.html">MCP-AQL Specification Documentation</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Versions</h3>
+  <ul><li><a href="versions/v1.0.0-draft.html">MCP-AQL Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Adapter</h3>
+  <ul><li><a href="adapter/danger-levels.html">Dangerous Operation Classification Specification</a></li><li><a href="adapter/discovery-bundle.html">MCP Server Discovery Bundle</a></li><li><a href="adapter/element-type.html">Adapter Element Type Specification</a></li><li><a href="adapter/generator.html">Adapter Generator Specification</a></li><li><a href="adapter/rate-limiting.html">Rate Limiting and Quota Management Specification</a></li><li><a href="adapter/trust-levels.html">Trust Levels Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Security</h3>
+  <ul><li><a href="security/confirmation-tokens.html">Confirmation Token Specification</a></li><li><a href="security/execution-safety-loop.html">Execution Safety Loop Specification</a></li><li><a href="security/gatekeeper.html">Security Model: Gatekeeper Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Features</h3>
+  <ul><li><a href="features/field-selection.html">Field Selection Specification</a></li><li><a href="features/pagination.html">Cursor-Based Pagination Specification</a></li><li><a href="features/warnings.html">Warnings Array Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Guides</h3>
+  <ul><li><a href="guides/protocol-comparison.html">Protocol Comparison Guide</a></li><li><a href="guides/README.html">Developer Guides</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Process</h3>
+  <ul><li><a href="process/breaking-changes.html">MCP-AQL Breaking Change Policy</a></li><li><a href="process/preliminary-public-launch-checklist.html">Preliminary Public Launch Checklist</a></li><li><a href="process/rfc-process.html">RFC Process for MCP-AQL Specification</a></li><li><a href="process/versioning.html">Versioning Strategy</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Architecture</h3>
+  <ul><li><a href="architecture/README.html">Architecture Documentation</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Research</h3>
+  <ul><li><a href="research/mcp-vs-mcpaql-vs-a2a.html">Protocol Landscape: MCP vs MCP-AQL vs A2A</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Reference</h3>
+  <ul><li><a href="reference/README.html">Reference Documentation</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>ADRs</h3>
+  <ul><li><a href="adr/ADR-001-crude-pattern.html">ADR-001: CRUDE Pattern (Extending CRUD with Execute)</a></li><li><a href="adr/ADR-002-graphql-style-input.html">ADR-002: GraphQL-Style Input Objects for Updates</a></li><li><a href="adr/ADR-003-snake-case-parameters.html">ADR-003: snake_case Parameter Convention</a></li><li><a href="adr/ADR-004-schema-driven-operations.html">ADR-004: Schema-Driven Operation Definitions</a></li><li><a href="adr/ADR-005-introspection-system.html">ADR-005: GraphQL-Style Introspection System</a></li><li><a href="adr/ADR-006-discriminated-responses.html">ADR-006: Discriminated Response Format</a></li><li><a href="adr/index.html">Architecture Decision Records</a></li><li><a href="adr/README.html">Architecture Decision Records</a></li></ul>
+</div>
+      </aside>
+
+      <article class="docs-main">
+        <section class="hero docs-hero">
+          <div class="hero-inner">
+            <span class="status-pill">REPO-SYNCED SPEC DOC</span>
+            <h1>MCP-AQL Conformance Testing Specification</h1>
+            <p class="lede">Document Status: This document is an informative conformance framework specification aligned to the normative protocol requirements in docs/versions/v1.0.0-draft.md. Implementation Status: The full mcpaql-conformance run</p>
+            <div class="spec-meta"><span class="state-chip live">Support document</span><span class="state-chip pending">Draft</span><span class="state-chip">1.0.0-draft</span><span class="state-chip">2026-03-06</span></div>
+            <p class="spec-source">Source: <a href="https://github.com/MCPAQL/spec/blob/main/docs/conformance-testing.md">spec/docs/conformance-testing.md</a></p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="https://github.com/MCPAQL/spec/blob/main/docs/conformance-testing.md">Open Source Markdown</a>
+              <a class="btn btn-secondary" href="index.html">Browse Full Spec Reference</a>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <div class="card spec-prose">
+            <p><strong>Version:</strong> 1.0.0-draft <strong>Status:</strong> Draft <strong>Last Updated:</strong> 2026-03-06</p>
+<blockquote>
+<p><strong>Document Status:</strong> This document is an <strong>informative conformance framework specification</strong> aligned to the normative protocol requirements in <code>docs/versions/v1.0.0-draft.md</code>.</p>
+<p><strong>Implementation Status:</strong> The full <code>mcpaql-conformance</code> runner defined here is not yet published in this repository. Current implemented checks are schema/example validation in <code>scripts/validate-schema-examples.mjs</code>.</p>
+</blockquote>
+<h2 id="abstract">Abstract</h2>
+<p>This document specifies the conformance testing requirements for MCP-AQL implementations. It defines conformance levels, test categories, pass/fail criteria, and evaluation methodologies including LLM-based semantic evaluation.</p>
+<hr />
+<h2 id="table-of-contents">Table of Contents</h2>
+<ol type="1">
+<li><a href="#1-introduction">Introduction</a></li>
+<li><a href="#2-conformance-levels">Conformance Levels</a></li>
+<li><a href="#3-test-categories">Test Categories</a></li>
+<li><a href="#4-test-requirements">Test Requirements</a></li>
+<li><a href="#5-evaluation-methodology">Evaluation Methodology</a></li>
+<li><a href="#6-reporting">Reporting</a></li>
+<li><a href="#7-command-line-interface">Command-Line Interface</a></li>
+</ol>
+<hr />
+<h2 id="1-introduction">1. Introduction</h2>
+<h3 id="11-purpose">1.1 Purpose</h3>
+<p>MCP-AQL conformance testing ensures implementations meet the protocol specification and provide consistent, discoverable APIs for LLM interaction. This specification defines:</p>
+<ul>
+<li>What implementations MUST test</li>
+<li>How to evaluate test results</li>
+<li>How to report conformance levels</li>
+</ul>
+<h3 id="12-terminology">1.2 Terminology</h3>
+<p>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <a href="https://www.rfc-editor.org/rfc/rfc2119">RFC 2119</a>.</p>
+<h3 id="13-test-result-classifications">1.3 Test Result Classifications</h3>
+<table>
+<thead>
+<tr>
+<th>Result</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>PASS</strong></td>
+<td>Test criteria fully satisfied</td>
+</tr>
+<tr>
+<td><strong>FAIL</strong></td>
+<td>Test criteria not met, conformance blocked</td>
+</tr>
+<tr>
+<td><strong>WARN</strong></td>
+<td>Test criteria partially met, conformance not blocked</td>
+</tr>
+<tr>
+<td><strong>SKIP</strong></td>
+<td>Test not applicable to this implementation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="2-conformance-levels">2. Conformance Levels</h2>
+<h3 id="21-level-1-basic-conformance">2.1 Level 1: Basic Conformance</h3>
+<p>Level 1 conformance establishes the minimum viable MCP-AQL implementation.</p>
+<p><strong>Requirements:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Requirement</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Introspect (operations)</td>
+<td><code>introspect</code> operation with <code>query: "operations"</code> implemented</td>
+</tr>
+<tr>
+<td>Introspect (types)</td>
+<td><code>introspect</code> operation with <code>query: "types"</code> implemented</td>
+</tr>
+<tr>
+<td>Endpoint routing</td>
+<td>Operations routed to correct CRUDE endpoint</td>
+</tr>
+<tr>
+<td>Response format</td>
+<td>Discriminated union responses (<code>{ success, data }</code> or <code>{ success, error }</code>)</td>
+</tr>
+<tr>
+<td>Error handling</td>
+<td>Structured error responses with code and message</td>
+</tr>
+<tr>
+<td>Parameter naming</td>
+<td>snake_case parameter naming convention</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Test Categories Required:</strong></p>
+<ul>
+<li>Introspection Fidelity (MUST PASS)</li>
+<li>Parameter Handling (MUST PASS)</li>
+<li>Error Quality (MUST PASS)</li>
+<li>Round-Trip Integrity (MUST PASS)</li>
+</ul>
+<h3 id="22-level-2-full-conformance">2.2 Level 2: Full Conformance</h3>
+<p>Level 2 conformance indicates a complete MCP-AQL implementation with all optional features.</p>
+<p><strong>Requirements:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Requirement</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Level 1</td>
+<td>All Level 1 requirements</td>
+</tr>
+<tr>
+<td>Endpoint modes</td>
+<td>Both CRUDE mode and Single-endpoint mode supported</td>
+</tr>
+<tr>
+<td>Field selection</td>
+<td><code>fields</code> and <code>preset</code> parameters on READ operations</td>
+</tr>
+<tr>
+<td>Batch operations</td>
+<td>Multi-operation batching with individual results</td>
+</tr>
+<tr>
+<td>Cross-cutting params</td>
+<td>Consistent <code>limit</code>, <code>offset</code>, <code>sort</code>, <code>order</code> support</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Test Categories Required:</strong></p>
+<ul>
+<li>All Level 1 test categories</li>
+<li>Constraint Documentation (SHOULD PASS)</li>
+<li>Semantic Evaluation (SHOULD PASS)</li>
+</ul>
+<h3 id="23-conformance-certification">2.3 Conformance Certification</h3>
+<p>Implementations MAY claim conformance levels as follows:</p>
+<pre><code>MCP-AQL Level 1 Conformant
+MCP-AQL Level 2 Conformant</code></pre>
+<p>Claims MUST include the specification version tested against.</p>
+<hr />
+<h2 id="3-test-categories">3. Test Categories</h2>
+<h3 id="31-introspection-fidelity-tests-must-pass">3.1 Introspection Fidelity Tests (MUST PASS)</h3>
+<p>Verifies that introspection accurately describes the implementation.</p>
+<pre><code>TEST: Introspection Parameter Accuracy
+  FOR EACH operation in introspection response:
+    1. Extract parameter names and types
+    2. Construct a valid request using ONLY introspection guidance
+    3. Verify the request succeeds OR fails with a documented error
+
+  PASS: All documented parameters work as described
+  FAIL: Following introspection exactly produces unexpected errors</code></pre>
+<pre><code>TEST: Introspection Completeness
+  FOR EACH operation in implementation:
+    1. Get documented parameters from introspection
+    2. Attempt operation with each documented parameter
+    3. Attempt operation with known cross-cutting parameters
+    4. Compare accepted vs documented parameters
+
+  PASS: All accepted parameters appear in introspection
+  FAIL: Operation accepts parameters not in introspection
+  WARN: Introspection documents parameters not accepted</code></pre>
+<h3 id="32-parameter-handling-tests-must-pass">3.2 Parameter Handling Tests (MUST PASS)</h3>
+<p>Verifies consistent parameter behavior.</p>
+<pre><code>TEST: Required Parameter Enforcement
+  FOR EACH operation with required parameters:
+    1. Omit each required parameter in turn
+    2. Verify operation fails with clear error
+
+  PASS: Missing required params produce &quot;missing parameter&quot; errors
+  FAIL: Operation succeeds without required parameter
+  FAIL: Error message does not identify the missing parameter</code></pre>
+<pre><code>TEST: Unknown Parameter Handling
+  FOR EACH operation:
+    1. Send valid request with one additional unknown parameter
+    2. Verify server either:
+       a) Accepts request (param ignored with optional warning), OR
+       b) Rejects with clear &quot;unknown parameter&quot; error
+
+  PASS: Behavior is explicit (warning OR error)
+  FAIL: Unknown parameters silently ignored with no indication</code></pre>
+<pre><code>TEST: Optional Parameter Defaults
+  FOR EACH optional parameter with documented default:
+    1. Send request without the parameter
+    2. Verify response reflects documented default behavior
+
+  PASS: Defaults applied as documented
+  FAIL: Behavior differs from documented default</code></pre>
+<h3 id="33-error-quality-tests-must-pass">3.3 Error Quality Tests (MUST PASS)</h3>
+<p>Verifies error messages are user-appropriate.</p>
+<pre><code>TEST: No Implementation Leakage
+  FOR EACH error condition:
+    1. Trigger the error
+    2. Verify error message does NOT contain:
+       - Programming language artifacts (TypeError, #&lt;Object&gt;, .js:, .ts:)
+       - Stack traces (at Function, at Module)
+       - Internal paths (/src/, /node_modules/)
+
+  PASS: Error messages are implementation-agnostic
+  FAIL: Raw implementation errors exposed</code></pre>
+<pre><code>TEST: Actionable Error Messages
+  FOR EACH validation error:
+    1. Trigger the error
+    2. Verify error message includes:
+       - What went wrong
+       - Which parameter/field is affected
+       - Expected type or format (for type errors)
+
+  PASS: Error messages enable self-correction
+  WARN: Error messages lack actionable guidance</code></pre>
+<p><strong>Recommended Error Format:</strong></p>
+<pre><code>Missing required parameter &#39;{paramName}&#39;. Expected: {type} ({description})</code></pre>
+<h3 id="34-round-trip-integrity-tests-must-pass">3.4 Round-Trip Integrity Tests (MUST PASS)</h3>
+<p>Verifies data consistency through create-read cycles.</p>
+<pre><code>TEST: Create-Read Consistency
+  FOR EACH element type:
+    1. Create element with all documented optional fields
+    2. Read element back via get operation
+    3. Compare all fields
+
+  PASS: All submitted fields present and unchanged
+  FAIL: Data silently dropped during create
+  FAIL: Field values modified unexpectedly</code></pre>
+<pre><code>TEST: Update Preservation
+  FOR EACH element type:
+    1. Create element with initial values
+    2. Update subset of fields
+    3. Read element back
+    4. Verify non-updated fields unchanged
+
+  PASS: Unmodified fields preserved
+  FAIL: Update operation affects non-targeted fields</code></pre>
+<h3 id="35-constraint-documentation-tests-should-pass">3.5 Constraint Documentation Tests (SHOULD PASS)</h3>
+<p>Verifies element-specific constraints are discoverable.</p>
+<pre><code>TEST: Read-Only Field Protection
+  FOR EACH element type with read-only fields:
+    1. Attempt to update a read-only field
+    2. Verify operation fails with constraint error
+    3. Verify introspection documents the constraint
+
+  PASS: Constraint enforced AND documented
+  WARN: Constraint enforced but not in introspection
+  FAIL: Read-only field can be modified</code></pre>
+<pre><code>TEST: Append-Only Semantics
+  FOR EACH append-only data type (e.g., Memory entries):
+    1. Verify content cannot be modified via update
+    2. Verify error message explains append-only behavior
+    3. Verify introspection documents the constraint
+
+  PASS: Append-only enforced AND documented
+  WARN: Enforced but not documented</code></pre>
+<hr />
+<h2 id="4-test-requirements">4. Test Requirements</h2>
+<h3 id="41-must-pass-requirements">4.1 MUST PASS Requirements</h3>
+<p>The following test categories MUST pass for Level 1 conformance:</p>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Tests</th>
+<th>Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Introspection Fidelity</td>
+<td>2</td>
+<td>LLMs must trust introspection</td>
+</tr>
+<tr>
+<td>Parameter Handling</td>
+<td>3</td>
+<td>Consistent behavior across operations</td>
+</tr>
+<tr>
+<td>Error Quality</td>
+<td>2</td>
+<td>Usable error messages</td>
+</tr>
+<tr>
+<td>Round-Trip Integrity</td>
+<td>2</td>
+<td>Data consistency guarantee</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Total MUST PASS tests:</strong> 9</p>
+<h3 id="42-should-pass-requirements">4.2 SHOULD PASS Requirements</h3>
+<p>The following test categories SHOULD pass for Level 2 conformance:</p>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Tests</th>
+<th>Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Constraint Documentation</td>
+<td>2</td>
+<td>Discoverable constraints</td>
+</tr>
+<tr>
+<td>Semantic Evaluation</td>
+<td>Per implementation</td>
+<td>LLM discoverability</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Failure in SHOULD PASS tests:</strong> Produces WARN, does not block conformance</p>
+<hr />
+<h2 id="5-evaluation-methodology">5. Evaluation Methodology</h2>
+<h3 id="51-two-tier-evaluation-approach">5.1 Two-Tier Evaluation Approach</h3>
+<p>Conformance tests SHOULD use a two-tier evaluation approach:</p>
+<h4 id="tier-1-structural-validation-fast-deterministic">Tier 1: Structural Validation (Fast, Deterministic)</h4>
+<ul>
+<li>Pattern matching for expected response elements</li>
+<li>JSON schema validation for response structure</li>
+<li>Presence checks for required fields</li>
+<li>Regex validation for error message patterns</li>
+</ul>
+<p><strong>Characteristics:</strong></p>
+<ul>
+<li>Fast execution</li>
+<li>Deterministic results</li>
+<li>Catches obvious failures</li>
+</ul>
+<h4 id="tier-2-semantic-validation-comprehensive-ai-assisted">Tier 2: Semantic Validation (Comprehensive, AI-Assisted)</h4>
+<ul>
+<li>LLM evaluation of response correctness</li>
+<li>Semantic similarity scoring</li>
+<li>Intent classification for operation selection</li>
+<li>Natural language understanding of guidance</li>
+</ul>
+<p><strong>Characteristics:</strong></p>
+<ul>
+<li>Comprehensive coverage</li>
+<li>Handles natural language variation</li>
+<li>Catches subtle usability issues</li>
+</ul>
+<h3 id="52-semantic-evaluation-requirements">5.2 Semantic Evaluation Requirements</h3>
+<p>Tests for LLM discoverability SHOULD use semantic evaluation:</p>
+<pre><code>TEST: API Discoverability
+  1. Prompt LLM with discovery task
+  2. Capture LLM response and tool calls
+  3. Tier 1: Check for expected patterns (fast fail)
+  4. Tier 2: If Tier 1 inconclusive, evaluate semantic correctness
+  5. Report both structural and semantic results
+
+  PASS: Tier 1 passes AND Tier 2 confirms understanding
+  WARN: Tier 1 fails but Tier 2 passes (potential pattern update needed)
+  FAIL: Both tiers fail OR Tier 1 passes but Tier 2 fails</code></pre>
+<h3 id="53-test-categories-requiring-semantic-evaluation">5.3 Test Categories Requiring Semantic Evaluation</h3>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Example Prompt</th>
+<th>Why Semantic Matters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Introspection Discovery</td>
+<td>"List available operations"</td>
+<td>LLM may describe operations differently</td>
+</tr>
+<tr>
+<td>Field Selection Discovery</td>
+<td>"Does search support field selection?"</td>
+<td>Affirmative answer may use varied phrasing</td>
+</tr>
+<tr>
+<td>Error Understanding</td>
+<td>"Handle this error gracefully"</td>
+<td>Recovery strategies may vary</td>
+</tr>
+<tr>
+<td>Operation Selection</td>
+<td>"Create an element"</td>
+<td>Correct tool choice matters more than exact call format</td>
+</tr>
+</tbody>
+</table>
+<h3 id="54-evaluation-workflow">5.4 Evaluation Workflow</h3>
+<pre class="mermaid"><code>graph TD
+    A[Run Test] --&gt; B{Tier 1 Pass?}
+    B --&gt;|Yes| C{Tier 2 Required?}
+    B --&gt;|No| D{Tier 2 Pass?}
+    C --&gt;|No| E[PASS]
+    C --&gt;|Yes| F{Tier 2 Pass?}
+    D --&gt;|Yes| G[WARN: Update patterns]
+    D --&gt;|No| H[FAIL]
+    F --&gt;|Yes| E
+    F --&gt;|No| H</code></pre>
+<hr />
+<h2 id="6-reporting">6. Reporting</h2>
+<h3 id="61-conformance-report-format">6.1 Conformance Report Format</h3>
+<p>Implementations SHOULD generate conformance reports:</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;implementation&quot;</span><span class="fu">:</span> <span class="st">&quot;example-adapter&quot;</span><span class="fu">,</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;version&quot;</span><span class="fu">:</span> <span class="st">&quot;1.0.0&quot;</span><span class="fu">,</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;specVersion&quot;</span><span class="fu">:</span> <span class="st">&quot;1.0.0-draft&quot;</span><span class="fu">,</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;testDate&quot;</span><span class="fu">:</span> <span class="st">&quot;2026-01-29T00:00:00Z&quot;</span><span class="fu">,</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;conformanceLevel&quot;</span><span class="fu">:</span> <span class="dv">1</span><span class="fu">,</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;summary&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;total&quot;</span><span class="fu">:</span> <span class="dv">11</span><span class="fu">,</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;passed&quot;</span><span class="fu">:</span> <span class="dv">9</span><span class="fu">,</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;warned&quot;</span><span class="fu">:</span> <span class="dv">2</span><span class="fu">,</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;failed&quot;</span><span class="fu">:</span> <span class="dv">0</span><span class="fu">,</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;skipped&quot;</span><span class="fu">:</span> <span class="dv">0</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">},</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;categories&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;Introspection Fidelity&quot;</span><span class="fu">,</span></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;required&quot;</span><span class="fu">:</span> <span class="st">&quot;MUST&quot;</span><span class="fu">,</span></span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;result&quot;</span><span class="fu">:</span> <span class="st">&quot;PASS&quot;</span><span class="fu">,</span></span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;tests&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>        <span class="fu">{</span> <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;Parameter Accuracy&quot;</span><span class="fu">,</span> <span class="dt">&quot;result&quot;</span><span class="fu">:</span> <span class="st">&quot;PASS&quot;</span> <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>        <span class="fu">{</span> <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;Completeness&quot;</span><span class="fu">,</span> <span class="dt">&quot;result&quot;</span><span class="fu">:</span> <span class="st">&quot;PASS&quot;</span> <span class="fu">}</span></span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>      <span class="ot">]</span></span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span></span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h3 id="62-badge-format">6.2 Badge Format</h3>
+<p>Conformant implementations MAY display badges:</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="al">![MCP-AQL Level 1](https://img.shields.io/badge/MCP--AQL-Level%201-green)</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="al">![MCP-AQL Level 2](https://img.shields.io/badge/MCP--AQL-Level%202-blue)</span></span></code></pre></div>
+<h3 id="63-certification-registry">6.3 Certification Registry</h3>
+<p>A future certification registry MAY track conformant implementations.</p>
+<hr />
+<h2 id="7-command-line-interface">7. Command-Line Interface</h2>
+<h3 id="71-cli-invocation">7.1 CLI Invocation</h3>
+<p>Conformance test runners SHOULD provide a command-line interface:</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="ex">mcpaql-conformance</span> <span class="op">&lt;</span>command<span class="op">&gt;</span> <span class="pp">[</span><span class="ss">options</span><span class="pp">]</span></span></code></pre></div>
+<h3 id="72-commands">7.2 Commands</h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Description</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>test</code></td>
+<td>Run conformance tests against an adapter</td>
+<td><code>mcpaql-conformance test ./adapter</code></td>
+</tr>
+<tr>
+<td><code>report</code></td>
+<td>Generate formatted report from test results file</td>
+<td><code>mcpaql-conformance report ./results.json</code></td>
+</tr>
+<tr>
+<td><code>version</code></td>
+<td>Print tool version</td>
+<td><code>mcpaql-conformance version</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Note:</strong> The <code>report</code> command takes a JSON results file (produced by <code>test --format json --output results.json</code>) as input and generates human-readable or markdown output.</p>
+<h3 id="73-test-command-options">7.3 Test Command Options</h3>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--level</code>, <code>-l</code></td>
+<td>Conformance level to test (1 or 2)</td>
+<td><code>1</code></td>
+</tr>
+<tr>
+<td><code>--output</code>, <code>-o</code></td>
+<td>Output file for results</td>
+<td>stdout</td>
+</tr>
+<tr>
+<td><code>--format</code>, <code>-f</code></td>
+<td>Output format (<code>json</code>, <code>text</code>, <code>markdown</code>)</td>
+<td><code>text</code></td>
+</tr>
+<tr>
+<td><code>--verbose</code>, <code>-v</code></td>
+<td>Enable verbose output</td>
+<td><code>false</code></td>
+</tr>
+<tr>
+<td><code>--tier</code></td>
+<td>Evaluation tier (<code>1</code>, <code>2</code>, <code>both</code>)</td>
+<td><code>both</code></td>
+</tr>
+<tr>
+<td><code>--category</code>, <code>-c</code></td>
+<td>Run specific test category only</td>
+<td>All</td>
+</tr>
+<tr>
+<td><code>--timeout</code></td>
+<td>Test timeout in seconds</td>
+<td><code>30</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="74-exit-codes">7.4 Exit Codes</h3>
+<table>
+<thead>
+<tr>
+<th>Code</th>
+<th>Meaning</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>0</code></td>
+<td>All tests passed</td>
+<td>Conformance achieved at requested level</td>
+</tr>
+<tr>
+<td><code>1</code></td>
+<td>Tests failed</td>
+<td>One or more MUST PASS tests failed</td>
+</tr>
+<tr>
+<td><code>2</code></td>
+<td>Tests warned</td>
+<td>All MUST PASS passed, but SHOULD PASS tests warned</td>
+</tr>
+<tr>
+<td><code>3</code></td>
+<td>Configuration error</td>
+<td>Invalid adapter path or configuration</td>
+</tr>
+<tr>
+<td><code>4</code></td>
+<td>Timeout</td>
+<td>Tests exceeded timeout limit</td>
+</tr>
+<tr>
+<td><code>5</code></td>
+<td>Internal error</td>
+<td>Unexpected error in test runner</td>
+</tr>
+</tbody>
+</table>
+<h3 id="75-example-usage">7.5 Example Usage</h3>
+<p><strong>Run Level 1 conformance tests:</strong></p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="ex">mcpaql-conformance</span> test ./generated-adapter <span class="at">--level</span> 1</span></code></pre></div>
+<p><strong>Run Level 2 tests with JSON output:</strong></p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="ex">mcpaql-conformance</span> test ./adapter <span class="at">--level</span> 2 <span class="at">--format</span> json <span class="at">--output</span> results.json</span></code></pre></div>
+<p><strong>Run specific test category:</strong></p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="ex">mcpaql-conformance</span> test ./adapter <span class="at">--category</span> <span class="st">&quot;Introspection Fidelity&quot;</span></span></code></pre></div>
+<p><strong>Verbose output with Tier 2 semantic evaluation:</strong></p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="ex">mcpaql-conformance</span> test ./adapter <span class="at">--level</span> 2 <span class="at">--tier</span> both <span class="at">--verbose</span></span></code></pre></div>
+<p><strong>Generate markdown report from results:</strong></p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="ex">mcpaql-conformance</span> report ./results.json <span class="at">--format</span> markdown <span class="op">&gt;</span> CONFORMANCE.md</span></code></pre></div>
+<h3 id="76-integration-with-generator">7.6 Integration with Generator</h3>
+<p>The adapter generator (see <a href="adapter/generator.html">Adapter Generator Specification</a>) SHOULD invoke conformance tests as part of the generation workflow:</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate adapter and run conformance tests</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="ex">mcpaql-generate</span> <span class="at">--schema</span> adapter.yaml <span class="at">--target</span> typescript <span class="at">--output</span> ./adapter</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Test generated adapter</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="ex">mcpaql-conformance</span> test ./adapter <span class="at">--level</span> 1</span></code></pre></div>
+<hr />
+<h2 id="references">References</h2>
+<ul>
+<li><a href="versions/v1.0.0-draft.html">MCP-AQL Specification v1.0.0-draft</a></li>
+<li><a href="introspection.html">Introspection Specification</a></li>
+<li><a href="operations.html">Operations Specification</a></li>
+<li><a href="https://github.com/MCPAQL/spec/issues/10">GitHub Issue #10</a> - Conformance test suite</li>
+<li><a href="https://github.com/MCPAQL/spec/issues/55">GitHub Issue #55</a> - Conformance test requirements</li>
+<li><a href="https://github.com/MCPAQL/spec/issues/56">GitHub Issue #56</a> - LLM semantic evaluation</li>
+</ul>
+
+          </div>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.</p>
+      <div class="footer-links">
+        <a href="../docs/index.html">Docs Library</a>
+        <a href="index.html">Repo-Synced Spec</a>
+        <a href="https://github.com/MCPAQL">MCPAQL Organization</a>
+        <a href="https://dollhouseresearch.com">Dollhouse Research</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../js/search.js"></script>
+</body>
+</html>

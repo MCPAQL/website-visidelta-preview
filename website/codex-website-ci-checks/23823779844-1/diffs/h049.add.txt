@@ -1,0 +1,299 @@
+MCP-AQL Spec | Plugin Interface Contracts
+Launch Checklist
+Adapter Patterns
+Search MCP-AQL docs
+Repo-Synced Spec
+Generated from MCPAQL/spec so the website carries the deeper protocol material too.
+MCP-AQL Conformance Testing Specification
+MCP-AQL CRUDE Pattern Specification
+MCP-AQL Endpoint Modes Specification
+Structured Error Codes Specification
+MCP-AQL Introspection Specification
+MCP-AQL Licensing Options (Working Notes)
+MCP Integration Specification
+MCP-AQL Operations Specification
+MCP-AQL Protocol Overview
+Plugin Interface Contracts
+MCP-AQL Specification Documentation
+Versions
+MCP-AQL Specification
+Dangerous Operation Classification Specification
+MCP Server Discovery Bundle
+Adapter Element Type Specification
+Adapter Generator Specification
+Rate Limiting and Quota Management Specification
+Trust Levels Specification
+Security
+Confirmation Token Specification
+Execution Safety Loop Specification
+Security Model: Gatekeeper Specification
+Features
+Field Selection Specification
+Cursor-Based Pagination Specification
+Warnings Array Specification
+Protocol Comparison Guide
+Developer Guides
+MCP-AQL Breaking Change Policy
+Preliminary Public Launch Checklist
+RFC Process for MCP-AQL Specification
+Versioning Strategy
+Architecture
+Architecture Documentation
+Research
+Protocol Landscape: MCP vs MCP-AQL vs A2A
+Reference
+Reference Documentation
+ADR-001: CRUDE Pattern (Extending CRUD with Execute)
+ADR-002: GraphQL-Style Input Objects for Updates
+ADR-003: snake_case Parameter Convention
+ADR-004: Schema-Driven Operation Definitions
+ADR-005: GraphQL-Style Introspection System
+ADR-006: Discriminated Response Format
+Architecture Decision Records
+REPO-SYNCED SPEC DOC
+This document defines the normative plugin interface contracts for the MCP-AQL adapter system. Plugins provide modular, composable functionality for transport, protocol, authentication, and serialization. This specificat
+Support document Draft (MVP) 1.0.0-draft 2026-01-27
+Source: spec/docs/plugin-contracts.md
+Open Source Markdown
+Browse Full Spec Reference
+Version: 1.0.0-draft Status: Draft (MVP) Last Updated: 2026-01-27
+Abstract
+This document defines the normative plugin interface contracts for the MCP-AQL adapter system. Plugins provide modular, composable functionality for transport, protocol, authentication, and serialization. This specification defines what each plugin type MUST provide; implementation details of specific plugins and the composition pipeline are documented in the mcpaql-adapter repository.
+Table of Contents
+Overview
+Plugin Categories
+Base Plugin Interface
+Transport Plugin Interface
+Protocol Plugin Interface
+Serialization Plugin Interface
+Authentication Plugin Interface
+Error Code Contracts
+1. Overview
+1.1 Purpose
+Plugins enable the universal adapter runtime to support different communication patterns without adapter-specific code. Each adapter schema references plugins declaratively:
+target :
+transport : http # Transport plugin
+protocol : rest # Protocol plugin
+serialization : json # Serialization plugin
+type : bearer # Auth plugin
+The runtime loads and composes these plugins to handle API communication.
+1.2 Design Principles
+Declarative composition - Adapters reference plugins by name, runtime composes them
+Single responsibility - Each plugin handles one concern
+Testable in isolation - Plugins can be unit tested independently
+Built-in only (MVP) - No user-extensible plugins in V1
+Future extensibility - Interfaces designed for later extension
+1.3 MVP Scope
+This specification covers the Minimum Viable Product plugins:
+Included:
+Category
+Transport
+Protocol
+Serialization
+none , api_key , bearer
+Deferred to future specifications:
+Deferred Plugins
+websocket , serial , native-*
+graphql , grpc , jsonrpc , custom
+xml , protobuf , msgpack , form , multipart
+basic , oauth , mtls , aws-sig4
+Pagination
+All pagination plugins (see #37)
+1.4 Requirement Levels
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in RFC 2119 .
+2. Plugin Categories
+2.1 Category Summary
+Responsibility
+MVP Plugin
+Communication channel
+Request/response structure
+Data encoding/decoding
+Credential attachment
+2.2 Plugin Resolution
+Plugins are resolved by name at runtime. Implementations:
+MUST check built-in plugins (shipped with runtime)
+MUST return a plugin instance for known names
+MUST fail with PLUGIN_NOT_FOUND error if the plugin name is unknown
+3. Base Plugin Interface
+3.1 Common Interface
+All plugins MUST implement a common base interface:
+interface Plugin {
+* Unique identifier for this plugin
+readonly name : string ;
+* Plugin category
+readonly category : PluginCategory ;
+* Human-readable description
+readonly description : string ;
+* Semantic version of the plugin
+readonly version : string ;
+type PluginCategory = &#39;transport&#39; | &#39;protocol&#39; | &#39;serialization&#39; | &#39;auth&#39; ;
+3.2 Plugin Lifecycle
+Plugins are stateless singletons. The runtime:
+Resolves plugins by name at adapter load time
+Validates plugin compatibility
+Composes plugins into a request pipeline
+Invokes pipeline for each operation
+Plugins MUST NOT maintain request-specific state between calls.
+4. Transport Plugin Interface
+4.1 Purpose
+Transport plugins handle the underlying communication channel between the runtime and target API.
+4.2 Interface
+interface TransportPlugin extends Plugin {
+readonly category : &#39;transport&#39; ;
+* Send a request and receive a response
+* @param request - The prepared request
+* @param options - Transport-specific options
+* @returns The raw response
+send (request : TransportRequest , options : TransportOptions) : Promise &lt; TransportResponse &gt;;
+interface TransportRequest {
+* Full URL including query parameters
+url : string ;
+* HTTP method (for HTTP-based transports)
+method : string ;
+* Request headers
+headers : Record &lt; string , string &gt;;
+* Serialized request body (may be undefined)
+body ?: string | Buffer ;
+interface TransportOptions {
+* Request timeout in milliseconds
+timeout ?: number ;
+* Number of retry attempts
+retries ?: number ;
+* Base delay between retries in milliseconds
+retryDelay ?: number ;
+interface TransportResponse {
+* HTTP status code
+status : number ;
+* Status text (e.g., &quot;OK&quot;, &quot;Not Found&quot;)
+statusText : string ;
+* Response headers
+* Raw response body
+body : string | Buffer ;
+5. Protocol Plugin Interface
+5.1 Purpose
+Protocol plugins translate MCP-AQL operation definitions into protocol-specific requests and parse responses into a standard format.
+5.2 Interface
+interface ProtocolPlugin extends Plugin {
+readonly category : &#39;protocol&#39; ;
+* Build a transport request from an operation definition
+* @param operation - The operation to execute
+* @param params - Resolved parameter values
+* @param config - Target configuration from adapter
+* @returns A request ready for the transport plugin
+buildRequest (
+operation : OperationDefinition ,
+params : Record &lt; string , unknown &gt;,
+config : TargetConfig
+) : TransportRequest ;
+* Parse a transport response into standard format
+* @param response - Raw response from transport
+* @param operation - The operation that was executed
+* @returns Parsed response data
+parseResponse (
+response : TransportResponse ,
+operation : OperationDefinition
+) : ParsedResponse ;
+interface OperationDefinition {
+name : string ;
+maps_to : string ; // e.g., &quot;GET /repos/{owner}/{repo}&quot;
+params ?: Record &lt; string , ParamDefinition &gt;;
+interface TargetConfig {
+base_url : string ;
+transport : string ;
+protocol : string ;
+serialization : string ;
+interface ParsedResponse {
+* Whether the request was successful (2xx status)
+ok : boolean ;
+* Deserialized response data
+data : unknown ;
+* Error information (if not ok)
+error ?: {
+message : string ;
+code ?: string ;
+6. Serialization Plugin Interface
+6.1 Purpose
+Serialization plugins handle encoding request bodies and decoding response bodies.
+6.2 Interface
+interface SerializationPlugin extends Plugin {
+readonly category : &#39;serialization&#39; ;
+* Content-Type header value for this format
+readonly contentType : string ;
+* Serialize data to string/buffer
+* @param data - Data to serialize
+* @returns Serialized string or buffer
+serialize (data : unknown ) : string | Buffer ;
+* Deserialize string/buffer to data
+* @param raw - Raw response body
+* @returns Deserialized data
+deserialize (raw : string | Buffer ) : unknown ;
+7. Authentication Plugin Interface
+7.1 Purpose
+Authentication plugins attach credentials to outgoing requests.
+7.2 Interface
+interface AuthPlugin extends Plugin {
+readonly category : &#39;auth&#39; ;
+* Attach authentication to a request
+* @param request - Request to modify
+* @param config - Auth configuration from adapter
+* @param context - Runtime context for credential resolution
+* @returns Modified request with auth attached
+authenticate (
+request : TransportRequest ,
+config : AuthConfig ,
+context : AuthContext
+interface AuthConfig {
+type : string ;
+// Type-specific fields
+token_env ?: string ; // For bearer
+header_name ?: string ; // For api_key
+key_env ?: string ; // For api_key
+interface AuthContext {
+* Resolve an environment variable
+getEnv (name : string ) : string | undefined ;
+8. Error Code Contracts
+8.1 Error Code Convention
+Plugin errors MUST use a namespaced code format:
+{CATEGORY}_{ERROR_TYPE}
+Examples:
+TRANSPORT_TIMEOUT
+AUTH_CREDENTIAL_MISSING
+SERIALIZATION_PARSE_ERROR
+PROTOCOL_INVALID_MAPPING
+8.2 Error Propagation
+Errors thrown by plugins MUST include:
+interface PluginError extends Error {
+code : string ; // Error code
+plugin : string ; // Plugin name
+category : string ; // Plugin category
+cause ?: Error ; // Underlying error
+8.3 MVP Error Codes
+Description
+PLUGIN_NOT_FOUND
+Requested plugin does not exist
+TRANSPORT_DNS_ERROR
+DNS resolution failed
+TRANSPORT_CONNECTION_REFUSED
+Connection refused
+Request timed out
+TRANSPORT_TLS_ERROR
+TLS/SSL error
+TRANSPORT_NETWORK_ERROR
+General network error
+Invalid maps_to format
+PROTOCOL_MISSING_PARAM
+Path parameter missing
+SERIALIZATION_CIRCULAR_REF
+Circular reference in data
+Failed to parse response
+AUTH_CONFIG_INVALID
+Invalid auth configuration
+Credential not found
+References
+Error Codes Specification
+Plugin System Implementation (implementation details)
+GitHub Issue: #62
+&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
+Docs Library
+MCPAQL Organization
+Dollhouse Research

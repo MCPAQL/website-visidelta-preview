@@ -1,0 +1,407 @@
+MCP-AQL Spec | Warnings Array Specification
+Launch Checklist
+Adapter Patterns
+Search MCP-AQL docs
+Repo-Synced Spec
+Generated from MCPAQL/spec so the website carries the deeper protocol material too.
+MCP-AQL Conformance Testing Specification
+MCP-AQL CRUDE Pattern Specification
+MCP-AQL Endpoint Modes Specification
+Structured Error Codes Specification
+MCP-AQL Introspection Specification
+MCP-AQL Licensing Options (Working Notes)
+MCP Integration Specification
+MCP-AQL Operations Specification
+MCP-AQL Protocol Overview
+Plugin Interface Contracts
+MCP-AQL Specification Documentation
+Versions
+MCP-AQL Specification
+Dangerous Operation Classification Specification
+MCP Server Discovery Bundle
+Adapter Element Type Specification
+Adapter Generator Specification
+Rate Limiting and Quota Management Specification
+Trust Levels Specification
+Security
+Confirmation Token Specification
+Execution Safety Loop Specification
+Security Model: Gatekeeper Specification
+Features
+Field Selection Specification
+Cursor-Based Pagination Specification
+Warnings Array Specification
+Protocol Comparison Guide
+Developer Guides
+MCP-AQL Breaking Change Policy
+Preliminary Public Launch Checklist
+RFC Process for MCP-AQL Specification
+Versioning Strategy
+Architecture
+Architecture Documentation
+Research
+Protocol Landscape: MCP vs MCP-AQL vs A2A
+Reference
+Reference Documentation
+ADR-001: CRUDE Pattern (Extending CRUD with Execute)
+ADR-002: GraphQL-Style Input Objects for Updates
+ADR-003: snake_case Parameter Convention
+ADR-004: Schema-Driven Operation Definitions
+ADR-005: GraphQL-Style Introspection System
+ADR-006: Discriminated Response Format
+Architecture Decision Records
+REPO-SYNCED SPEC DOC
+This document specifies the warnings array extension to MCP-AQL's discriminated response format. Warnings provide a mechanism to communicate non-fatal conditions to clients within successful responses, enabling proactive
+Support document Draft 1.0.0-draft 2026-01-28
+Source: spec/docs/features/warnings.md
+Open Source Markdown
+Browse Full Spec Reference
+Version: 1.0.0-draft Status: Draft Last Updated: 2026-01-28
+Abstract
+This document specifies the warnings array extension to MCP-AQL's discriminated response format. Warnings provide a mechanism to communicate non-fatal conditions to clients within successful responses, enabling proactive notification without blocking operation execution.
+Table of Contents
+Overview
+Response Format Extension
+Warning Object Schema
+3.2 Severity Levels
+Standard Warning Codes
+Client Requirements
+Implementation Requirements
+6.5 Warning Deduplication
+1. Overview
+1.1 Purpose
+Warnings address scenarios where:
+An operation succeeds but a condition warrants attention
+Resource limits are approaching but not exceeded
+Deprecated features are used
+Data quality issues exist but don't prevent operation
+Performance degradation may occur
+Without warnings, these conditions would either:
+Block the operation (too severe for the condition)
+Go unnoticed (hidden from the client entirely)
+1.2 Design Principles
+Non-blocking - Warnings never prevent successful operation completion
+Structured - Same format as error objects for consistency
+Actionable - Each warning suggests or enables a response
+Combinable - Multiple warnings can be returned in a single response
+Optional - Clients MAY ignore warnings without breaking functionality
+1.3 Relationship to Errors
+Response success
+Operation completed
+Client action
+Required
+Optional
+Blocks execution
+Schema structure
+error object
+warnings array
+2. Response Format Extension
+2.1 Extended Success Response
+The discriminated response format (see ADR-006 ) is extended to include an optional warnings array:
+interface SuccessResponse &lt; T &gt; {
+success : true ;
+data : T ;
+warnings ?: Warning[] ;
+interface ErrorResponse {
+success : false ;
+error : ErrorDetail ;
+// Note: warnings are NOT included in error responses
+2.2 Response Examples
+Success without warnings:
+&quot;success&quot; : true ,
+&quot;data&quot; : {
+&quot;user&quot; : {
+&quot;id&quot; : &quot;u123&quot; ,
+&quot;name&quot; : &quot;Alice&quot;
+Success with warnings:
+&quot;warnings&quot; : [
+&quot;code&quot; : &quot;RATE_LIMIT_QUOTA_WARNING&quot; ,
+&quot;message&quot; : &quot;Approaching quota limit&quot; ,
+&quot;details&quot; : {
+&quot;metric&quot; : &quot;requests_per_hour&quot; ,
+&quot;current&quot; : 4100 ,
+&quot;warn_threshold&quot; : 4000
+Success with multiple warnings:
+&quot;results&quot; : [ /* ... */ ]
+&quot;code&quot; : &quot;DEPRECATION_WARNING&quot; ,
+&quot;message&quot; : &quot;Operation &#39;list_users_v1&#39; is deprecated&quot; ,
+&quot;deprecated_operation&quot; : &quot;list_users_v1&quot; ,
+&quot;replacement&quot; : &quot;list_users&quot; ,
+&quot;removal_date&quot; : &quot;2027-01-01&quot;
+2.3 Warnings in Error Responses
+Warnings SHOULD NOT be included in error responses ( success: false ). The rationale:
+Clarity - Error responses focus on the failure condition
+Simplicity - Clients handle one concern at a time
+Semantics - If the operation failed, pre-operation warnings are moot
+If a warning condition would have applied, it will appear when the operation is retried successfully.
+3. Warning Object Schema
+3.1 Schema Definition
+interface Warning {
+* Machine-readable warning code
+* Format: CATEGORY_SPECIFIC_WARNING
+* Uses same format as error codes for consistency
+code : string ;
+* Human-readable warning message
+* Should be suitable for display to end users
+message : string ;
+* Optional structured details about the warning
+* Content varies by warning code
+details ?: Record &lt; string , unknown &gt;;
+* Optional severity level for client prioritization
+* Helps clients decide display ordering and filtering
+severity ?: &#39;low&#39; | &#39;medium&#39; | &#39;high&#39; ;
+The optional severity field helps clients prioritize warnings when multiple are present:
+Description
+Example Use Cases
+Requires immediate attention; may affect operations soon
+Quota nearly exhausted, imminent deprecation removal
+Should be addressed but not urgent
+Approaching limits, scheduled deprecation
+Informational; can be safely deferred or filtered
+Performance hints, soft deprecation notices
+Numeric severity mapping:
+For sorting, filtering, and programmatic comparison, implementations SHOULD use this numeric mapping:
+Severity
+Numeric Value
+Sort Order
+First (most urgent)
+Third (least urgent)
+This mapping ensures:
+Lower numeric values indicate higher urgency (consistent with syslog and common logging frameworks)
+Implementations can store severity in databases as integers
+Threshold-based filtering is consistent (e.g., "show severity ≤ 1" means high and medium)
+Cross-implementation interoperability when comparing severity levels
+Severity guidelines for implementations:
+Implementations MAY omit severity (clients should assume medium as default)
+Implementations SHOULD use high sparingly to avoid alert fatigue
+Implementations SHOULD NOT change a warning's severity between requests for the same condition
+Client handling:
+function sortWarningsBySeverity (warnings : Warning[]) : Warning[] {
+const order = { high : 0 , medium : 1 , low : 2 } ;
+return [ ... warnings] . sort ((a , b) =&gt; {
+const severityA = a . severity ?? &#39;medium&#39; ;
+const severityB = b . severity ?? &#39;medium&#39; ;
+return order[severityA] - order[severityB] ;
+function filterByMinimumSeverity (
+warnings : Warning[] ,
+minimum : &#39;low&#39; | &#39;medium&#39; | &#39;high&#39;
+) : Warning[] {
+const threshold = { low : 2 , medium : 1 , high : 0 } ;
+const minLevel = threshold[minimum] ;
+return warnings . filter (w =&gt; {
+const level = threshold[w . severity ?? &#39;medium&#39; ] ;
+return level &lt;= minLevel ;
+3.3 Code Format
+Warning codes follow the same naming convention as error codes:
+CATEGORY_SPECIFIC_WARNING
+All uppercase with underscores
+Category prefix identifies warning class
+Specific suffix describes the condition
+Codes may overlap with error codes when the condition can be either (e.g., rate limits)
+3.4 Warning Categories
+Category
+RATE_LIMIT_
+Approaching rate/quota limits
+RATE_LIMIT_QUOTA_WARNING
+DEPRECATION_
+Deprecated feature usage
+DEPRECATION_WARNING
+VALIDATION_
+Data quality issues
+VALIDATION_TRUNCATED_WARNING
+PERFORMANCE_
+Performance concerns
+PERFORMANCE_SLOW_QUERY_WARNING
+4. Standard Warning Codes
+4.1 Rate Limit Warnings
+When used: Usage is approaching a configured quota threshold.
+Message format: Approaching quota limit
+Severity recommendations:
+Condition
+Rationale
+&gt;90% of quota consumed
+Imminent limit, requires immediate attention
+At warn_threshold (default 80%)
+Standard warning, action advisable
+Details:
+/** The metric approaching the limit */
+metric : string ;
+/** Current usage count */
+current : number ;
+/** The warning threshold */
+warn_threshold : number ;
+/** The next threshold (pause or hard stop) */
+pause_threshold ?: number ;
+hard_stop_threshold ?: number ;
+Example:
+&quot;warn_threshold&quot; : 4000 ,
+&quot;pause_threshold&quot; : 4800
+Reference: Rate Limiting Specification
+4.2 Deprecation Warnings
+When used: A deprecated operation, parameter, or feature was used.
+Message format: {feature} is deprecated
+Within 30 days of removal_date
+Urgent migration required
+More than 30 days from removal_date
+Migration advisable
+No removal_date set (soft deprecation)
+Informational, no urgency
+/** What is deprecated (operation, parameter, etc.) */
+type : &#39;operation&#39; | &#39;parameter&#39; | &#39;feature&#39; ;
+/** Name of the deprecated item */
+deprecated_item : string ;
+/** Replacement to use instead */
+replacement ?: string ;
+/** When the deprecated item will be removed */
+removal_date ?: string ;
+/** Link to migration documentation */
+migration_guide ?: string ;
+&quot;type&quot; : &quot;operation&quot; ,
+&quot;deprecated_item&quot; : &quot;list_users_v1&quot; ,
+4.3 Validation Warnings
+When used: Response data was truncated due to size limits.
+Message format: Response truncated to {limit} items
+Significant data loss (&gt;50% truncated)
+User may miss important data
+Minor truncation (≤50% truncated)
+Informational, pagination available
+/** What was truncated */
+field : string ;
+/** Original count before truncation */
+original_count : number ;
+/** Count after truncation */
+truncated_count : number ;
+/** The limit that was applied */
+limit : number ;
+&quot;code&quot; : &quot;VALIDATION_TRUNCATED_WARNING&quot; ,
+&quot;message&quot; : &quot;Response truncated to 100 items&quot; ,
+&quot;field&quot; : &quot;results&quot; ,
+&quot;original_count&quot; : 1523 ,
+&quot;truncated_count&quot; : 100 ,
+&quot;limit&quot; : 100
+4.4 Performance Warnings
+When used: An operation took longer than expected to complete.
+Message format: Operation took {duration}ms (threshold: {threshold}ms)
+&gt;10x threshold exceeded
+Severe degradation, may indicate systemic issue
+2-10x threshold exceeded
+Notable slowdown, optimization recommended
+Just above threshold (&lt;2x)
+Minor performance concern
+/** Operation that was slow */
+operation : string ;
+/** Actual duration in milliseconds */
+duration_ms : number ;
+/** Threshold that was exceeded */
+threshold_ms : number ;
+/** Suggestions for improvement */
+suggestions ?: string [] ;
+&quot;code&quot; : &quot;PERFORMANCE_SLOW_QUERY_WARNING&quot; ,
+&quot;message&quot; : &quot;Operation took 5230ms (threshold: 1000ms)&quot; ,
+&quot;operation&quot; : &quot;search_all&quot; ,
+&quot;duration_ms&quot; : 5230 ,
+&quot;threshold_ms&quot; : 1000 ,
+&quot;suggestions&quot; : [
+&quot;Consider adding filters to narrow results&quot; ,
+&quot;Use pagination for large result sets&quot;
+5. Client Requirements
+5.1 Processing Warnings
+Clients MUST:
+Accept warnings gracefully - Responses with warnings are valid successful responses
+Not fail on unknown codes - New warning codes may be added
+Clients SHOULD:
+Log warnings - Record warnings for monitoring and debugging
+Display warnings to users - Make warnings visible when appropriate
+Surface quota warnings - Rate limit warnings warrant user attention
+Clients MAY:
+Take automated action - Adjust behavior based on warning codes
+Filter warnings - Suppress warnings that aren't relevant
+Aggregate warnings - Combine similar warnings for display
+5.2 Client Handling Algorithm
+function handleResponse &lt; T &gt; (response : SuccessResponse &lt; T &gt; | ErrorResponse) : T {
+if ( ! response . success ) {
+throw new Error (response . error . message ) ;
+// Process warnings if present
+if (response . warnings &amp;&amp; response . warnings . length &gt; 0 ) {
+for ( const warning of response . warnings ) {
+// Log all warnings
+logger . warn ( `[ ${ warning . code } ] ${ warning . message } ` , warning . details ) ;
+// Take action on specific warnings
+if (warning . code === &#39;RATE_LIMIT_QUOTA_WARNING&#39; ) {
+displayQuotaWarning (warning) ;
+return response . data ;
+5.3 Display Guidelines
+When displaying warnings to users:
+Warning Category
+Display Recommendation
+Prominent, real-time indicator
+One-time notification per session
+Inline with affected data
+Status bar or background notification
+6. Implementation Requirements
+6.1 MUST Requirements
+Implementations supporting warnings MUST:
+Include warnings only in successful responses ( success: true )
+Use array format even for single warnings
+Include code and message in all warning objects
+Use consistent warning codes within the adapter
+6.2 SHOULD Requirements
+Implementations supporting warnings SHOULD:
+Include details with contextual information
+Use standard warning codes when applicable
+Limit warnings to actionable conditions
+Aggregate similar warnings rather than repeating
+6.3 MAY Requirements
+Implementations supporting warnings MAY:
+Allow clients to suppress specific warning codes
+Provide warning history via introspection
+Configure warning thresholds
+Include warnings in audit logs
+6.4 Warning Limits
+To prevent response bloat:
+Implementations SHOULD limit warnings to 10 per response
+If more warnings apply, implementations SHOULD include the most important
+Implementations MAY include a meta-warning about suppressed warnings
+Duplicate warnings (same code and semantically equivalent details ) can occur when multiple subsystems generate the same warning or when batch operations trigger repeated conditions.
+Server-Side Deduplication
+Implementations SHOULD deduplicate warnings before including them in responses:
+Exact duplicates - Warnings with identical code and details SHOULD be collapsed to a single instance
+Semantic duplicates - Warnings with the same code but minor variations in details (e.g., same metric at same threshold) MAY be collapsed
+Counting - When deduplicating, implementations MAY add an occurrence_count field to indicate how many times the warning occurred
+Example with occurrence count:
+&quot;occurrence_count&quot; : 3
+Client-Side Deduplication
+Clients MAY implement additional deduplication when:
+Session-level deduplication - Suppress warnings already shown in the current session (a session is the lifetime of a single MCP connection; see Section 2.3 )
+Time-based deduplication - Suppress warnings seen within a configurable window (e.g., 5 minutes)
+Code-based filtering - Allow users to dismiss specific warning codes
+Client deduplication example:
+class WarningDeduplicator {
+private seen = new Map &lt; string , number &gt; () ; // code -&gt; timestamp
+private deduplicationWindowMs = 5 * 60 * 1000 ; // 5 minutes
+shouldShow (warning : Warning) : boolean {
+const key = ` ${ warning . code } : ${ JSON . stringify (warning . details ) } ` ;
+const lastSeen = this . seen . get (key) ;
+const now = Date . now () ;
+if (lastSeen &amp;&amp; now - lastSeen &lt; this . deduplicationWindowMs ) {
+return false ; // Suppress duplicate
+this . seen . set (key , now) ;
+return true ;
+Deduplication Recommendations
+Recommendation
+Single request
+Server SHOULD deduplicate identical warnings
+Batch operations
+Server SHOULD collapse per-item warnings into summary
+Client session
+Client MAY deduplicate across requests
+Long-running clients
+Client SHOULD use time-based expiration
+References
+Error Codes Specification
+Rate Limiting Specification
+GitHub Issue: #80
+&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
+Docs Library
+MCPAQL Organization
+Dollhouse Research

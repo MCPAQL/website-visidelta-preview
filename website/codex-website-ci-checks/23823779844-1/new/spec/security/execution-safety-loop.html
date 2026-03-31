@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Informative Document: This is an informative specification that provides detailed guidance for the execution safety loop pattern defined normatively in Section 8.6 of the core specification. In case of conflict, the norm">
+  <title>MCP-AQL Spec | Execution Safety Loop Specification</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <a class="logo" href="../../index.html"><span class="logo-mark"></span>MCP-AQL</a>
+        <ul class="nav-links">
+          <li><a href="../../index.html">Home</a></li>
+          <li><a href="../../docs/index.html">Docs</a></li>
+          <li><a href="../../launch-checklist.html">Launch Checklist</a></li>
+          <li><a href="../../apis/mcp-server.html">Adapter Patterns</a></li>
+        </ul>
+        <form class="site-search" data-search-form data-index-url="../../data/search-index.json" role="search">
+          <label class="sr-only" for="site-search-input">Search MCP-AQL docs</label>
+          <input id="site-search-input" data-search-input type="search" placeholder="Search repo-synced spec docs...">
+          <span class="search-count" data-search-count></span>
+          <ul class="search-results" data-search-results hidden></ul>
+        </form>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container docs-shell">
+      <aside class="docs-side">
+        <h2>Repo-Synced Spec</h2>
+        <p class="docs-side-note">Generated from <code>MCPAQL/spec</code> so the website carries the deeper protocol material too.</p>
+        <div class="docs-side-group">
+  <h3>Core</h3>
+  <ul><li><a href="../conformance-testing.html">MCP-AQL Conformance Testing Specification</a></li><li><a href="../crude-pattern.html">MCP-AQL CRUDE Pattern Specification</a></li><li><a href="../endpoint-modes.html">MCP-AQL Endpoint Modes Specification</a></li><li><a href="../error-codes.html">Structured Error Codes Specification</a></li><li><a href="../introspection.html">MCP-AQL Introspection Specification</a></li><li><a href="../licensing-options.html">MCP-AQL Licensing Options (Working Notes)</a></li><li><a href="../mcp-integration.html">MCP Integration Specification</a></li><li><a href="../operations.html">MCP-AQL Operations Specification</a></li><li><a href="../overview.html">MCP-AQL Protocol Overview</a></li><li><a href="../plugin-contracts.html">Plugin Interface Contracts</a></li><li><a href="../README.html">MCP-AQL Specification Documentation</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Versions</h3>
+  <ul><li><a href="../versions/v1.0.0-draft.html">MCP-AQL Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Adapter</h3>
+  <ul><li><a href="../adapter/danger-levels.html">Dangerous Operation Classification Specification</a></li><li><a href="../adapter/discovery-bundle.html">MCP Server Discovery Bundle</a></li><li><a href="../adapter/element-type.html">Adapter Element Type Specification</a></li><li><a href="../adapter/generator.html">Adapter Generator Specification</a></li><li><a href="../adapter/rate-limiting.html">Rate Limiting and Quota Management Specification</a></li><li><a href="../adapter/trust-levels.html">Trust Levels Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Security</h3>
+  <ul><li><a href="confirmation-tokens.html">Confirmation Token Specification</a></li><li><a class="current" href="execution-safety-loop.html">Execution Safety Loop Specification</a></li><li><a href="gatekeeper.html">Security Model: Gatekeeper Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Features</h3>
+  <ul><li><a href="../features/field-selection.html">Field Selection Specification</a></li><li><a href="../features/pagination.html">Cursor-Based Pagination Specification</a></li><li><a href="../features/warnings.html">Warnings Array Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Guides</h3>
+  <ul><li><a href="../guides/protocol-comparison.html">Protocol Comparison Guide</a></li><li><a href="../guides/README.html">Developer Guides</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Process</h3>
+  <ul><li><a href="../process/breaking-changes.html">MCP-AQL Breaking Change Policy</a></li><li><a href="../process/preliminary-public-launch-checklist.html">Preliminary Public Launch Checklist</a></li><li><a href="../process/rfc-process.html">RFC Process for MCP-AQL Specification</a></li><li><a href="../process/versioning.html">Versioning Strategy</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Architecture</h3>
+  <ul><li><a href="../architecture/README.html">Architecture Documentation</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Research</h3>
+  <ul><li><a href="../research/mcp-vs-mcpaql-vs-a2a.html">Protocol Landscape: MCP vs MCP-AQL vs A2A</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Reference</h3>
+  <ul><li><a href="../reference/README.html">Reference Documentation</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>ADRs</h3>
+  <ul><li><a href="../adr/ADR-001-crude-pattern.html">ADR-001: CRUDE Pattern (Extending CRUD with Execute)</a></li><li><a href="../adr/ADR-002-graphql-style-input.html">ADR-002: GraphQL-Style Input Objects for Updates</a></li><li><a href="../adr/ADR-003-snake-case-parameters.html">ADR-003: snake_case Parameter Convention</a></li><li><a href="../adr/ADR-004-schema-driven-operations.html">ADR-004: Schema-Driven Operation Definitions</a></li><li><a href="../adr/ADR-005-introspection-system.html">ADR-005: GraphQL-Style Introspection System</a></li><li><a href="../adr/ADR-006-discriminated-responses.html">ADR-006: Discriminated Response Format</a></li><li><a href="../adr/index.html">Architecture Decision Records</a></li><li><a href="../adr/README.html">Architecture Decision Records</a></li></ul>
+</div>
+      </aside>
+
+      <article class="docs-main">
+        <section class="hero docs-hero">
+          <div class="hero-inner">
+            <span class="status-pill">REPO-SYNCED SPEC DOC</span>
+            <h1>Execution Safety Loop Specification</h1>
+            <p class="lede">Informative Document: This is an informative specification that provides detailed guidance for the execution safety loop pattern defined normatively in Section 8.6 of the core specification. In case of conflict, the norm</p>
+            <div class="spec-meta"><span class="state-chip live">Support document</span><span class="state-chip pending">Draft</span><span class="state-chip">1.0.0-draft</span><span class="state-chip">2026-02-25</span></div>
+            <p class="spec-source">Source: <a href="https://github.com/MCPAQL/spec/blob/main/docs/security/execution-safety-loop.md">spec/docs/security/execution-safety-loop.md</a></p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="https://github.com/MCPAQL/spec/blob/main/docs/security/execution-safety-loop.md">Open Source Markdown</a>
+              <a class="btn btn-secondary" href="../index.html">Browse Full Spec Reference</a>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <div class="card spec-prose">
+            <p><strong>Version:</strong> 1.0.0-draft <strong>Status:</strong> Draft <strong>Last Updated:</strong> 2026-02-25</p>
+<blockquote>
+<p><strong>Informative Document:</strong> This is an informative specification that provides detailed guidance for the execution safety loop pattern defined normatively in <a href="../versions/v1.0.0-draft.html#86-execution-safety-loop">Section 8.6 of the core specification</a>. In case of conflict, the normative specification takes precedence.</p>
+</blockquote>
+<h2 id="abstract">Abstract</h2>
+<p>This document specifies the <strong>execution safety loop</strong> — an opt-in monitoring pattern that enables continuous safety evaluation of an LLM's intended actions across all connected MCP servers. It also defines the <strong>safety dongle</strong> deployment model, where a standalone MCP-AQL server functions as a universal safety layer without implementing any other MCP-AQL features.</p>
+<hr />
+<h2 id="table-of-contents">Table of Contents</h2>
+<ol type="1">
+<li><a href="#1-introduction">Introduction</a></li>
+<li><a href="#2-the-safety-dongle-deployment-model">The Safety Dongle Deployment Model</a></li>
+<li><a href="#3-the-execution-safety-loop">The Execution Safety Loop</a></li>
+<li><a href="#4-minimal-operation-surface">Minimal Operation Surface</a></li>
+<li><a href="#5-integration-with-gatekeeper">Integration with Gatekeeper</a></li>
+<li><a href="#6-integration-with-danger-zone">Integration with Danger Zone</a></li>
+<li><a href="#7-deployment-examples">Deployment Examples</a></li>
+<li><a href="#8-opting-out">Opting Out</a></li>
+<li><a href="#9-implementation-requirements">Implementation Requirements</a></li>
+</ol>
+<hr />
+<h2 id="1-introduction">1. Introduction</h2>
+<h3 id="11-purpose">1.1 Purpose</h3>
+<p>The execution safety loop addresses a fundamental challenge in LLM tool-calling environments: <strong>how do you enforce safety policies on an LLM's actions when those actions target multiple independent MCP servers?</strong></p>
+<p>Individual MCP servers can protect their own operations, but no single server has visibility into what the LLM is doing across all connected servers. The execution safety loop solves this by providing a central checkpoint that the LLM reports to before taking any action — regardless of which server handles the actual operation.</p>
+<h3 id="12-status">1.2 Status</h3>
+<p>The execution safety loop is an <strong>optional</strong> feature defined normatively in <a href="../versions/v1.0.0-draft.html#86-execution-safety-loop">Section 8.6 of the core specification</a>. This document provides informative guidance on deployment models, integration patterns, and implementation strategies.</p>
+<h3 id="13-core-concept">1.3 Core Concept</h3>
+<p>The execution safety loop is a protocol-level monitoring pattern:</p>
+<ol type="1">
+<li>The LLM plans an action (any tool call, file operation, shell command, etc.)</li>
+<li>The LLM reports its intent to a safety-enabled MCP-AQL server via <code>record_execution_step</code> with <code>nextActionHint</code></li>
+<li>The server evaluates the intent against its safety pipeline (Gatekeeper policies, Autonomy Evaluator, Danger Zone rules)</li>
+<li>The server returns an <code>AutonomyDirective</code> — go, pause, or hard stop</li>
+<li>The LLM respects the directive before proceeding</li>
+</ol>
+<p>This is distinct from the full agent lifecycle that a specific adapter (like DollhouseMCP) may implement. The safety loop is purely about monitoring and evaluating — it does not manage agent state, personas, elements, or any domain-specific functionality.</p>
+<h3 id="14-opt-in-design">1.4 Opt-In Design</h3>
+<p>The execution safety loop is entirely optional at every level:</p>
+<ul>
+<li><strong>Adapters</strong> choose whether to support it</li>
+<li><strong>Clients</strong> choose whether to enable it</li>
+<li><strong>Users</strong> can disable it at any time</li>
+</ul>
+<p>No adapter is required to implement the safety loop, and no client is required to use it. When disabled, the adapter operates normally without any safety enforcement overhead. See <a href="#8-opting-out">Section 8: Opting Out</a> for details.</p>
+<hr />
+<h2 id="2-the-safety-dongle-deployment-model">2. The Safety Dongle Deployment Model</h2>
+<h3 id="21-what-is-a-safety-dongle">2.1 What Is a Safety Dongle?</h3>
+<p>A safety dongle is a standalone MCP-AQL server whose sole purpose is safety enforcement. It has no domain functionality — it does not manage files, query databases, or interact with external services. It exists only to evaluate the LLM's intended actions and return go/no-go directives.</p>
+<p>The name "dongle" reflects the deployment model: you plug it in alongside your existing MCP servers, and it acts as a universal firewall for all tool calls in the session.</p>
+<h3 id="22-architecture">2.2 Architecture</h3>
+<pre><code>┌────────────────────────────────────────────────────────┐
+│  MCP Client (Claude, GPT, etc.)                        │
+│                                                        │
+│  LLM decides to take an action                         │
+│       │                                                │
+│       ▼                                                │
+│  1. Report intent to safety dongle                     │
+│     record_execution_step {                            │
+│       nextActionHint: &quot;calling write_file on server X&quot; │
+│     }                                                  │
+│       │                                                │
+│       ▼                                                │
+│  ┌──────────────────────────────────────────┐          │
+│  │  Safety Dongle (MCP-AQL Server)          │          │
+│  │                                          │          │
+│  │  Gatekeeper → Autonomy Evaluator →       │          │
+│  │  Danger Zone Enforcer                    │          │
+│  │                                          │          │
+│  │  Returns: AutonomyDirective              │          │
+│  │  { continue: true/false, factors: [...] }│          │
+│  └──────────────────────────────────────────┘          │
+│       │                                                │
+│       ▼                                                │
+│  2. If continue: execute the action on target server   │
+│     If !continue: pause, escalate, or abort            │
+│                                                        │
+│  ┌─────────┐  ┌─────────┐  ┌─────────┐               │
+│  │ MCP     │  │ MCP     │  │ MCP     │               │
+│  │ Server A│  │ Server B│  │ Server C│               │
+│  │ (files) │  │ (db)    │  │ (slack) │               │
+│  └─────────┘  └─────────┘  └─────────┘               │
+└────────────────────────────────────────────────────────┘</code></pre>
+<h3 id="23-what-the-dongle-does-not-do">2.3 What the Dongle Does NOT Do</h3>
+<p>A safety dongle in its minimal configuration:</p>
+<ul>
+<li><strong>Does not</strong> manage elements (personas, skills, templates, agents, memories)</li>
+<li><strong>Does not</strong> store or query domain data</li>
+<li><strong>Does not</strong> interact with external services beyond safety evaluation</li>
+<li><strong>Does not</strong> implement the full CRUDE pattern for domain operations</li>
+<li><strong>Does not</strong> require introspection of other servers' capabilities</li>
+</ul>
+<p>It is a purpose-built safety layer with a minimal operation surface.</p>
+<h3 id="24-relationship-to-full-mcp-aql-adapters">2.4 Relationship to Full MCP-AQL Adapters</h3>
+<p>The safety dongle and a full MCP-AQL adapter are both valid configurations of the same protocol. They differ only in scope:</p>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Safety Dongle</th>
+<th>Full MCP-AQL Adapter</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Purpose</td>
+<td>Safety enforcement only</td>
+<td>Domain operations + safety</td>
+</tr>
+<tr>
+<td>Operations</td>
+<td>~7 (safety loop + introspection)</td>
+<td>Dozens (full CRUDE surface)</td>
+</tr>
+<tr>
+<td>Elements</td>
+<td>None</td>
+<td>Personas, skills, agents, etc.</td>
+</tr>
+<tr>
+<td>State</td>
+<td>Execution state + policies only</td>
+<td>Full domain state</td>
+</tr>
+<tr>
+<td>Endpoints used</td>
+<td>CREATE, EXECUTE, READ (subset)</td>
+<td>All five CRUDE endpoints</td>
+</tr>
+</tbody>
+</table>
+<p>A full MCP-AQL adapter MAY embed the safety loop directly — it does not need a separate dongle. The dongle model is for environments where safety enforcement is decoupled from the adapters performing the actual work.</p>
+<hr />
+<h2 id="3-the-execution-safety-loop">3. The Execution Safety Loop</h2>
+<h3 id="31-loop-protocol">3.1 Loop Protocol</h3>
+<p>The execution safety loop follows a simple protocol:</p>
+<pre><code>┌─────────────────────────────────────┐
+│                                     │
+│  ┌──────────┐                       │
+│  │  Plan    │  LLM determines       │
+│  │  action  │  next action          │
+│  └────┬─────┘                       │
+│       │                             │
+│       ▼                             │
+│  ┌──────────┐                       │
+│  │  Report  │  record_execution_step│
+│  │  intent  │  { nextActionHint,    │
+│  │          │    outcome? }         │
+│  └────┬─────┘                       │
+│       │                             │
+│       ▼                             │
+│  ┌──────────┐                       │
+│  │ Evaluate │  Gatekeeper +         │
+│  │          │  Autonomy Evaluator + │
+│  │          │  Danger Zone          │
+│  └────┬─────┘                       │
+│       │                             │
+│       ▼                             │
+│  ┌──────────┐    ┌──────────┐       │
+│  │ continue │───▶│  Act     │       │
+│  │ = true   │    │  (tool   │       │
+│  └──────────┘    │   call)  │       │
+│                  └────┬─────┘       │
+│       ┌───────────────┘             │
+│       │                             │
+│       ▼                             │
+│  ┌──────────┐    ┌──────────┐       │
+│  │ continue │───▶│  Pause / │       │
+│  │ = false  │    │  Escalate│       │
+│  └──────────┘    └──────────┘       │
+│                                     │
+└─────────────────────────────────────┘</code></pre>
+<p><strong>Lifecycle:</strong></p>
+<ol type="1">
+<li><strong>Start:</strong> <code>execute_agent</code> — initiates the safety loop (requires explicit approval)</li>
+<li><strong>Loop:</strong> <code>record_execution_step</code> — report each intended action, receive directive</li>
+<li><strong>End:</strong> <code>complete_execution</code> (success) or <code>abort_execution</code> (abnormal termination)</li>
+</ol>
+<h3 id="32-monitoring-scope">3.2 Monitoring Scope</h3>
+<p>The execution safety loop monitors <strong>all intended actions</strong>, not only MCP-AQL operations on the same adapter. This includes:</p>
+<ul>
+<li>Tool calls to any MCP server in the client session</li>
+<li>Tool calls to non-MCP-AQL MCP servers</li>
+<li>Built-in client capabilities (file I/O, shell access, web requests)</li>
+<li>Any operation that produces effects beyond the LLM's reasoning context</li>
+</ul>
+<p>This broad scope is what makes the safety dongle deployment model possible: the dongle does not need to understand or proxy the actual operations — it only needs to evaluate the LLM's description of what it intends to do.</p>
+<h3 id="33-the-record_execution_step-parameters">3.3 The <code>record_execution_step</code> Parameters</h3>
+<p>The <code>record_execution_step</code> operation accepts several parameters. The full parameter table is defined normatively in <a href="../versions/v1.0.0-draft.html#863-mandatory-action-reporting">Section 8.6.3 of the core specification</a>. The two most important fields are:</p>
+<ul>
+<li><strong><code>nextActionHint</code></strong> (MUST) — describes the intended next action for safety evaluation</li>
+<li><strong><code>outcome</code></strong> (SHOULD) — reports the result of the previous step (<code>"success"</code>, <code>"failure"</code>, or <code>"skipped"</code>), which drives Stage 2 of the Autonomy Evaluator pipeline (Section 8.7.2)</li>
+</ul>
+<p>The <code>nextActionHint</code> is a human-readable string describing the intended action with sufficient detail for safety evaluation.</p>
+<p><strong>Good <code>nextActionHint</code> examples:</strong></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Specific tool call with target</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;calling write_file on project/config.json to update database URL&quot;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">// Shell command with detail</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;executing shell command: npm install express&quot;</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">// Cross-server operation</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;sending message to #general channel via Slack MCP server&quot;</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co">// Destructive operation</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;deleting all records from staging_users table via database MCP server&quot;</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co">// File system operation</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;reading /etc/passwd to check user configuration&quot;</span></span></code></pre></div>
+<p><strong>Poor <code>nextActionHint</code> examples:</strong></p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Too vague — cannot evaluate risk</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;doing something&quot;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">// No target information</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;writing a file&quot;</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">// Missing context for risk assessment</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;running a command&quot;</span></span></code></pre></div>
+<p>The quality of safety evaluation depends directly on the quality of the <code>nextActionHint</code>. LLM system prompts SHOULD instruct the model to provide specific, detailed action descriptions.</p>
+<h3 id="34-the-autonomydirective-response">3.4 The <code>AutonomyDirective</code> Response</h3>
+<p>Every <code>record_execution_step</code> call returns an <code>AutonomyDirective</code> indicating whether the LLM may proceed. See <a href="../versions/v1.0.0-draft.html#87-autonomy-evaluation">Section 8.7 of the core specification</a> for the full type definition.</p>
+<p>Key fields:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>continue</code></td>
+<td>boolean</td>
+<td>Whether the LLM may proceed with the reported action</td>
+</tr>
+<tr>
+<td><code>factors</code></td>
+<td>string[]</td>
+<td>Human-readable explanations of the evaluation decision</td>
+</tr>
+<tr>
+<td><code>stopped</code></td>
+<td>boolean</td>
+<td>Whether the agent has been hard-blocked (Danger Zone)</td>
+</tr>
+<tr>
+<td><code>reason</code></td>
+<td>string</td>
+<td>Why the agent was paused or stopped</td>
+</tr>
+<tr>
+<td><code>stepsRemaining</code></td>
+<td>number</td>
+<td>Steps remaining before mandatory pause</td>
+</tr>
+<tr>
+<td><code>nextStepRisk</code></td>
+<td>SafetyTier</td>
+<td>Safety tier assigned to the reported action</td>
+</tr>
+<tr>
+<td><code>notifications</code></td>
+<td>AgentNotification[]</td>
+<td>Gatekeeper blocks, danger alerts, and other events</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Decision tree:</strong></p>
+<ol type="1">
+<li>If <code>stopped === true</code> → <strong>Hard stop.</strong> Agent MUST cease all actions until unblocked via out-of-band verification.</li>
+<li>If <code>continue === false</code> → <strong>Pause.</strong> Agent MUST NOT proceed. Report the pause to the user or upstream system.</li>
+<li>If <code>continue === true</code> → <strong>Proceed.</strong> Agent MAY execute the reported action.</li>
+</ol>
+<hr />
+<h2 id="4-minimal-operation-surface">4. Minimal Operation Surface</h2>
+<h3 id="41-required-operations">4.1 Required Operations</h3>
+<p>A safety dongle implements a minimal set of operations:</p>
+<table>
+<thead>
+<tr>
+<th>Operation</th>
+<th>Endpoint</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>execute_agent</code></td>
+<td>EXECUTE</td>
+<td>Start the execution safety loop</td>
+</tr>
+<tr>
+<td><code>record_execution_step</code></td>
+<td>CREATE</td>
+<td>Report intended action, receive <code>AutonomyDirective</code></td>
+</tr>
+<tr>
+<td><code>complete_execution</code></td>
+<td>EXECUTE</td>
+<td>Signal normal completion of the safety loop</td>
+</tr>
+<tr>
+<td><code>abort_execution</code></td>
+<td>EXECUTE</td>
+<td>Signal abnormal termination</td>
+</tr>
+<tr>
+<td><code>confirm_operation</code></td>
+<td>EXECUTE</td>
+<td>Confirm Gatekeeper blocks or Autonomy Evaluator <code>confirm</code> tier pauses</td>
+</tr>
+<tr>
+<td><code>verify_challenge</code></td>
+<td>CREATE</td>
+<td>Submit out-of-band verification code (<code>verify</code> tier and Danger Zone)</td>
+</tr>
+<tr>
+<td><code>introspect</code></td>
+<td>READ</td>
+<td>Discover available operations and capabilities</td>
+</tr>
+</tbody>
+</table>
+<p>This is 7 operations across 3 endpoints — a fraction of a full MCP-AQL adapter's surface.</p>
+<h3 id="42-endpoint-classification">4.2 Endpoint Classification</h3>
+<p>The endpoint placement of these operations is critical to the permission architecture:</p>
+<table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Default Permission</th>
+<th>Operations</th>
+<th>Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>READ</td>
+<td><code>AUTO_APPROVE</code></td>
+<td><code>introspect</code></td>
+<td>Zero friction for discovery</td>
+</tr>
+<tr>
+<td>CREATE</td>
+<td><code>CONFIRM_SESSION</code></td>
+<td><code>record_execution_step</code>, <code>verify_challenge</code></td>
+<td>Approve once, then frictionless for the session</td>
+</tr>
+<tr>
+<td>EXECUTE</td>
+<td><code>CONFIRM_SINGLE_USE</code></td>
+<td><code>execute_agent</code>, <code>complete_execution</code>, <code>abort_execution</code>, <code>confirm_operation</code></td>
+<td>Each invocation requires explicit approval</td>
+</tr>
+</tbody>
+</table>
+<p>The key design decision: <code>record_execution_step</code> is on CREATE (not EXECUTE) because it runs on every loop cycle. If it were on EXECUTE, the client would need to either:</p>
+<ul>
+<li><strong>Auto-approve all EXECUTE operations</strong> — which also auto-approves <code>confirm_operation</code>, collapsing the Gatekeeper permission architecture</li>
+<li><strong>Manually approve every loop cycle</strong> — making the safety loop unusable in practice</li>
+</ul>
+<p>By placing it on CREATE with <code>CONFIRM_SESSION</code> semantics, the user approves it once at the start of the session, and subsequent calls are frictionless. Meanwhile, <code>confirm_operation</code> stays on EXECUTE with <code>CONFIRM_SINGLE_USE</code>, preserving the permission model.</p>
+<h3 id="43-permission-architecture">4.3 Permission Architecture</h3>
+<p>The CRUDE endpoint classification directly determines default friction levels:</p>
+<pre><code>READ (AUTO_APPROVE)
+  └── introspect           → Zero friction
+
+CREATE (CONFIRM_SESSION)
+  ├── record_execution_step → Approve once, then frictionless
+  └── verify_challenge      → Approve once, then frictionless
+
+EXECUTE (CONFIRM_SINGLE_USE)
+  ├── execute_agent         → Explicit approval each time
+  ├── complete_execution    → Explicit approval each time
+  ├── abort_execution       → Explicit approval each time
+  └── confirm_operation     → AUTO_APPROVE override (avoids &quot;confirm to confirm&quot; loop)</code></pre>
+<blockquote>
+<p><strong>Implementation Note:</strong> <code>confirm_operation</code> has an <code>AUTO_APPROVE</code> override despite being on the EXECUTE endpoint. This prevents an infinite confirmation loop where confirming an operation itself requires confirmation.</p>
+<p><strong>Security Note:</strong> Because <code>confirm_operation</code> is auto-approved, the LLM could theoretically call it to approve its own blocked operations (Gatekeeper blocks or Autonomy Evaluator <code>confirm</code> tier pauses) without human involvement. Implementations MUST prevent self-approval — the entity confirming an operation MUST NOT be the same agent that triggered the block. Server-side controls (caller identity validation, confirmation tokens bound to a human channel, or out-of-band confirmation delivery) are required. See <a href="../versions/v1.0.0-draft.html#873-agent-notification-system">Section 8.7.3</a> for the normative requirement.</p>
+</blockquote>
+<hr />
+<h2 id="5-integration-with-gatekeeper">5. Integration with Gatekeeper</h2>
+<h3 id="51-how-the-dongle-evaluates-actions">5.1 How the Dongle Evaluates Actions</h3>
+<p>The safety dongle uses the same <a href="gatekeeper.html">Gatekeeper</a> architecture as a full MCP-AQL adapter, but scoped to the execution safety loop:</p>
+<ol type="1">
+<li><strong>Layer 1 — Route Validation:</strong> Verifies the operation is called via the correct CRUDE endpoint</li>
+<li><strong>Layer 2 — Safety Tier:</strong> Evaluates the endpoint's permission characteristics</li>
+<li><strong>Layer 3 — Policy Evaluation:</strong> Checks <code>nextActionHint</code> against configured policies</li>
+<li><strong>Layer 4 — Confirmation:</strong> Issues confirmation tokens for operations requiring acknowledgment</li>
+</ol>
+<p>For the safety dongle, Layer 3 is the most important: it evaluates the LLM's stated intent against configurable patterns.</p>
+<h3 id="52-policy-model">5.2 Policy Model</h3>
+<p>Policies control which actions are allowed, denied, or require confirmation. Policies are matched against the <code>nextActionHint</code> string using glob patterns:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Example policy configuration</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">deny</span><span class="op">:</span> [</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;drop_*&quot;</span><span class="op">,</span>           <span class="co">// Block any drop operations</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;delete_all*&quot;</span><span class="op">,</span>      <span class="co">// Block bulk deletions</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;*_production*&quot;</span><span class="op">,</span>    <span class="co">// Block anything targeting production</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;rm -rf*&quot;</span>           <span class="co">// Block recursive force deletions</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  ]<span class="op">,</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">requiresApproval</span><span class="op">:</span> [</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;delete_*&quot;</span><span class="op">,</span>         <span class="co">// Require approval for deletions</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;*force*&quot;</span><span class="op">,</span>          <span class="co">// Require approval for force operations</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;deploy_*&quot;</span><span class="op">,</span>         <span class="co">// Require approval for deployments</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;git push*&quot;</span>         <span class="co">// Require approval for git pushes</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>  ]<span class="op">,</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>  <span class="dt">autoApprove</span><span class="op">:</span> [</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;read_*&quot;</span><span class="op">,</span>           <span class="co">// Auto-approve reads</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;list_*&quot;</span><span class="op">,</span>           <span class="co">// Auto-approve listings</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;get_*&quot;</span><span class="op">,</span>            <span class="co">// Auto-approve getters</span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;search_*&quot;</span>          <span class="co">// Auto-approve searches</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>  ]</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><strong>Resolution order:</strong> <code>deny</code> &gt; <code>requiresApproval</code> &gt; <code>autoApprove</code> &gt; default (evaluate via Autonomy Evaluator)</p>
+<h3 id="53-notification-system">5.3 Notification System</h3>
+<p>When the Gatekeeper blocks an operation or the Autonomy Evaluator pauses execution, notifications are included in the <code>AutonomyDirective</code> response:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">continue</span><span class="op">:</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">reason</span><span class="op">:</span> <span class="st">&quot;Action requires approval: delete_user&quot;</span><span class="op">,</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">factors</span><span class="op">:</span> [<span class="st">&quot;Pattern match: delete_* requires approval&quot;</span>]<span class="op">,</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">notifications</span><span class="op">:</span> [</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">type</span><span class="op">:</span> <span class="st">&quot;permission_pending&quot;</span><span class="op">,</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">message</span><span class="op">:</span> <span class="st">&quot;Operation &#39;delete_user&#39; requires confirmation&quot;</span><span class="op">,</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>      <span class="dt">metadata</span><span class="op">:</span> {</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>        <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;delete_user&quot;</span><span class="op">,</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>        <span class="dt">level</span><span class="op">:</span> <span class="st">&quot;CONFIRM_SINGLE_USE&quot;</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>      }<span class="op">,</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>      <span class="dt">timestamp</span><span class="op">:</span> <span class="st">&quot;2026-02-25T14:30:00Z&quot;</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>  ]</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>Notification types:</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Trigger</th>
+<th>Action Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>permission_pending</code></td>
+<td>Gatekeeper blocked an operation</td>
+<td>Call <code>confirm_operation</code> to approve</td>
+</tr>
+<tr>
+<td><code>autonomy_pause</code></td>
+<td>Autonomy Evaluator returned <code>continue: false</code></td>
+<td>For <code>confirm</code> tier: call <code>confirm_operation</code>; for <code>verify</code> tier: out-of-band <code>verify_challenge</code> (Section 6)</td>
+</tr>
+<tr>
+<td><code>danger_zone</code></td>
+<td>Hard block triggered (<code>danger_zone</code> tier or <code>deny</code> pattern)</td>
+<td>Out-of-band <code>verify_challenge</code> required (Section 6)</td>
+</tr>
+</tbody>
+</table>
+<p>The notification system is <strong>pull-based</strong>: notifications are included in <code>record_execution_step</code> responses. There is no push channel — the LLM must call <code>record_execution_step</code> to discover pending events. This aligns with the MCP protocol's request-response model.</p>
+<hr />
+<h2 id="6-integration-with-danger-zone">6. Integration with Danger Zone</h2>
+<h3 id="61-danger-level-escalation-during-execution">6.1 Danger Level Escalation During Execution</h3>
+<p>When the Autonomy Evaluator assigns a high risk score to a <code>nextActionHint</code>, the action escalates through safety tiers defined in the <a href="../adapter/danger-levels.html">Danger Levels specification</a>:</p>
+<table>
+<thead>
+<tr>
+<th>Risk Score</th>
+<th>Tier</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0-30</td>
+<td><code>advisory</code></td>
+<td>Log and continue</td>
+</tr>
+<tr>
+<td>31-60</td>
+<td><code>confirm</code></td>
+<td>Pause for human review (<code>continue: false</code>)</td>
+</tr>
+<tr>
+<td>61-85</td>
+<td><code>verify</code></td>
+<td>Pause + out-of-band verification via <code>verify_challenge</code> (Section 8.8)</td>
+</tr>
+<tr>
+<td>86-100</td>
+<td><code>danger_zone</code></td>
+<td>Hard stop + out-of-band verification via <code>verify_challenge</code> (Section 8.8)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="62-out-of-band-verification">6.2 Out-of-Band Verification</h3>
+<p>Both the <code>verify</code> and <code>danger_zone</code> tiers trigger out-of-band verification, but with different enforcement severity.</p>
+<p><strong>Danger Zone hard stop</strong> (<code>danger_zone</code> tier or <code>deny</code> pattern match):</p>
+<ol type="1">
+<li>The <code>AutonomyDirective</code> returns <code>stopped: true</code></li>
+<li>A verification challenge is generated with a cryptographically random code</li>
+<li>The code is displayed through a channel <strong>inaccessible to the AI</strong> (OS dialog, hardware token, SMS, etc.)</li>
+<li>The agent is blocked at the agent level until a human provides the correct code via <code>verify_challenge</code></li>
+<li>The block persists across server restarts</li>
+</ol>
+<p><strong>Verify tier pause</strong> (<code>verify</code> tier):</p>
+<ol type="1">
+<li>The <code>AutonomyDirective</code> returns <code>continue: false</code> (without <code>stopped: true</code>)</li>
+<li>A verification challenge is generated and displayed out-of-band (same as above)</li>
+<li>The agent is paused — subsequent <code>record_execution_step</code> calls return <code>continue: false</code> until verified</li>
+<li>Unlike Danger Zone blocks, verify pauses do not persist across restarts and do not prevent new executions</li>
+</ol>
+<p>See <a href="../versions/v1.0.0-draft.html#88-out-of-band-verification">Section 8.8 of the core specification</a> for the full out-of-band verification protocol.</p>
+<blockquote>
+<p><strong>Security Principle:</strong> The verification code MUST NOT appear in any MCP response, tool result, log accessible to the AI, or <code>_meta</code> field. The AI can only see the challenge ID — never the code itself. This ensures that even a prompt-injected LLM cannot self-verify.</p>
+</blockquote>
+<hr />
+<h2 id="7-deployment-examples">7. Deployment Examples</h2>
+<h3 id="71-minimal-safety-dongle">7.1 Minimal Safety Dongle</h3>
+<p>A standalone MCP-AQL server with no domain functionality:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">// MCP client configuration</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">mcpServers</span><span class="op">:</span> {</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Safety dongle — evaluates all actions</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;safety&quot;</span><span class="op">:</span> {</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>      <span class="dt">command</span><span class="op">:</span> <span class="st">&quot;mcpaql-safety-dongle&quot;</span><span class="op">,</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">args</span><span class="op">:</span> [<span class="st">&quot;--policy&quot;</span><span class="op">,</span> <span class="st">&quot;./safety-policies.json&quot;</span>]</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    }<span class="op">,</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Domain servers — do the actual work</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;filesystem&quot;</span><span class="op">:</span> { <span class="dt">command</span><span class="op">:</span> <span class="st">&quot;mcp-filesystem&quot;</span><span class="op">,</span> <span class="dt">args</span><span class="op">:</span> [<span class="st">&quot;/workspace&quot;</span>] }<span class="op">,</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;database&quot;</span><span class="op">:</span> { <span class="dt">command</span><span class="op">:</span> <span class="st">&quot;mcp-postgres&quot;</span><span class="op">,</span> <span class="dt">args</span><span class="op">:</span> [<span class="st">&quot;--connection&quot;</span><span class="op">,</span> <span class="st">&quot;...&quot;</span>] }<span class="op">,</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;slack&quot;</span><span class="op">:</span> { <span class="dt">command</span><span class="op">:</span> <span class="st">&quot;mcp-slack&quot;</span><span class="op">,</span> <span class="dt">args</span><span class="op">:</span> [<span class="st">&quot;--token&quot;</span><span class="op">,</span> <span class="st">&quot;...&quot;</span>] }</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>The LLM's system prompt includes:</p>
+<pre><code>Before taking any action (tool call, file operation, shell command),
+you MUST report your intent to the safety server via
+record_execution_step with a detailed nextActionHint.
+Only proceed if the AutonomyDirective returns continue: true.</code></pre>
+<h3 id="72-safety-dongle--multiple-mcp-servers">7.2 Safety Dongle + Multiple MCP Servers</h3>
+<p>In a multi-server environment, the safety dongle monitors actions across all servers:</p>
+<pre><code>┌─────────────────────────────────────────────────┐
+│  MCP Client                                     │
+│                                                 │
+│  ┌─────────────┐                                │
+│  │ Safety      │ ◄── report ALL intended actions│
+│  │ Dongle      │ ──► go/no-go directives        │
+│  │ (MCP-AQL)   │                                │
+│  └─────────────┘                                │
+│                                                 │
+│  ┌──────┐ ┌──────┐ ┌──────┐ ┌──────┐           │
+│  │FS    │ │DB    │ │Slack │ │Git   │           │
+│  │Server│ │Server│ │Server│ │Server│           │
+│  └──────┘ └──────┘ └──────┘ └──────┘           │
+└─────────────────────────────────────────────────┘</code></pre>
+<p>The domain servers do not need to know about the safety dongle. They are standard MCP servers — the safety evaluation happens between the LLM and the dongle, before the LLM calls any tool on any server.</p>
+<h3 id="73-full-mcp-aql-adapter-with-embedded-safety">7.3 Full MCP-AQL Adapter with Embedded Safety</h3>
+<p>A full MCP-AQL adapter can embed the execution safety loop directly — no separate dongle needed:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Single adapter with full CRUDE surface + embedded safety</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">mcpServers</span><span class="op">:</span> {</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;dollhouse&quot;</span><span class="op">:</span> {</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>      <span class="dt">command</span><span class="op">:</span> <span class="st">&quot;dollhouse-mcp&quot;</span><span class="op">,</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>      <span class="dt">args</span><span class="op">:</span> [<span class="st">&quot;--safety-mode&quot;</span><span class="op">,</span> <span class="st">&quot;enforcing&quot;</span>]</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>In this model, the adapter handles both domain operations (elements, personas, agents) and safety enforcement (Gatekeeper, Autonomy Evaluator, Danger Zone) in the same server. The execution safety loop is just one feature among many.</p>
+<hr />
+<h2 id="8-opting-out">8. Opting Out</h2>
+<h3 id="81-when-to-disable">8.1 When to Disable</h3>
+<p>The execution safety loop may be unnecessary or undesirable in several scenarios:</p>
+<ul>
+<li><strong>Trusted environments:</strong> Development machines, sandboxed containers, or testing environments where safety enforcement adds friction without benefit</li>
+<li><strong>Performance-sensitive workloads:</strong> The loop adds latency to every action (one round-trip per tool call)</li>
+<li><strong>Simple automation:</strong> Scripts or pipelines where the action sequence is predetermined and does not need LLM-level safety evaluation</li>
+<li><strong>User preference:</strong> Some users may prefer to operate without safety constraints</li>
+</ul>
+<h3 id="82-how-to-disable">8.2 How to Disable</h3>
+<p>Adapters indicate their safety loop status via introspection:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Safety loop actively enforcing</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>{ <span class="dt">capabilities</span><span class="op">:</span> { <span class="dt">execution_safety_loop</span><span class="op">:</span> <span class="st">&quot;enforcing&quot;</span> } }</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co">// Safety loop in monitoring mode (advisory only)</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>{ <span class="dt">capabilities</span><span class="op">:</span> { <span class="dt">execution_safety_loop</span><span class="op">:</span> <span class="st">&quot;monitoring&quot;</span> } }</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="co">// Safety loop logging only (no evaluation)</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>{ <span class="dt">capabilities</span><span class="op">:</span> { <span class="dt">execution_safety_loop</span><span class="op">:</span> <span class="st">&quot;logging&quot;</span> } }</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="co">// Safety loop supported but currently disabled</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>{ <span class="dt">capabilities</span><span class="op">:</span> { <span class="dt">execution_safety_loop</span><span class="op">:</span> <span class="st">&quot;disabled&quot;</span> } }</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="co">// Adapter does not support the safety loop (field omitted entirely)</span></span></code></pre></div>
+<p>Disabling is typically done via adapter configuration:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Adapter startup configuration</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>{ <span class="dt">safetyLoop</span><span class="op">:</span> { <span class="dt">mode</span><span class="op">:</span> <span class="st">&quot;disabled&quot;</span> } }</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co">// Or via environment variable</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co">// MCPAQL_SAFETY_LOOP=disabled</span></span></code></pre></div>
+<h3 id="83-partial-modes">8.3 Partial Modes</h3>
+<p>Between full enforcement and fully disabled, adapters MAY support intermediate modes:</p>
+<p><strong>Monitoring mode</strong> (<code>"monitoring"</code>):</p>
+<ul>
+<li>Actions are evaluated by the full safety pipeline</li>
+<li><code>AutonomyDirective</code> is returned with accurate <code>factors</code> and risk assessment</li>
+<li><code>continue</code> is always <code>true</code> — the directive is advisory, never blocking</li>
+<li><code>stopped</code> MUST NOT be set to <code>true</code></li>
+<li>Useful for: observing what the safety loop would block without actually blocking, gradual rollout, policy tuning</li>
+</ul>
+<p><strong>Logging mode</strong> (<code>"logging"</code>):</p>
+<ul>
+<li>Actions are recorded for audit purposes</li>
+<li>No evaluation occurs — the safety pipeline is not invoked</li>
+<li>Useful for: compliance auditing, post-incident analysis, establishing baseline action patterns</li>
+</ul>
+<hr />
+<h2 id="9-implementation-requirements">9. Implementation Requirements</h2>
+<p>This section provides a compliance checklist for adapters implementing the execution safety loop. Every requirement listed here corresponds to a normative MUST, SHOULD, or MAY in <a href="../versions/v1.0.0-draft.html">Sections 8.6–8.8 of the core specification</a>. See <a href="#94-normative-cross-reference">Section 9.4</a> for the complete mapping between normative sections and compliance bullets.</p>
+<h3 id="91-must-requirements">9.1 MUST Requirements</h3>
+<p>Adapters that support the execution safety loop:</p>
+<p><strong>Core Operations &amp; Introspection:</strong></p>
+<ul>
+<li>MUST document whether they support the execution safety loop via introspection (<a href="../versions/v1.0.0-draft.html#861-opt-in-activation">Section 8.6.1</a>)</li>
+<li>MUST clearly indicate via introspection whether safety enforcement is active or disabled (<a href="../versions/v1.0.0-draft.html#867-disabling-the-safety-loop">Section 8.6.7</a>)</li>
+<li>MUST implement <code>execute_agent</code>, <code>record_execution_step</code>, <code>complete_execution</code>, and <code>abort_execution</code> (<a href="../versions/v1.0.0-draft.html#862-enforcement-boundary-property">Section 8.6.2</a>)</li>
+<li>MUST place <code>record_execution_step</code> on the CREATE endpoint (<a href="../versions/v1.0.0-draft.html#854-reserved-operations">Section 8.5.4</a>)</li>
+<li>MUST place <code>execute_agent</code>, <code>complete_execution</code>, and <code>abort_execution</code> on the EXECUTE endpoint (<a href="../versions/v1.0.0-draft.html#854-reserved-operations">Section 8.5.4</a>)</li>
+</ul>
+<p><strong>AutonomyDirective Contract:</strong></p>
+<ul>
+<li>MUST return an <code>AutonomyDirective</code> on every <code>record_execution_step</code> call (<a href="../versions/v1.0.0-draft.html#871-the-autonomydirective-contract">Section 8.7.1</a>)</li>
+<li>MUST include <code>continue</code> and <code>factors</code> in every <code>AutonomyDirective</code> (<a href="../versions/v1.0.0-draft.html#871-the-autonomydirective-contract">Section 8.7.1</a>)</li>
+<li>MUST NOT allow agents to proceed after a stop directive (<code>stopped: true</code>) (<a href="../versions/v1.0.0-draft.html#864-continuous-enforcement">Section 8.6.4</a>)</li>
+<li>MUST NOT set <code>stopped: true</code> when operating in monitoring mode (<a href="../versions/v1.0.0-draft.html#864-continuous-enforcement">Section 8.6.4</a>)</li>
+<li>MUST return <code>stopped: true</code> in the <code>AutonomyDirective</code> for <code>danger_zone</code> tier and <code>deny</code> pattern triggers (<a href="../versions/v1.0.0-draft.html#881-trigger-conditions">Section 8.8.1</a>)</li>
+</ul>
+<p><strong>Step Limit:</strong></p>
+<ul>
+<li>MUST implement the Step Limit stage with a configurable <code>maxAutonomousSteps</code> threshold (<a href="../versions/v1.0.0-draft.html#875-minimum-viable-implementation">Section 8.7.5</a>)</li>
+</ul>
+<p><strong>Notifications &amp; Self-Approval:</strong></p>
+<ul>
+<li>MUST include a <code>danger_zone</code> notification broadcast to all executing agents when returning <code>stopped: true</code> (<a href="../versions/v1.0.0-draft.html#881-trigger-conditions">Section 8.8.1</a>)</li>
+<li>MUST include a <code>danger_zone</code> notification with <code>metadata.verificationId</code> for <code>danger_zone</code> tier and <code>deny</code> pattern challenges (<a href="../versions/v1.0.0-draft.html#882-challenge-protocol">Section 8.8.2</a>)</li>
+<li>MUST include an <code>autonomy_pause</code> notification with <code>metadata.verificationId</code> when issuing a <code>verify</code> tier challenge (<a href="../versions/v1.0.0-draft.html#882-challenge-protocol">Section 8.8.2</a>)</li>
+<li>MUST prevent self-approval — the entity confirming an operation MUST NOT be the same agent that triggered the block (<a href="../versions/v1.0.0-draft.html#873-agent-notification-system">Section 8.7.3</a>)</li>
+</ul>
+<p><strong>Out-of-Band Verification (when the adapter implements <code>verify</code> or <code>danger_zone</code> tier evaluation, or <code>deny</code> pattern matching):</strong></p>
+<ul>
+<li>MUST require out-of-band human verification when a <code>verify</code> or <code>danger_zone</code> safety tier is assigned, or when a <code>deny</code> pattern matches (<a href="../versions/v1.0.0-draft.html#88-out-of-band-verification">Section 8.8</a>)</li>
+<li>MUST generate verification codes with at least 128 bits of entropy from a cryptographically secure random source; codes MUST be cryptographically unpredictable (<a href="../versions/v1.0.0-draft.html#882-challenge-protocol">Section 8.8.2</a>)</li>
+<li>MUST display verification codes through a channel inaccessible to the AI agent — codes MUST NOT appear in any MCP response, tool result, <code>_meta</code> field, log, error message, or diagnostic output accessible to the AI, and MUST NOT be derivable from any information available to the AI (e.g., timestamps, sequential IDs) (<a href="../versions/v1.0.0-draft.html#882-challenge-protocol">Sections 8.8.2</a>, <a href="../versions/v1.0.0-draft.html#884-channel-separation-requirements">8.8.4</a>)</li>
+<li>MUST treat expired verification challenges as failed (<a href="../versions/v1.0.0-draft.html#882-challenge-protocol">Section 8.8.2</a>)</li>
+</ul>
+<p><strong>Blocking Semantics (when the adapter implements <code>stopped: true</code> behavior):</strong></p>
+<ul>
+<li>MUST reject all subsequent execution operations for a hard-blocked agent until unblocked via <code>verify_challenge</code> or admin override (<a href="../versions/v1.0.0-draft.html#883-blocking-semantics">Section 8.8.3</a>)</li>
+<li>MUST NOT allow an agent to bypass a hard block by starting a new execution — blocks apply at the agent level, not the execution level (<a href="../versions/v1.0.0-draft.html#883-blocking-semantics">Section 8.8.3</a>)</li>
+<li>MUST persist hard-blocked agent state across server restarts (file-based or database storage) (<a href="../versions/v1.0.0-draft.html#883-blocking-semantics">Section 8.8.3</a>)</li>
+</ul>
+<h3 id="92-should-requirements">9.2 SHOULD Requirements</h3>
+<p>Adapters that support the execution safety loop:</p>
+<p><strong>Evaluation Pipeline:</strong></p>
+<ul>
+<li>SHOULD evaluate actions through the multi-stage pipeline defined in <a href="../versions/v1.0.0-draft.html#872-evaluation-pipeline">Section 8.7.2</a></li>
+<li>SHOULD return <code>continue: false</code> with an appropriate reason when the step limit is exceeded (<a href="../versions/v1.0.0-draft.html#872-evaluation-pipeline">Section 8.7.2, Stage 1</a>)</li>
+<li>SHOULD document the default step limit via introspection (<a href="../versions/v1.0.0-draft.html#872-evaluation-pipeline">Section 8.7.2, Stage 1</a>)</li>
+<li>SHOULD evaluate the <code>outcome</code> field in <code>record_execution_step</code> calls and return <code>continue: false</code> on reported failures (<a href="../versions/v1.0.0-draft.html#872-evaluation-pipeline">Section 8.7.2, Stage 2</a>)</li>
+<li>SHOULD support configurable policy patterns (<code>deny</code>, <code>requiresApproval</code>, <code>autoApprove</code>) (<a href="../versions/v1.0.0-draft.html#872-evaluation-pipeline">Section 8.7.2, Stage 3</a>)</li>
+<li>SHOULD NOT allow agents to proceed after <code>continue: false</code> without human intervention (<a href="../versions/v1.0.0-draft.html#864-continuous-enforcement">Section 8.6.4</a>)</li>
+</ul>
+<p><strong>Operations:</strong></p>
+<ul>
+<li>SHOULD implement <code>confirm_operation</code> for Gatekeeper blocks and <code>confirm</code> tier pauses (<a href="../versions/v1.0.0-draft.html#873-agent-notification-system">Section 8.7.3</a>)</li>
+<li>SHOULD implement <code>verify_challenge</code> for <code>verify</code> tier pauses and Danger Zone unblocking (<a href="../versions/v1.0.0-draft.html#88-out-of-band-verification">Section 8.8</a>)</li>
+</ul>
+<p><strong>Configuration &amp; Introspection:</strong></p>
+<ul>
+<li>SHOULD expose the <code>execution_safety_loop</code> capability value in the introspection response (<a href="../versions/v1.0.0-draft.html#861-opt-in-activation">Section 8.6.1</a>)</li>
+<li>SHOULD make evaluation pipeline elements configurable per agent or per adapter (<a href="../versions/v1.0.0-draft.html#874-configurable-elements">Section 8.7.4</a>)</li>
+<li>SHOULD document default configuration and supported options via introspection (<a href="../versions/v1.0.0-draft.html#874-configurable-elements">Section 8.7.4</a>)</li>
+</ul>
+<p><strong>Notifications:</strong></p>
+<ul>
+<li>SHOULD include <code>notifications</code> in <code>AutonomyDirective</code> responses for non-hard-block events (note: <code>verify</code> tier <code>autonomy_pause</code> with <code>metadata.verificationId</code> and <code>danger_zone</code> notifications are MUST — see Section 9.1) (<a href="../versions/v1.0.0-draft.html#873-agent-notification-system">Section 8.7.3</a>)</li>
+</ul>
+<p><strong>Verify Tier Behavior:</strong></p>
+<ul>
+<li>SHOULD return <code>continue: false</code> with the pending challenge ID for subsequent <code>record_execution_step</code> calls while a <code>verify</code> challenge is pending (<a href="../versions/v1.0.0-draft.html#883-blocking-semantics">Section 8.8.3</a>)</li>
+<li>SHOULD re-evaluate actions normally when a <code>verify</code> challenge expires, generating a new challenge if the same action is reported again (<a href="../versions/v1.0.0-draft.html#883-blocking-semantics">Section 8.8.3</a>)</li>
+<li>SHOULD expire verification challenges after a configurable timeout (default: 5 minutes) (<a href="../versions/v1.0.0-draft.html#882-challenge-protocol">Section 8.8.2</a>)</li>
+</ul>
+<p><strong>Rate Limiting:</strong></p>
+<ul>
+<li>SHOULD rate-limit failed verification attempts (no more than 10 per 60-second window per agent) (<a href="../versions/v1.0.0-draft.html#885-rate-limiting">Section 8.8.5</a>)</li>
+<li>SHOULD reject subsequent verification attempts after the rate limit is exceeded (<a href="../versions/v1.0.0-draft.html#885-rate-limiting">Section 8.8.5</a>)</li>
+<li>SHOULD persist rate limit state across server restarts (<a href="../versions/v1.0.0-draft.html#885-rate-limiting">Section 8.8.5</a>)</li>
+<li>SHOULD trigger security audit events on failed verification attempts (<a href="../versions/v1.0.0-draft.html#885-rate-limiting">Section 8.8.5</a>)</li>
+</ul>
+<p><strong>Monitoring &amp; Audit:</strong></p>
+<ul>
+<li>SHOULD support the <code>"monitoring"</code> partial mode for gradual rollout (<a href="../versions/v1.0.0-draft.html#867-disabling-the-safety-loop">Section 8.6.7</a>)</li>
+</ul>
+<h3 id="93-may-requirements">9.3 MAY Requirements</h3>
+<p>Adapters that support the execution safety loop:</p>
+<ul>
+<li>MAY support the <code>"logging"</code> partial mode (<a href="../versions/v1.0.0-draft.html#867-disabling-the-safety-loop">Section 8.6.7</a>)</li>
+<li>MAY implement Safety Tier evaluation (Stage 4) using pattern matching, LLM-provided risk assessments, or adapter-specific heuristics for risk scoring (<a href="../versions/v1.0.0-draft.html#872-evaluation-pipeline">Section 8.7.2, Stage 4</a>)</li>
+<li>MAY support configurable risk tolerance thresholds (<code>conservative</code>, <code>moderate</code>, <code>aggressive</code>) (<a href="../versions/v1.0.0-draft.html#872-evaluation-pipeline">Section 8.7.2, Stage 5</a>)</li>
+<li>MAY apply progressive lockout (e.g., doubling the window duration) after repeated rate-limit violations (<a href="../versions/v1.0.0-draft.html#885-rate-limiting">Section 8.8.5</a>)</li>
+<li>MAY use OS dialogs, hardware tokens, SMS/email, or other display channels for presenting verification codes to operators (<a href="../versions/v1.0.0-draft.html#886-implementation-flexibility">Section 8.8.6</a>)</li>
+</ul>
+<h3 id="94-normative-cross-reference">9.4 Normative Cross-Reference</h3>
+<p>The following table maps each normative section to its corresponding Section 9 requirements, providing an audit trail for compliance verification.</p>
+<table>
+<thead>
+<tr>
+<th>Normative Section</th>
+<th>Key Requirements</th>
+<th>Section 9 Coverage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>8.6.1 Opt-In Activation</td>
+<td>MUST document support; SHOULD expose capability value</td>
+<td>9.1 (introspection); 9.2 (capability value)</td>
+</tr>
+<tr>
+<td>8.6.2 Enforcement Boundary</td>
+<td>MUST report and evaluate all actions</td>
+<td>9.1 (operations, AutonomyDirective on every call)</td>
+</tr>
+<tr>
+<td>8.6.3 Action Reporting</td>
+<td>MUST/SHOULD/MAY parameter requirements</td>
+<td>9.1 (operations — parameter validation is part of implementing <code>record_execution_step</code>)</td>
+</tr>
+<tr>
+<td>8.6.4 Continuous Enforcement</td>
+<td>MUST NOT proceed after stop; SHOULD NOT after pause; MUST NOT <code>stopped</code> in monitoring</td>
+<td>9.1 (stop directive, monitoring mode); 9.2 (SHOULD NOT after pause)</td>
+</tr>
+<tr>
+<td>8.6.5 Non-Bypass Property</td>
+<td>Agent MUST NOT act outside loop</td>
+<td>Agent-side protocol obligation (not adapter-specific)</td>
+</tr>
+<tr>
+<td>8.6.6 Scope of Monitoring</td>
+<td>Monitors all actions (informative)</td>
+<td>Described in Sections 3.2, 2.2 of this document</td>
+</tr>
+<tr>
+<td>8.6.7 Disabling</td>
+<td>MAY disable; MUST indicate via introspection</td>
+<td>9.1 (introspection); 9.2 (monitoring); 9.3 (logging)</td>
+</tr>
+<tr>
+<td>8.7.1 AutonomyDirective</td>
+<td>MUST include <code>continue</code> + <code>factors</code></td>
+<td>9.1 (AutonomyDirective fields)</td>
+</tr>
+<tr>
+<td>8.7.2 Pipeline Stages 1–5</td>
+<td>MUST step limit; SHOULD stages 2–3; MAY stages 4–5</td>
+<td>9.1 (step limit MUST); 9.2 (stage 1 documentation SHOULDs, stages 2–3 SHOULDs); 9.3 (stages 4–5)</td>
+</tr>
+<tr>
+<td>8.7.3 Notifications</td>
+<td>MUST notification contents; MUST prevent self-approval</td>
+<td>9.1 (notifications, self-approval); 9.2 (non-hard-block notifications)</td>
+</tr>
+<tr>
+<td>8.7.4 Configurable Elements</td>
+<td>SHOULD configurable; SHOULD document</td>
+<td>9.2 (configuration, introspection)</td>
+</tr>
+<tr>
+<td>8.7.5 Minimum Viable</td>
+<td>MUST Step Limit; SHOULD Previous Outcome + Pattern Matching; MAY Safety Tier + Risk Tolerance</td>
+<td>9.1 (step limit); 9.2 (outcome, patterns); 9.3 (tier, tolerance)</td>
+</tr>
+<tr>
+<td>8.8 Introduction</td>
+<td>MUST require OOB for <code>verify</code>/<code>danger_zone</code></td>
+<td>9.1 (OOB verification)</td>
+</tr>
+<tr>
+<td>8.8.1 Trigger Conditions</td>
+<td>MUST <code>stopped: true</code> + <code>danger_zone</code> notification</td>
+<td>9.1 (<code>stopped: true</code>, notification broadcast)</td>
+</tr>
+<tr>
+<td>8.8.2 Challenge Protocol</td>
+<td>MUST entropy, display, notification, expiration</td>
+<td>9.1 (code generation, display, challenge ID, expiration); 9.2 (timeout)</td>
+</tr>
+<tr>
+<td>8.8.3 Blocking Semantics</td>
+<td>MUST reject, persist, no bypass; SHOULD verify behavior</td>
+<td>9.1 (blocking); 9.2 (verify tier)</td>
+</tr>
+<tr>
+<td>8.8.4 Channel Separation</td>
+<td>MUST NOT expose code (5 specific prohibitions)</td>
+<td>9.1 (display/channel separation — consolidated)</td>
+</tr>
+<tr>
+<td>8.8.5 Rate Limiting</td>
+<td>SHOULD rate-limit, persist, audit; MAY progressive lockout</td>
+<td>9.2 (rate limiting); 9.3 (lockout)</td>
+</tr>
+<tr>
+<td>8.8.6 Implementation Flexibility</td>
+<td>MAY any display channel</td>
+<td>9.3 (display channels)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="related-specifications">Related Specifications</h2>
+<ul>
+<li><a href="../versions/v1.0.0-draft.html#86-execution-safety-loop">Core Specification — Section 8.6: Execution Safety Loop</a> — Normative requirements</li>
+<li><a href="../versions/v1.0.0-draft.html#87-autonomy-evaluation">Core Specification — Section 8.7: Autonomy Evaluation</a> — AutonomyDirective contract and evaluation pipeline</li>
+<li><a href="../versions/v1.0.0-draft.html#88-out-of-band-verification">Core Specification — Section 8.8: Out-of-Band Verification</a> — Out-of-band verification protocol (<code>verify</code> tier and Danger Zone)</li>
+<li><a href="gatekeeper.html">Gatekeeper Specification</a> — Multi-layer access control architecture</li>
+<li><a href="../adapter/danger-levels.html">Danger Levels Specification</a> — Risk classification and trust-to-danger gating</li>
+<li><a href="confirmation-tokens.html">Confirmation Tokens Specification</a> — Token protocol for operation confirmation</li>
+</ul>
+
+          </div>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.</p>
+      <div class="footer-links">
+        <a href="../../docs/index.html">Docs Library</a>
+        <a href="../index.html">Repo-Synced Spec</a>
+        <a href="https://github.com/MCPAQL">MCPAQL Organization</a>
+        <a href="https://dollhouseresearch.com">Dollhouse Research</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../js/search.js"></script>
+</body>
+</html>

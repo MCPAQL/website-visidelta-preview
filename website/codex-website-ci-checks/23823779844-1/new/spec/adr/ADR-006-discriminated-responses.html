@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Date: 2026-01-16">
+  <title>MCP-AQL Spec | ADR-006: Discriminated Response Format</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <a class="logo" href="../../index.html"><span class="logo-mark"></span>MCP-AQL</a>
+        <ul class="nav-links">
+          <li><a href="../../index.html">Home</a></li>
+          <li><a href="../../docs/index.html">Docs</a></li>
+          <li><a href="../../launch-checklist.html">Launch Checklist</a></li>
+          <li><a href="../../apis/mcp-server.html">Adapter Patterns</a></li>
+        </ul>
+        <form class="site-search" data-search-form data-index-url="../../data/search-index.json" role="search">
+          <label class="sr-only" for="site-search-input">Search MCP-AQL docs</label>
+          <input id="site-search-input" data-search-input type="search" placeholder="Search repo-synced spec docs...">
+          <span class="search-count" data-search-count></span>
+          <ul class="search-results" data-search-results hidden></ul>
+        </form>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container docs-shell">
+      <aside class="docs-side">
+        <h2>Repo-Synced Spec</h2>
+        <p class="docs-side-note">Generated from <code>MCPAQL/spec</code> so the website carries the deeper protocol material too.</p>
+        <div class="docs-side-group">
+  <h3>Core</h3>
+  <ul><li><a href="../conformance-testing.html">MCP-AQL Conformance Testing Specification</a></li><li><a href="../crude-pattern.html">MCP-AQL CRUDE Pattern Specification</a></li><li><a href="../endpoint-modes.html">MCP-AQL Endpoint Modes Specification</a></li><li><a href="../error-codes.html">Structured Error Codes Specification</a></li><li><a href="../introspection.html">MCP-AQL Introspection Specification</a></li><li><a href="../licensing-options.html">MCP-AQL Licensing Options (Working Notes)</a></li><li><a href="../mcp-integration.html">MCP Integration Specification</a></li><li><a href="../operations.html">MCP-AQL Operations Specification</a></li><li><a href="../overview.html">MCP-AQL Protocol Overview</a></li><li><a href="../plugin-contracts.html">Plugin Interface Contracts</a></li><li><a href="../README.html">MCP-AQL Specification Documentation</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Versions</h3>
+  <ul><li><a href="../versions/v1.0.0-draft.html">MCP-AQL Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Adapter</h3>
+  <ul><li><a href="../adapter/danger-levels.html">Dangerous Operation Classification Specification</a></li><li><a href="../adapter/discovery-bundle.html">MCP Server Discovery Bundle</a></li><li><a href="../adapter/element-type.html">Adapter Element Type Specification</a></li><li><a href="../adapter/generator.html">Adapter Generator Specification</a></li><li><a href="../adapter/rate-limiting.html">Rate Limiting and Quota Management Specification</a></li><li><a href="../adapter/trust-levels.html">Trust Levels Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Security</h3>
+  <ul><li><a href="../security/confirmation-tokens.html">Confirmation Token Specification</a></li><li><a href="../security/execution-safety-loop.html">Execution Safety Loop Specification</a></li><li><a href="../security/gatekeeper.html">Security Model: Gatekeeper Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Features</h3>
+  <ul><li><a href="../features/field-selection.html">Field Selection Specification</a></li><li><a href="../features/pagination.html">Cursor-Based Pagination Specification</a></li><li><a href="../features/warnings.html">Warnings Array Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Guides</h3>
+  <ul><li><a href="../guides/protocol-comparison.html">Protocol Comparison Guide</a></li><li><a href="../guides/README.html">Developer Guides</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Process</h3>
+  <ul><li><a href="../process/breaking-changes.html">MCP-AQL Breaking Change Policy</a></li><li><a href="../process/preliminary-public-launch-checklist.html">Preliminary Public Launch Checklist</a></li><li><a href="../process/rfc-process.html">RFC Process for MCP-AQL Specification</a></li><li><a href="../process/versioning.html">Versioning Strategy</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Architecture</h3>
+  <ul><li><a href="../architecture/README.html">Architecture Documentation</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Research</h3>
+  <ul><li><a href="../research/mcp-vs-mcpaql-vs-a2a.html">Protocol Landscape: MCP vs MCP-AQL vs A2A</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Reference</h3>
+  <ul><li><a href="../reference/README.html">Reference Documentation</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>ADRs</h3>
+  <ul><li><a href="ADR-001-crude-pattern.html">ADR-001: CRUDE Pattern (Extending CRUD with Execute)</a></li><li><a href="ADR-002-graphql-style-input.html">ADR-002: GraphQL-Style Input Objects for Updates</a></li><li><a href="ADR-003-snake-case-parameters.html">ADR-003: snake_case Parameter Convention</a></li><li><a href="ADR-004-schema-driven-operations.html">ADR-004: Schema-Driven Operation Definitions</a></li><li><a href="ADR-005-introspection-system.html">ADR-005: GraphQL-Style Introspection System</a></li><li><a class="current" href="ADR-006-discriminated-responses.html">ADR-006: Discriminated Response Format</a></li><li><a href="index.html">Architecture Decision Records</a></li><li><a href="README.html">Architecture Decision Records</a></li></ul>
+</div>
+      </aside>
+
+      <article class="docs-main">
+        <section class="hero docs-hero">
+          <div class="hero-inner">
+            <span class="status-pill">REPO-SYNCED SPEC DOC</span>
+            <h1>ADR-006: Discriminated Response Format</h1>
+            <p class="lede">Date: 2026-01-16</p>
+            <div class="spec-meta"><span class="state-chip live">Support document</span><span class="state-chip pending">Accepted</span></div>
+            <p class="spec-source">Source: <a href="https://github.com/MCPAQL/spec/blob/main/docs/adr/ADR-006-discriminated-responses.md">spec/docs/adr/ADR-006-discriminated-responses.md</a></p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="https://github.com/MCPAQL/spec/blob/main/docs/adr/ADR-006-discriminated-responses.md">Open Source Markdown</a>
+              <a class="btn btn-secondary" href="../index.html">Browse Full Spec Reference</a>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <div class="card spec-prose">
+            <p><strong>Status:</strong> Accepted <strong>Date:</strong> 2026-01-16</p>
+<h2 id="context">Context</h2>
+<p>API responses need to clearly indicate success or failure in a way that is:</p>
+<ol type="1">
+<li>Unambiguous for programmatic handling</li>
+<li>Easy for LLMs to parse and understand</li>
+<li>Consistent across all operations</li>
+<li>Informative when errors occur</li>
+</ol>
+<p>Common approaches include:</p>
+<ul>
+<li>HTTP status codes (not applicable to MCP tool responses)</li>
+<li>Exception throwing (varies by implementation)</li>
+<li>Null/undefined returns (ambiguous)</li>
+<li>Boolean success flags (lacks error details)</li>
+<li>Discriminated unions (explicit success/failure with data)</li>
+</ul>
+<p>LLMs particularly benefit from explicit, consistent response structures that do not require inference about success or failure states.</p>
+<h2 id="decision">Decision</h2>
+<p>MCP-AQL adopts a discriminated response format where all responses include an explicit <code>success</code> boolean discriminator.</p>
+<p>Successful responses MUST have the following structure:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">success</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">data</span><span class="op">:</span> { <span class="co">/* operation-specific response data */</span> }<span class="op">,</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">warnings</span><span class="op">:</span> [ <span class="co">/* optional array of warning objects */</span> ]</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>The <code>warnings</code> field is optional and contains non-fatal conditions that warrant attention. See the <a href="../features/warnings.html">Warnings Specification</a> for details.</p>
+<p>Failed responses MUST have the following structure:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">success</span><span class="op">:</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">error</span><span class="op">:</span> {</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">code</span><span class="op">:</span> <span class="st">&quot;ERROR_CODE&quot;</span><span class="op">,</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">message</span><span class="op">:</span> <span class="st">&quot;Human-readable error description&quot;</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>Additional fields MAY be included in error responses for debugging:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">success</span><span class="op">:</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">error</span><span class="op">:</span> {</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">code</span><span class="op">:</span> <span class="st">&quot;VALIDATION_ERROR&quot;</span><span class="op">,</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">message</span><span class="op">:</span> <span class="st">&quot;Required parameter &#39;element_name&#39; is missing&quot;</span><span class="op">,</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">details</span><span class="op">:</span> {</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">parameter</span><span class="op">:</span> <span class="st">&quot;element_name&quot;</span><span class="op">,</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;create_element&quot;</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>Implementations MUST:</p>
+<ol type="1">
+<li>Always include the <code>success</code> boolean at the top level</li>
+<li>Include <code>data</code> when <code>success</code> is true</li>
+<li>Include <code>error</code> with at least <code>code</code> and <code>message</code> when <code>success</code> is false</li>
+<li>Use consistent error codes across the implementation</li>
+<li>Include <code>warnings</code> array only in successful responses (when present)</li>
+</ol>
+<h2 id="consequences">Consequences</h2>
+<h3 id="positive">Positive</h3>
+<ul>
+<li><strong>Unambiguous parsing</strong>: The <code>success</code> field clearly indicates response state</li>
+<li><strong>LLM-friendly</strong>: Explicit structure is easy for models to understand</li>
+<li><strong>Consistent handling</strong>: All operations return the same response shape</li>
+<li><strong>Rich error information</strong>: Structured errors enable better debugging</li>
+<li><strong>Type safety</strong>: Discriminated unions enable compile-time type narrowing</li>
+</ul>
+<h3 id="negative">Negative</h3>
+<ul>
+<li><strong>Response overhead</strong>: Every response includes the discriminator</li>
+<li><strong>Verbosity</strong>: Simple operations have wrapper structure</li>
+<li><strong>Migration effort</strong>: Existing implementations must adapt response format</li>
+</ul>
+<h2 id="references">References</h2>
+<ul>
+<li><a href="../features/warnings.html">Warnings Specification</a></li>
+<li><a href="../error-codes.html">Error Codes Specification</a></li>
+<li>ADR-004: Schema-Driven Operation Definitions</li>
+</ul>
+
+          </div>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.</p>
+      <div class="footer-links">
+        <a href="../../docs/index.html">Docs Library</a>
+        <a href="../index.html">Repo-Synced Spec</a>
+        <a href="https://github.com/MCPAQL">MCPAQL Organization</a>
+        <a href="https://dollhouseresearch.com">Dollhouse Research</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../js/search.js"></script>
+</body>
+</html>

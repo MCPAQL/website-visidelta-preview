@@ -1,0 +1,235 @@
+MCP-AQL Spec | MCP-AQL Protocol Overview
+Launch Checklist
+Adapter Patterns
+Search MCP-AQL docs
+Repo-Synced Spec
+Generated from MCPAQL/spec so the website carries the deeper protocol material too.
+MCP-AQL Conformance Testing Specification
+MCP-AQL CRUDE Pattern Specification
+MCP-AQL Endpoint Modes Specification
+Structured Error Codes Specification
+MCP-AQL Introspection Specification
+MCP-AQL Licensing Options (Working Notes)
+MCP Integration Specification
+MCP-AQL Operations Specification
+MCP-AQL Protocol Overview
+Plugin Interface Contracts
+MCP-AQL Specification Documentation
+Versions
+MCP-AQL Specification
+Dangerous Operation Classification Specification
+MCP Server Discovery Bundle
+Adapter Element Type Specification
+Adapter Generator Specification
+Rate Limiting and Quota Management Specification
+Trust Levels Specification
+Security
+Confirmation Token Specification
+Execution Safety Loop Specification
+Security Model: Gatekeeper Specification
+Features
+Field Selection Specification
+Cursor-Based Pagination Specification
+Warnings Array Specification
+Protocol Comparison Guide
+Developer Guides
+MCP-AQL Breaking Change Policy
+Preliminary Public Launch Checklist
+RFC Process for MCP-AQL Specification
+Versioning Strategy
+Architecture
+Architecture Documentation
+Research
+Protocol Landscape: MCP vs MCP-AQL vs A2A
+Reference
+Reference Documentation
+ADR-001: CRUDE Pattern (Extending CRUD with Execute)
+ADR-002: GraphQL-Style Input Objects for Updates
+ADR-003: snake_case Parameter Convention
+ADR-004: Schema-Driven Operation Definitions
+ADR-005: GraphQL-Style Introspection System
+ADR-006: Discriminated Response Format
+Architecture Decision Records
+REPO-SYNCED SPEC DOC
+MCP-AQL (Model Context Protocol - Agent Query Language) is a protocol that consolidates discrete MCP tools into 5 CRUDE endpoints (Create, Read, Update, Delete, Execute), providing significant token reduction while maint
+Support document
+Source: spec/docs/overview.md
+Open Source Markdown
+Browse Full Spec Reference
+MCP-AQL (Model Context Protocol - Agent Query Language) is a protocol that consolidates discrete MCP tools into 5 CRUDE endpoints (Create, Read, Update, Delete, Execute), providing significant token reduction while maintaining full functionality.
+Document Status: This document is informative . For normative requirements, see MCP-AQL Specification v1.0.0 .
+Table of Contents
+Protocol Summary
+The CRUDE Pattern
+Endpoint Modes
+Token Efficiency
+Core Concepts
+Request Flow
+Batch Operations
+MCP-AQL defines a schema-driven operation dispatch protocol that:
+Consolidates Operations - Many discrete tools into 5 semantic endpoints
+Enables Discovery - GraphQL-style introspection for runtime operation discovery
+Enforces Safety - Endpoint classification validates operation/endpoint matching
+Supports Flexibility - Implementations MAY offer CRUDE mode (5 endpoints) or Single mode (1 endpoint)
++-------------------+
+| MCP Client |
++--------+----------+
+| MCP-AQL Layer |
+| +-------------+ |
+| | Gatekeeper | | Route Validation
+| +------+------+ |
+| +------v------+ |
+| | Router | | Endpoint Mapping
+| | Schema | | Operation Definitions
+| | Dispatcher | | Handler Resolution
+| Target Handlers |
+MCP-AQL extends traditional CRUD with an EXECUTE endpoint, creating the CRUDE pattern:
+Endpoint
+Description
+Example Operations
+Non-destructive
+Additive operations that create new state
+create_entity , import_resource
+Read-Only
+Safe operations that query state
+list_entities , get_entity , search , introspect
+Modifying
+Operations that modify existing state
+update_entity , update_resource
+Destructive
+Operations that remove state
+delete_entity , clear
+Lifecycle operations for executable elements
+execute_workflow , cancel_task , resume_workflow
+Permission Characteristics
+Each endpoint MUST have defined permission characteristics:
+Implementations MUST classify operations according to these permission characteristics and MUST NOT allow an operation to be called through an endpoint that does not match its classification.
+Why CRUDE not CRUD?
+The EXECUTE endpoint exists because certain operations:
+Are inherently non-idempotent (calling execute twice creates two separate executions)
+Manage runtime state rather than persistent definitions
+Require lifecycle management (start, update progress, complete, resume)
+CRUD (Resource Definitions) EXECUTE (Runtime Lifecycle)
++--------+ +-------------------+
+| Create |--------------------------&gt;| execute |
++--------+ +--------+----------+
+| Read | |
++--------+ +--------v----------+
+| Update | | get_execution_state|
+| Delete | |
+| update_execution |
++---------------+---------------+
++--------v----------+ +--------v----------+
+| complete_execution| | continue_execution|
++-------------------+ +-------------------+
+Note: This diagram shows a runtime lifecycle flow, not endpoint classification. Operations like get_execution_state that query execution state belong to the READ endpoint, not EXECUTE. See CRUDE Pattern Classification for details.
+MCP-AQL supports two operational modes. Implementations MUST support at least one mode and SHOULD support both:
+CRUDE Mode
+Exposes 5 separate endpoints, each with semantic meaning:
+mcp_aql_create - CREATE operations
+mcp_aql_read - READ operations
+mcp_aql_update - UPDATE operations
+mcp_aql_delete - DELETE operations
+mcp_aql_execute - EXECUTE operations
+Advantages:
+Clear semantic grouping
+Endpoint-level permission control
+Clients MAY choose which endpoints to expose
+Single Mode
+Exposes 1 unified endpoint that routes internally:
+mcp_aql - All operations through single entry point
+Minimal token footprint
+Simpler client integration
+Server-side routing enforcement
+Implementations using Single Mode MUST still enforce endpoint classification internally. An operation classified as DELETE MUST NOT succeed if the implementation would not allow DELETE operations.
+Token Reduction
+The primary motivation for MCP-AQL is reducing the token cost of tool registration. Empirical measurements demonstrate:
+Configuration
+Approximate Token Cost
+Reduction
+Discrete Tools (50+)
+~30,000 tokens
+baseline
+CRUDE Mode (5 endpoints)
+~4,500 tokens
+Single Mode (1 endpoint)
+~1,100 tokens
+Runtime Discovery
+Instead of parsing many tool schemas at registration time, clients use introspection at runtime:
+// Query all available operations
+{ operation : &quot;introspect&quot; , params : { query : &quot;operations&quot; } }
+// Get details for a specific operation
+{ operation : &quot;introspect&quot; , params : { query : &quot;operations&quot; , name : &quot;create_entity&quot; } }
+// Query available types
+{ operation : &quot;introspect&quot; , params : { query : &quot;types&quot; , name : &quot;EntityType&quot; } }
+Implementations MUST support the introspect operation on the READ endpoint.
+Schema-Driven Operations
+Operations SHOULD be defined declaratively with:
+name - The operation identifier
+endpoint - The CRUDE endpoint classification
+description - Human-readable description
+params - Required and optional parameter definitions
+handler - Reference to the implementation handler
+Gatekeeper
+The Gatekeeper component enforces that operations are only callable through their designated endpoints. Implementations MUST validate that:
+The operation exists
+The operation is allowed on the requested endpoint
+Required parameters are present
+Introspection
+MCP-AQL implementations MUST provide GraphQL-style introspection capabilities:
+List all available operations
+Get detailed information about specific operations
+Query available types and enumerations
+Discover parameter requirements
+Standard Request
+1. Client sends { operation, params } to endpoint
+2. Gatekeeper validates operation is allowed on endpoint
+3. Router resolves operation to handler
+4. Schema validates required parameters
+5. Dispatcher invokes handler with mapped parameters
+6. Handler returns result
+7. Response formatted as { success: true, data } or { success: false, error }
+Response Format
+All MCP-AQL operations MUST return discriminated responses:
+Success:
+success : true ,
+data : { /* operation result */ }
+Failure:
+success : false ,
+error : {
+code : &quot;VALIDATION_ERROR&quot; ,
+message : &quot;Required parameter &#39;entity_name&#39; is missing&quot;
+Implementations SHOULD include an error code for programmatic handling and MUST include a human-readable message .
+MCP-AQL implementations MAY support batch operations for executing multiple operations in a single request.
+Batch Request Format
+operations : [
+{ operation : &quot;create_entity&quot; , params : { name : &quot;entity1&quot; } } ,
+{ operation : &quot;create_entity&quot; , params : { name : &quot;entity2&quot; } } ,
+{ operation : &quot;activate_entity&quot; , params : { name : &quot;entity1&quot; } }
+Batch Response Format
+results : [
+{ index : 0 , operation : &quot;create_entity&quot; , result : { success : true , data : { /* ... */ } } } ,
+{ index : 1 , operation : &quot;create_entity&quot; , result : { success : true , data : { /* ... */ } } } ,
+{ index : 2 , operation : &quot;activate_entity&quot; , result : { success : true , data : { /* ... */ } } }
+summary : { total : 3 , succeeded : 3 , failed : 0 }
+When batch operations are supported, implementations:
+MUST process operations in order
+MUST include results for all operations, including failures
+SHOULD continue processing after individual operation failures
+MAY provide a configuration option to stop on first failure
+Conformance
+An MCP-AQL implementation is conformant if it:
+Implements at least one endpoint mode (CRUDE or Single)
+Enforces endpoint classification for all operations
+Provides the introspect operation on the READ endpoint
+Returns discriminated responses for all operations
+Validates required parameters before dispatching
+Related Specifications
+Operations Reference - Complete operation reference
+Introspection - Introspection system specification
+MCP Integration - MCP protocol integration specification
+Response Format - Response format specification
+&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
+Docs Library
+MCPAQL Organization
+Dollhouse Research

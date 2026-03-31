@@ -1,0 +1,105 @@
+MCP-AQL Spec | ADR-001: CRUDE Pattern (Extending CRUD with Execute)
+Launch Checklist
+Adapter Patterns
+Search MCP-AQL docs
+Repo-Synced Spec
+Generated from MCPAQL/spec so the website carries the deeper protocol material too.
+MCP-AQL Conformance Testing Specification
+MCP-AQL CRUDE Pattern Specification
+MCP-AQL Endpoint Modes Specification
+Structured Error Codes Specification
+MCP-AQL Introspection Specification
+MCP-AQL Licensing Options (Working Notes)
+MCP Integration Specification
+MCP-AQL Operations Specification
+MCP-AQL Protocol Overview
+Plugin Interface Contracts
+MCP-AQL Specification Documentation
+Versions
+MCP-AQL Specification
+Dangerous Operation Classification Specification
+MCP Server Discovery Bundle
+Adapter Element Type Specification
+Adapter Generator Specification
+Rate Limiting and Quota Management Specification
+Trust Levels Specification
+Security
+Confirmation Token Specification
+Execution Safety Loop Specification
+Security Model: Gatekeeper Specification
+Features
+Field Selection Specification
+Cursor-Based Pagination Specification
+Warnings Array Specification
+Protocol Comparison Guide
+Developer Guides
+MCP-AQL Breaking Change Policy
+Preliminary Public Launch Checklist
+RFC Process for MCP-AQL Specification
+Versioning Strategy
+Architecture
+Architecture Documentation
+Research
+Protocol Landscape: MCP vs MCP-AQL vs A2A
+Reference
+Reference Documentation
+ADR-001: CRUDE Pattern (Extending CRUD with Execute)
+ADR-002: GraphQL-Style Input Objects for Updates
+ADR-003: snake_case Parameter Convention
+ADR-004: Schema-Driven Operation Definitions
+ADR-005: GraphQL-Style Introspection System
+ADR-006: Discriminated Response Format
+Architecture Decision Records
+REPO-SYNCED SPEC DOC
+Date: 2026-01-16
+Support document Accepted
+Source: spec/docs/adr/ADR-001-crude-pattern.md
+Open Source Markdown
+Browse Full Spec Reference
+Status: Accepted Date: 2026-01-16
+Traditional CRUD (Create, Read, Update, Delete) operations are well-suited for managing resource definitions and state. However, MCP-AQL needs to support runtime execution operations that have fundamentally different characteristics:
+Characteristic
+CRUD Operations
+Execution Operations
+Idempotency
+Generally idempotent
+Non-idempotent
+Element definitions
+Runtime state
+Lifecycle
+Discrete operations
+Stateful lifecycle
+Side effects
+Predictable
+Unbounded
+Placing execution operations within existing CRUD endpoints creates semantic confusion. For example, placing execute_agent in the DELETE endpoint because it is "potentially destructive" obscures the operation's true intent.
+Decision
+MCP-AQL extends traditional CRUD with an EXECUTE endpoint, creating the CRUDE pattern:
+Create - Non-destructive, additive operations
+Read - Safe, read-only operations
+Update - Modifying operations that change existing state
+Delete - Destructive operations that remove state
+Execute - Runtime lifecycle operations (non-idempotent)
+Implementations MUST expose five distinct endpoints corresponding to these categories. Operations MUST be routed to the endpoint matching their semantic intent.
+The EXECUTE endpoint is designated for operations that:
+Manage runtime execution state rather than definitions
+Are inherently non-idempotent
+May have unbounded side effects
+Follow a stateful lifecycle pattern
+Consequences
+Positive
+Semantic clarity : Operations are grouped by their actual behavior and intent
+Clear execution boundary : Runtime operations are explicitly separated from definition management
+Permission modeling : Security policies can treat execution operations distinctly
+Future extensibility : The pattern accommodates workflow, pipeline, and agent execution patterns
+Negative
+Unfamiliar pattern : CRUDE is not a widely-known acronym like CRUD
+Additional endpoint : Implementations must support five endpoints instead of four
+Learning curve : Developers must understand when to use Execute vs other endpoints
+References
+Protocol Specification: Endpoints
+ADR-004: Schema-Driven Operations
+&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
+Docs Library
+MCPAQL Organization
+Dollhouse Research

@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="This document specifies the optional field selection feature that enables clients to request only specific fields in responses, reducing payload size and token consumption.">
+  <title>MCP-AQL Spec | Field Selection Specification</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <a class="logo" href="../../index.html"><span class="logo-mark"></span>MCP-AQL</a>
+        <ul class="nav-links">
+          <li><a href="../../index.html">Home</a></li>
+          <li><a href="../../docs/index.html">Docs</a></li>
+          <li><a href="../../launch-checklist.html">Launch Checklist</a></li>
+          <li><a href="../../apis/mcp-server.html">Adapter Patterns</a></li>
+        </ul>
+        <form class="site-search" data-search-form data-index-url="../../data/search-index.json" role="search">
+          <label class="sr-only" for="site-search-input">Search MCP-AQL docs</label>
+          <input id="site-search-input" data-search-input type="search" placeholder="Search repo-synced spec docs...">
+          <span class="search-count" data-search-count></span>
+          <ul class="search-results" data-search-results hidden></ul>
+        </form>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container docs-shell">
+      <aside class="docs-side">
+        <h2>Repo-Synced Spec</h2>
+        <p class="docs-side-note">Generated from <code>MCPAQL/spec</code> so the website carries the deeper protocol material too.</p>
+        <div class="docs-side-group">
+  <h3>Core</h3>
+  <ul><li><a href="../conformance-testing.html">MCP-AQL Conformance Testing Specification</a></li><li><a href="../crude-pattern.html">MCP-AQL CRUDE Pattern Specification</a></li><li><a href="../endpoint-modes.html">MCP-AQL Endpoint Modes Specification</a></li><li><a href="../error-codes.html">Structured Error Codes Specification</a></li><li><a href="../introspection.html">MCP-AQL Introspection Specification</a></li><li><a href="../licensing-options.html">MCP-AQL Licensing Options (Working Notes)</a></li><li><a href="../mcp-integration.html">MCP Integration Specification</a></li><li><a href="../operations.html">MCP-AQL Operations Specification</a></li><li><a href="../overview.html">MCP-AQL Protocol Overview</a></li><li><a href="../plugin-contracts.html">Plugin Interface Contracts</a></li><li><a href="../README.html">MCP-AQL Specification Documentation</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Versions</h3>
+  <ul><li><a href="../versions/v1.0.0-draft.html">MCP-AQL Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Adapter</h3>
+  <ul><li><a href="../adapter/danger-levels.html">Dangerous Operation Classification Specification</a></li><li><a href="../adapter/discovery-bundle.html">MCP Server Discovery Bundle</a></li><li><a href="../adapter/element-type.html">Adapter Element Type Specification</a></li><li><a href="../adapter/generator.html">Adapter Generator Specification</a></li><li><a href="../adapter/rate-limiting.html">Rate Limiting and Quota Management Specification</a></li><li><a href="../adapter/trust-levels.html">Trust Levels Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Security</h3>
+  <ul><li><a href="../security/confirmation-tokens.html">Confirmation Token Specification</a></li><li><a href="../security/execution-safety-loop.html">Execution Safety Loop Specification</a></li><li><a href="../security/gatekeeper.html">Security Model: Gatekeeper Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Features</h3>
+  <ul><li><a class="current" href="field-selection.html">Field Selection Specification</a></li><li><a href="pagination.html">Cursor-Based Pagination Specification</a></li><li><a href="warnings.html">Warnings Array Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Guides</h3>
+  <ul><li><a href="../guides/protocol-comparison.html">Protocol Comparison Guide</a></li><li><a href="../guides/README.html">Developer Guides</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Process</h3>
+  <ul><li><a href="../process/breaking-changes.html">MCP-AQL Breaking Change Policy</a></li><li><a href="../process/preliminary-public-launch-checklist.html">Preliminary Public Launch Checklist</a></li><li><a href="../process/rfc-process.html">RFC Process for MCP-AQL Specification</a></li><li><a href="../process/versioning.html">Versioning Strategy</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Architecture</h3>
+  <ul><li><a href="../architecture/README.html">Architecture Documentation</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Research</h3>
+  <ul><li><a href="../research/mcp-vs-mcpaql-vs-a2a.html">Protocol Landscape: MCP vs MCP-AQL vs A2A</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Reference</h3>
+  <ul><li><a href="../reference/README.html">Reference Documentation</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>ADRs</h3>
+  <ul><li><a href="../adr/ADR-001-crude-pattern.html">ADR-001: CRUDE Pattern (Extending CRUD with Execute)</a></li><li><a href="../adr/ADR-002-graphql-style-input.html">ADR-002: GraphQL-Style Input Objects for Updates</a></li><li><a href="../adr/ADR-003-snake-case-parameters.html">ADR-003: snake_case Parameter Convention</a></li><li><a href="../adr/ADR-004-schema-driven-operations.html">ADR-004: Schema-Driven Operation Definitions</a></li><li><a href="../adr/ADR-005-introspection-system.html">ADR-005: GraphQL-Style Introspection System</a></li><li><a href="../adr/ADR-006-discriminated-responses.html">ADR-006: Discriminated Response Format</a></li><li><a href="../adr/index.html">Architecture Decision Records</a></li><li><a href="../adr/README.html">Architecture Decision Records</a></li></ul>
+</div>
+      </aside>
+
+      <article class="docs-main">
+        <section class="hero docs-hero">
+          <div class="hero-inner">
+            <span class="status-pill">REPO-SYNCED SPEC DOC</span>
+            <h1>Field Selection Specification</h1>
+            <p class="lede">This document specifies the optional field selection feature that enables clients to request only specific fields in responses, reducing payload size and token consumption.</p>
+            <div class="spec-meta"><span class="state-chip live">Support document</span><span class="state-chip pending">Draft</span><span class="state-chip">1.0.0-draft</span><span class="state-chip">2026-01-14</span></div>
+            <p class="spec-source">Source: <a href="https://github.com/MCPAQL/spec/blob/main/docs/features/field-selection.md">spec/docs/features/field-selection.md</a></p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="https://github.com/MCPAQL/spec/blob/main/docs/features/field-selection.md">Open Source Markdown</a>
+              <a class="btn btn-secondary" href="../index.html">Browse Full Spec Reference</a>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <div class="card spec-prose">
+            <p><strong>Version:</strong> 1.0.0-draft <strong>Status:</strong> Draft <strong>Last Updated:</strong> 2026-01-14</p>
+<h2 id="abstract">Abstract</h2>
+<p>This document specifies the optional field selection feature that enables clients to request only specific fields in responses, reducing payload size and token consumption.</p>
+<hr />
+<h2 id="table-of-contents">Table of Contents</h2>
+<ol type="1">
+<li><a href="#1-introduction">Introduction</a></li>
+<li><a href="#2-request-format">Request Format</a></li>
+<li><a href="#3-presets">Presets</a></li>
+<li><a href="#4-response-format">Response Format</a></li>
+<li><a href="#5-implementation-requirements">Implementation Requirements</a></li>
+</ol>
+<hr />
+<h2 id="1-introduction">1. Introduction</h2>
+<h3 id="11-purpose">1.1 Purpose</h3>
+<p>Field selection allows clients to specify which fields to include in responses, providing:</p>
+<ul>
+<li><strong>Token efficiency</strong> - Smaller payloads consume fewer tokens</li>
+<li><strong>Bandwidth savings</strong> - Reduced data transfer</li>
+<li><strong>Client control</strong> - Fetch only what's needed</li>
+<li><strong>Consistent interface</strong> - Same pattern across operations</li>
+</ul>
+<h3 id="12-status">1.2 Status</h3>
+<p>Field selection is an <strong>optional</strong> feature. Adapters MAY implement it for Level 2 conformance.</p>
+<h3 id="13-token-impact">1.3 Token Impact</h3>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Without Selection</th>
+<th>With Selection</th>
+<th>Savings</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>List 10 items (full)</td>
+<td>~2,500 tokens</td>
+<td>~800 tokens</td>
+<td>~68%</td>
+</tr>
+<tr>
+<td>Get single item (full)</td>
+<td>~350 tokens</td>
+<td>~120 tokens</td>
+<td>~65%</td>
+</tr>
+<tr>
+<td>Search results (20 items)</td>
+<td>~4,000 tokens</td>
+<td>~1,200 tokens</td>
+<td>~70%</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="2-request-format">2. Request Format</h2>
+<h3 id="21-fields-parameter">2.1 Fields Parameter</h3>
+<p>The <code>fields</code> parameter accepts an array of field names:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;list_users&quot;</span><span class="op">,</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">params</span><span class="op">:</span> {</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">fields</span><span class="op">:</span> [<span class="st">&quot;id&quot;</span><span class="op">,</span> <span class="st">&quot;name&quot;</span><span class="op">,</span> <span class="st">&quot;email&quot;</span>]</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="22-preset-parameter">2.2 Preset Parameter</h3>
+<p>The <code>preset</code> parameter selects a predefined field set:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;list_users&quot;</span><span class="op">,</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">params</span><span class="op">:</span> {</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">preset</span><span class="op">:</span> <span class="st">&quot;minimal&quot;</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="23-combined-usage">2.3 Combined Usage</h3>
+<p>When both are specified, <code>fields</code> extends the preset:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;list_users&quot;</span><span class="op">,</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">params</span><span class="op">:</span> {</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">preset</span><span class="op">:</span> <span class="st">&quot;minimal&quot;</span><span class="op">,</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">fields</span><span class="op">:</span> [<span class="st">&quot;created_at&quot;</span>]  <span class="co">// Adds to minimal preset</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="24-nested-fields">2.4 Nested Fields</h3>
+<p>Dot notation accesses nested properties:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;get_user&quot;</span><span class="op">,</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">params</span><span class="op">:</span> {</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">fields</span><span class="op">:</span> [<span class="st">&quot;id&quot;</span><span class="op">,</span> <span class="st">&quot;name&quot;</span><span class="op">,</span> <span class="st">&quot;settings.theme&quot;</span><span class="op">,</span> <span class="st">&quot;settings.language&quot;</span>]</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<hr />
+<h2 id="3-presets">3. Presets</h2>
+<h3 id="31-standard-presets">3.1 Standard Presets</h3>
+<p>Adapters implementing field selection SHOULD support these presets:</p>
+<h4 id="311-minimal">3.1.1 Minimal</h4>
+<p>Essential identification fields only.</p>
+<p><strong>Use case:</strong> Quick listings, autocomplete, selection UI.</p>
+<h4 id="312-standard">3.1.2 Standard</h4>
+<p>Common fields for typical use.</p>
+<p><strong>Use case:</strong> Default listing view, basic info display.</p>
+<h4 id="313-full">3.1.3 Full</h4>
+<p>All available fields.</p>
+<p><strong>Use case:</strong> Detailed view, export, debugging.</p>
+<h3 id="32-default-behavior">3.2 Default Behavior</h3>
+<p>When neither <code>fields</code> nor <code>preset</code> is specified:</p>
+<ul>
+<li>Single item operations: Return <code>full</code></li>
+<li>Collection operations: Return <code>standard</code></li>
+<li>Search operations: Return <code>minimal</code></li>
+</ul>
+<h3 id="33-custom-presets">3.3 Custom Presets</h3>
+<p>Adapters MAY define additional presets specific to their domain:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Example custom presets for a user adapter</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;contact&quot;</span><span class="op">:</span> [<span class="st">&quot;id&quot;</span><span class="op">,</span> <span class="st">&quot;name&quot;</span><span class="op">,</span> <span class="st">&quot;email&quot;</span><span class="op">,</span> <span class="st">&quot;phone&quot;</span>]</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;profile&quot;</span><span class="op">:</span> [<span class="st">&quot;id&quot;</span><span class="op">,</span> <span class="st">&quot;name&quot;</span><span class="op">,</span> <span class="st">&quot;bio&quot;</span><span class="op">,</span> <span class="st">&quot;avatar_url&quot;</span>]</span></code></pre></div>
+<p>Custom presets SHOULD be discoverable via introspection.</p>
+<hr />
+<h2 id="4-response-format">4. Response Format</h2>
+<h3 id="41-filtered-response">4.1 Filtered Response</h3>
+<p>Only requested fields appear in response:</p>
+<p><strong>Request:</strong></p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;get_user&quot;</span><span class="op">,</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">params</span><span class="op">:</span> {</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">user_id</span><span class="op">:</span> <span class="st">&quot;123&quot;</span><span class="op">,</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">fields</span><span class="op">:</span> [<span class="st">&quot;id&quot;</span><span class="op">,</span> <span class="st">&quot;name&quot;</span>]</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><strong>Response:</strong></p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">success</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">data</span><span class="op">:</span> {</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">id</span><span class="op">:</span> <span class="st">&quot;123&quot;</span><span class="op">,</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;Alice&quot;</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="42-collection-response">4.2 Collection Response</h3>
+<p>For collections, selection applies to each item:</p>
+<p><strong>Request:</strong></p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;list_users&quot;</span><span class="op">,</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">params</span><span class="op">:</span> {</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">preset</span><span class="op">:</span> <span class="st">&quot;minimal&quot;</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><strong>Response:</strong></p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">success</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">data</span><span class="op">:</span> {</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">items</span><span class="op">:</span> [</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>      { <span class="dt">id</span><span class="op">:</span> <span class="st">&quot;1&quot;</span><span class="op">,</span> <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;Alice&quot;</span> }<span class="op">,</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>      { <span class="dt">id</span><span class="op">:</span> <span class="st">&quot;2&quot;</span><span class="op">,</span> <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;Bob&quot;</span> }</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    ]<span class="op">,</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">pagination</span><span class="op">:</span> { <span class="op">...</span> }  <span class="co">// Pagination not affected by selection</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="43-missing-fields">4.3 Missing Fields</h3>
+<p>If a requested field doesn't exist on an item:</p>
+<ul>
+<li><strong>Omit the field</strong> - Don't include in response</li>
+<li><strong>No error</strong> - Silently skip</li>
+<li><strong>Consistent behavior</strong> - Same across all items</li>
+</ul>
+<hr />
+<h2 id="5-implementation-requirements">5. Implementation Requirements</h2>
+<h3 id="51-must-requirements">5.1 MUST Requirements</h3>
+<p>Adapters implementing field selection MUST:</p>
+<ol type="1">
+<li>Support the <code>fields</code> parameter on READ operations</li>
+<li>Support the <code>preset</code> parameter</li>
+<li>Handle nested field access via dot notation</li>
+<li>Preserve structure for nested fields</li>
+</ol>
+<h3 id="52-should-requirements">5.2 SHOULD Requirements</h3>
+<p>Adapters implementing field selection SHOULD:</p>
+<ol type="1">
+<li>Implement <code>minimal</code>, <code>standard</code>, and <code>full</code> presets</li>
+<li>Document available fields per resource type</li>
+<li>Support field selection on search results</li>
+<li>Validate field names against known fields</li>
+</ol>
+<h3 id="53-introspection">5.3 Introspection</h3>
+<p>Field selection options SHOULD be discoverable:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;introspect&quot;</span><span class="op">,</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">params</span><span class="op">:</span> { <span class="dt">query</span><span class="op">:</span> <span class="st">&quot;types&quot;</span><span class="op">,</span> <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;FieldSelection&quot;</span> }</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co">// Response:</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">success</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">data</span><span class="op">:</span> {</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">type</span><span class="op">:</span> {</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>      <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;FieldSelection&quot;</span><span class="op">,</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>      <span class="dt">kind</span><span class="op">:</span> <span class="st">&quot;object&quot;</span><span class="op">,</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>      <span class="dt">description</span><span class="op">:</span> <span class="st">&quot;Field selection configuration&quot;</span><span class="op">,</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>      <span class="dt">fields</span><span class="op">:</span> [</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>        { <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;presets&quot;</span><span class="op">,</span> <span class="dt">type</span><span class="op">:</span> <span class="st">&quot;array&quot;</span><span class="op">,</span> <span class="dt">description</span><span class="op">:</span> <span class="st">&quot;Available presets&quot;</span> }<span class="op">,</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>        { <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;fields&quot;</span><span class="op">,</span> <span class="dt">type</span><span class="op">:</span> <span class="st">&quot;object&quot;</span><span class="op">,</span> <span class="dt">description</span><span class="op">:</span> <span class="st">&quot;Available fields by type&quot;</span> }</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>      ]</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<hr />
+<h2 id="references">References</h2>
+<ul>
+<li><a href="../versions/v1.0.0-draft.html">MCP-AQL Specification</a></li>
+<li><a href="../operations.html">Operations Guide</a></li>
+<li><a href="../introspection.html">Introspection Specification</a></li>
+</ul>
+
+          </div>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.</p>
+      <div class="footer-links">
+        <a href="../../docs/index.html">Docs Library</a>
+        <a href="../index.html">Repo-Synced Spec</a>
+        <a href="https://github.com/MCPAQL">MCPAQL Organization</a>
+        <a href="https://dollhouseresearch.com">Dollhouse Research</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../js/search.js"></script>
+</body>
+</html>

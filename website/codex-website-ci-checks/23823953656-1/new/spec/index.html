@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Repo-synced full MCP-AQL spec reference generated from the specification repository.">
+  <title>MCP-AQL Spec | Full Reference</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <a class="logo" href="../index.html"><span class="logo-mark"></span>MCP-AQL</a>
+        <ul class="nav-links">
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="../docs/index.html">Docs</a></li>
+          <li><a href="../launch-checklist.html">Launch Checklist</a></li>
+          <li><a href="../apis/mcp-server.html">Adapter Patterns</a></li>
+        </ul>
+        <form class="site-search" data-search-form data-index-url="../data/search-index.json" role="search">
+          <label class="sr-only" for="site-search-input">Search MCP-AQL docs</label>
+          <input id="site-search-input" data-search-input type="search" placeholder="Search full spec reference...">
+          <span class="search-count" data-search-count></span>
+          <ul class="search-results" data-search-results hidden></ul>
+        </form>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <section class="hero">
+        <div class="hero-inner">
+          <span class="status-pill">REPO-SYNCED SPEC REFERENCE</span>
+          <h1>The deeper protocol docs now live on the website too</h1>
+          <p class="lede">
+            These pages are generated from <code>MCPAQL/spec/docs</code> so the public site can carry the full protocol and adapter material,
+            not just summaries and links back to GitHub.
+          </p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="versions/v1.0.0-draft.html">Read The Normative Draft</a>
+            <a class="btn btn-secondary" href="../docs/index.html">Back To Docs Library</a>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">How To Use This Section</h2>
+        <div class="card">
+          <ul>
+            <li>Use the summary pages in <a href="../docs/index.html">Docs Library</a> for orientation and launch framing.</li>
+            <li>Use this repo-synced reference for the fuller spec text hosted directly on the website.</li>
+            <li>In case of conflict, the versioned draft under <code>versions/</code> remains the normative source.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section>
+  <h2 class="section-title">Core</h2>
+  <div class="grid cols-3 spec-index-grid">
+    <article class="card">
+  <h3>MCP-AQL Conformance Testing Specification</h3>
+  <p>Document Status: This document is an informative conformance framework specification aligned to the normative protocol requirements in docs/versions/v1.0.0-draft.md. Implementation Status: The full mcpaql-conformance run</p>
+  <div class="spec-meta">
+    <span class="state-chip live">Support document</span>
+    <span class="state-chip pending">Draft</span>
+  </div>
+  <a href="conformance-testing.html">Open Page</a>
+</article>
+<article class="card">
+  <h3>MCP-AQL CRUDE Pattern Specification</h3>
+  <p>Document Status: This document is informative. For normative requirements, see MCP-AQL Specification v1.0.0.</p>
+  <div class="spec-meta">
+    <span class="state-chip live">Support document</span>
+    <span class="state-chip pending">Draft</span>
+  </div>
+  <a href="crude-pattern.html">Open Page</a>
+</article>
+<article class="card">
+  <h3>MCP-AQL Endpoint Modes Specification</h3>
+  <p>Document Status: This document is informative. For normative requirements, see MCP-AQL Specification v1.0.0.</p>
+  <div class="spec-meta">
+    <span class="state-chip live">Support document</span>
+    <span class="state-chip pending">Draft</span>
+  </div>
+  <a href="endpoint-modes.html">Open Page</a>
+</article>
+<article class="card">
+  <h3>Structured Error Codes Specification</h3>
+  <p>This document defines the structured error code system for MCP-AQL protocol responses. Structured error codes enable machine-readable error handling, consistent error categorization, and reliable error mapping across ada</p>
+  <div class="spec-meta">
+    <span class="state-chip live">Support document</span>
+    <span class="state-chip pending">Draft (MVP)</span>
+  </div>
+  <a href="error-codes.html">Open Page</a>
+</article>
+<article class="card">
+  <h3>MCP-AQL Introspection Specification</h3>
+  <p>Document Status: This document is informative. For normative requirements, see MCP-AQL Specification v1.0.0.</p>
+  <div class="spec-meta">
+    <span class="state-chip live">Support document</span>
+    <span class="state-chip pending">Draft</span>
+  </div>
+  <a href="introspection.html">Open Page</a>
+</article>
+<article class="card">
+  <h3>MCP-AQL Licensing Options (Working Notes)</h3>
+  <p>This document is a discussion aid for deciding how to license the MCP-AQL ecosystem (spec + schema artifacts + tooling + generated adapters + brand/name), while meeting these goals:</p>
+  <div class="spec-meta">
+    <span class="state-chip live">Support document</span>
+    
+  </div>
+  <a href="licensing-options.html">Open Page</a>
+</article>
+<article class="card">
+  <h3>MCP Integration Specification</h3>
+  <p>This document specifies how MCP-AQL adapters integrate with the Model Context Protocol (MCP). It defines tool registration requirements, input schema composition, error mapping between protocols, progress notification ha</p>
+  <div class="spec-meta">
+    <span class="state-chip live">Support document</span>
+    <span class="state-chip pending">Draft</span>
+  </div>
+  <a href="mcp-integration.html">Open Page</a>
+</article>
+<article class="card">
+  <h3>MCP-AQL Operations Specification</h3>
+  <p>Document Status: This document is informative. For normative requirements, see MCP-AQL Specification v1.0.0.</p>
+  <div class="spec-meta">
+    <span class="state-chip live">Support document</span>
+    <span class="state-chip pending">Draft</span>
+  </div>
+  <a href="operations.html">Open Page</a>
+</article>
+<article class="card">
+  <h3>MCP-AQL Protocol Overview</h3>
+  <p>MCP-AQL (Model Context Protocol - Agent Query Language) is a protocol that consolidates discrete MCP tools into 5 CRUDE endpoints (Create, Read, Update, Delete, Execute), providing significant token reduction while maint</p>
+  <div class="spec-meta">
+    <span class="state-chip live">Support document</span>
+    
+  </div>
+  <a href="overview.html">Open Page</a>
+</article>
+<article class="card">
+  <h3>Plugin Interface Contracts</h3>
+  <p>This document defines the normative plugin interface contracts for the MCP-AQL adapter system. Plugins provide modular, composable functionality for transport, protocol, authentication, and serialization. This specificat</p>
+  <div class="spec-meta">
+    <span class="state-chip live">Support document</span>
+    <span class="state-chip pending">Draft (MVP)</span>
+  </div>
+  <a href="plugin-contracts.html">Open Page</a>
+</article>
+<article class="card">
+  <h3>MCP-AQL Specification Documentation</h3>
+  <p>This directory contains the MCP-AQL specification set:</p>
+  <div class="spec-meta">
+    <span class="state-chip live">Support document</span>
+    
+  </div>
+  <a href="README.html">Open Page</a>
+</article>
+  </div>
+</section>
+<section>
+  <h2 class="section-title">Versions</h2>
+  <div class="grid cols-3 spec-index-grid">
+    <article class="card">
+  <h3>MCP-AQL Specification</h3>
+  <p>MCP-AQL (Model Context Protocol - Advanced Agent API Adapter Query Language) is a protocol specification that consolidates multiple MCP tools into semantic CRUDE endpoints, providing significant token reduction while ena</p>
+  <div class="spec-meta">
+    <span class="state-chip live">Normative source</span>
+    <span class="state-chip pending">Draft</span>
+  </div>
+  <a href="versions/v1.0.0-draft.html">Open Page</a>
+</article>
+  </div>
+</section>
+<section>
+  <h2 class="section-title">Adapter</h2>
+  <div class="grid cols-3 spec-index-grid">
+    <article class="card">
+  <h3>Dangerous Operation Classification Specification</h3>
+  <p>This document defines a standard classification system for dangerous operations in MCP-AQL adapters. Danger levels enable automatic lockdown of high-risk actions, consistent confirmation requirements, and trust-based per</p>
+  <div class="spec-meta">
+    <span class="state-chip live">Support document</span>
+    <span class="state-chip pending">Draft</span>
+  </div>
+  <a href="adapter/danger-levels.html">Open Page</a>
+</article>
+<article class="card">
+  <h3>MCP Server Discovery Bundle</h3>
+  <p>Document Status: This document is informative support text for the current MCP-AQL draft. The normative source of truth remains Specification v1.0.0-draft plus the published schemas in spec/schemas/.</p>
+  <div class="spec-meta">
+    <span class="state-chip live">Support document</span>
+    <span class="state-chip pending">Draft</span>
+  </div>
+  <a href="adapter/discovery-bundle.html">Open Page</a>
+</article>
+<article class="card">
+  <h3>Adapter Element Type Specification</h3>
+  <p>This document defines the Adapter Element Type, a declarative schema format for describing how MCP-AQL CRUDE operations map to target API calls. Adapters are Markdown files with YAML front matter that a universal runtime</p>
+  <div class="spec-meta">
+    <span class="state-chip live">Support document</span>
+    <span class="state-chip pending">Draft (MVP)</span>
+  </div>
+  <a href="adapter/element-type.html">Open Page</a>
+</article>
+<article class="card">
+  <h3>Adapter Generator Specification</h3>
+  <p>This document specifies the requirements and behavior of MCP-AQL adapter generators. An adapter generator takes a schema definition as input and produces compliant adapter code with required licensing artifacts and prove</p>
+  <div class="spec-meta">
+    <span class="state-chip live">Support document</span>
+    <span class="state-chip pending">Draft</span>
+  </div>
+  <a href="adapter/generator.html">Open Page</a>
+</article>
+<article class="card">
+  <h3>Rate Limiting and Quota Management Specification</h3>
+  <p>This document defines the rate limiting and quota management system for MCP-AQL adapters. Rate limits enable systems to respect API constraints, prevent runaway costs, and provide graceful degradation under load.</p>
+  <div class="spec-meta">
+    <span class="state-chip live">Support document</span>
+    <span class="state-chip pending">Draft</span>
+  </div>
+  <a href="adapter/rate-limiting.html">Open Page</a>
+</article>
+<article class="card">
+  <h3>Trust Levels Specification</h3>
+  <p>This document defines the trust level system for MCP-AQL adapters. Trust levels indicate the verification and validation status of an adapter, enabling systems to make informed decisions about which operations to permit </p>
+  <div class="spec-meta">
+    <span class="state-chip live">Support document</span>
+    <span class="state-chip pending">Draft</span>
+  </div>
+  <a href="adapter/trust-levels.html">Open Page</a>
+</article>
+  </div>
+</section>
+<section>
+  <h2 class="section-title">Security</h2>
+  <div class="grid cols-3 spec-index-grid">
+    <article class="card">
+  <h3>Confirmation Token Specification</h3>
+  <p>This document specifies the confirmation token mechanism used by MCP-AQL adapters to gate dangerous operations and quota continuations. Confirmation tokens provide a secure, time-limited method for clients to acknowledge</p>
+  <div class="spec-meta">
+    <span class="state-chip live">Support document</span>
+    <span class="state-chip pending">Draft</span>
+  </div>
+  <a href="security/confirmation-tokens.html">Open Page</a>
+</article>
+<article class="card">
+  <h3>Execution Safety Loop Specification</h3>
+  <p>Informative Document: This is an informative specification that provides detailed guidance for the execution safety loop pattern defined normatively in Section 8.6 of the core specification. In case of conflict, the norm</p>
+  <div class="spec-meta">
+    <span class="state-chip live">Support document</span>
+    <span class="state-chip pending">Draft</span>
+  </div>
+  <a href="security/execution-safety-loop.html">Open Page</a>
+</article>
+<article class="card">
+  <h3>Security Model: Gatekeeper Specification</h3>
+  <p>This document specifies an optional security model for MCP-AQL adapters, providing multi-layer access control, confirmation requirements, and audit capabilities.</p>
+  <div class="spec-meta">
+    <span class="state-chip live">Support document</span>
+    <span class="state-chip pending">Draft</span>
+  </div>
+  <a href="security/gatekeeper.html">Open Page</a>
+</article>
+  </div>
+</section>
+<section>
+  <h2 class="section-title">Features</h2>
+  <div class="grid cols-3 spec-index-grid">
+    <article class="card">
+  <h3>Field Selection Specification</h3>
+  <p>This document specifies the optional field selection feature that enables clients to request only specific fields in responses, reducing payload size and token consumption.</p>
+  <div class="spec-meta">
+    <span class="state-chip live">Support document</span>
+    <span class="state-chip pending">Draft</span>
+  </div>
+  <a href="features/field-selection.html">Open Page</a>
+</article>
+<article class="card">
+  <h3>Cursor-Based Pagination Specification</h3>
+  <p>This document defines cursor-based pagination semantics for MCP-AQL operations that return collections. Cursor pagination enables efficient iteration through large datasets while minimizing token usage in LLM context win</p>
+  <div class="spec-meta">
+    <span class="state-chip live">Support document</span>
+    <span class="state-chip pending">Draft</span>
+  </div>
+  <a href="features/pagination.html">Open Page</a>
+</article>
+<article class="card">
+  <h3>Warnings Array Specification</h3>
+  <p>This document specifies the warnings array extension to MCP-AQL's discriminated response format. Warnings provide a mechanism to communicate non-fatal conditions to clients within successful responses, enabling proactive</p>
+  <div class="spec-meta">
+    <span class="state-chip live">Support document</span>
+    <span class="state-chip pending">Draft</span>
+  </div>
+  <a href="features/warnings.html">Open Page</a>
+</article>
+  </div>
+</section>
+<section>
+  <h2 class="section-title">Guides</h2>
+  <div class="grid cols-3 spec-index-grid">
+    <article class="card">
+  <h3>Protocol Comparison Guide</h3>
+  <p>This document helps developers familiar with GraphQL, MongoDB, REST, SQL, or classic MCP understand MCP-AQL by mapping familiar concepts to their MCP-AQL equivalents.</p>
+  <div class="spec-meta">
+    <span class="state-chip live">Support document</span>
+    <span class="state-chip pending">draft</span>
+  </div>
+  <a href="guides/protocol-comparison.html">Open Page</a>
+</article>
+<article class="card">
+  <h3>Developer Guides</h3>
+  <p>Step-by-step guides for implementing and using MCP-AQL adapters.</p>
+  <div class="spec-meta">
+    <span class="state-chip live">Support document</span>
+    
+  </div>
+  <a href="guides/README.html">Open Page</a>
+</article>
+  </div>
+</section>
+<section>
+  <h2 class="section-title">Process</h2>
+  <div class="grid cols-3 spec-index-grid">
+    <article class="card">
+  <h3>MCP-AQL Breaking Change Policy</h3>
+  <p>This document defines how breaking changes are handled in the MCP-AQL specification, including change classification, deprecation procedures, migration requirements, and communication standards.</p>
+  <div class="spec-meta">
+    <span class="state-chip live">Support document</span>
+    <span class="state-chip pending">Draft</span>
+  </div>
+  <a href="process/breaking-changes.html">Open Page</a>
+</article>
+<article class="card">
+  <h3>Preliminary Public Launch Checklist</h3>
+  <p>This checklist defines the minimum quality bar for a coordinated preliminary public launch of:</p>
+  <div class="spec-meta">
+    <span class="state-chip live">Support document</span>
+    <span class="state-chip pending">Working</span>
+  </div>
+  <a href="process/preliminary-public-launch-checklist.html">Open Page</a>
+</article>
+<article class="card">
+  <h3>RFC Process for MCP-AQL Specification</h3>
+  <p>This document describes the formal process for proposing, reviewing, and accepting changes to the MCP-AQL specification through Requests for Comments (RFCs).</p>
+  <div class="spec-meta">
+    <span class="state-chip live">Support document</span>
+    <span class="state-chip pending">Active</span>
+  </div>
+  <a href="process/rfc-process.html">Open Page</a>
+</article>
+<article class="card">
+  <h3>Versioning Strategy</h3>
+  <p>This document describes the version numbering scheme and release process for the MCPAQL specification.</p>
+  <div class="spec-meta">
+    <span class="state-chip live">Support document</span>
+    <span class="state-chip pending">draft</span>
+  </div>
+  <a href="process/versioning.html">Open Page</a>
+</article>
+  </div>
+</section>
+<section>
+  <h2 class="section-title">Architecture</h2>
+  <div class="grid cols-3 spec-index-grid">
+    <article class="card">
+  <h3>Architecture Documentation</h3>
+  <p>Implementation architecture documentation has moved to the mcpaql-adapter repository.</p>
+  <div class="spec-meta">
+    <span class="state-chip live">Support document</span>
+    
+  </div>
+  <a href="architecture/README.html">Open Page</a>
+</article>
+  </div>
+</section>
+<section>
+  <h2 class="section-title">Research</h2>
+  <div class="grid cols-3 spec-index-grid">
+    <article class="card">
+  <h3>Protocol Landscape: MCP vs MCP-AQL vs A2A</h3>
+  <p>A strategic comparison of three protocols shaping how AI agents interact with the world: where they overlap, where they diverge, and where the gaps are.</p>
+  <div class="spec-meta">
+    <span class="state-chip live">Support document</span>
+    <span class="state-chip pending">research</span>
+  </div>
+  <a href="research/mcp-vs-mcpaql-vs-a2a.html">Open Page</a>
+</article>
+  </div>
+</section>
+<section>
+  <h2 class="section-title">Reference</h2>
+  <div class="grid cols-3 spec-index-grid">
+    <article class="card">
+  <h3>Reference Documentation</h3>
+  <p>Detailed specifications for schemas, formats, and protocol structures.</p>
+  <div class="spec-meta">
+    <span class="state-chip live">Support document</span>
+    
+  </div>
+  <a href="reference/README.html">Open Page</a>
+</article>
+  </div>
+</section>
+<section>
+  <h2 class="section-title">ADRs</h2>
+  <div class="grid cols-3 spec-index-grid">
+    <article class="card">
+  <h3>ADR-001: CRUDE Pattern (Extending CRUD with Execute)</h3>
+  <p>Date: 2026-01-16</p>
+  <div class="spec-meta">
+    <span class="state-chip live">Support document</span>
+    <span class="state-chip pending">Accepted</span>
+  </div>
+  <a href="adr/ADR-001-crude-pattern.html">Open Page</a>
+</article>
+<article class="card">
+  <h3>ADR-002: GraphQL-Style Input Objects for Updates</h3>
+  <p>Date: 2026-01-16</p>
+  <div class="spec-meta">
+    <span class="state-chip live">Support document</span>
+    <span class="state-chip pending">Accepted</span>
+  </div>
+  <a href="adr/ADR-002-graphql-style-input.html">Open Page</a>
+</article>
+<article class="card">
+  <h3>ADR-003: snake_case Parameter Convention</h3>
+  <p>Date: 2026-01-16</p>
+  <div class="spec-meta">
+    <span class="state-chip live">Support document</span>
+    <span class="state-chip pending">Accepted</span>
+  </div>
+  <a href="adr/ADR-003-snake-case-parameters.html">Open Page</a>
+</article>
+<article class="card">
+  <h3>ADR-004: Schema-Driven Operation Definitions</h3>
+  <p>Date: 2026-01-16</p>
+  <div class="spec-meta">
+    <span class="state-chip live">Support document</span>
+    <span class="state-chip pending">Accepted</span>
+  </div>
+  <a href="adr/ADR-004-schema-driven-operations.html">Open Page</a>
+</article>
+<article class="card">
+  <h3>ADR-005: GraphQL-Style Introspection System</h3>
+  <p>Date: 2026-01-16</p>
+  <div class="spec-meta">
+    <span class="state-chip live">Support document</span>
+    <span class="state-chip pending">Accepted</span>
+  </div>
+  <a href="adr/ADR-005-introspection-system.html">Open Page</a>
+</article>
+<article class="card">
+  <h3>ADR-006: Discriminated Response Format</h3>
+  <p>Date: 2026-01-16</p>
+  <div class="spec-meta">
+    <span class="state-chip live">Support document</span>
+    <span class="state-chip pending">Accepted</span>
+  </div>
+  <a href="adr/ADR-006-discriminated-responses.html">Open Page</a>
+</article>
+<article class="card">
+  <h3>Architecture Decision Records</h3>
+  <p>This directory contains Architecture Decision Records (ADRs) documenting significant design decisions in the MCP-AQL protocol specification.</p>
+  <div class="spec-meta">
+    <span class="state-chip live">Support document</span>
+    <span class="state-chip pending">Accepted | Proposed | Deprecated | Superseded</span>
+  </div>
+  <a href="adr/index.html">Open Page</a>
+</article>
+<article class="card">
+  <h3>Architecture Decision Records</h3>
+  <p>See index.md for the complete list of ADRs.</p>
+  <div class="spec-meta">
+    <span class="state-chip live">Support document</span>
+    
+  </div>
+  <a href="adr/README.html">Open Page</a>
+</article>
+  </div>
+</section>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.</p>
+      <div class="footer-links">
+        <a href="../docs/index.html">Docs Library</a>
+        <a href="https://github.com/MCPAQL/spec">Spec Repository</a>
+        <a href="https://github.com/MCPAQL">MCPAQL Organization</a>
+        <a href="https://dollhouseresearch.com">Dollhouse Research</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../js/search.js"></script>
+</body>
+</html>

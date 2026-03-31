@@ -1,0 +1,98 @@
+MCP-AQL Spec | ADR-003: snake_case Parameter Convention
+Launch Checklist
+Adapter Patterns
+Search MCP-AQL docs
+Repo-Synced Spec
+Generated from MCPAQL/spec so the website carries the deeper protocol material too.
+MCP-AQL Conformance Testing Specification
+MCP-AQL CRUDE Pattern Specification
+MCP-AQL Endpoint Modes Specification
+Structured Error Codes Specification
+MCP-AQL Introspection Specification
+MCP-AQL Licensing Options (Working Notes)
+MCP Integration Specification
+MCP-AQL Operations Specification
+MCP-AQL Protocol Overview
+Plugin Interface Contracts
+MCP-AQL Specification Documentation
+Versions
+MCP-AQL Specification
+Dangerous Operation Classification Specification
+MCP Server Discovery Bundle
+Adapter Element Type Specification
+Adapter Generator Specification
+Rate Limiting and Quota Management Specification
+Trust Levels Specification
+Security
+Confirmation Token Specification
+Execution Safety Loop Specification
+Security Model: Gatekeeper Specification
+Features
+Field Selection Specification
+Cursor-Based Pagination Specification
+Warnings Array Specification
+Protocol Comparison Guide
+Developer Guides
+MCP-AQL Breaking Change Policy
+Preliminary Public Launch Checklist
+RFC Process for MCP-AQL Specification
+Versioning Strategy
+Architecture
+Architecture Documentation
+Research
+Protocol Landscape: MCP vs MCP-AQL vs A2A
+Reference
+Reference Documentation
+ADR-001: CRUDE Pattern (Extending CRUD with Execute)
+ADR-002: GraphQL-Style Input Objects for Updates
+ADR-003: snake_case Parameter Convention
+ADR-004: Schema-Driven Operation Definitions
+ADR-005: GraphQL-Style Introspection System
+ADR-006: Discriminated Response Format
+Architecture Decision Records
+REPO-SYNCED SPEC DOC
+Date: 2026-01-16
+Support document Accepted
+Source: spec/docs/adr/ADR-003-snake-case-parameters.md
+Open Source Markdown
+Browse Full Spec Reference
+Status: Accepted Date: 2026-01-16
+MCP-AQL is designed for consumption by Large Language Models (LLMs) as well as traditional software clients. LLMs exhibit inconsistent behavior when generating identifiers in different naming conventions.
+Empirical observation shows LLMs may generate any of the following for the same conceptual parameter:
+{ elementType : &quot;persona&quot; } // camelCase
+{ element_type : &quot;persona&quot; } // snake_case
+{ ElementType : &quot;persona&quot; } // PascalCase
+{ elementtype : &quot;persona&quot; } // lowercase
+This inconsistency leads to parameter resolution failures and degraded LLM performance. Additionally, snake_case aligns with:
+Python naming conventions (dominant in AI/ML ecosystems)
+JSON conventions in many REST APIs
+Clear word boundary visibility without case sensitivity
+Decision
+MCP-AQL standardizes on snake_case for all public-facing parameter names.
+Parameter names MUST use snake_case format:
+element_name instead of elementName
+element_type instead of elementType
+page_size instead of pageSize
+Implementations SHOULD accept both snake_case and camelCase variants for backward compatibility and developer convenience, normalizing internally to snake_case.
+Example of both formats being accepted:
+// Preferred (snake_case)
+{ operation : &quot;list_elements&quot; , element_type : &quot;persona&quot; }
+// Also accepted (camelCase)
+{ operation : &quot;list_elements&quot; , elementType : &quot;persona&quot; }
+Internal implementation code MAY use any naming convention appropriate to the implementation language.
+Consequences
+Positive
+LLM reliability : snake_case is generated more consistently by LLMs across models
+Ecosystem alignment : Matches Python/JSON conventions common in AI APIs
+Readability : Clear word boundaries without case sensitivity ambiguity
+Backward compatibility : Accepting both formats eases migration
+Negative
+JavaScript convention mismatch : JavaScript typically uses camelCase
+Dual format support : Implementations must handle both formats
+Documentation burden : Examples should show preferred snake_case format
+References
+Protocol Specification: Request Format
+&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
+Docs Library
+MCPAQL Organization
+Dollhouse Research

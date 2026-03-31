@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="MCP-AQL error model: structured error envelopes, machine-readable codes, and draft alignment work.">
+  <title>MCP-AQL Docs | Error Model</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <a class="logo" href="../index.html"><span class="logo-mark"></span>MCP-AQL</a>
+        <ul class="nav-links">
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="index.html">Docs</a></li>
+          <li><a href="../launch-checklist.html">Launch Checklist</a></li>
+          <li><a href="../apis/mcp-server.html">Adapter Patterns</a></li>
+        </ul>
+        <form class="site-search" data-search-form data-index-url="../data/search-index.json" role="search">
+          <label class="sr-only" for="site-search-input">Search MCP-AQL docs</label>
+          <input id="site-search-input" data-search-input type="search" placeholder="Search error-model topics...">
+          <span class="search-count" data-search-count></span>
+          <ul class="search-results" data-search-results hidden></ul>
+        </form>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container docs-shell">
+      <aside class="docs-side">
+        <h2>In This Library</h2>
+        <ul>
+          <li><a href="getting-started.html">Getting Started</a></li>
+          <li><a href="protocol-core.html">Protocol Core</a></li>
+          <li><a href="error-model.html">Error Model</a></li>
+          <li><a href="security-model.html">Security Model</a></li>
+          <li><a href="conformance.html">Conformance</a></li>
+          <li><a href="adapter-contracts.html">Adapter Contracts</a></li>
+          <li><a href="implementation-profiles.html">Implementation Profiles</a></li>
+          <li><a href="roadmap.html">Roadmap</a></li>
+          <li><a href="release-notes.html">Release Notes</a></li>
+        </ul>
+      </aside>
+
+      <article class="docs-main">
+        <section class="hero docs-hero">
+          <div class="hero-inner">
+            <span class="status-pill">ERROR MODEL</span>
+            <h1>Machine-readable failures are part of the public contract</h1>
+            <p class="lede">
+              MCP-AQL uses a discriminated success/error envelope and a structured error object so clients can distinguish validation problems,
+              missing resources, permissions, and server failures without parsing free-form text.
+            </p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="../spec/error-codes.html">Error Codes Spec</a>
+              <a class="btn btn-secondary" href="https://github.com/MCPAQL/spec/issues/199">Issue #199</a>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h2 class="section-title">Canonical response envelope</h2>
+          <div class="grid cols-2">
+            <article class="card">
+              <h3>Success</h3>
+              <pre class="code-box">{
+  "success": true,
+  "data": { ... }
+}</pre>
+            </article>
+            <article class="card">
+              <h3>Failure</h3>
+              <pre class="code-box">{
+  "success": false,
+  "error": {
+    "code": "VALIDATION_MISSING_PARAM",
+    "message": "Missing required parameter 'owner'"
+  }
+}</pre>
+            </article>
+          </div>
+        </section>
+
+        <section>
+          <h2 class="section-title">Why the code field matters</h2>
+          <div class="card">
+            <ul>
+              <li>LLMs and client code can tell "fix your request" failures from "server-side problem" failures.</li>
+              <li>Adapters can map target-system failures into a predictable registry.</li>
+              <li>Monitoring and analytics can group failures by category instead of message text.</li>
+              <li>Localized or rewritten human messages do not break programmatic recovery.</li>
+            </ul>
+          </div>
+        </section>
+
+        <section>
+          <h2 class="section-title">Current draft focus</h2>
+          <div class="grid cols-2">
+            <article class="card">
+              <h3>Defined today</h3>
+              <ul>
+                <li>Structured <code>error.code</code> and <code>error.message</code> fields</li>
+                <li>MVP registry with validation, not-found, permission, and internal categories</li>
+                <li>Optional <code>details</code> object for additional context</li>
+              </ul>
+            </article>
+            <article class="card">
+              <h3>Still being aligned</h3>
+              <ul>
+                <li>Implementation surfaces that still emit string-only failures</li>
+                <li>Exact schema and prose alignment across all response definitions</li>
+                <li>Conformance checks that validate machine-readable error surfacing</li>
+              </ul>
+            </article>
+          </div>
+          <p class="callout">
+            Live spec issue <a href="https://github.com/MCPAQL/spec/issues/199">#199</a> tracks the remaining alignment work between the error-code registry,
+            response envelope requirements, and implementation-facing schemas.
+          </p>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.</p>
+      <div class="footer-links">
+        <a href="index.html">Docs Library</a>
+        <a href="../index.html">Portal Home</a>
+        <a href="https://github.com/MCPAQL">MCPAQL Organization</a>
+        <a href="https://dollhouseresearch.com">Dollhouse Research</a>
+        <a href="https://github.com/DollhouseMCP/mcp-server">DollhouseMCP Production Profile</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../js/search.js"></script>
+</body>
+</html>

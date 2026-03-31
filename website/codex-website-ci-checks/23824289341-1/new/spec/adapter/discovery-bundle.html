@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Document Status: This document is informative support text for the current MCP-AQL draft. The normative source of truth remains Specification v1.0.0-draft plus the published schemas in spec/schemas/.">
+  <title>MCP-AQL Spec | MCP Server Discovery Bundle</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <a class="logo" href="../../index.html"><span class="logo-mark"></span>MCP-AQL</a>
+        <ul class="nav-links">
+          <li><a href="../../index.html">Home</a></li>
+          <li><a href="../../docs/index.html">Docs</a></li>
+          <li><a href="../../launch-checklist.html">Launch Checklist</a></li>
+          <li><a href="../../apis/mcp-server.html">Adapter Patterns</a></li>
+        </ul>
+        <form class="site-search" data-search-form data-index-url="../../data/search-index.json" role="search">
+          <label class="sr-only" for="site-search-input">Search MCP-AQL docs</label>
+          <input id="site-search-input" data-search-input type="search" placeholder="Search repo-synced spec docs...">
+          <span class="search-count" data-search-count></span>
+          <ul class="search-results" data-search-results hidden></ul>
+        </form>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container docs-shell">
+      <aside class="docs-side">
+        <h2>Repo-Synced Spec</h2>
+        <p class="docs-side-note">Generated from <code>MCPAQL/spec</code> so the website carries the deeper protocol material too.</p>
+        <div class="docs-side-group">
+  <h3>Core</h3>
+  <ul><li><a href="../conformance-testing.html">MCP-AQL Conformance Testing Specification</a></li><li><a href="../crude-pattern.html">MCP-AQL CRUDE Pattern Specification</a></li><li><a href="../endpoint-modes.html">MCP-AQL Endpoint Modes Specification</a></li><li><a href="../error-codes.html">Structured Error Codes Specification</a></li><li><a href="../introspection.html">MCP-AQL Introspection Specification</a></li><li><a href="../licensing-options.html">MCP-AQL Licensing Options (Working Notes)</a></li><li><a href="../mcp-integration.html">MCP Integration Specification</a></li><li><a href="../operations.html">MCP-AQL Operations Specification</a></li><li><a href="../overview.html">MCP-AQL Protocol Overview</a></li><li><a href="../plugin-contracts.html">Plugin Interface Contracts</a></li><li><a href="../README.html">MCP-AQL Specification Documentation</a></li><li><a href="../repo/README.html">MCP-AQL Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Versions</h3>
+  <ul><li><a href="../versions/v1.0.0-draft.html">MCP-AQL Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Adapter</h3>
+  <ul><li><a href="danger-levels.html">Dangerous Operation Classification Specification</a></li><li><a class="current" href="discovery-bundle.html">MCP Server Discovery Bundle</a></li><li><a href="element-type.html">Adapter Element Type Specification</a></li><li><a href="generator.html">Adapter Generator Specification</a></li><li><a href="rate-limiting.html">Rate Limiting and Quota Management Specification</a></li><li><a href="trust-levels.html">Trust Levels Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Security</h3>
+  <ul><li><a href="../security/confirmation-tokens.html">Confirmation Token Specification</a></li><li><a href="../security/execution-safety-loop.html">Execution Safety Loop Specification</a></li><li><a href="../security/gatekeeper.html">Security Model: Gatekeeper Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Features</h3>
+  <ul><li><a href="../features/field-selection.html">Field Selection Specification</a></li><li><a href="../features/pagination.html">Cursor-Based Pagination Specification</a></li><li><a href="../features/warnings.html">Warnings Array Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Guides</h3>
+  <ul><li><a href="../guides/protocol-comparison.html">Protocol Comparison Guide</a></li><li><a href="../guides/README.html">Developer Guides</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Process</h3>
+  <ul><li><a href="../process/breaking-changes.html">MCP-AQL Breaking Change Policy</a></li><li><a href="../process/preliminary-public-launch-checklist.html">Preliminary Public Launch Checklist</a></li><li><a href="../process/rfc-process.html">RFC Process for MCP-AQL Specification</a></li><li><a href="../process/versioning.html">Versioning Strategy</a></li><li><a href="../repo/CHANGELOG.html">Changelog</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Architecture</h3>
+  <ul><li><a href="../architecture/README.html">Architecture Documentation</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Research</h3>
+  <ul><li><a href="../research/mcp-vs-mcpaql-vs-a2a.html">Protocol Landscape: MCP vs MCP-AQL vs A2A</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Reference</h3>
+  <ul><li><a href="../reference/README.html">Reference Documentation</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>ADRs</h3>
+  <ul><li><a href="../adr/ADR-001-crude-pattern.html">ADR-001: CRUDE Pattern (Extending CRUD with Execute)</a></li><li><a href="../adr/ADR-002-graphql-style-input.html">ADR-002: GraphQL-Style Input Objects for Updates</a></li><li><a href="../adr/ADR-003-snake-case-parameters.html">ADR-003: snake_case Parameter Convention</a></li><li><a href="../adr/ADR-004-schema-driven-operations.html">ADR-004: Schema-Driven Operation Definitions</a></li><li><a href="../adr/ADR-005-introspection-system.html">ADR-005: GraphQL-Style Introspection System</a></li><li><a href="../adr/ADR-006-discriminated-responses.html">ADR-006: Discriminated Response Format</a></li><li><a href="../adr/index.html">Architecture Decision Records</a></li><li><a href="../adr/README.html">Architecture Decision Records</a></li></ul>
+</div>
+      </aside>
+
+      <article class="docs-main">
+        <section class="hero docs-hero">
+          <div class="hero-inner">
+            <span class="status-pill">REPO-SYNCED SPEC DOC</span>
+            <h1>MCP Server Discovery Bundle</h1>
+            <p class="lede">Document Status: This document is informative support text for the current MCP-AQL draft. The normative source of truth remains Specification v1.0.0-draft plus the published schemas in spec/schemas/.</p>
+            <div class="spec-meta"><span class="state-chip live">Support document</span><span class="state-chip pending">Draft</span><span class="state-chip">1.0.0-draft</span><span class="state-chip">2026-03-19</span></div>
+            <p class="spec-source">Source: <a href="https://github.com/MCPAQL/spec/blob/main/docs/adapter/discovery-bundle.md">spec/docs/adapter/discovery-bundle.md</a></p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="https://github.com/MCPAQL/spec/blob/main/docs/adapter/discovery-bundle.md">Open Source Markdown</a>
+              <a class="btn btn-secondary" href="../index.html">Browse Full Spec Reference</a>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <div class="card spec-prose">
+            <p><strong>Version:</strong> 1.0.0-draft <strong>Status:</strong> Draft <strong>Last Updated:</strong> 2026-03-19</p>
+<blockquote>
+<p><strong>Document Status:</strong> This document is <strong>informative support text</strong> for the current MCP-AQL draft. The normative source of truth remains <a href="../versions/v1.0.0-draft.html">Specification v1.0.0-draft</a> plus the published schemas in <code>spec/schemas/</code>.</p>
+</blockquote>
+<h2 id="abstract">Abstract</h2>
+<p>This document defines the minimal discovery bundle contract used when interrogating an MCP server and synthesizing a spec-aligned MCP-AQL adapter schema. The bundle is an intermediate artifact in the MCP server -&gt; MCP-AQL adapter pipeline. It is not a separate protocol layer and does not supersede the main MCP-AQL specification.</p>
+<h2 id="purpose">Purpose</h2>
+<p>The discovery bundle exists to make generator pipelines reproducible and auditable:</p>
+<ul>
+<li><code>raw_capture</code> preserves what the source MCP server actually reported</li>
+<li><code>normalized_bundle</code> records the generator-facing interpretation of that capture</li>
+<li>provenance fields make it possible to trace every inferred value back to source metadata or an explicit heuristic</li>
+</ul>
+<p>This split is especially important when adapting third-party MCP servers whose tool descriptions may be incomplete, ambiguous, or biased toward a specific host application.</p>
+<h2 id="two-layer-structure">Two-Layer Structure</h2>
+<h3 id="raw_capture"><code>raw_capture</code></h3>
+<p><code>raw_capture</code> contains source facts captured directly from the MCP server, without semantic rewriting.</p>
+<p>Current minimal required contents:</p>
+<ul>
+<li>exact <code>tools/list</code> payload</li>
+</ul>
+<p><code>raw_capture</code> SHOULD preserve source field names exactly as received.</p>
+<p>When an interrogator captures additional source response metadata such as pagination cursors, opaque <code>_meta</code> fields, or other transport-specific response facts, those MAY also be preserved in <code>raw_capture</code>.</p>
+<p>The following capture context belongs in <code>source</code>, not <code>raw_capture</code>:</p>
+<ul>
+<li>server identity/version information when available</li>
+<li>capture timestamp</li>
+<li>connection metadata needed to understand the source context</li>
+<li>redacted capture configuration</li>
+</ul>
+<h3 id="normalized_bundle"><code>normalized_bundle</code></h3>
+<p><code>normalized_bundle</code> contains derived records that downstream schema builders and validators consume.</p>
+<p>Minimum contents:</p>
+<ul>
+<li>normalized operation records</li>
+<li>endpoint classification suggestions</li>
+<li>parameter normalization records</li>
+<li>danger-level defaults</li>
+<li>confidence markers</li>
+<li>warnings for ambiguity or unsupported shapes</li>
+</ul>
+<p>Every inferred field in <code>normalized_bundle</code> SHOULD carry enough provenance to explain whether it came from:</p>
+<ol type="1">
+<li><code>direct_source_metadata</code></li>
+<li><code>deterministic_normalization</code></li>
+<li><code>heuristic_classification</code></li>
+<li><code>manual_override</code></li>
+</ol>
+<p>Generators SHOULD populate <code>provenance.inference_sources</code> whenever a normalized field was derived rather than copied directly from source metadata.</p>
+<h2 id="minimal-record-shape">Minimal Record Shape</h2>
+<p>The current minimal discovery bundle contract is captured in <a href="https://github.com/MCPAQL/spec/blob/main/schemas/discovery-bundle.schema.json"><code>schemas/discovery-bundle.schema.json</code></a>.</p>
+<p>Important required concepts:</p>
+<ul>
+<li><code>source</code>
+<ul>
+<li>source server identity</li>
+<li>transport information</li>
+<li>auth metadata with secrets redacted from persisted config</li>
+</ul></li>
+<li><code>raw_capture.tools</code>
+<ul>
+<li>raw upstream tool definitions</li>
+</ul></li>
+<li><code>normalized_bundle.operations</code>
+<ul>
+<li><code>source_tool_name</code></li>
+<li><code>operation_name</code></li>
+<li><code>endpoint</code></li>
+<li><code>endpoint_confidence</code></li>
+<li><code>danger_level</code></li>
+<li><code>needs_review</code></li>
+<li>normalized parameter list</li>
+<li><code>maps_to</code></li>
+</ul></li>
+<li><code>normalized_bundle.warnings</code>
+<ul>
+<li>machine-readable warnings emitted during capture/normalization</li>
+<li><code>review_reasons</code> remain human-readable operation-local explanations, while <code>warnings</code> remain the cross-operation machine-readable signal channel</li>
+</ul></li>
+</ul>
+<h2 id="mapping-expectations">Mapping Expectations</h2>
+<p>The discovery bundle is intentionally narrow. It does not define MCP-AQL itself. Instead, it exists to preserve enough information for a later schema builder to produce an MCP-AQL adapter schema that validates against the current MCP-AQL spec.</p>
+<p>The schema builder is expected to:</p>
+<ul>
+<li>preserve source semantics before style normalization</li>
+<li>classify CRUDE endpoints conservatively</li>
+<li>surface ambiguous operations for review rather than silently “guessing”</li>
+<li>transform <code>normalized_bundle.operations[].params</code> from an ordered array of parameter records into the keyed <code>params</code> object used by the adapter schema</li>
+<li>treat <code>params[].source_path</code> as a dot-path into the raw upstream tool object unless a future version defines a different encoding</li>
+<li>understand that <code>maps_to</code> and <code>danger_level</code> may be generator suggestions or manual-review outcomes rather than source-declared facts</li>
+<li>carry or intentionally discard fields such as parameter <code>format</code> when the downstream adapter schema cannot represent them directly</li>
+<li>preserve the normalized <code>returns</code> wrapper contract even when the upstream MCP tool returns a non-object domain payload</li>
+<li>keep sidecar provenance/warning data outside the adapter schema when the adapter schema cannot represent it directly</li>
+</ul>
+<h2 id="current-scope-notes">Current Scope Notes</h2>
+<p>The current minimal schema reflects the first transport and auth milestone for the GitHub golden path:</p>
+<ul>
+<li><code>source.transport</code> currently enumerates <code>streamable_http</code> only</li>
+<li><code>source.auth.type</code> currently enumerates <code>bearer</code> and <code>none</code> only</li>
+<li><code>source.server</code> is optional because not every interrogated MCP server exposes stable server identity metadata during initialization</li>
+</ul>
+<p>These constraints describe the current capture contract, not the full design space for future interrogators.</p>
+<h2 id="non-goals">Non-Goals</h2>
+<p>The discovery bundle does <strong>not</strong>:</p>
+<ul>
+<li>replace the MCP-AQL adapter schema</li>
+<li>replace the canonical Markdown + YAML adapter format</li>
+<li>make existing implementations normative</li>
+<li>require speculative probing of side-effecting tools</li>
+</ul>
+<h2 id="safety-guidance">Safety Guidance</h2>
+<p>Interrogators SHOULD default to non-side-effecting capture:</p>
+<ul>
+<li>call <code>tools/list</code></li>
+<li>capture initialization metadata</li>
+<li>avoid tool execution unless the operator explicitly opts into safe probes</li>
+</ul>
+<p>If probes are used, probe results SHOULD be stored separately from pure <code>tools/list</code> facts and clearly labeled as observations rather than declarations.</p>
+
+          </div>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.</p>
+      <div class="footer-links">
+        <a href="../../docs/index.html">Docs Library</a>
+        <a href="../index.html">Repo-Synced Spec</a>
+        <a href="https://github.com/MCPAQL">MCPAQL Organization</a>
+        <a href="https://dollhouseresearch.com">Dollhouse Research</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../js/search.js"></script>
+</body>
+</html>

@@ -1,0 +1,564 @@
+MCP-AQL Spec | MCP-AQL Operations Specification
+Launch Checklist
+Adapter Patterns
+Search MCP-AQL docs
+Repo-Synced Spec
+Generated from MCPAQL/spec so the website carries the deeper protocol material too.
+MCP-AQL Conformance Testing Specification
+MCP-AQL CRUDE Pattern Specification
+MCP-AQL Endpoint Modes Specification
+Structured Error Codes Specification
+MCP-AQL Introspection Specification
+MCP-AQL Licensing Options (Working Notes)
+MCP Integration Specification
+MCP-AQL Operations Specification
+MCP-AQL Protocol Overview
+Plugin Interface Contracts
+MCP-AQL Specification Documentation
+MCP-AQL Specification
+Versions
+Dangerous Operation Classification Specification
+MCP Server Discovery Bundle
+Adapter Element Type Specification
+Adapter Generator Specification
+Rate Limiting and Quota Management Specification
+Trust Levels Specification
+Security
+Confirmation Token Specification
+Execution Safety Loop Specification
+Security Model: Gatekeeper Specification
+Features
+Field Selection Specification
+Cursor-Based Pagination Specification
+Warnings Array Specification
+Protocol Comparison Guide
+Developer Guides
+MCP-AQL Breaking Change Policy
+Preliminary Public Launch Checklist
+RFC Process for MCP-AQL Specification
+Versioning Strategy
+Changelog
+Architecture
+Architecture Documentation
+Research
+Protocol Landscape: MCP vs MCP-AQL vs A2A
+Reference
+Reference Documentation
+ADR-001: CRUDE Pattern (Extending CRUD with Execute)
+ADR-002: GraphQL-Style Input Objects for Updates
+ADR-003: snake_case Parameter Convention
+ADR-004: Schema-Driven Operation Definitions
+ADR-005: GraphQL-Style Introspection System
+ADR-006: Discriminated Response Format
+Architecture Decision Records
+REPO-SYNCED SPEC DOC
+Document Status: This document is informative. For normative requirements, see MCP-AQL Specification v1.0.0.
+Support document Draft 1.0.0-draft 2026-01-16
+Source: spec/docs/operations.md
+Open Source Markdown
+Browse Full Spec Reference
+Version: 1.0.0-draft Status: Draft Last Updated: 2026-01-16
+Document Status: This document is informative . For normative requirements, see MCP-AQL Specification v1.0.0 .
+Abstract
+This document specifies how operations are defined, documented, and invoked in MCP-AQL adapters. It covers the operation input format, response format, parameter conventions, operation schemas, batch operations, and error handling patterns.
+Table of Contents
+Conformance Requirements
+Operation Input Format
+Response Format
+Parameter Conventions
+Operation Schema Definition
+CRUDE Endpoint Assignment
+Batch Operations
+Error Handling
+The introspect Operation
+1. Conformance Requirements
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in RFC 2119 .
+An MCP-AQL adapter is conformant if it implements:
+The operation input format as specified in Section 2
+The discriminated response format as specified in Section 3
+The introspect operation as specified in Section 9
+Correct endpoint routing based on operation semantics (Section 6)
+2. Operation Input Format
+2.1 Standard Input Structure
+All operations MUST follow a consistent input structure:
+&quot;operation&quot; : &quot;&lt;operation_name&gt;&quot; ,
+&quot;params&quot; : {
+// Operation-specific parameters
+2.2 Required Fields
+required
+Description
+operation
+The operation to perform
+OPTIONAL
+Operation-specific parameters
+The operation field MUST be a non-empty string matching a defined operation name.
+Terminology Note: The request field params (an object) carries runtime parameter values. The introspection field parameters (an array of ParameterInfo ) describes the accepted parameter definitions. The keys of params correspond to the name field of each ParameterInfo entry. See Introspection — OperationDetails .
+2.3 Parameter Resolution
+Adapters MAY support parameter resolution from multiple locations. The RECOMMENDED resolution order is:
+params.&lt;parameter_name&gt; (preferred)
+Top-level &lt;parameter_name&gt; (convenience)
+When the same parameter appears at multiple levels, the value in params takes precedence.
+Example - Equivalent Requests:
+// Parameters in params object (RECOMMENDED)
+operation : &quot;get_item&quot; ,
+params : { item_id : &quot;123&quot; }
+// Parameters at top level (also valid)
+item_id : &quot;123&quot;
+2.4 Case Sensitivity
+Operation names MUST be case-sensitive. Operation names MUST use snake_case (a lowercase letter followed by lowercase letters, digits, and underscores), matching the schema pattern ^[a-z][a-z0-9_]*$ .
+3. Response Format
+3.1 Discriminated Union Result
+All operations MUST return a discriminated union response. The success field serves as the discriminator.
+type OperationResult = OperationSuccess | OperationFailure ;
+interface OperationSuccess {
+success : true ;
+data : unknown ; // Operation-specific payload
+error ?: never ; // MUST NOT be present
+interface OperationFailure {
+success : false ;
+error : ErrorDetail ; // Structured error information
+data ?: never ; // MUST NOT be present
+interface ErrorDetail {
+code : string ; // Machine-readable error code (e.g., &quot;NOT_FOUND_RESOURCE&quot;)
+message : string ; // Human-readable error message
+details ?: Record &lt; string , unknown &gt;; // Optional contextual information
+Note: See Structured Error Codes Specification for the complete error code taxonomy.
+3.2 Success Response
+A successful operation MUST return:
+success : The boolean value true
+data : The operation result (type varies by operation)
+&quot;success&quot; : true ,
+&quot;data&quot; : {
+&quot;id&quot; : &quot;item_123&quot; ,
+&quot;name&quot; : &quot;Example Item&quot; ,
+&quot;created_at&quot; : &quot;2024-01-15T10:30:00Z&quot;
+3.3 Failure Response
+A failed operation MUST return:
+success : The boolean value false
+error : A structured error object with code and message
+&quot;success&quot; : false ,
+&quot;error&quot; : {
+&quot;code&quot; : &quot;NOT_FOUND_RESOURCE&quot; ,
+&quot;message&quot; : &quot;Item with ID &#39;item_999&#39; not found&quot; ,
+&quot;details&quot; : {
+&quot;resource_type&quot; : &quot;item&quot; ,
+&quot;resource_id&quot; : &quot;item_999&quot;
+3.4 Response Metadata
+Implementations MAY include metadata in responses:
+&quot;data&quot; : { ... },
+&quot;_meta&quot; : {
+&quot;requestId&quot; : &quot;req_abc123&quot; ,
+&quot;duration_ms&quot; : 42
+Metadata fields MUST be prefixed with underscore ( _ ) to distinguish them from the operation payload.
+4. Parameter Conventions
+4.1 Naming Convention
+All public-facing parameter names MUST use snake_case (matching the pattern ^[a-z][a-z0-9_]*$ ):
+// Correct
+{ item_id : &quot;123&quot; , created_after : &quot;2024-01-01&quot; }
+// Non-conforming
+{ itemId : &quot;123&quot; , createdAfter : &quot;2024-01-01&quot; }
+For backward compatibility, adapters MAY accept camelCase variants as aliases and normalize them to snake_case internally, but the canonical parameter names MUST be snake_case.
+4.2 Common Parameter Patterns
+Adapters SHOULD use consistent patterns for common functionality:
+Pagination (offset-based):
+page : 1 , // Page number (1-indexed)
+page_size : 25 // Items per page
+Pagination (cursor-based):
+cursor : &quot;abc123&quot; , // Opaque cursor from previous response
+limit : 25 // Maximum items to return
+Filtering:
+filter : {
+status : &quot;active&quot; ,
+created_after : &quot;2024-01-01&quot;
+Sorting:
+sort : {
+field : &quot;created_at&quot; ,
+order : &quot;desc&quot; // &quot;asc&quot; or &quot;desc&quot;
+Field Selection:
+fields : [ &quot;id&quot; , &quot;name&quot; , &quot;email&quot; ] // Only return these fields
+4.3 Required vs Optional Parameters
+Each parameter MUST be documented as either required or optional. The operation schema (Section 5) specifies this via the required attribute.
+4.4 Cross-Cutting Parameters
+Cross-cutting parameters are parameters that apply across multiple operations. To ensure consistent discoverability, implementations SHOULD define these parameters once and reference them consistently.
+4.4.1 Standard Cross-Cutting Parameters
+Parameter
+Operations
+string | string[]
+All READ operations returning data
+Field selection: preset name or array of field paths
+List/search operations
+Maximum results to return
+Number of results to skip
+Page number (1-indexed)
+page_size
+Items per page
+Sort field name
+Sort order: "asc" or "desc"
+All mutating operations
+Preview without executing
+4.4.2 Shared Parameter Definitions
+Implementations SHOULD use a shared definition mechanism to ensure consistency:
+shared_parameters :
+fields :
+name : &quot;fields&quot;
+type : &quot;string | string[]&quot;
+required : false
+description : &quot;Field selection: preset (&#39;minimal&#39;, &#39;standard&#39;, &#39;full&#39;) or array of field names&quot;
+pagination :
+- name : &quot;limit&quot;
+type : &quot;number&quot;
+description : &quot;Maximum results to return&quot;
+default : 25
+- name : &quot;offset&quot;
+description : &quot;Number of results to skip&quot;
+default : 0
+sorting :
+- name : &quot;sort&quot;
+type : &quot;string&quot;
+description : &quot;Field to sort by&quot;
+- name : &quot;order&quot;
+enum : [ &quot;asc&quot; , &quot;desc&quot; ]
+description : &quot;Sort order&quot;
+default : &quot;asc&quot;
+4.4.3 Cross-Cutting Parameter Consistency (SHOULD)
+When a parameter applies to multiple operations:
+The parameter name SHOULD be identical across operations
+The parameter type SHOULD be identical across operations
+The parameter description SHOULD be semantically equivalent
+Default values SHOULD be consistent where applicable
+4.4.4 Introspection Integration
+When introspection is queried, shared parameters SHOULD be expanded inline with their full definitions. This ensures LLMs see consistent documentation regardless of which operation they query.
+Example - Operations referencing shared parameters:
+operations :
+list_items :
+params :
+- $ref : &quot;#/shared_parameters/fields&quot;
+- $ref : &quot;#/shared_parameters/pagination&quot;
+- name : &quot;category&quot;
+description : &quot;Filter by category&quot;
+search_items :
+- $ref : &quot;#/shared_parameters/sorting&quot;
+- name : &quot;query&quot;
+required : true
+description : &quot;Search query&quot;
+4.5 UPDATE Input Pattern
+UPDATE operations SHOULD use a nested input object to separate identifier parameters from updateable fields. See MCP-AQL Specification Section 4.5 for normative requirements including deep-merge semantics and field removal. See ADR-002 for design rationale.
+5. Operation Schema Definition
+5.1 Schema Structure
+Each operation MUST be defined by a schema that specifies its behavior, parameters, and routing. Conformant adapters MUST validate requests against operation schemas before execution.
+Schema Properties:
+Property
+Endpoint
+CRUDE endpoint: CREATE, READ, UPDATE, DELETE, or EXECUTE
+Human-readable description
+Parameter definitions
+Internal handler reference
+dangerous
+If true, operation has significant side effects
+5.2 Parameter Schema
+Each parameter in the params object MUST include:
+Data type: "string", "number", "boolean", "object", "array"
+Whether parameter is required (default: false)
+Default value if not provided
+Additional properties MAY be included:
+Internal parameter name mapping
+Ordered list of resolution paths
+Allowed values for string parameters
+Minimum value for numeric parameters
+Maximum value for numeric parameters
+Regex pattern for string validation
+5.3 Example Schema Definition
+// Schema for a create operation
+create_item : {
+endpoint : &quot;CREATE&quot; ,
+description : &quot;Create a new item in the system&quot; ,
+params : {
+name : {
+type : &quot;string&quot; ,
+required : true ,
+description : &quot;Item name&quot;
+category : {
+description : &quot;Item category&quot; ,
+enum : [ &quot;product&quot; , &quot;service&quot; , &quot;subscription&quot; ]
+price : {
+type : &quot;number&quot; ,
+required : false ,
+minimum : 0 ,
+description : &quot;Item price in cents&quot;
+metadata : {
+type : &quot;object&quot; ,
+description : &quot;Additional item metadata&quot;
+5.4 Parameter Validation
+Before executing an operation, adapters MUST:
+Verify all required parameters are present
+Validate parameter types match the schema
+Reject unknown parameters not defined in the operation schema (see MCP-AQL Specification Section 4.6 )
+Apply any constraints (enum, minimum, maximum, pattern)
+Apply default values for missing optional parameters
+Note: Unknown parameter rejection (step 3) occurs before applying defaults (step 5) to ensure that typos or hallucinated parameters are caught early, before any processing occurs.
+Validation failures MUST return an error response (not throw exceptions).
+6. CRUDE Endpoint Assignment
+6.1 Endpoint Semantics
+Operations MUST be assigned to endpoints based on their semantics:
+Semantics
+Characteristics
+Additive, non-destructive
+Creates new resources; idempotent if duplicate detection enabled
+Safe, read-only
+No side effects; cacheable; always safe to retry
+Modifying
+Changes existing resources; may be partially idempotent
+Destructive
+Removes resources; potentially irreversible
+Lifecycle, non-idempotent
+Triggers actions; manages runtime state
+6.2 Common Verbs by Endpoint
+Each endpoint has canonical verbs (shown in bold) that SHOULD be used for standard operations, plus additional verbs for domain-specific semantics. See Section 8.5 of the normative specification for naming requirements.
+Canonical
+Additional Verbs
+add, upload, register, import, insert
+get , list
+search, find, export, count
+edit, set, rename, move, patch, merge
+remove, purge, unregister, clear, drop
+execute , cancel
+run, start, stop, resume, trigger, invoke
+Note: The introspect operation is a reserved protocol operation and is not listed as a common verb. See Section 8.5.4 of the normative specification.
+6.3 Endpoint Routing Enforcement
+Adapters MUST validate that operations are invoked via their designated endpoint. An operation assigned to CREATE MUST NOT execute when called via the DELETE endpoint.
+When an operation is routed to the wrong endpoint, adapters SHOULD return an error:
+&quot;code&quot; : &quot;VALIDATION_ENDPOINT_MISMATCH&quot; ,
+&quot;message&quot; : &quot;Operation &#39;create_item&#39; must use CREATE endpoint, not DELETE&quot; ,
+&quot;operation&quot; : &quot;create_item&quot; ,
+&quot;expected_endpoint&quot; : &quot;CREATE&quot; ,
+&quot;actual_endpoint&quot; : &quot;DELETE&quot;
+6.4 Dangerous Operation Classification
+Operations with significant consequences SHOULD be marked with dangerous: true in their schema. This enables clients to:
+Display confirmation prompts
+Log operations with enhanced audit trails
+Apply additional authorization checks
+Examples of dangerous operations:
+Bulk deletions
+Data truncation
+Irreversible state changes
+Operations affecting production data
+7. Batch Operations
+7.1 Batch Request Format
+Adapters MAY support batch operations. When supported, the format MUST be:
+&quot;operations&quot; : [
+{ &quot;operation&quot; : &quot;create_item&quot; , &quot;params&quot; : { &quot;name&quot; : &quot;Item A&quot; , &quot;category&quot; : &quot;product&quot; } } ,
+{ &quot;operation&quot; : &quot;create_item&quot; , &quot;params&quot; : { &quot;name&quot; : &quot;Item B&quot; , &quot;category&quot; : &quot;service&quot; } } ,
+{ &quot;operation&quot; : &quot;create_item&quot; , &quot;params&quot; : { &quot;name&quot; : &quot;Item C&quot; , &quot;category&quot; : &quot;product&quot; } }
+7.2 Batch Response Format
+Batch responses MUST include individual results for each operation:
+&quot;data&quot; : null ,
+&quot;results&quot; : [
+{ &quot;index&quot; : 0 , &quot;operation&quot; : &quot;create_item&quot; , &quot;result&quot; : { &quot;success&quot; : true , &quot;data&quot; : { &quot;id&quot; : &quot;item_1&quot; } } } ,
+{ &quot;index&quot; : 1 , &quot;operation&quot; : &quot;create_item&quot; , &quot;result&quot; : { &quot;success&quot; : true , &quot;data&quot; : { &quot;id&quot; : &quot;item_2&quot; } } } ,
+{ &quot;index&quot; : 2 , &quot;operation&quot; : &quot;create_item&quot; , &quot;result&quot; : { &quot;success&quot; : false , &quot;error&quot; : { &quot;code&quot; : &quot;CONFLICT_ALREADY_EXISTS&quot; , &quot;message&quot; : &quot;Item with name &#39;Item C&#39; already exists&quot; } } }
+&quot;summary&quot; : {
+&quot;total&quot; : 3 ,
+&quot;succeeded&quot; : 2 ,
+&quot;failed&quot; : 1
+7.3 Batch Execution Semantics
+Conformant batch implementations MUST follow these semantics:
+Operations execute in array order
+Failure of one operation MUST NOT prevent subsequent operations from executing
+Each operation result is independent
+The overall success is true if the batch completed processing (even with individual failures)
+The overall success is false only for batch-level errors (malformed request, authentication failure)
+7.4 Cross-Endpoint Batching
+When using CRUDE mode (separate endpoints), batch operations SHOULD be constrained to a single endpoint:
+All CREATE operations together in one batch to the CREATE endpoint
+All READ operations together in one batch to the READ endpoint
+Mixing operations across endpoints in a single batch is NOT RECOMMENDED. Implementations MAY reject mixed batches or MAY process them with explicit endpoint routing per operation.
+7.5 Confirmation-Gated Batch Operations
+When a batch operation encounters a CONFIRMATION_REQUIRED response, special handling is needed to maintain state consistency.
+7.5.1 The Problem
+Consider a batch where operations depend on each other:
+{ &quot;operation&quot; : &quot;delete_user&quot; , &quot;params&quot; : { &quot;user_id&quot; : &quot;alice&quot; } } ,
+{ &quot;operation&quot; : &quot;send_notification&quot; , &quot;params&quot; : { &quot;user_id&quot; : &quot;alice&quot; , &quot;message&quot; : &quot;Account deleted&quot; } }
+If delete_user requires confirmation, executing send_notification anyway would create inconsistent state (notification sent, but user not deleted).
+7.5.2 Batch Halting (RECOMMENDED)
+When an operation returns CONFIRMATION_REQUIRED , the batch SHOULD halt:
+Operations before the gated operation execute normally
+The gated operation returns CONFIRMATION_REQUIRED with a confirmation token
+Subsequent operations do NOT execute
+Response includes partial results and continuation information
+{ &quot;index&quot; : 0 , &quot;operation&quot; : &quot;update_user&quot; , &quot;result&quot; : { &quot;success&quot; : true , &quot;data&quot; : { &quot;id&quot; : &quot;alice&quot; } } }
+&quot;halted_at&quot; : {
+&quot;index&quot; : 1 ,
+&quot;operation&quot; : &quot;delete_user&quot; ,
+&quot;result&quot; : {
+&quot;code&quot; : &quot;CONFIRMATION_REQUIRED&quot; ,
+&quot;message&quot; : &quot;This operation requires confirmation&quot; ,
+&quot;danger_level&quot; : &quot;destructive&quot; ,
+&quot;reasons&quot; : [ &quot;Permanently deletes user account and associated data&quot; ] ,
+&quot;confirmation_token&quot; : &quot;conf_abc123&quot; ,
+&quot;expires_at&quot; : &quot;2026-02-04T12:05:00Z&quot;
+&quot;pending_operations&quot; : [
+{ &quot;index&quot; : 2 , &quot;operation&quot; : &quot;send_notification&quot; , &quot;params&quot; : { &quot;user_id&quot; : &quot;alice&quot; , &quot;message&quot; : &quot;Account deleted&quot; } }
+&quot;succeeded&quot; : 1 ,
+&quot;failed&quot; : 0 ,
+&quot;halted&quot; : 1 ,
+&quot;pending&quot; : 1
+7.5.3 Continuation After Confirmation
+To continue after the user confirms, submit a new batch starting from the halted operation with the confirmation token:
+&quot;user_id&quot; : &quot;alice&quot; ,
+&quot;confirmation_token&quot; : &quot;conf_abc123&quot;
+&quot;operation&quot; : &quot;send_notification&quot; ,
+&quot;params&quot; : { &quot;user_id&quot; : &quot;alice&quot; , &quot;message&quot; : &quot;Account deleted&quot; }
+Clients MAY use the pending_operations array from the halted response to construct the continuation batch.
+7.5.4 Alternative: Skip and Continue (MAY)
+Adapters MAY implement skip-and-continue behavior, where the gated operation is skipped and subsequent operations execute.
+Mode Selection: Whether an adapter uses halt-and-wait (recommended) or skip-and-continue is an adapter configuration decision, not a per-request option. Clients can detect which mode is in use by examining the response:
+Halt mode: Response includes halted_at and pending_operations
+Skip mode: Response includes results for all operations, with status: "pending_confirmation" on gated operations
+{ &quot;index&quot; : 0 , &quot;operation&quot; : &quot;update_user&quot; , &quot;result&quot; : { &quot;success&quot; : true , &quot;data&quot; : { &quot;id&quot; : &quot;alice&quot; } } } ,
+{ &quot;index&quot; : 1 , &quot;operation&quot; : &quot;delete_user&quot; , &quot;result&quot; : { &quot;success&quot; : false , &quot;error&quot; : { &quot;code&quot; : &quot;CONFIRMATION_REQUIRED&quot; , ... } }, &quot;status&quot; : &quot;pending_confirmation&quot; } ,
+{ &quot;index&quot; : 2 , &quot;operation&quot; : &quot;send_notification&quot; , &quot;result&quot; : { &quot;success&quot; : true , &quot;data&quot; : {} } }
+&quot;summary&quot; : { &quot;total&quot; : 3 , &quot;succeeded&quot; : 2 , &quot;failed&quot; : 0 , &quot;pending_confirmation&quot; : 1 }
+Warning: Skip-and-continue risks inconsistent state when operations depend on each other. This approach is NOT RECOMMENDED unless operations are known to be independent.
+7.5.5 Semantics
+For batch processing purposes:
+CONFIRMATION_REQUIRED is NOT a failure — it is a halting condition
+The batch overall success is true (batch processing succeeded; an operation requires confirmation)
+Halted batches include halted_at and pending_operations for continuation
+The summary.halted count indicates operations that triggered halting
+The summary.pending count indicates operations that did not execute
+See Confirmation Token Specification for token lifecycle details and CONFIRMATION_REQUIRED Error Code for the complete response format.
+8. Error Handling
+8.1 Error Categories
+Adapters MUST categorize errors using structured error codes. The table below shows error categories and their corresponding codes:
+Category
+Error Code
+Example Message
+Missing Parameter
+VALIDATION_MISSING_PARAM
+"Missing required parameter 'name'"
+Invalid Type
+VALIDATION_INVALID_TYPE
+"Parameter 'price' expected 'number', got 'string'"
+Resource not found
+NOT_FOUND_RESOURCE
+"Item 'item_999' not found"
+Unknown Operation
+NOT_FOUND_OPERATION
+"Unknown operation: 'create_widget'"
+Permission Denied
+PERMISSION_DENIED
+"Permission denied: requires 'admin' scope"
+Rate Limited
+RATE_LIMIT_EXCEEDED
+"API rate limit exceeded"
+Internal Error
+INTERNAL_ERROR
+"Internal error: database connection failed"
+See Structured Error Codes Specification for detailed error code definitions and usage.
+8.2 Error Response Structure
+All error responses MUST use structured error objects:
+&quot;message&quot; : &quot;Item &#39;item_999&#39; not found&quot; ,
+The error object:
+MUST include code - A machine-readable error code from the error code taxonomy
+MUST include message - A human-readable error message
+MAY include details - Additional contextual information for debugging
+See Structured Error Codes Specification for the complete error code registry and usage guidelines.
+8.3 Standard Error Codes
+Adapters MUST use standardized error codes for programmatic handling. Common codes include:
+Required parameter not provided
+Parameter type mismatch
+Operation name not recognized
+Operation not permitted
+Too many requests
+Server error
+See Structured Error Codes Specification for the complete error code registry including Phase 1 robustness codes.
+8.4 Error Message Guidelines
+Error messages SHOULD be:
+Actionable : Tell the user what to do to fix the problem
+Specific : Include relevant identifiers and values
+Safe : Never expose sensitive information (passwords, tokens, internal paths)
+9. The introspect Operation
+9.1 Required Implementation
+Every MCP-AQL adapter MUST implement the introspect operation on the READ endpoint. This operation enables runtime discovery of available operations and types.
+9.2 Operation Schema
+introspect : {
+endpoint : &quot;READ&quot; ,
+description : &quot;Discover available operations and types&quot; ,
+query : {
+enum : [ &quot;operations&quot; , &quot;types&quot; ] ,
+description : &quot;What to introspect&quot;
+description : &quot;Specific operation or type name for detailed info&quot;
+9.3 Query Types
+List all operations:
+{ &quot;operation&quot; : &quot;introspect&quot; , &quot;params&quot; : { &quot;query&quot; : &quot;operations&quot; } }
+Get operation details:
+{ &quot;operation&quot; : &quot;introspect&quot; , &quot;params&quot; : { &quot;query&quot; : &quot;operations&quot; , &quot;name&quot; : &quot;create_item&quot; } }
+List all types:
+{ &quot;operation&quot; : &quot;introspect&quot; , &quot;params&quot; : { &quot;query&quot; : &quot;types&quot; } }
+Get type details:
+{ &quot;operation&quot; : &quot;introspect&quot; , &quot;params&quot; : { &quot;query&quot; : &quot;types&quot; , &quot;name&quot; : &quot;ItemCategory&quot; } }
+9.4 Operations Response
+When query is "operations" without a name :
+&quot;name&quot; : &quot;create_item&quot; ,
+&quot;endpoint&quot; : &quot;CREATE&quot; ,
+&quot;description&quot; : &quot;Create a new item&quot;
+&quot;name&quot; : &quot;list_items&quot; ,
+&quot;endpoint&quot; : &quot;READ&quot; ,
+&quot;description&quot; : &quot;List all items&quot;
+&quot;name&quot; : &quot;update_item&quot; ,
+&quot;endpoint&quot; : &quot;UPDATE&quot; ,
+&quot;description&quot; : &quot;Update item properties&quot;
+&quot;name&quot; : &quot;delete_item&quot; ,
+&quot;endpoint&quot; : &quot;DELETE&quot; ,
+&quot;description&quot; : &quot;Delete an item&quot;
+&quot;name&quot; : &quot;introspect&quot; ,
+&quot;description&quot; : &quot;Discover available operations&quot;
+9.5 Operation Details Response
+When query is "operations" with a name :
+&quot;operation&quot; : {
+&quot;mcpTool&quot; : &quot;mcp_aql_create&quot; ,
+&quot;description&quot; : &quot;Create a new item&quot; ,
+&quot;permissions&quot; : {
+&quot;readOnly&quot; : false ,
+&quot;destructive&quot; : false
+&quot;parameters&quot; : [
+&quot;name&quot; : &quot;name&quot; ,
+&quot;type&quot; : &quot;string&quot; ,
+&quot;required&quot; : true ,
+&quot;description&quot; : &quot;Item name&quot;
+&quot;name&quot; : &quot;category&quot; ,
+&quot;description&quot; : &quot;Item category&quot; ,
+&quot;enum&quot; : [ &quot;product&quot; , &quot;service&quot; , &quot;subscription&quot; ]
+&quot;name&quot; : &quot;price&quot; ,
+&quot;type&quot; : &quot;number&quot; ,
+&quot;required&quot; : false ,
+&quot;minimum&quot; : 0 ,
+&quot;description&quot; : &quot;Item price in cents&quot;
+&quot;returns&quot; : {
+&quot;name&quot; : &quot;Item&quot; ,
+&quot;kind&quot; : &quot;object&quot; ,
+&quot;description&quot; : &quot;Newly created item&quot;
+&quot;examples&quot; : [
+&quot;description&quot; : &quot;Create a basic item&quot; ,
+&quot;request&quot; : {
+&quot;name&quot; : &quot;Widget&quot; ,
+&quot;category&quot; : &quot;product&quot;
+9.6 Types Response
+When query is "types":
+&quot;types&quot; : [
+&quot;name&quot; : &quot;ItemCategory&quot; ,
+&quot;kind&quot; : &quot;enum&quot; ,
+&quot;values&quot; : [ &quot;product&quot; , &quot;service&quot; , &quot;subscription&quot; ]
+&quot;fields&quot; : [
+{ &quot;name&quot; : &quot;id&quot; , &quot;type&quot; : &quot;string&quot; } ,
+{ &quot;name&quot; : &quot;name&quot; , &quot;type&quot; : &quot;string&quot; } ,
+{ &quot;name&quot; : &quot;category&quot; , &quot;type&quot; : &quot;ItemCategory&quot; } ,
+{ &quot;name&quot; : &quot;price&quot; , &quot;type&quot; : &quot;number&quot; }
+References
+MCP-AQL Specification v1.0.0-draft
+CRUDE Pattern Specification
+Introspection Specification
+&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
+Docs Library
+MCPAQL Organization
+Dollhouse Research

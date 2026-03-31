@@ -1,0 +1,110 @@
+MCP-AQL Spec | ADR-002: GraphQL-Style Input Objects for Updates
+Launch Checklist
+Adapter Patterns
+Search MCP-AQL docs
+Repo-Synced Spec
+Generated from MCPAQL/spec so the website carries the deeper protocol material too.
+MCP-AQL Conformance Testing Specification
+MCP-AQL CRUDE Pattern Specification
+MCP-AQL Endpoint Modes Specification
+Structured Error Codes Specification
+MCP-AQL Introspection Specification
+MCP-AQL Licensing Options (Working Notes)
+MCP Integration Specification
+MCP-AQL Operations Specification
+MCP-AQL Protocol Overview
+Plugin Interface Contracts
+MCP-AQL Specification Documentation
+MCP-AQL Specification
+Versions
+Dangerous Operation Classification Specification
+MCP Server Discovery Bundle
+Adapter Element Type Specification
+Adapter Generator Specification
+Rate Limiting and Quota Management Specification
+Trust Levels Specification
+Security
+Confirmation Token Specification
+Execution Safety Loop Specification
+Security Model: Gatekeeper Specification
+Features
+Field Selection Specification
+Cursor-Based Pagination Specification
+Warnings Array Specification
+Protocol Comparison Guide
+Developer Guides
+MCP-AQL Breaking Change Policy
+Preliminary Public Launch Checklist
+RFC Process for MCP-AQL Specification
+Versioning Strategy
+Changelog
+Architecture
+Architecture Documentation
+Research
+Protocol Landscape: MCP vs MCP-AQL vs A2A
+Reference
+Reference Documentation
+ADR-001: CRUDE Pattern (Extending CRUD with Execute)
+ADR-002: GraphQL-Style Input Objects for Updates
+ADR-003: snake_case Parameter Convention
+ADR-004: Schema-Driven Operation Definitions
+ADR-005: GraphQL-Style Introspection System
+ADR-006: Discriminated Response Format
+Architecture Decision Records
+REPO-SYNCED SPEC DOC
+Date: 2026-01-16
+Support document Accepted
+Source: spec/docs/adr/ADR-002-graphql-style-input.md
+Open Source Markdown
+Browse Full Spec Reference
+Status: Accepted Date: 2026-01-16
+Update operations require a mechanism to specify which fields should be modified. Several approaches exist:
+Flat parameters : All updateable fields at the same level as identifiers
+Patch operations : JSON Patch-style { op, path, value } arrays
+Field-specific operations : Separate operations like set_description , set_metadata
+Full replacement : Send complete resource data, overwriting everything
+Nested input objects : GraphQL-style separation of identifiers from updateable fields
+Flat parameters create ambiguity about which fields are identifiers versus updateable values:
+operation : &quot;edit_element&quot; ,
+params : {
+element_name : &quot;MyPersona&quot; , // Identifier
+element_type : &quot;persona&quot; , // Identifier
+description : &quot;new desc&quot; , // Updateable?
+triggers : [ &quot;new&quot; ] // Updateable?
+Decision
+MCP-AQL adopts GraphQL-aligned nested input objects for update operations.
+Update operations MUST use a nested input object to contain all updateable fields:
+element_type : &quot;persona&quot; ,
+element_name : &quot;MyPersona&quot; ,
+input : {
+description : &quot;new desc&quot; ,
+metadata : {
+triggers : [ &quot;new&quot; , &quot;triggers&quot; ]
+Implementations MUST:
+Clearly separate identifier parameters from updateable fields
+Deep-merge input contents with existing resource state
+Only modify fields explicitly present in input
+Preserve fields not mentioned in input
+Consequences
+Positive
+Clear separation : Identifiers and updateable fields are unambiguous
+Deep merging : Nested structures merge cleanly without explicit field selection
+Partial updates : Only specified fields change; others remain untouched
+Familiar pattern : Aligns with GraphQL mutation conventions
+Extensibility : New updateable fields can be added without breaking changes
+Negative
+Increased nesting : Requests are more deeply nested
+Learning curve : Users unfamiliar with GraphQL may find pattern unusual
+Payload size : Slight increase in request size due to input wrapper
+Specification Impact
+This ADR is codified in the normative specification:
+Section 4.5 of MCP-AQL Specification v1.0.0-draft defines the input object structure, deep-merge semantics, field removal via null , and validation rules.
+Section 4 of Operations Reference references the UPDATE input pattern for parameter conventions.
+Implementations MUST follow the normative specification. This ADR provides design rationale only.
+References
+MCP-AQL Specification v1.0.0-draft — Section 4.5
+Operations Reference
+&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
+Docs Library
+MCPAQL Organization
+Dollhouse Research

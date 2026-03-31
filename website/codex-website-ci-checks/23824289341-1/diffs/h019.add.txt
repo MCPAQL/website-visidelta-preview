@@ -1,0 +1,160 @@
+MCP-AQL Spec | MCP-AQL Specification Documentation
+Launch Checklist
+Adapter Patterns
+Search MCP-AQL docs
+Repo-Synced Spec
+Generated from MCPAQL/spec so the website carries the deeper protocol material too.
+MCP-AQL Conformance Testing Specification
+MCP-AQL CRUDE Pattern Specification
+MCP-AQL Endpoint Modes Specification
+Structured Error Codes Specification
+MCP-AQL Introspection Specification
+MCP-AQL Licensing Options (Working Notes)
+MCP Integration Specification
+MCP-AQL Operations Specification
+MCP-AQL Protocol Overview
+Plugin Interface Contracts
+MCP-AQL Specification Documentation
+MCP-AQL Specification
+Versions
+Dangerous Operation Classification Specification
+MCP Server Discovery Bundle
+Adapter Element Type Specification
+Adapter Generator Specification
+Rate Limiting and Quota Management Specification
+Trust Levels Specification
+Security
+Confirmation Token Specification
+Execution Safety Loop Specification
+Security Model: Gatekeeper Specification
+Features
+Field Selection Specification
+Cursor-Based Pagination Specification
+Warnings Array Specification
+Protocol Comparison Guide
+Developer Guides
+MCP-AQL Breaking Change Policy
+Preliminary Public Launch Checklist
+RFC Process for MCP-AQL Specification
+Versioning Strategy
+Changelog
+Architecture
+Architecture Documentation
+Research
+Protocol Landscape: MCP vs MCP-AQL vs A2A
+Reference
+Reference Documentation
+ADR-001: CRUDE Pattern (Extending CRUD with Execute)
+ADR-002: GraphQL-Style Input Objects for Updates
+ADR-003: snake_case Parameter Convention
+ADR-004: Schema-Driven Operation Definitions
+ADR-005: GraphQL-Style Introspection System
+ADR-006: Discriminated Response Format
+Architecture Decision Records
+REPO-SYNCED SPEC DOC
+This directory contains the MCP-AQL specification set:
+Support document
+Source: spec/docs/README.md
+Open Source Markdown
+Browse Full Spec Reference
+Normative source: versions/v1.0.0-draft.md
+Informative support documents: all other files under docs/
+In case of conflict, the versioned normative document takes precedence.
+Implementation architecture documentation is maintained in the mcpaql-adapter repository. Example adapters are in the examples repository.
+Document Organization
+Core Specification
+Document
+Description
+v1.0.0-draft
+Current specification version
+CRUDE Pattern
+Endpoint semantics and routing
+Endpoint Modes
+CRUDE vs Single mode configuration
+Introspection
+Runtime discovery system
+Operations
+Operation design guide
+Error Codes
+Structured error code system
+Draft (MVP)
+Conformance Testing
+Test requirements and evaluation methodology
+Plugin &amp; Adapter Contracts
+What each plugin type MUST provide
+Element Type Specification
+Declarative adapter schema format
+Raw capture + normalized bundle contract for generator pipelines
+Impl Status
+Field Selection
+GraphQL-style response filtering
+Implemented
+Gatekeeper
+Multi-layer access control
+RFC Process
+How to propose specification changes
+Breaking Changes
+Policy for handling breaking changes
+Versioning
+Version numbering and release process
+Preliminary Launch Checklist
+Coordinated draft-launch criteria
+Protocol Comparison
+MCP-AQL vs other protocols
+Future features are tracked as GitHub issues. Key upcoming features:
+Phase 0 - MVP Core:
+Adapter Element Type (#61)
+Plugin Interface (#62)
+Universal Adapter Runtime (#63)
+Structured error codes (#35)
+Phase 1 - Robustness:
+Trust levels (#59)
+Dangerous operation classification (#49)
+Rate limiting (#60)
+Cursor-based pagination (#37)
+Phase 2+ - Advanced:
+Computed fields (#42)
+Streaming responses (#43)
+Relationship queries (#44)
+Schema versioning (#48)
+Reading Order
+For newcomers to MCP-AQL:
+v1.0.0-draft - Start with the main specification
+CRUDE Pattern - Understand the endpoint semantics
+Operations - Learn operation design patterns
+Introspection - Learn the discovery system
+Conformance Testing - Understand conformance requirements
+For adapter developers:
+Element Type Specification - Declarative schema format
+Plugin Interface Contracts - Plugin system contracts
+Architecture Overview - Understand adapter structure (in mcpaql-adapter repo)
+Development Guide - Implementation walkthrough (in mcpaql-adapter repo)
+Gatekeeper - Security implementation
+Cross-Repository Content
+MCP-AQL follows a four-level protocol model:
+Normative?
+Repository
+1. Wire format
+Request/response JSON, error codes, introspection
+this repo
+2. Schema semantics
+Operation declarations, params, auth, target
+MUST/SHOULD
+3. Canonical format
+Markdown + YAML front matter interchange format
+4. Implementation guidance
+Runtime architecture, plugin pipeline, dispatch
+Non-normative
+mcpaql-adapter
+Example adapters: examples
+Reference Profile
+DollhouseMCP is treated as a practical reference profile for MCP-AQL. It validates feasibility at scale, but protocol authority remains with the normative specification in this repository.
+Contributing
+See CONTRIBUTING.md for guidelines on contributing to the specification.
+Specification text : CC BY 4.0
+Code/schemas/tests : AGPL-3.0
+See LICENSING.md for details.
+&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
+Docs Library
+MCPAQL Organization
+Dollhouse Research

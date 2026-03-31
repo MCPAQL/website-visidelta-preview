@@ -1,0 +1,80 @@
+MCP-AQL Spec | Architecture Documentation
+Launch Checklist
+Adapter Patterns
+Search MCP-AQL docs
+Repo-Synced Spec
+Generated from MCPAQL/spec so the website carries the deeper protocol material too.
+MCP-AQL Conformance Testing Specification
+MCP-AQL CRUDE Pattern Specification
+MCP-AQL Endpoint Modes Specification
+Structured Error Codes Specification
+MCP-AQL Introspection Specification
+MCP-AQL Licensing Options (Working Notes)
+MCP Integration Specification
+MCP-AQL Operations Specification
+MCP-AQL Protocol Overview
+Plugin Interface Contracts
+MCP-AQL Specification Documentation
+MCP-AQL Specification
+Versions
+Dangerous Operation Classification Specification
+MCP Server Discovery Bundle
+Adapter Element Type Specification
+Adapter Generator Specification
+Rate Limiting and Quota Management Specification
+Trust Levels Specification
+Security
+Confirmation Token Specification
+Execution Safety Loop Specification
+Security Model: Gatekeeper Specification
+Features
+Field Selection Specification
+Cursor-Based Pagination Specification
+Warnings Array Specification
+Protocol Comparison Guide
+Developer Guides
+MCP-AQL Breaking Change Policy
+Preliminary Public Launch Checklist
+RFC Process for MCP-AQL Specification
+Versioning Strategy
+Changelog
+Architecture
+Architecture Documentation
+Research
+Protocol Landscape: MCP vs MCP-AQL vs A2A
+Reference
+Reference Documentation
+ADR-001: CRUDE Pattern (Extending CRUD with Execute)
+ADR-002: GraphQL-Style Input Objects for Updates
+ADR-003: snake_case Parameter Convention
+ADR-004: Schema-Driven Operation Definitions
+ADR-005: GraphQL-Style Introspection System
+ADR-006: Discriminated Response Format
+Architecture Decision Records
+REPO-SYNCED SPEC DOC
+Implementation architecture documentation has moved to the mcpaql-adapter repository.
+Support document
+Source: spec/docs/architecture/README.md
+Open Source Markdown
+Browse Full Spec Reference
+Moved Documents
+Former Location
+New Location
+overview.md
+mcpaql-adapter/docs/architecture/overview.md
+adapter-runtime.md
+mcpaql-adapter/docs/architecture/runtime.md
+plugin-interface.md
+Split: normative contracts in plugin-contracts.md , implementation in mcpaql-adapter/docs/architecture/plugin-system.md
+schema-driven-dispatch.md
+mcpaql-adapter/docs/architecture/dispatch.md
+Normative Protocol Documents
+For normative protocol specifications that remain in this repository, see:
+Plugin Interface Contracts - What each plugin type MUST provide
+Core Specification - Protocol wire format and semantics
+Adapter Element Type - Declarative adapter schema format
+Error Codes - Structured error code system
+&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
+Docs Library
+MCPAQL Organization
+Dollhouse Research

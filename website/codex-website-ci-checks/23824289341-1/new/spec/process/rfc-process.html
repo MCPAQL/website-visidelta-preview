@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="This document describes the formal process for proposing, reviewing, and accepting changes to the MCP-AQL specification through Requests for Comments (RFCs).">
+  <title>MCP-AQL Spec | RFC Process for MCP-AQL Specification</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <a class="logo" href="../../index.html"><span class="logo-mark"></span>MCP-AQL</a>
+        <ul class="nav-links">
+          <li><a href="../../index.html">Home</a></li>
+          <li><a href="../../docs/index.html">Docs</a></li>
+          <li><a href="../../launch-checklist.html">Launch Checklist</a></li>
+          <li><a href="../../apis/mcp-server.html">Adapter Patterns</a></li>
+        </ul>
+        <form class="site-search" data-search-form data-index-url="../../data/search-index.json" role="search">
+          <label class="sr-only" for="site-search-input">Search MCP-AQL docs</label>
+          <input id="site-search-input" data-search-input type="search" placeholder="Search repo-synced spec docs...">
+          <span class="search-count" data-search-count></span>
+          <ul class="search-results" data-search-results hidden></ul>
+        </form>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container docs-shell">
+      <aside class="docs-side">
+        <h2>Repo-Synced Spec</h2>
+        <p class="docs-side-note">Generated from <code>MCPAQL/spec</code> so the website carries the deeper protocol material too.</p>
+        <div class="docs-side-group">
+  <h3>Core</h3>
+  <ul><li><a href="../conformance-testing.html">MCP-AQL Conformance Testing Specification</a></li><li><a href="../crude-pattern.html">MCP-AQL CRUDE Pattern Specification</a></li><li><a href="../endpoint-modes.html">MCP-AQL Endpoint Modes Specification</a></li><li><a href="../error-codes.html">Structured Error Codes Specification</a></li><li><a href="../introspection.html">MCP-AQL Introspection Specification</a></li><li><a href="../licensing-options.html">MCP-AQL Licensing Options (Working Notes)</a></li><li><a href="../mcp-integration.html">MCP Integration Specification</a></li><li><a href="../operations.html">MCP-AQL Operations Specification</a></li><li><a href="../overview.html">MCP-AQL Protocol Overview</a></li><li><a href="../plugin-contracts.html">Plugin Interface Contracts</a></li><li><a href="../README.html">MCP-AQL Specification Documentation</a></li><li><a href="../repo/README.html">MCP-AQL Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Versions</h3>
+  <ul><li><a href="../versions/v1.0.0-draft.html">MCP-AQL Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Adapter</h3>
+  <ul><li><a href="../adapter/danger-levels.html">Dangerous Operation Classification Specification</a></li><li><a href="../adapter/discovery-bundle.html">MCP Server Discovery Bundle</a></li><li><a href="../adapter/element-type.html">Adapter Element Type Specification</a></li><li><a href="../adapter/generator.html">Adapter Generator Specification</a></li><li><a href="../adapter/rate-limiting.html">Rate Limiting and Quota Management Specification</a></li><li><a href="../adapter/trust-levels.html">Trust Levels Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Security</h3>
+  <ul><li><a href="../security/confirmation-tokens.html">Confirmation Token Specification</a></li><li><a href="../security/execution-safety-loop.html">Execution Safety Loop Specification</a></li><li><a href="../security/gatekeeper.html">Security Model: Gatekeeper Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Features</h3>
+  <ul><li><a href="../features/field-selection.html">Field Selection Specification</a></li><li><a href="../features/pagination.html">Cursor-Based Pagination Specification</a></li><li><a href="../features/warnings.html">Warnings Array Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Guides</h3>
+  <ul><li><a href="../guides/protocol-comparison.html">Protocol Comparison Guide</a></li><li><a href="../guides/README.html">Developer Guides</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Process</h3>
+  <ul><li><a href="breaking-changes.html">MCP-AQL Breaking Change Policy</a></li><li><a href="preliminary-public-launch-checklist.html">Preliminary Public Launch Checklist</a></li><li><a class="current" href="rfc-process.html">RFC Process for MCP-AQL Specification</a></li><li><a href="versioning.html">Versioning Strategy</a></li><li><a href="../repo/CHANGELOG.html">Changelog</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Architecture</h3>
+  <ul><li><a href="../architecture/README.html">Architecture Documentation</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Research</h3>
+  <ul><li><a href="../research/mcp-vs-mcpaql-vs-a2a.html">Protocol Landscape: MCP vs MCP-AQL vs A2A</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Reference</h3>
+  <ul><li><a href="../reference/README.html">Reference Documentation</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>ADRs</h3>
+  <ul><li><a href="../adr/ADR-001-crude-pattern.html">ADR-001: CRUDE Pattern (Extending CRUD with Execute)</a></li><li><a href="../adr/ADR-002-graphql-style-input.html">ADR-002: GraphQL-Style Input Objects for Updates</a></li><li><a href="../adr/ADR-003-snake-case-parameters.html">ADR-003: snake_case Parameter Convention</a></li><li><a href="../adr/ADR-004-schema-driven-operations.html">ADR-004: Schema-Driven Operation Definitions</a></li><li><a href="../adr/ADR-005-introspection-system.html">ADR-005: GraphQL-Style Introspection System</a></li><li><a href="../adr/ADR-006-discriminated-responses.html">ADR-006: Discriminated Response Format</a></li><li><a href="../adr/index.html">Architecture Decision Records</a></li><li><a href="../adr/README.html">Architecture Decision Records</a></li></ul>
+</div>
+      </aside>
+
+      <article class="docs-main">
+        <section class="hero docs-hero">
+          <div class="hero-inner">
+            <span class="status-pill">REPO-SYNCED SPEC DOC</span>
+            <h1>RFC Process for MCP-AQL Specification</h1>
+            <p class="lede">This document describes the formal process for proposing, reviewing, and accepting changes to the MCP-AQL specification through Requests for Comments (RFCs).</p>
+            <div class="spec-meta"><span class="state-chip live">Support document</span><span class="state-chip pending">Active</span><span class="state-chip">1.0.0</span></div>
+            <p class="spec-source">Source: <a href="https://github.com/MCPAQL/spec/blob/main/docs/process/rfc-process.md">spec/docs/process/rfc-process.md</a></p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="https://github.com/MCPAQL/spec/blob/main/docs/process/rfc-process.md">Open Source Markdown</a>
+              <a class="btn btn-secondary" href="../index.html">Browse Full Spec Reference</a>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <div class="card spec-prose">
+            <p>This document describes the formal process for proposing, reviewing, and accepting changes to the MCP-AQL specification through Requests for Comments (RFCs).</p>
+<h2 id="table-of-contents">Table of Contents</h2>
+<ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#rfc-lifecycle">RFC Lifecycle</a></li>
+<li><a href="#submitting-an-rfc">Submitting an RFC</a></li>
+<li><a href="#review-process">Review Process</a></li>
+<li><a href="#after-acceptance">After Acceptance</a></li>
+<li><a href="#rfc-numbering">RFC Numbering</a></li>
+</ul>
+<hr />
+<h2 id="introduction">Introduction</h2>
+<h3 id="what-is-an-rfc">What is an RFC?</h3>
+<p>An RFC (Request for Comments) is a formal proposal for a significant change to the MCP-AQL specification. RFCs provide a consistent and controlled process for introducing new features, modifying existing behaviors, or making other substantive changes to the protocol.</p>
+<p>The RFC process ensures that:</p>
+<ul>
+<li>Changes are thoroughly documented before implementation</li>
+<li>The community has opportunity to provide feedback</li>
+<li>Design decisions are recorded for future reference</li>
+<li>Breaking changes are carefully considered</li>
+<li>Implementations can prepare for upcoming changes</li>
+</ul>
+<p>Formal proposals are stored in the <a href="https://github.com/MCPAQL/spec/blob/main/proposals/"><code>proposals/</code></a> directory using the standard template.</p>
+<h3 id="when-to-use-an-rfc">When to Use an RFC</h3>
+<p>You SHOULD submit an RFC for:</p>
+<ul>
+<li><strong>New operations or endpoints</strong>: Adding new functionality to the CRUDE pattern</li>
+<li><strong>Behavioral changes</strong>: Modifying how existing operations work</li>
+<li><strong>New parameters or fields</strong>: Extending request/response schemas</li>
+<li><strong>Security-related changes</strong>: Modifications to authentication, authorization, or access control</li>
+<li><strong>Breaking changes</strong>: Any change that affects backward compatibility</li>
+<li><strong>Architectural changes</strong>: Modifications to core patterns or design principles</li>
+</ul>
+<p>You MAY skip the RFC process for:</p>
+<ul>
+<li>Editorial corrections (typos, grammar, clarifications)</li>
+<li>Documentation improvements that do not change the specification</li>
+<li>Adding conformance tests for existing features</li>
+<li>Bug fixes to specification text that correct obvious errors</li>
+</ul>
+<p>When in doubt, start with a GitHub Issue to discuss whether an RFC is appropriate.</p>
+<hr />
+<h2 id="rfc-lifecycle">RFC Lifecycle</h2>
+<p>RFCs progress through five stages from initial concept to integration into the specification.</p>
+<h3 id="stage-0-pre-rfc-discussion">Stage 0: Pre-RFC (Discussion)</h3>
+<p><strong>Purpose</strong>: Gather initial feedback before investing effort in a formal proposal.</p>
+<p><strong>Process</strong>:</p>
+<ol type="1">
+<li>Open a GitHub Issue describing the problem or enhancement</li>
+<li>Use the <code>discussion</code> label to indicate this is exploratory</li>
+<li>Engage with community feedback</li>
+<li>Refine the idea based on input</li>
+</ol>
+<p><strong>Exit Criteria</strong>:</p>
+<ul>
+<li>General agreement that the change is worth pursuing</li>
+<li>Clear understanding of the problem being solved</li>
+<li>Initial design direction identified</li>
+</ul>
+<p><strong>Duration</strong>: No minimum; proceed when ready</p>
+<h3 id="stage-1-draft-formal-proposal">Stage 1: Draft (Formal Proposal)</h3>
+<p><strong>Purpose</strong>: Submit a complete, formal proposal for review.</p>
+<p><strong>Process</strong>:</p>
+<ol type="1">
+<li>Create a new Issue using the RFC issue template</li>
+<li>Complete all required sections (see <a href="#submitting-an-rfc">Submitting an RFC</a>)</li>
+<li>Apply the <code>rfc</code> and <code>proposal</code> labels</li>
+<li>Link to any related Pre-RFC discussions</li>
+</ol>
+<p><strong>Exit Criteria</strong>:</p>
+<ul>
+<li>RFC is complete and well-formed</li>
+<li>All required sections are filled out</li>
+<li>Examples and use cases are provided</li>
+</ul>
+<p><strong>Duration</strong>: Immediate upon submission</p>
+<h3 id="stage-2-review-community-and-maintainer-review">Stage 2: Review (Community and Maintainer Review)</h3>
+<p><strong>Purpose</strong>: Gather comprehensive feedback and iterate on the design.</p>
+<p><strong>Process</strong>:</p>
+<ol type="1">
+<li>The RFC enters the minimum 14-day discussion period</li>
+<li>Community members provide feedback via Issue comments</li>
+<li>Maintainers review for technical accuracy and consistency</li>
+<li>The RFC author addresses feedback and updates the proposal</li>
+<li>Spec editors may request changes or clarifications</li>
+</ol>
+<p><strong>Exit Criteria</strong>:</p>
+<ul>
+<li>Minimum discussion period has elapsed</li>
+<li>All blocking concerns have been addressed</li>
+<li>Maintainer consensus is reached</li>
+</ul>
+<p><strong>Duration</strong>: Minimum 14 days; may extend based on complexity or ongoing discussion</p>
+<h3 id="stage-3-accepted-approved-for-implementation">Stage 3: Accepted (Approved for Implementation)</h3>
+<p><strong>Purpose</strong>: Signal that the RFC is approved and ready for implementation.</p>
+<p><strong>Process</strong>:</p>
+<ol type="1">
+<li>A maintainer applies the <code>accepted</code> label</li>
+<li>The RFC Issue is updated to reflect acceptance</li>
+<li>An RFC number is assigned (see <a href="#rfc-numbering">RFC Numbering</a>)</li>
+<li>The RFC is added to the accepted RFC tracking list</li>
+</ol>
+<p><strong>Exit Criteria</strong>:</p>
+<ul>
+<li>RFC has been formally accepted by maintainers</li>
+<li>RFC number has been assigned</li>
+<li>Implementation can begin</li>
+</ul>
+<p><strong>Duration</strong>: Immediate upon acceptance decision</p>
+<h3 id="stage-4-integrated-merged-into-spec">Stage 4: Integrated (Merged into Spec)</h3>
+<p><strong>Purpose</strong>: The RFC changes have been merged into the specification.</p>
+<p><strong>Process</strong>:</p>
+<ol type="1">
+<li>Specification changes are implemented in a PR</li>
+<li>The PR undergoes review and is merged</li>
+<li>The RFC Issue is closed with the <code>integrated</code> label</li>
+<li>The changelog is updated to reference the RFC</li>
+</ol>
+<p><strong>Exit Criteria</strong>:</p>
+<ul>
+<li>All specification changes from the RFC are merged</li>
+<li>Changelog updated</li>
+<li>RFC Issue closed</li>
+</ul>
+<p><strong>Duration</strong>: Varies based on implementation complexity</p>
+<hr />
+<h2 id="submitting-an-rfc">Submitting an RFC</h2>
+<h3 id="using-the-rfc-issue-template">Using the RFC Issue Template</h3>
+<p>All RFCs MUST be submitted using the RFC issue template located at <code>.github/ISSUE_TEMPLATE/rfc.md</code>. This ensures consistency and completeness across proposals.</p>
+<p>To create an RFC:</p>
+<ol type="1">
+<li>Navigate to the repository's Issues tab</li>
+<li>Click "New Issue"</li>
+<li>Select the "RFC Proposal" template</li>
+<li>Fill out all sections completely</li>
+</ol>
+<h3 id="required-sections">Required Sections</h3>
+<p>Every RFC MUST include the following sections:</p>
+<h4 id="summary">Summary</h4>
+<p>A concise, one-paragraph description of the proposed change. This should be understandable without reading the full RFC.</p>
+<p><strong>Example</strong>:</p>
+<blockquote>
+<p>This RFC proposes adding a <code>batch</code> operation to the CRUDE pattern, allowing multiple operations to be submitted and executed in a single request, with support for transactional semantics.</p>
+</blockquote>
+<h4 id="motivation">Motivation</h4>
+<p>Explain why this change is needed:</p>
+<ul>
+<li>What problem does it solve?</li>
+<li>What use cases does it enable?</li>
+<li>Why is the current approach insufficient?</li>
+<li>Who benefits from this change?</li>
+</ul>
+<h4 id="detailed-design">Detailed Design</h4>
+<p>Provide a comprehensive description of the proposal:</p>
+<ul>
+<li>Specific changes to the specification text</li>
+<li>New operations, parameters, or behaviors introduced</li>
+<li>Request and response examples (in JSON format)</li>
+<li>How the change interacts with existing features</li>
+<li>Edge cases and their handling</li>
+</ul>
+<h4 id="drawbacks">Drawbacks</h4>
+<p>Honestly assess the potential downsides:</p>
+<ul>
+<li>Complexity added to the specification</li>
+<li>Implementation burden for adapters</li>
+<li>Breaking changes or migration requirements</li>
+<li>Performance implications</li>
+<li>Security considerations</li>
+</ul>
+<h4 id="alternatives">Alternatives</h4>
+<p>Document other approaches that were considered:</p>
+<ul>
+<li>Alternative designs and why they were rejected</li>
+<li>Status quo (doing nothing) and its implications</li>
+<li>Partial solutions and their trade-offs</li>
+</ul>
+<h3 id="optional-sections">Optional Sections</h3>
+<p>The following sections are encouraged but not required:</p>
+<h4 id="prior-art">Prior Art</h4>
+<p>References to similar features in other specifications, protocols, or systems.</p>
+<h4 id="unresolved-questions">Unresolved Questions</h4>
+<p>Open design decisions that need further discussion or will be resolved during implementation.</p>
+<h3 id="discussion-period">Discussion Period</h3>
+<p>All RFCs are subject to a <strong>minimum 14-day discussion period</strong> from the date of submission. This period:</p>
+<ul>
+<li>Allows sufficient time for community review</li>
+<li>Enables asynchronous participation across time zones</li>
+<li>Provides opportunity for implementation feedback</li>
+</ul>
+<p>The discussion period MAY be extended for:</p>
+<ul>
+<li>Complex or controversial proposals</li>
+<li>Significant ongoing discussion</li>
+<li>Requests from maintainers or active participants</li>
+</ul>
+<hr />
+<h2 id="review-process">Review Process</h2>
+<h3 id="who-reviews-rfcs">Who Reviews RFCs</h3>
+<p>RFCs are reviewed by two groups:</p>
+<h4 id="maintainers">Maintainers</h4>
+<p>Project maintainers have final authority on RFC acceptance. They evaluate:</p>
+<ul>
+<li>Alignment with specification goals and philosophy</li>
+<li>Technical soundness and feasibility</li>
+<li>Impact on existing implementations</li>
+<li>Long-term maintenance implications</li>
+</ul>
+<h4 id="spec-editors">Spec Editors</h4>
+<p>Spec editors focus on:</p>
+<ul>
+<li>Consistency with existing specification language</li>
+<li>Completeness of the proposal</li>
+<li>Clarity and precision of the design</li>
+<li>Integration with other specification sections</li>
+</ul>
+<h3 id="criteria-for-acceptance">Criteria for Acceptance</h3>
+<p>An RFC is accepted when it meets the following criteria:</p>
+<ol type="1">
+<li><strong>Completeness</strong>: All required sections are filled out thoroughly</li>
+<li><strong>Technical Soundness</strong>: The design is technically feasible and well-reasoned</li>
+<li><strong>Consistency</strong>: The proposal aligns with existing specification patterns</li>
+<li><strong>Addressed Feedback</strong>: All substantive concerns have been resolved</li>
+<li><strong>Consensus</strong>: Maintainers agree the change should proceed</li>
+<li><strong>Clear Benefit</strong>: The proposal provides meaningful value to the specification</li>
+</ol>
+<h3 id="determining-consensus">Determining Consensus</h3>
+<p>Consensus is determined through the following process:</p>
+<ol type="1">
+<li><strong>Discussion</strong>: All feedback is considered and addressed</li>
+<li><strong>Maintainer Review</strong>: At least two maintainers must review the RFC</li>
+<li><strong>Approval</strong>: A maintainer signals readiness to accept</li>
+<li><strong>Objection Period</strong>: 48 hours for final objections</li>
+<li><strong>Decision</strong>: If no blocking objections, the RFC is accepted</li>
+</ol>
+<p>Blocking objections MUST include:</p>
+<ul>
+<li>A clear statement of the concern</li>
+<li>Specific changes that would resolve the objection</li>
+<li>Willingness to engage in discussion</li>
+</ul>
+<p>If consensus cannot be reached, maintainers may:</p>
+<ul>
+<li>Request additional changes to address concerns</li>
+<li>Defer the RFC for future consideration</li>
+<li>Close the RFC as not accepted (with explanation)</li>
+</ul>
+<hr />
+<h2 id="after-acceptance">After Acceptance</h2>
+<h3 id="create-rfc-branch">Create rfc/* Branch</h3>
+<p>Once an RFC is accepted:</p>
+<ol type="1">
+<li>Create a branch named <code>rfc/RFC-NNNN-short-description</code>
+<ul>
+<li>Example: <code>rfc/RFC-0001-batch-operations</code></li>
+</ul></li>
+<li>Branch from <code>develop</code> (not <code>main</code>)</li>
+<li>Reference the RFC number in the branch name</li>
+</ol>
+<h3 id="implement-spec-changes">Implement Spec Changes</h3>
+<p>Implement the accepted RFC in the branch:</p>
+<ol type="1">
+<li>Update relevant specification documents</li>
+<li>Add or modify examples as needed</li>
+<li>Update schema files if applicable</li>
+<li>Add conformance tests for new features</li>
+<li>Ensure all existing tests pass</li>
+</ol>
+<h3 id="pr-review-process">PR Review Process</h3>
+<p>Submit a Pull Request for the implementation:</p>
+<ol type="1">
+<li>Title format: <code>[RFC-NNNN] Brief description</code></li>
+<li>Reference the RFC Issue in the PR description</li>
+<li>Provide a checklist of all specification changes made</li>
+<li>Request review from maintainers</li>
+</ol>
+<p>The PR review focuses on:</p>
+<ul>
+<li>Accurate implementation of the accepted RFC</li>
+<li>Quality of specification language</li>
+<li>Completeness of examples</li>
+<li>Test coverage</li>
+</ul>
+<h3 id="changelog-updates">Changelog Updates</h3>
+<p>All RFC implementations MUST update the changelog:</p>
+<ol type="1">
+<li>Add an entry under "Unreleased" or the appropriate version</li>
+<li>Reference the RFC number: <code>[RFC-NNNN]</code></li>
+<li>Provide a brief description of the change</li>
+<li>Link to the RFC Issue and PR</li>
+</ol>
+<p><strong>Example changelog entry</strong>:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">### Added</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Batch operations support (<span class="co">[</span><span class="ot">RFC-0001</span><span class="co">](link-to-issue)</span>) - Enables multiple operations in a single request with transactional semantics</span></code></pre></div>
+<hr />
+<h2 id="rfc-numbering">RFC Numbering</h2>
+<h3 id="assignment">Assignment</h3>
+<p>RFC numbers are assigned sequentially, starting from RFC-0001. Numbers are assigned:</p>
+<ul>
+<li>When an RFC is accepted (Stage 3)</li>
+<li>By a maintainer updating the RFC Issue</li>
+<li>In chronological order of acceptance</li>
+</ul>
+<h3 id="format">Format</h3>
+<p>RFC numbers use a four-digit format with leading zeros:</p>
+<ul>
+<li><code>RFC-0001</code></li>
+<li><code>RFC-0042</code></li>
+<li><code>RFC-0123</code></li>
+</ul>
+<h3 id="tracking">Tracking</h3>
+<p>Accepted and integrated RFCs are tracked in the repository:</p>
+<ul>
+<li>A comment on the RFC Issue includes the assigned number</li>
+<li>The RFC is listed in project documentation</li>
+<li>Branch names and PR titles reference the RFC number</li>
+</ul>
+<h3 id="numbers-are-permanent">Numbers Are Permanent</h3>
+<p>Once assigned, RFC numbers are never reused, even if:</p>
+<ul>
+<li>The RFC is later withdrawn</li>
+<li>The implementation is reverted</li>
+<li>The feature is deprecated</li>
+</ul>
+<p>This ensures stable references in documentation, changelogs, and external resources.</p>
+<hr />
+<h2 id="quick-reference">Quick Reference</h2>
+<table>
+<thead>
+<tr>
+<th>Stage</th>
+<th>Name</th>
+<th>Duration</th>
+<th>Exit Criteria</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>Pre-RFC</td>
+<td>No minimum</td>
+<td>Ready to formalize</td>
+</tr>
+<tr>
+<td>1</td>
+<td>Draft</td>
+<td>Immediate</td>
+<td>Complete submission</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Review</td>
+<td>14+ days</td>
+<td>Consensus reached</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Accepted</td>
+<td>Immediate</td>
+<td>Number assigned</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Integrated</td>
+<td>Varies</td>
+<td>PR merged</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="related-documents">Related Documents</h2>
+<ul>
+<li><a href="https://github.com/MCPAQL/spec/blob/main/CONTRIBUTING.md">CONTRIBUTING.md</a> - General contribution guidelines</li>
+<li><a href="https://github.com/MCPAQL/spec/blob/main/.github/ISSUE_TEMPLATE/rfc.md">RFC Issue Template</a> - Template for RFC submissions</li>
+<li><a href="https://github.com/MCPAQL/spec/blob/main/CONTRIBUTING.md#branching-strategy">Branching Strategy</a> - Branch naming conventions</li>
+</ul>
+<hr />
+<p><em>This document is part of the MCP-AQL specification. See <a href="https://github.com/MCPAQL/spec/blob/main/LICENSING.md">LICENSING.md</a> for license information.</em></p>
+
+          </div>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.</p>
+      <div class="footer-links">
+        <a href="../../docs/index.html">Docs Library</a>
+        <a href="../index.html">Repo-Synced Spec</a>
+        <a href="https://github.com/MCPAQL">MCPAQL Organization</a>
+        <a href="https://dollhouseresearch.com">Dollhouse Research</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../js/search.js"></script>
+</body>
+</html>

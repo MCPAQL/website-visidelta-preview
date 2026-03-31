@@ -1,0 +1,638 @@
+MCP-AQL Spec | Protocol Comparison Guide
+Launch Checklist
+Adapter Patterns
+Search MCP-AQL docs
+Repo-Synced Spec
+Generated from MCPAQL/spec so the website carries the deeper protocol material too.
+MCP-AQL Conformance Testing Specification
+MCP-AQL CRUDE Pattern Specification
+MCP-AQL Endpoint Modes Specification
+Structured Error Codes Specification
+MCP-AQL Introspection Specification
+MCP-AQL Licensing Options (Working Notes)
+MCP Integration Specification
+MCP-AQL Operations Specification
+MCP-AQL Protocol Overview
+Plugin Interface Contracts
+MCP-AQL Specification Documentation
+MCP-AQL Specification
+Versions
+Dangerous Operation Classification Specification
+MCP Server Discovery Bundle
+Adapter Element Type Specification
+Adapter Generator Specification
+Rate Limiting and Quota Management Specification
+Trust Levels Specification
+Security
+Confirmation Token Specification
+Execution Safety Loop Specification
+Security Model: Gatekeeper Specification
+Features
+Field Selection Specification
+Cursor-Based Pagination Specification
+Warnings Array Specification
+Protocol Comparison Guide
+Developer Guides
+MCP-AQL Breaking Change Policy
+Preliminary Public Launch Checklist
+RFC Process for MCP-AQL Specification
+Versioning Strategy
+Changelog
+Architecture
+Architecture Documentation
+Research
+Protocol Landscape: MCP vs MCP-AQL vs A2A
+Reference
+Reference Documentation
+ADR-001: CRUDE Pattern (Extending CRUD with Execute)
+ADR-002: GraphQL-Style Input Objects for Updates
+ADR-003: snake_case Parameter Convention
+ADR-004: Schema-Driven Operation Definitions
+ADR-005: GraphQL-Style Introspection System
+ADR-006: Discriminated Response Format
+Architecture Decision Records
+REPO-SYNCED SPEC DOC
+This document helps developers familiar with GraphQL, MongoDB, REST, SQL, or classic MCP understand MCP-AQL by mapping familiar concepts to their MCP-AQL equivalents.
+Support document draft 1.0.0
+Source: spec/docs/guides/protocol-comparison.md
+Open Source Markdown
+Browse Full Spec Reference
+Table of Contents
+Introduction
+Quick Reference Table
+For GraphQL Developers
+For MongoDB Developers
+For REST API Developers
+For SQL Developers
+For Classic MCP Users
+Comprehensive Concept Mapping
+Code Examples: Same Operation Across Protocols
+MCP-AQL (Model Context Protocol - Advanced Agent API Adapter Query Language) is a protocol pattern for consolidating multiple MCP tools into semantic endpoints. The core ideas are:
+CRUDE Endpoints - Categorize operations by safety: Create, Read, Update, Delete, Execute
+Operation Routing - A single operation parameter dispatches to the appropriate handler
+Schema-Driven Dispatch - Declarative operation definitions with automatic validation
+Introspection - On-demand discovery replaces upfront schema parsing
+Token Efficiency by Mode
+MCP-AQL supports multiple endpoint modes with different token trade-offs:
+Endpoints
+Token Cost
+Reduction
+Use Case
+Discrete
+Many individual tools
+Baseline
+Traditional MCP
+5 semantic endpoints
+Host-level permission control
+1 unified endpoint
+Maximum token efficiency
+Response Token Savings: Field selection ( fields parameter) provides additional ~73-86% reduction in response tokens. Combined with endpoint consolidation, total savings can exceed 98%.
+Why Compare?
+Developers often approach new protocols through the lens of what they already know. This guide provides mental models for understanding MCP-AQL by drawing parallels to:
+Protocol
+Similarity to MCP-AQL
+Introspection, typed operations, nested input objects
+Document-based operations, flexible queries
+Resource-oriented endpoints, HTTP-like semantics
+Structured queries, CRUD operations
+Classic MCP
+Tool-based interface (what MCP-AQL can replace)
+Core Design Philosophy
+MCP-AQL optimizes for LLM token efficiency while maintaining human readability :
+Consolidated Endpoints - Semantic grouping instead of many discrete tools
+On-Demand Discovery - Introspection replaces upfront schema parsing
+Flexible Parameter Resolution - Multiple sources checked for each parameter
+Define Operation
+mutation createUser
+db.users.insertOne()
+POST /users
+INSERT INTO users
+{ operation: "..." }
+Specify Parameters
+variables: { ... }
+{ filter: { ... } }
+Request body / query params
+WHERE clause
+params: { ... }
+Target Type
+Type in schema
+Collection name
+URL path
+Table name
+Implementation-defined
+Read One
+query { user(id) }
+findOne({ _id })
+GET /users/:id
+SELECT ... WHERE id=
+Read operation
+Read Many
+query { users }
+find({})
+GET /users
+SELECT * FROM
+List operation
+mutation { createUser }
+insertOne()
+INSERT INTO
+Create operation
+mutation { updateUser }
+updateOne()
+PUT /users/:id
+UPDATE ... SET
+Update operation
+mutation { deleteUser }
+deleteOne()
+DELETE /users/:id
+DELETE FROM
+Delete operation
+query { search(q) }
+find({ $text })
+GET /search?q=
+LIKE '%term%'
+search operation
+Discover Schema
+__schema introspection
+db.getCollectionInfos()
+OpenAPI / Swagger
+DESCRIBE table
+introspect
+Field Selection
+Field list in query
+Projection { field: 1 }
+?fields=a,b
+SELECT a, b
+fields param or preset
+Response Format
+{ data, errors }
+Document / cursor
+JSON body
+Result set
+{ success, data/error }
+Error Handling
+errors array
+Exception
+HTTP status codes
+SQLSTATE
+{ success: false, error }
+If you are familiar with GraphQL, MCP-AQL will feel conceptually similar. Both protocols emphasize typed operations, introspection, and structured inputs.
+Operations = Queries/Mutations
+GraphQL separates read operations (queries) from write operations (mutations). MCP-AQL takes this further with the CRUDE pattern (5 semantic categories):
+MCP-AQL Endpoint
+mcp_aql_read
+Read-only operations
+mutation (create)
+mcp_aql_create
+Additive operations
+mutation (update)
+mcp_aql_update
+Modifying operations
+mutation (delete)
+mcp_aql_delete
+Destructive operations
+subscription
+mcp_aql_execute
+Runtime/stateful operations
+GraphQL:
+mutation CreateUser( $input : UserInput!) {
+createUser( input : $input ) {
+MCP-AQL:
+operation : &quot;create_resource&quot; ,
+params : {
+resource_type : &quot;user&quot; ,
+resource_id : &quot;user-123&quot; ,
+name : &quot;alice&quot; ,
+email : &quot;alice@example.com&quot;
+Resource Types
+In GraphQL, you query specific types ( User , Post ). In MCP-AQL, implementations define their own resource type parameter:
+MCP-AQL Pattern
+type User
+resource_type: "user"
+type Post
+resource_type: "post"
+type Comment
+resource_type: "comment"
+Introspection: __schema vs introspect
+Both protocols support self-description. MCP-AQL's introspection is modeled after GraphQL:
+__schema {
+types { name }
+queryType { name }
+// List all operations
+{ operation : &quot;introspect&quot; , params : { query : &quot;operations&quot; } }
+// Get specific operation details
+{ operation : &quot;introspect&quot; , params : { query : &quot;operations&quot; , name : &quot;create_resource&quot; } }
+// List available types
+{ operation : &quot;introspect&quot; , params : { query : &quot;types&quot; } }
+Nested Input Objects (GraphQL-style Updates)
+MCP-AQL supports GraphQL-style nested input objects for updates. This allows partial updates with deep merging:
+mutation UpdateUser( $id : ID !, $input : UpdateUserInput!) {
+updateUser(id: $id , input : $input ) {
+operation : &quot;update_resource&quot; ,
+input : { // Everything in &#39;input&#39; gets deep-merged
+name : &quot;Updated Name&quot; ,
+settings : { theme : &quot;dark&quot; }
+Field Selection (GraphQL-style)
+MCP-AQL supports GraphQL-style field selection to reduce response token usage. Implementations can support a fields parameter for specific fields or define presets for common use cases.
+MCP-AQL Field Selection:
+operation : &quot;list_resources&quot; ,
+fields : [ &quot;name&quot; , &quot;description&quot; , &quot;metadata.tags&quot; ]
+// Returns only requested fields, reducing response tokens
+Preset Field Sets:
+Implementations MAY define preset field sets for common use cases:
+operation : &quot;get_resource&quot; ,
+fields : &quot;minimal&quot; // Preset: returns only essential fields
+Description
+Typical Token Savings
+Only identifier and description
+standard
+Common fields for most use cases
+All fields (default)
+Key Differences from GraphQL
+Client selects specific fields
+fields param or presets
+Subscriptions
+Real-time WebSocket streams
+EXECUTE for stateful lifecycle
+Schema Definition
+SDL files
+Declarative operation schemas
+Fragments/Aliases
+Supported
+Not applicable
+Batching
+DataLoader pattern
+Built-in batch operations
+If you are familiar with MongoDB, MCP-AQL's document-oriented operations and flexible query patterns will feel natural.
+Resource Types (like Collections)
+MongoDB organizes documents into collections. MCP-AQL implementations define resource type parameters:
+db.users
+db.posts
+db.comments
+Collection name in method
+Passed as parameter
+CRUD Method Mapping
+create_resource
+list_resources
+findOne()
+get_resource
+update_resource
+delete_resource
+aggregate()
+search or query_resources
+MongoDB:
+db . users . insertOne ({
+description : &quot;A helpful assistant&quot; ,
+settings : { theme : &quot;light&quot; }
+resource_id : &quot;alice&quot; ,
+Query Patterns
+MongoDB Find:
+db . users . find ({
+tags : { $in : [ &quot;creative&quot; , &quot;writing&quot; ] }
+}) . limit ( 10 )
+MCP-AQL Search:
+operation : &quot;search&quot; ,
+query : &quot;creative writing&quot; ,
+scope : &quot;local&quot; ,
+limit : 10
+Update Patterns
+MongoDB's $set operator is similar to MCP-AQL's deep-merge input :
+db . users . updateOne (
+{ name : &quot;Alice&quot; } ,
+{ $set : {
+description : &quot;Updated&quot; ,
+&quot;metadata.triggers&quot; : [ &quot;helper&quot; ]
+input : {
+metadata : {
+triggers : [ &quot;helper&quot; ]
+Key Differences from MongoDB
+Query Operators
+Rich ($gt, $in, $regex)
+Simplified search/filter
+Aggregation
+Complex pipelines
+Normalized via search operation
+User-defined
+Managed by server
+Transactions
+Multi-document ACID
+Per-operation atomicity
+Iterable result sets
+Paginated responses
+If you are familiar with REST APIs, MCP-AQL maps cleanly to RESTful patterns while adding semantic grouping and introspection.
+HTTP Methods = CRUDE Endpoints
+REST uses HTTP methods for semantics. MCP-AQL uses 5 semantic endpoints:
+HTTP Method
+POST (create)
+Create new resources
+Read resources
+PUT / PATCH
+Modify resources
+Remove resources
+Runtime operations
+URL Paths = operation + resource parameters
+REST encodes resources in URLs. MCP-AQL uses operation plus implementation-defined parameters:
+REST Pattern
+GET /resources
+{ operation: "list_resources" }
+GET /resources/:id
+{ operation: "get_resource", params: { id } }
+POST /resources
+{ operation: "create_resource", params: { ... } }
+PUT /resources/:id
+{ operation: "update_resource", params: { id, input } }
+DELETE /resources/:id
+{ operation: "delete_resource", params: { id } }
+Request/Response Patterns
+POST /api/users HTTP/1.1
+Content-Type: application/json
+&quot;name&quot;: &quot;Alice&quot;,
+&quot;description&quot;: &quot;A helpful assistant&quot;,
+&quot;settings&quot;: { &quot;theme&quot;: &quot;light&quot; }
+Response:
+&quot;id&quot; : &quot;123&quot; ,
+&quot;name&quot; : &quot;Alice&quot; ,
+&quot;description&quot; : &quot;A helpful assistant&quot; ,
+&quot;created_at&quot; : &quot;2024-01-15T10:30:00Z&quot;
+// Request
+// Response
+success : true ,
+data : {
+type : &quot;user&quot; ,
+// ... full resource data
+HTTP 200 OK
+{ success: true, data: ... }
+HTTP 400 Bad Request
+{ success: false, error: "Invalid parameter..." }
+HTTP 404 Not Found
+{ success: false, error: "Resource not found..." }
+HTTP 500 Internal Error
+{ success: false, error: "..." }
+API Documentation = Introspection
+REST APIs use OpenAPI/Swagger for documentation. MCP-AQL uses introspection:
+OpenAPI (conceptual):
+/users :
+summary : Create a user
+parameters : [ ... ]
+// Discover all operations
+// Get specific operation docs
+// Returns:
+operation : {
+name : &quot;create_resource&quot; ,
+endpoint : &quot;CREATE&quot; ,
+mcpTool : &quot;mcp_aql_create&quot; ,
+description : &quot;Create a new resource&quot; ,
+parameters : [
+{ name : &quot;resource_id&quot; , type : &quot;string&quot; , required : true , description : &quot;Resource identifier&quot; } ,
+examples : [ ... ]
+Key Differences from REST
+Transport
+MCP (stdio/SSE)
+Versioning
+URL path ( /v1/... )
+Schema version in response
+Links in responses
+Introspection for discovery
+HTTP headers
+Server-managed
+Authentication
+Headers (Bearer, API key)
+MCP session-based
+If you are familiar with SQL, MCP-AQL's structured operations and type system will feel familiar, though the query patterns differ.
+Resource Types (like Tables)
+SQL organizes data into tables. MCP-AQL implementations define resource type parameters:
+users table
+posts table
+SELECT * FROM users
+list_resources with resource_type
+SQL Statement Mapping
+SELECT ... WHERE id =
+Get operation
+SELECT ... WHERE ... LIKE
+Query Examples
+SQL INSERT:
+INSERT INTO users (name, description, settings)
+VALUES ( &#39;alice&#39; , &#39;A helpful assistant&#39; , &#39;{&quot;theme&quot;: &quot;light&quot;}&#39; );
+SQL SELECT:
+SELECT * FROM users WHERE name = &#39;alice&#39; ;
+resource_id : &quot;alice&quot;
+SQL UPDATE:
+UPDATE users
+SET description = &#39;Updated description&#39;
+WHERE name = &#39;alice&#39; ;
+input : { description : &quot;Updated description&quot; }
+SQL SEARCH:
+WHERE description LIKE &#39;%creative%&#39;
+OR settings LIKE &#39;%creative%&#39;
+LIMIT 10 ;
+query : &quot;creative&quot; ,
+Schema Discovery
+DESCRIBE users
+introspect with query: "types"
+SHOW TABLES
+introspect with query: "operations"
+Key Differences from SQL
+Query Language
+Declarative SQL
+Structured JSON
+Complex multi-table joins
+Resource relationships via handlers
+BEGIN/COMMIT/ROLLBACK
+User-defined CREATE INDEX
+Stored Procedures
+User-defined functions
+Agent execution
+This section helps developers migrating from discrete MCP tool interfaces to MCP-AQL understand the consolidation benefits.
+Before: Many Discrete Tools
+Traditional MCP servers expose each operation as a separate tool:
+create_user delete_user list_users
+create_post delete_post list_posts
+create_comment delete_comment list_comments
+get_user edit_user search_users
+get_post edit_post search_posts
+...and more (potentially 40+ tools)
+Token cost: ~30,000 tokens for tool registrations (depending on tool count)
+After: 5 CRUDE Endpoints
+MCP-AQL consolidates into 5 semantic endpoints:
+mcp_aql_create - CREATE operations (create, import, activate, add entry)
+mcp_aql_read - READ operations (list, get, search, introspect)
+mcp_aql_update - UPDATE operations (edit)
+mcp_aql_delete - DELETE operations (delete, clear)
+mcp_aql_execute - EXECUTE operations (execute workflows, update state)
+Token cost by mode: | Mode | Token Cost | Reduction | |------|------------|-----------| | CRUDE (5 endpoints) | ~4,300 | ~85% | | Single (1 endpoint) | ~1,100 | ~96% |
+Migration Examples
+Before (Classic MCP):
+// Tool: create_user
+After (MCP-AQL):
+// Endpoint: mcp_aql_create
+// Tool: list_users
+{ page : 1 , pageSize : 10 }
+// Endpoint: mcp_aql_read
+page : 1 ,
+pageSize : 10
+Tool to Operation Mapping
+Classic Tool Pattern
+MCP-AQL Operation Pattern
+Endpoint
+create_&lt;type&gt;
+create_resource + resource_type
+list_&lt;type&gt;s
+list_resources + resource_type
+get_&lt;type&gt;
+get_resource + resource_type
+edit_&lt;type&gt;
+update_resource + resource_type
+delete_&lt;type&gt;
+delete_resource + resource_type
+search_&lt;type&gt;s
+execute_&lt;workflow&gt;
+execute_workflow
+Permission Model Changes
+Before: Each tool had implicit permissions based on naming convention.
+After: Explicit CRUDE endpoint permissions:
+readOnly
+Destructive
+Additive, non-destructive
+Safe, read-only
+Modifying
+Potentially destructive, non-idempotent
+Discovery Changes
+Before: LLMs parsed all 40+ tool schemas upfront (~30,000 tokens).
+After: LLMs use introspection for on-demand discovery:
+// Step 1: Quick discovery (~50 tokens)
+// Step 2: Get details for relevant operation (~100 tokens)
+// Step 3: Use the operation
+{ operation : &quot;create_resource&quot; , ... }
+This table maps concepts across all compared protocols.
+Namespace
+Database
+Base URL
+Type/Entity
+Collection
+Resource
+Resource type param
+Instance
+Document
+Resource instance
+Identifier
+ID field
+Path param
+Primary key
+Resource ID
+Mutation
+insertOne
+create_* operation
+GET /:id
+SELECT ... WHERE
+get_* operation
+SELECT *
+list_* operation
+updateOne
+PUT/PATCH
+update_* operation
+deleteOne
+delete_* operation
+find +text
+GET /search
+LIKE/FTS
+__schema
+getCollectionInfos
+DESCRIBE
+Parameters
+Variables
+Filter/options
+Query/body
+WHERE/VALUES
+params object
+Response
+HTTP status
+N/A (single)
+insertMany
+Bulk endpoint
+Transaction
+operations array
+Pagination
+first/after
+skip/limit
+Query params
+OFFSET/LIMIT
+page/pageSize
+Example 1: Create a Resource
+# Variables
+&quot;input&quot; : {
+&quot;name&quot; : &quot;CreativeWriter&quot; ,
+&quot;email&quot; : &quot;writer@example.com&quot; ,
+&quot;bio&quot; : &quot;A creative writing assistant&quot;
+name : &quot;CreativeWriter&quot; ,
+email : &quot;writer@example.com&quot; ,
+bio : &quot;A creative writing assistant&quot; ,
+created_at : new Date ()
+&quot;name&quot;: &quot;CreativeWriter&quot;,
+&quot;description&quot;: &quot;A creative writing assistant&quot;,
+&quot;settings&quot;: { &quot;expertise&quot;: &quot;storytelling, poetry, imaginative content&quot; }
+INSERT INTO users (name, description, settings, created_at)
+VALUES (
+&#39;CreativeWriter&#39; ,
+&#39;A creative writing assistant&#39; ,
+&#39;{&quot;expertise&quot;: &quot;storytelling, poetry, imaginative content&quot;}&#39; ,
+Classic MCP:
+description : &quot;A creative writing assistant&quot; ,
+settings : { expertise : &quot;storytelling, poetry, imaginative content&quot; }
+resource_id : &quot;CreativeWriter&quot; ,
+Example 2: Search for Resources
+query SearchUsers( $query : String !, $limit : Int ) {
+searchUsers( query : $query , limit: $limit ) {
+results {
+{ &quot;query&quot; : &quot;creative writing&quot; , &quot;limit&quot; : 10 }
+$text : { $search : &quot;creative writing&quot; }
+}) . limit ( 10 ) . toArray () ;
+GET /api/users/search?q=creative+writing&amp;limit=10 HTTP/1.1
+OR description LIKE &#39;%writing%&#39;
+// Tool: search_users
+Example 3: Update a Resource
+mutation UpdateUser( $name : String !, $input : UpdateUserInput!) {
+updateUser(name: $name , input : $input ) {
+&quot;description&quot; : &quot;An enhanced creative writing assistant with poetry expertise&quot;
+{ name : &quot;CreativeWriter&quot; } ,
+{ $set : { description : &quot;An enhanced creative writing assistant with poetry expertise&quot; } }
+PATCH /api/users/CreativeWriter HTTP/1.1
+&quot;description&quot;: &quot;An enhanced creative writing assistant with poetry expertise&quot;
+SET description = &#39;An enhanced creative writing assistant with poetry expertise&#39;
+WHERE name = &#39;CreativeWriter&#39; ;
+// Tool: edit_user
+description : &quot;An enhanced creative writing assistant with poetry expertise&quot;
+// Endpoint: mcp_aql_update
+Example 4: Discover Available Operations
+mutationType {
+fields {
+// No direct equivalent - typically use documentation
+db . getCollectionInfos () ;
+GET /api/openapi.json HTTP/1.1
+GET /api/swagger.json HTTP/1.1
+SHOW TABLES ;
+DESCRIBE users;
+# No dedicated operation - parsed from tool schemas
+# (Consumed ~30,000 tokens for all 40+ tools)
+// Get details for specific operation
+{ operation : &quot;introspect&quot; , params : { query : &quot;operations&quot; , name : &quot;update_resource&quot; } }
+MCP-AQL combines the best patterns from established protocols:
+From GraphQL: Introspection, typed operations, nested input objects, field selection
+From MongoDB: Flexible document operations, simple query patterns
+From REST: Semantic endpoint grouping, clear resource addressing
+From SQL: Structured CRUD operations, schema awareness
+The result is a protocol optimized for LLM token efficiency while remaining human-readable and developer-friendly .
+Token Efficiency Summary
+Token Savings
+CRUDE Consolidation
+Semantic endpoints instead of discrete tools
+On-Demand Introspection
+Query schemas as needed vs. upfront parsing
+Return only requested fields in responses
+Related Documentation
+Overview - Architecture overview
+Operations - Complete operation reference
+Introspection - Discovery system
+Design Decisions - Design rationale
+&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
+Docs Library
+MCPAQL Organization
+Dollhouse Research

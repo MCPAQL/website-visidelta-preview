@@ -1,0 +1,344 @@
+MCP-AQL Spec | Cursor-Based Pagination Specification
+Launch Checklist
+Adapter Patterns
+Search MCP-AQL docs
+Repo-Synced Spec
+Generated from MCPAQL/spec so the website carries the deeper protocol material too.
+MCP-AQL Conformance Testing Specification
+MCP-AQL CRUDE Pattern Specification
+MCP-AQL Endpoint Modes Specification
+Structured Error Codes Specification
+MCP-AQL Introspection Specification
+MCP-AQL Licensing Options (Working Notes)
+MCP Integration Specification
+MCP-AQL Operations Specification
+MCP-AQL Protocol Overview
+Plugin Interface Contracts
+MCP-AQL Specification Documentation
+MCP-AQL Specification
+Versions
+Dangerous Operation Classification Specification
+MCP Server Discovery Bundle
+Adapter Element Type Specification
+Adapter Generator Specification
+Rate Limiting and Quota Management Specification
+Trust Levels Specification
+Security
+Confirmation Token Specification
+Execution Safety Loop Specification
+Security Model: Gatekeeper Specification
+Features
+Field Selection Specification
+Cursor-Based Pagination Specification
+Warnings Array Specification
+Protocol Comparison Guide
+Developer Guides
+MCP-AQL Breaking Change Policy
+Preliminary Public Launch Checklist
+RFC Process for MCP-AQL Specification
+Versioning Strategy
+Changelog
+Architecture
+Architecture Documentation
+Research
+Protocol Landscape: MCP vs MCP-AQL vs A2A
+Reference
+Reference Documentation
+ADR-001: CRUDE Pattern (Extending CRUD with Execute)
+ADR-002: GraphQL-Style Input Objects for Updates
+ADR-003: snake_case Parameter Convention
+ADR-004: Schema-Driven Operation Definitions
+ADR-005: GraphQL-Style Introspection System
+ADR-006: Discriminated Response Format
+Architecture Decision Records
+REPO-SYNCED SPEC DOC
+This document defines cursor-based pagination semantics for MCP-AQL operations that return collections. Cursor pagination enables efficient iteration through large datasets while minimizing token usage in LLM context win
+Support document Draft 1.0.0-draft 2026-01-28
+Source: spec/docs/features/pagination.md
+Open Source Markdown
+Browse Full Spec Reference
+Version: 1.0.0-draft Status: Draft Last Updated: 2026-01-28
+Abstract
+This document defines cursor-based pagination semantics for MCP-AQL operations that return collections. Cursor pagination enables efficient iteration through large datasets while minimizing token usage in LLM context windows.
+Table of Contents
+Overview
+Pagination Parameters
+PageInfo Response
+Connection-Style Response
+Applicable Operations
+Implementation Requirements
+Future Extensions
+1. Overview
+1.1 Purpose
+Operations returning complete result sets create several problems:
+Token bloat - Large collections consume LLM context windows
+Memory pressure - Servers and clients may struggle with large datasets
+Inefficient re-fetching - No way to resume interrupted queries
+Poor user experience - Long wait times for initial results
+Cursor-based pagination addresses these by:
+Bounded responses - Control result set size per request
+Stable iteration - Cursors maintain position across requests
+Efficient forward/backward - Navigate in either direction
+Resumable queries - Continue from any cursor position
+1.2 Design Principles
+Opaque cursors - Cursor format is implementation-defined
+Stable ordering - Results maintain consistent order across pages
+Bidirectional - Support both forward and backward navigation
+Optional totals - Total count is optional (expensive for some backends)
+1.3 Alignment with Standards
+This specification aligns with:
+GraphQL Relay Cursor Connections - Primary inspiration for the connection model
+OData pagination - Parameter naming conventions
+JSON:API pagination - Link-based navigation patterns
+2. Pagination Parameters
+2.1 Parameter Schema
+Operations supporting pagination accept these parameters:
+interface PaginationParams {
+* Number of items to return from the start
+* Mutually exclusive with &#39;last&#39;
+first ?: number ;
+* Cursor to start after (forward pagination)
+* Used with &#39;first&#39;
+after ?: string ;
+* Number of items to return from the end
+* Mutually exclusive with &#39;first&#39;
+last ?: number ;
+* Cursor to start before (backward pagination)
+* Used with &#39;last&#39;
+before ?: string ;
+2.2 Parameter Combinations
+Parameters
+Behavior
+First N items from start
+first + after
+First N items after cursor
+Last N items from end
+last + before
+Last N items before cursor
+Default page size from start
+2.3 Invalid Combinations
+The following combinations MUST return a validation error:
+first + last (ambiguous direction)
+after without first (missing page size)
+before without last (missing page size)
+first + before (mismatched direction)
+last + after (mismatched direction)
+Error response:
+&quot;success&quot; : false ,
+&quot;error&quot; : {
+&quot;code&quot; : &quot;VALIDATION_INVALID_TYPE&quot; ,
+&quot;message&quot; : &quot;Cannot use &#39;first&#39; and &#39;last&#39; together&quot; ,
+&quot;details&quot; : {
+&quot;param_name&quot; : &quot;pagination&quot; ,
+&quot;expected_type&quot; : &quot;valid pagination combination&quot; ,
+&quot;actual_type&quot; : &quot;conflicting parameters&quot; ,
+&quot;provided&quot; : [ &quot;first&quot; , &quot;last&quot; ] ,
+&quot;hint&quot; : &quot;Use &#39;first&#39; for forward pagination or &#39;last&#39; for backward pagination&quot;
+Note: This uses the existing VALIDATION_INVALID_TYPE error code with pagination-specific context in the details object, following the error-codes.md specification pattern.
+2.4 Example Requests
+First page:
+operation : &quot;list_elements&quot; ,
+element_type : &quot;persona&quot; ,
+params : {
+first : 10
+Next page:
+first : 10 ,
+after : &quot;cursor_xyz789&quot;
+Previous page:
+last : 10 ,
+before : &quot;cursor_abc123&quot;
+3. PageInfo Response
+3.1 PageInfo Schema
+All paginated responses MUST include a pageInfo object:
+interface PageInfo {
+* Whether more items exist after the last item
+* Required
+hasNextPage : boolean ;
+* Whether more items exist before the first item
+hasPreviousPage : boolean ;
+* Cursor of the first item in the result set
+* Required when items are returned
+startCursor ?: string ;
+* Cursor of the last item in the result set
+endCursor ?: string ;
+* Total count of items matching the query
+* Optional - may be omitted if expensive to compute
+totalCount ?: number ;
+3.2 PageInfo Requirements
+Required
+hasNextPage
+Always include, even if false
+hasPreviousPage
+startCursor
+Conditional
+Required when results are returned ( items.length &gt; 0 or edges.length &gt; 0 )
+endCursor
+totalCount
+Include when available without performance impact
+3.3 Example PageInfo
+First page of results:
+&quot;pageInfo&quot; : {
+&quot;hasNextPage&quot; : true ,
+&quot;hasPreviousPage&quot; : false ,
+&quot;startCursor&quot; : &quot;cursor_001&quot; ,
+&quot;endCursor&quot; : &quot;cursor_010&quot; ,
+&quot;totalCount&quot; : 150
+Last page of results:
+&quot;hasNextPage&quot; : false ,
+&quot;hasPreviousPage&quot; : true ,
+&quot;startCursor&quot; : &quot;cursor_141&quot; ,
+&quot;endCursor&quot; : &quot;cursor_150&quot;
+Empty results:
+&quot;totalCount&quot; : 0
+4. Connection-Style Response
+4.1 Response Structure
+Paginated operations SHOULD return a connection-style response:
+interface Connection &lt; T &gt; {
+* The items in this page (mutually exclusive with edges)
+items ?: T[] ;
+* Pagination metadata
+pageInfo : PageInfo ;
+* Edges with per-item cursors (mutually exclusive with items)
+* When present, items should be omitted
+edges ?: Edge &lt; T &gt; [] ;
+interface Edge &lt; T &gt; {
+* The item
+node : T ;
+* Cursor for this specific item
+cursor : string ;
+4.2 Simple Response Format
+For most use cases, the simple format is sufficient:
+&quot;success&quot; : true ,
+&quot;data&quot; : {
+&quot;items&quot; : [
+{ &quot;name&quot; : &quot;alice&quot; , &quot;status&quot; : &quot;active&quot; } ,
+{ &quot;name&quot; : &quot;bob&quot; , &quot;status&quot; : &quot;active&quot; } ,
+{ &quot;name&quot; : &quot;charlie&quot; , &quot;status&quot; : &quot;inactive&quot; }
+&quot;endCursor&quot; : &quot;cursor_003&quot; ,
+&quot;totalCount&quot; : 25
+4.3 Edge Response Format
+When per-item cursors are needed (e.g., for deletion during iteration):
+&quot;edges&quot; : [
+&quot;node&quot; : { &quot;name&quot; : &quot;alice&quot; , &quot;status&quot; : &quot;active&quot; },
+&quot;cursor&quot; : &quot;cursor_001&quot;
+&quot;node&quot; : { &quot;name&quot; : &quot;bob&quot; , &quot;status&quot; : &quot;active&quot; },
+&quot;cursor&quot; : &quot;cursor_002&quot;
+&quot;node&quot; : { &quot;name&quot; : &quot;charlie&quot; , &quot;status&quot; : &quot;inactive&quot; },
+&quot;cursor&quot; : &quot;cursor_003&quot;
+&quot;endCursor&quot; : &quot;cursor_003&quot;
+4.4 Choosing Response Format
+Use Case
+Recommended Format
+Simple listing
+items array
+Modify during iteration
+edges with cursors
+LLM context (minimize tokens)
+Resume from specific item
+5. Applicable Operations
+5.1 Operations Supporting Pagination
+The following operation types SHOULD support pagination:
+Operation
+list_elements
+Core element listing
+search_elements
+Search results
+query_elements
+Complex queries
+Any list operation
+search_*
+Any search operation
+5.2 Default Behavior
+When pagination parameters are omitted:
+Page size
+Implementation-defined (RECOMMENDED: 20)
+Direction
+Forward (from start)
+None (first page)
+5.3 Maximum Page Size
+Implementations SHOULD enforce a maximum page size:
+RECOMMENDED maximum: 100 items
+Hard limit: 1000 items
+Requests exceeding the maximum SHOULD be clamped to the maximum (not rejected).
+5.4 Introspection of Pagination Support
+Operations indicate pagination support in introspection:
+&quot;name&quot; : &quot;list_elements&quot; ,
+&quot;supports_pagination&quot; : true ,
+&quot;pagination&quot; : {
+&quot;default_page_size&quot; : 20 ,
+&quot;max_page_size&quot; : 100 ,
+&quot;supports_total_count&quot; : true
+6. Implementation Requirements
+6.1 MUST Requirements
+Implementations supporting pagination MUST:
+Accept first , after , last , before parameters
+Return pageInfo with hasNextPage and hasPreviousPage
+Return startCursor and endCursor when items are present
+Reject invalid parameter combinations with error code
+Maintain stable ordering within a pagination session
+6.2 SHOULD Requirements
+Implementations supporting pagination SHOULD:
+Return totalCount when available without performance impact
+Enforce maximum page size limits
+Support both forward and backward pagination
+Use opaque, URL-safe cursor format
+Include pagination support in introspection
+6.3 MAY Requirements
+Implementations supporting pagination MAY:
+Include edges with per-item cursors
+Support cursor expiration/TTL
+Implement cursor resumption across sessions
+Support sorting parameters alongside pagination
+6.4 Cursor Format
+Cursors MUST be:
+Opaque - Clients treat as black box
+URL-safe - Base64url encoding recommended
+Stable - Same cursor returns same position
+Cursors SHOULD be:
+Tamper-resistant - Include validation/signature
+Compact - Minimize size for LLM context
+Self-contained - No server-side session state required
+Example cursor encoding:
+// Encoding
+const cursor = btoa ( JSON . stringify ({
+id : &quot;item_123&quot; ,
+sort_key : &quot;2026-01-28T12:00:00Z&quot;
+// Result: &quot;eyJpZCI6Iml0ZW1fMTIzIiwic29ydF9rZXkiOiIyMDI2LTAxLTI4VDEyOjAwOjAwWiJ9&quot;
+7. Future Extensions
+7.1 Sorting with Pagination
+Combine sorting and pagination:
+sort_by : &quot;created_at&quot; ,
+sort_order : &quot;desc&quot;
+7.2 Filtered Pagination
+Pagination with filters:
+filter : {
+status : &quot;active&quot; ,
+tags : { contains : &quot;admin&quot; }
+7.3 Offset-Based Pagination
+For backends requiring offset:
+offset : 20 ,
+limit : 10
+7.4 Streaming Pagination
+For real-time data:
+stream : true ,
+poll_interval_ms : 5000
+7.5 Pagination Presets
+Named pagination configurations:
+# In adapter schema
+pagination_presets :
+compact :
+page_size : 5
+include_total : false
+detailed :
+page_size : 20
+include_total : true
+include_edges : true
+References
+GraphQL Relay Cursor Connections
+Operations Reference
+GitHub Issue: #37
+DollhouseMCP Implementation: #299
+&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
+Docs Library
+MCPAQL Organization
+Dollhouse Research

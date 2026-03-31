@@ -267,6 +267,7 @@
     "keywords": [
       "adapter",
       "spec",
+      "docs",
       "danger",
       "levels",
       "dangerous",
@@ -282,6 +283,7 @@
     "keywords": [
       "adapter",
       "spec",
+      "docs",
       "discovery",
       "bundle",
       "mcp",
@@ -295,6 +297,7 @@
     "keywords": [
       "adapter",
       "spec",
+      "docs",
       "element",
       "type",
       "specification"
@@ -307,6 +310,7 @@
     "keywords": [
       "adapter",
       "spec",
+      "docs",
       "generator",
       "specification"
     ]
@@ -318,6 +322,7 @@
     "keywords": [
       "adapter",
       "spec",
+      "docs",
       "rate",
       "limiting",
       "and",
@@ -333,6 +338,7 @@
     "keywords": [
       "adapter",
       "spec",
+      "docs",
       "trust",
       "levels",
       "specification"
@@ -345,6 +351,7 @@
     "keywords": [
       "adrs",
       "spec",
+      "docs",
       "adr",
       "001",
       "crude",
@@ -362,6 +369,7 @@
     "keywords": [
       "adrs",
       "spec",
+      "docs",
       "adr",
       "002",
       "graphql",
@@ -379,6 +387,7 @@
     "keywords": [
       "adrs",
       "spec",
+      "docs",
       "adr",
       "003",
       "snake",
@@ -395,6 +404,7 @@
     "keywords": [
       "adrs",
       "spec",
+      "docs",
       "adr",
       "004",
       "schema",
@@ -411,6 +421,7 @@
     "keywords": [
       "adrs",
       "spec",
+      "docs",
       "adr",
       "005",
       "introspection",
@@ -426,6 +437,7 @@
     "keywords": [
       "adrs",
       "spec",
+      "docs",
       "adr",
       "006",
       "discriminated",
@@ -441,6 +453,7 @@
     "keywords": [
       "adrs",
       "spec",
+      "docs",
       "adr",
       "index",
       "architecture",
@@ -455,6 +468,7 @@
     "keywords": [
       "adrs",
       "spec",
+      "docs",
       "adr",
       "readme",
       "architecture",
@@ -469,6 +483,7 @@
     "keywords": [
       "architecture",
       "spec",
+      "docs",
       "readme",
       "documentation"
     ]
@@ -480,6 +495,7 @@
     "keywords": [
       "core",
       "spec",
+      "docs",
       "conformance",
       "testing",
       "mcp",
@@ -494,6 +510,7 @@
     "keywords": [
       "core",
       "spec",
+      "docs",
       "crude",
       "pattern",
       "mcp",
@@ -508,6 +525,7 @@
     "keywords": [
       "core",
       "spec",
+      "docs",
       "endpoint",
       "modes",
       "mcp",
@@ -522,6 +540,7 @@
     "keywords": [
       "core",
       "spec",
+      "docs",
       "error",
       "codes",
       "structured",
@@ -535,6 +554,7 @@
     "keywords": [
       "features",
       "spec",
+      "docs",
       "field",
       "selection",
       "specification"
@@ -547,6 +567,7 @@
     "keywords": [
       "features",
       "spec",
+      "docs",
       "pagination",
       "cursor",
       "based",
@@ -560,6 +581,7 @@
     "keywords": [
       "features",
       "spec",
+      "docs",
       "warnings",
       "array",
       "specification"
@@ -572,6 +594,7 @@
     "keywords": [
       "guides",
       "spec",
+      "docs",
       "protocol",
       "comparison",
       "guide"
@@ -584,6 +607,7 @@
     "keywords": [
       "guides",
       "spec",
+      "docs",
       "readme",
       "developer"
     ]
@@ -595,6 +619,7 @@
     "keywords": [
       "core",
       "spec",
+      "docs",
       "introspection",
       "mcp",
       "aql",
@@ -608,6 +633,7 @@
     "keywords": [
       "core",
       "spec",
+      "docs",
       "licensing",
       "options",
       "mcp",
@@ -623,6 +649,7 @@
     "keywords": [
       "core",
       "spec",
+      "docs",
       "mcp",
       "integration",
       "specification"
@@ -635,6 +662,7 @@
     "keywords": [
       "core",
       "spec",
+      "docs",
       "operations",
       "mcp",
       "aql",
@@ -648,6 +676,7 @@
     "keywords": [
       "core",
       "spec",
+      "docs",
       "overview",
       "mcp",
       "aql",
@@ -661,6 +690,7 @@
     "keywords": [
       "core",
       "spec",
+      "docs",
       "plugin",
       "contracts",
       "interface"
@@ -673,6 +703,7 @@
     "keywords": [
       "process",
       "spec",
+      "docs",
       "breaking",
       "changes",
       "mcp",
@@ -688,6 +719,7 @@
     "keywords": [
       "process",
       "spec",
+      "docs",
       "preliminary",
       "public",
       "launch",
@@ -701,6 +733,7 @@
     "keywords": [
       "process",
       "spec",
+      "docs",
       "rfc",
       "for",
       "mcp",
@@ -715,6 +748,7 @@
     "keywords": [
       "process",
       "spec",
+      "docs",
       "versioning",
       "strategy"
     ]
@@ -726,6 +760,7 @@
     "keywords": [
       "core",
       "spec",
+      "docs",
       "readme",
       "mcp",
       "aql",
@@ -740,6 +775,7 @@
     "keywords": [
       "reference",
       "spec",
+      "docs",
       "readme",
       "documentation"
     ]
@@ -751,6 +787,7 @@
     "keywords": [
       "research",
       "spec",
+      "docs",
       "mcp",
       "vs",
       "mcpaql",
@@ -767,6 +804,7 @@
     "keywords": [
       "security",
       "spec",
+      "docs",
       "confirmation",
       "tokens",
       "token",
@@ -780,6 +818,7 @@
     "keywords": [
       "security",
       "spec",
+      "docs",
       "execution",
       "safety",
       "loop",
@@ -793,6 +832,7 @@
     "keywords": [
       "security",
       "spec",
+      "docs",
       "gatekeeper",
       "model",
       "specification"
@@ -805,11 +845,35 @@
     "keywords": [
       "versions",
       "spec",
+      "docs",
       "v1.0.0",
       "draft",
       "mcp",
       "aql",
       "specification"
+    ]
+  },
+  {
+    "title": "Spec: MCP-AQL Specification",
+    "url": "/spec/repo/README.html",
+    "excerpt": "Model Context Protocol - Advanced Agent API Adapter Query Language",
+    "keywords": [
+      "core",
+      "spec",
+      "readme",
+      "mcp",
+      "aql",
+      "specification"
+    ]
+  },
+  {
+    "title": "Spec: Changelog",
+    "url": "/spec/repo/CHANGELOG.html",
+    "excerpt": "All notable changes to the MCP-AQL specification will be documented in this file.",
+    "keywords": [
+      "process",
+      "spec",
+      "changelog"
     ]
   }
 ]

@@ -28,13 +28,13 @@ The website now mirrors the major categories from the spec docs index so public 
 Spec source
 Website surface
 What it covers
-overview.md
-Protocol summary, token efficiency, and quick-start framing
-spec/docs
+README.md
+Repository-level protocol summary, token efficiency, and quick-start framing
+spec mirror
 Repo-Synced Spec Reference
 Website-hosted full mirror of versioned and topical specification documents
-operations.md
-Request shape, endpoint rules, operation semantics, routing
+versions/v1.0.0-draft.md
+Normative request shape, endpoint rules, operation semantics, and routing
 error-codes.md
 Structured errors, machine-readable codes, current gaps
 plugin-contracts.md

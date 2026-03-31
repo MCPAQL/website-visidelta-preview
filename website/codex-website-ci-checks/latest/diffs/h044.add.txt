@@ -4,7 +4,7 @@ Adapter Patterns
 Search MCP-AQL docs
 REPO-SYNCED SPEC REFERENCE
 The deeper protocol docs now live on the website too
-These pages are generated from MCPAQL/spec/docs so the public site can carry the full protocol and adapter material,
+These pages are generated from MCPAQL/spec so the public site can carry the full protocol and adapter material,
 not just summaries and links back to GitHub.
 Read The Normative Draft
 Back To Docs Library
@@ -34,8 +34,10 @@ Plugin Interface Contracts
 This document defines the normative plugin interface contracts for the MCP-AQL adapter system. Plugins provide modular, composable functionality for transport, protocol, authentication, and serialization. This specificat
 MCP-AQL Specification Documentation
 This directory contains the MCP-AQL specification set:
-Versions
 MCP-AQL Specification
+Model Context Protocol - Advanced Agent API Adapter Query Language
+Repository source
+Versions
 MCP-AQL (Model Context Protocol - Advanced Agent API Adapter Query Language) is a protocol specification that consolidates multiple MCP tools into semantic CRUDE endpoints, providing significant token reduction while ena
 Normative source
 Dangerous Operation Classification Specification
@@ -76,6 +78,8 @@ RFC Process for MCP-AQL Specification
 This document describes the formal process for proposing, reviewing, and accepting changes to the MCP-AQL specification through Requests for Comments (RFCs).
 Versioning Strategy
 This document describes the version numbering scheme and release process for the MCPAQL specification.
+Changelog
+All notable changes to the MCP-AQL specification will be documented in this file.
 Architecture
 Architecture Documentation
 Implementation architecture documentation has moved to the mcpaql-adapter repository.

@@ -15,8 +15,8 @@ MCP-AQL Operations Specification
 MCP-AQL Protocol Overview
 Plugin Interface Contracts
 MCP-AQL Specification Documentation
-Versions
 MCP-AQL Specification
+Versions
 Dangerous Operation Classification Specification
 MCP Server Discovery Bundle
 Adapter Element Type Specification
@@ -37,6 +37,7 @@ MCP-AQL Breaking Change Policy
 Preliminary Public Launch Checklist
 RFC Process for MCP-AQL Specification
 Versioning Strategy
+Changelog
 Architecture
 Architecture Documentation
 Research

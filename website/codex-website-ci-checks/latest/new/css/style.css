@@ -749,6 +749,14 @@ footer {
   height: 100%;
 }
 
+.spec-index-grid h3 a {
+  color: inherit;
+}
+
+.spec-index-grid h3 a:hover {
+  color: var(--accent-700);
+}
+
 .table-card {
   overflow-x: auto;
   padding: 0;

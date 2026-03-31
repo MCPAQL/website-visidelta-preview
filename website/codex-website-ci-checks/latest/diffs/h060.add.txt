@@ -1,4 +1,4 @@
-MCP-AQL Spec | MCP-AQL Specification
+MCP-AQL Spec | Execution Safety Loop Specification
 Launch Checklist
 Adapter Patterns
 Search MCP-AQL docs
@@ -15,8 +15,8 @@ MCP-AQL Operations Specification
 MCP-AQL Protocol Overview
 Plugin Interface Contracts
 MCP-AQL Specification Documentation
-Versions
 MCP-AQL Specification
+Versions
 Dangerous Operation Classification Specification
 MCP Server Discovery Bundle
 Adapter Element Type Specification
@@ -37,6 +37,7 @@ MCP-AQL Breaking Change Policy
 Preliminary Public Launch Checklist
 RFC Process for MCP-AQL Specification
 Versioning Strategy
+Changelog
 Architecture
 Architecture Documentation
 Research
@@ -51,922 +52,512 @@ ADR-005: GraphQL-Style Introspection System
 ADR-006: Discriminated Response Format
 Architecture Decision Records
 REPO-SYNCED SPEC DOC
-MCP-AQL (Model Context Protocol - Advanced Agent API Adapter Query Language) is a protocol specification that consolidates multiple MCP tools into semantic CRUDE endpoints, providing significant token reduction while ena
-Normative source Draft 1.0.0-draft 2026-03-06
-Source: spec/docs/versions/v1.0.0-draft.md
+Informative Document: This is an informative specification that provides detailed guidance for the execution safety loop pattern defined normatively in Section 8.6 of the core specification. In case of conflict, the norm
+Support document Draft 1.0.0-draft 2026-02-25
+Source: spec/docs/security/execution-safety-loop.md
 Open Source Markdown
 Browse Full Spec Reference
-Version: 1.0.0-draft Status: Draft Last Updated: 2026-03-06
+Version: 1.0.0-draft Status: Draft Last Updated: 2026-02-25
+Informative Document: This is an informative specification that provides detailed guidance for the execution safety loop pattern defined normatively in Section 8.6 of the core specification . In case of conflict, the normative specification takes precedence.
 Abstract
-MCP-AQL (Model Context Protocol - Advanced Agent API Adapter Query Language) is a protocol specification that consolidates multiple MCP tools into semantic CRUDE endpoints, providing significant token reduction while enabling runtime operation discovery through introspection.
-Status of This Document
-This is the normative MCP-AQL specification. All conformance requirements (MUST, SHOULD, MAY) in this document are authoritative.
-Other documents in the docs/ directory are informative and provide additional context, examples, and implementation guidance. In case of conflict between this specification and informative documents, this specification takes precedence.
-This is a draft specification subject to change. Feedback is welcome via the specification repository .
-This draft is intended for preliminary public launch and ecosystem experimentation. It is not yet a final certification baseline.
+This document specifies the execution safety loop — an opt-in monitoring pattern that enables continuous safety evaluation of an LLM's intended actions across all connected MCP servers. It also defines the safety dongle deployment model, where a standalone MCP-AQL server functions as a universal safety layer without implementing any other MCP-AQL features.
 Table of Contents
 Introduction
-Terminology
-Protocol Overview
-Request Format
-Response Format
-CRUDE Endpoints
-Introspection
-Operation Classification
-Type System
-Conformance
+The Safety Dongle Deployment Model
+The Execution Safety Loop
+Minimal Operation Surface
+Integration with Gatekeeper
+Integration with Danger Zone
+Deployment Examples
+Opting Out
+Implementation Requirements
 1. Introduction
 1.1 Purpose
-MCP-AQL addresses the token efficiency challenge in LLM-MCP interactions. Traditional MCP implementations expose discrete tools, each requiring schema definition in the model's context. With many tools, this can consume significant tokens before any work begins.
-MCP-AQL consolidates operations into five semantic endpoints, reducing token overhead by approximately 85-96% while maintaining full functionality.
-1.2 Goals
-Token Efficiency - Minimize context consumed by tool definitions
-Semantic Clarity - Group operations by their effect on system state
-Runtime Discovery - Enable operation discovery via introspection
-Flexibility - Support multiple endpoint modes for different use cases
-Genericity - Work with any domain, any backend, any operation set
-1.3 Scope
-This specification defines:
-The CRUDE endpoint pattern
-Request and response formats
-The introspection system for operation discovery
-Operation classification guidelines
-Conformance requirements
-This specification does NOT define:
-Specific operations (adapters define their own)
-Domain-specific concepts (adapters define their own)
-Implementation architecture details
-Transport-layer concerns (handled by MCP)
-1.4 Relationship to Adapters
-MCP-AQL is a protocol layer , not an application. Adapters implement MCP-AQL to expose their domain-specific operations through the unified CRUDE interface. Each adapter:
-Defines its own operations
-Defines its own parameters
-Classifies operations into CRUDE endpoints
-Exposes operations via introspection
-2. Terminology
-2.1 Key Terms
-CRUDE Pattern : The five-endpoint pattern: Create, Read, Update, Delete, Execute
-Operation : A specific action that an adapter provides (e.g., create_user , run_report , search_documents )
-Endpoint : One of the five CRUDE categories to which operations are routed
-Adapter : An MCP server that implements MCP-AQL to expose domain-specific operations
-Introspection : The ability to query available operations and types at runtime
-Resource : Any entity managed by an adapter (documents, users, configurations, workflows, etc.)
-2.2 Requirement Levels
-The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in RFC 2119 .
-2.3 Session Lifecycle
-2.3.1 Definition
-An MCP-AQL session is the lifetime of a single MCP connection, beginning when the MCP initialize handshake completes successfully and ending when the connection terminates.
-2.3.2 Session Boundaries
-Session Impact
-MCP initialize completes
-Session begins
-MCP shutdown received
-Session ends gracefully
-Transport disconnect
-Session ends abruptly
-Transport reconnect
-New session begins
-A session is strictly 1:1 with an MCP connection. If a transport disconnects and reconnects, the new connection is a new session — even if the same client reconnects immediately.
-2.3.3 Session-Scoped State
-The following are session-scoped and MUST NOT survive session termination:
-Confirmation tokens (default behavior per Section 5.4 of the Confirmation Token Specification; adapters MAY explicitly persist tokens across sessions)
-Cached introspection results
-In-progress EXECUTE operation context (pending state machine transitions)
-Warning deduplication state
-Adapters MUST invalidate all session-scoped state when a session ends, whether gracefully or abruptly. In-progress EXECUTE operations SHOULD transition to failed or cancelled as defined by the execution lifecycle ( Section 8.4 ).
-2.3.4 Cross-Session Persistence
-The following MAY persist across sessions:
-Adapter configuration and operation schemas
-Stored resources and data managed by the adapter
-Audit logs and telemetry
-Completed execution results (terminal states)
-2.3.5 Session Identification
-Adapters MAY track sessions using:
-MCP connection identifier (if provided by the transport)
-Internally generated session ID
-Client-provided metadata (via _meta ) as a labeling hint
-Client-provided _meta values MUST be treated as labels for logging purposes only. Adapters MUST NOT use client-provided values as authoritative session identity for security decisions (e.g., token validation, access control).
-Session identifiers SHOULD be included in audit logs and error responses for debugging.
-Implementation Note: MCP does not define a standard session identifier field. Adapters that need session tracking SHOULD generate their own identifier when the initialize handshake completes and include it in the _protocol metadata returned by introspection.
-3. Protocol Overview
-3.1 Architecture
-┌─────────────────────────────────────────────────────────────┐
-│ MCP Client │
-│ (LLM / Agent) │
-└─────────────────────────┬───────────────────────────────────┘
-│ MCP-AQL Layer │
-│ ┌──────────────────────────────────────────────────────┐ │
-│ │ CRUDE Endpoints │ │
-│ │ CREATE │ READ │ UPDATE │ DELETE │ EXECUTE │ │
-│ └──────────────────────────────────────────────────────┘ │
-│ │ Operation Router │ │
-│ │ Routes operations to correct handlers │ │
-│ │ Introspection System │ │
-│ │ Provides runtime operation discovery │ │
-└─────────────────────────────────────────────────────────────┘
-│ Domain Backend │
-│ (Database, API, Service, File System, etc.) │
-3.2 Request Flow
-Client sends request to MCP-AQL endpoint
-Router extracts operation field
-Router validates operation belongs to receiving endpoint
-Parameters are extracted and validated
-Handler executes operation
-Response returned to client
-3.3 Endpoint Modes
-MCP-AQL supports two operational modes:
-CRUDE Mode (5 endpoints)
-mcp_aql_create - CREATE operations
-mcp_aql_read - READ operations
-mcp_aql_update - UPDATE operations
-mcp_aql_delete - DELETE operations
-mcp_aql_execute - EXECUTE operations
-Single Mode (1 endpoint)
-mcp_aql - All operations through unified entry point
-Implementations MUST support at least one mode. Implementations SHOULD support both.
-4. Request Format
-4.1 Standard Request Structure
-interface OperationInput {
-operation : string ; // REQUIRED: Operation to perform
-params ?: Record &lt; string , any &gt;; // OPTIONAL: Operation parameters
-4.2 Parameter Resolution
-Parameters MAY appear at multiple levels. Resolution follows this precedence:
-params.&lt;parameter_name&gt;
-Top-level &lt;parameter_name&gt;
-4.3 Parameter Naming
-All public-facing parameters MUST use snake_case naming (matching the pattern ^[a-z][a-z0-9_]*$ ) for consistency across adapters.
-Terminology Note: The request field params (an object of key-value pairs) contains runtime parameter values. The introspection field parameters (an array of ParameterInfo entries) describes the accepted parameter definitions. The keys of params correspond to the name field of each entry in parameters .
-4.4 Request Examples
-Minimal Request:
-&quot;operation&quot; : &quot;list_users&quot;
-Request with Parameters:
-&quot;operation&quot; : &quot;create_document&quot; ,
-&quot;params&quot; : {
-&quot;title&quot; : &quot;Quarterly Report&quot; ,
-&quot;content&quot; : &quot;...&quot; ,
-&quot;folder_id&quot; : &quot;folder_123&quot;
-Alternative Parameter Placement:
-&quot;operation&quot; : &quot;get_user&quot; ,
-&quot;user_id&quot; : &quot;user_456&quot;
-4.5 UPDATE Input Pattern
-UPDATE operations MUST use a nested input object within params to contain all updateable fields. Identifier parameters (used to locate the resource) MUST remain at the params level.
-Structure:
-&quot;operation&quot; : &quot;update_resource&quot; ,
-&quot;resource_id&quot; : &quot;res_123&quot; ,
-&quot;input&quot; : {
-&quot;title&quot; : &quot;New Title&quot; ,
-&quot;metadata&quot; : {
-&quot;priority&quot; : &quot;high&quot;
-4.5.1 Merge Semantics
-When processing the input object, adapters MUST apply deep-merge semantics:
-Top-level fields in input replace existing values entirely
-Nested objects merge recursively (keys present in input are updated; keys absent from input are preserved)
-Arrays replace entirely (no element-level merging)
-Explicit null removes the field from the resource
-Example — Deep Merge Behavior:
-Given existing resource state:
-&quot;title&quot; : &quot;Old Title&quot; ,
-&quot;priority&quot; : &quot;low&quot; ,
-&quot;tags&quot; : [ &quot;draft&quot; ] ,
-&quot;author&quot; : &quot;alice&quot;
-And update request:
-&quot;priority&quot; : &quot;high&quot; ,
-&quot;tags&quot; : [ &quot;published&quot; , &quot;reviewed&quot; ]
-The resulting state MUST be:
-&quot;tags&quot; : [ &quot;published&quot; , &quot;reviewed&quot; ] ,
-title : replaced (top-level field)
-metadata.priority : replaced (present in input)
-metadata.tags : replaced entirely (array)
-metadata.author : preserved (absent from input)
-4.5.2 Field Removal
-To remove a field, clients MUST set its value to null :
-&quot;deprecated_field&quot; : null
-4.5.3 Validation
-Adapters MUST validate the input object:
-The input field MUST be present for UPDATE operations; adapters MUST reject requests missing input with a VALIDATION_MISSING_PARAM error
-The input field MUST be an object when present
-Fields within input MUST be validated against the resource schema
-Unknown fields within input SHOULD be rejected with a VALIDATION_UNKNOWN_FIELD error
-Identifier parameters MUST NOT appear inside input
-See ADR-002: GraphQL-Style Input Objects for design rationale.
-4.6 Unknown Parameter Handling
-Adapters MUST reject requests containing parameters not defined in the operation schema.
-When an unknown parameter is detected, adapters MUST return a VALIDATION_UNKNOWN_PARAM error:
-&quot;success&quot; : false ,
-&quot;error&quot; : {
-&quot;code&quot; : &quot;VALIDATION_UNKNOWN_PARAM&quot; ,
-&quot;message&quot; : &quot;Unknown parameter &#39;force_create&#39; for operation &#39;create_user&#39;&quot; ,
-&quot;details&quot; : {
-&quot;operation&quot; : &quot;create_user&quot; ,
-&quot;unknown_params&quot; : [ &quot;force_create&quot; , &quot;admin_override&quot; ] ,
-&quot;valid_params&quot; : [ &quot;user_name&quot; , &quot;password&quot; , &quot;email&quot; ]
-This requirement:
-Prevents typos from silently failing
-Prevents LLM hallucination of non-existent parameters
-Provides actionable feedback for correction
-4.6.1 Scope
-Unknown parameter validation applies to:
-Parameters within the params object
-Top-level parameters (when parameter resolution is enabled per Section 4.2)
-Unknown parameter validation does NOT apply to:
-Protocol-level fields ( operation , params )
-Metadata fields prefixed with underscore ( _meta , _request_id )
-4.6.2 Strict Mode Configuration
-Adapters MAY implement a strict_mode configuration option. When strict_mode is disabled (development environments only), adapters MAY log warnings for unknown parameters instead of rejecting the request.
-When strict_mode is enabled or not configured, the default behavior MUST be rejection.
-Implementation Note: The strict_mode setting is considered implementation-internal configuration and is not exposed via introspection. Clients SHOULD always assume strict validation is enabled and not rely on lenient behavior.
-4.7 Data Types and Encoding
-This section defines data encoding requirements for interoperability across adapters.
-4.7.1 Character Encoding
-All text MUST be encoded as UTF-8. Adapters MUST reject requests containing invalid UTF-8 sequences with a VALIDATION_INVALID_ENCODING error.
-Invalid UTF-8 sequences include:
-Overlong encodings (e.g., using 2 bytes to encode a character that fits in 1)
-Invalid continuation bytes
-Truncated multi-byte sequences
-Surrogate code points (U+D800 to U+DFFF)
-Adapters SHOULD reject strings containing null bytes (U+0000) unless explicitly documented as supported for the parameter, as null bytes can cause issues in many languages and databases.
-4.7.2 Date and Time
-Dates and timestamps MUST use ISO 8601 format:
-Date only: 2026-02-04
-Date-time (UTC): 2026-02-04T10:30:00Z
-Date-time with offset: 2026-02-04T10:30:00+05:30
-Adapters SHOULD use UTC (Z suffix) for timestamps in responses. Adapters MUST document timezone handling for date-only values.
-4.7.3 Numbers
-Numeric values follow JSON number syntax ( RFC 8259 ), which uses IEEE 754 double-precision floating-point:
-Safe integer range: ±(2^53 - 1), i.e., ±9,007,199,254,740,991
-Precision: Approximately 15-17 significant decimal digits
-For values requiring higher precision (e.g., financial amounts, large identifiers), adapters SHOULD use string representation:
-&quot;amount&quot; : &quot;12345678901234567890&quot; ,
-&quot;amount_type&quot; : &quot;bigint&quot;
-Note: The type indicator field name (e.g., amount_type ) is adapter-specific. Adapters SHOULD document their conventions for distinguishing string-encoded numbers from regular strings.
-Adapters MUST document when string representation is required for numeric parameters.
-4.7.4 Binary Data
-Binary data MUST be encoded as base64 ( RFC 4648 ) with standard padding ( = characters) and metadata:
-&quot;file_content&quot; : &quot;SGVsbG8gV29ybGQ=&quot; ,
-&quot;file_encoding&quot; : &quot;base64&quot; ,
-&quot;file_mime_type&quot; : &quot;text/plain&quot;
-Adapters MAY support alternative binary handling (e.g., URL references, multipart) but MUST document this behavior via introspection.
-4.7.5 Payload Size Limits
-Adapters MUST enforce payload size limits to prevent resource exhaustion:
-Configurable Range
-Request payload
-64 KB – 10 MB
-Response payload
-1 MB – 100 MB
-Single string value
-Array elements
-100 – 100,000
-Object nesting depth
-32 levels
-8 – 64 levels
-Nesting depth counting: Depth counts the levels of nested objects or arrays. For example, {"a": {"b": {"c": {}}}} has a depth of 4. The root object counts as level 1.
-When a limit is exceeded, adapters MUST return a VALIDATION_PAYLOAD_TOO_LARGE error with details indicating which limit was exceeded.
-Adapters MUST document their configured limits via introspection or adapter documentation. Adapters SHOULD expose limits in protocol metadata (see Section 9.3.3) to enable client-side pre-validation:
-&quot;_protocol&quot; : {
-&quot;limits&quot; : {
-&quot;max_request_size&quot; : 1048576 ,
-&quot;max_response_size&quot; : 10485760 ,
-&quot;max_string_length&quot; : 1048576 ,
-&quot;max_array_elements&quot; : 10000 ,
-&quot;max_nesting_depth&quot; : 32
-4.7.6 Null Handling
-JSON null represents the absence of a value:
-In requests: Omitting a field and explicitly setting it to null MAY have different semantics. See Section 4.5.2 for UPDATE operations where null removes fields.
-In responses: null indicates the field exists but has no value.
-Adapters MUST document null semantics for parameters where the distinction matters.
-5. Response Format
-5.1 Discriminated Union
-All operations return a discriminated union result:
-type OperationResult = OperationSuccess | OperationFailure ;
-interface OperationSuccess {
-success : true ;
-data : any ; // Operation-specific payload
-interface OperationFailure {
-success : false ;
-error : ErrorDetail ;
-interface ErrorDetail {
-code : string ; // Machine-readable error code (e.g., &quot;VALIDATION_MISSING_PARAM&quot;)
-message : string ; // Human-readable error message
-details ?: Record &lt; string , unknown &gt;; // Optional contextual information
-Note: See Structured Error Codes Specification for the complete error code taxonomy and usage guidelines.
-5.2 Success Response
-&quot;success&quot; : true ,
-&quot;data&quot; : {
-&quot;id&quot; : &quot;doc_789&quot; ,
-&quot;created_at&quot; : &quot;2024-01-15T10:30:00Z&quot;
-5.3 Error Response
-&quot;code&quot; : &quot;VALIDATION_MISSING_PARAM&quot; ,
-&quot;message&quot; : &quot;Missing required parameter &#39;title&#39; for operation &#39;create_document&#39;&quot; ,
-&quot;param_name&quot; : &quot;title&quot; ,
-&quot;operation&quot; : &quot;create_document&quot;
-6. CRUDE Endpoints
-6.1 Endpoint Summary
-Endpoint
-Read-Only
-Destructive
-Description
-Additive operations
-Query operations
-Modification operations
-Removal operations
-Runtime lifecycle operations
-6.2 Operation Routing
-Each operation MUST be routed to exactly one endpoint based on its characteristics. Implementations MUST reject operations sent to incorrect endpoints in CRUDE mode.
-See Protocol Overview for detailed endpoint definitions and classification guidelines.
-7. Introspection
-7.1 Purpose
-Introspection enables clients to discover available operations without parsing tool schemas, providing:
-On-demand operation discovery
-Parameter documentation
-Type information
-Usage examples
-7.2 The introspect Operation
-Endpoint: READ
-Every MCP-AQL adapter MUST implement the introspect operation.
-Parameters: | Parameter | Type | Required | Description | |-----------|------|----------|-------------| | query | string | Yes | Query type: "operations" or "types" | | name | string | No | Specific item name for details |
-7.3 Query Types
-List Operations:
-{ &quot;operation&quot; : &quot;introspect&quot; , &quot;params&quot; : { &quot;query&quot; : &quot;operations&quot; } }
-Operation Details:
-{ &quot;operation&quot; : &quot;introspect&quot; , &quot;params&quot; : { &quot;query&quot; : &quot;operations&quot; , &quot;name&quot; : &quot;create_document&quot; } }
-List Types:
-{ &quot;operation&quot; : &quot;introspect&quot; , &quot;params&quot; : { &quot;query&quot; : &quot;types&quot; } }
-Type Details:
-{ &quot;operation&quot; : &quot;introspect&quot; , &quot;params&quot; : { &quot;query&quot; : &quot;types&quot; , &quot;name&quot; : &quot;DocumentStatus&quot; } }
-See Introspection Specification for detailed response structures.
-8. Operation Classification
-8.1 Classification Guidelines
-Adapters classify their operations into CRUDE endpoints based on characteristics:
-CREATE - Operations that:
-Add new resources or state
-Do not remove or overwrite existing data
-Are non-destructive
-READ - Operations that:
-Query or retrieve data
-Have no side effects on stored state
-Are safe to call repeatedly (idempotent)
-UPDATE - Operations that:
-Modify existing resources
-Overwrite previous values
-Require the resource to exist
-DELETE - Operations that:
-Remove resources permanently
-Are irreversible without backup
-May require confirmation
-EXECUTE - Operations that:
-Manage runtime lifecycle (start, stop, monitor)
-Are non-idempotent (each call may create new state)
-May have external side effects
-8.2 Classification Examples
-Operation
-Rationale
-create_user
-Adds new user
-upload_file
-Adds new file
-list_users
-Queries without modification
-get_status
-Retrieves state
-update_profile
-Modifies existing resource
-rename_file
-delete_user
-Removes permanently
-purge_cache
-Removes data
-execute_job
-Starts runtime process
-cancel_task
-Lifecycle management
-8.3 Edge Cases
-When classification is ambiguous:
-Prefer READ if operation has no side effects
-Prefer CREATE over UPDATE if resource may not exist
-Prefer EXECUTE for operations with external effects
-Document reasoning in adapter specification
-8.4 Execution Lifecycle
-EXECUTE operations that create or manage long-running processes SHOULD follow the standard execution lifecycle defined in this section.
-8.4.1 Core States
-Execution created but not yet started
-Execution actively processing
-completed
-Execution finished successfully
-Execution terminated with error
-cancelled
-Execution terminated by user request
-8.4.2 State Transitions
-┌───────────┐
-│ cancelled │
-└───────────┘
-cancel │ cancel
-┌─────────────────────┼─────────────────────┐
-┌────────┴─┐ ┌─────┴────┐ ┌─────┴────┐
-│ pending │───start────▶│ running │◄──retry──│ failed │
-└──────────┘ └────┬─────┘ └──────────┘
-│ success/error │
-┌─────┴────┐ │
-│ │────────────────┘
-┌────────┐ ┌────────┐
-│completed│ │ failed │
-└────────┘ └────────┘
-(terminal) (may retry)
-Terminal States: completed , failed , and cancelled are terminal states. Once an execution reaches a terminal state, it MUST NOT transition to any other state except for the optional failed → running retry transition when supported.
-Valid state transitions:
-pending → running (start)
-pending → cancelled (cancel before start)
-running → completed (successful completion)
-running → failed (error during execution)
-running → cancelled (user cancellation)
-failed → running (retry, if supported)
-8.4.3 State Response Format
-Operations that return execution state SHOULD include:
-&quot;execution_id&quot; : &quot;exec_123&quot; ,
-&quot;status&quot; : &quot;running&quot; ,
-&quot;started_at&quot; : &quot;2026-02-04T10:00:00Z&quot; ,
-&quot;progress&quot; : {
-&quot;current&quot; : 45 ,
-&quot;total&quot; : 100 ,
-&quot;message&quot; : &quot;Processing step 5 of 10&quot;
-Required Fields: | Field | Type | Description | |-------|------|-------------| | execution_id | string | Unique identifier for the execution | | status | string | Current state (one of the core states) |
-Optional Fields: | Field | Type | Description | |-------|------|-------------| | started_at | string (ISO 8601) | When execution started | | finished_at | string (ISO 8601) | When execution reached a terminal state | | progress | object | Progress information (see below) | | error | object | Error details if status is failed (see Error Response Format ) |
-Progress Object:
-When progress is present, at least one of the following SHOULD be included:
-percentage
-Completion percentage (0-100) — use for determinate progress
-current + total
-Current and total values — use when count information is available
-Human-readable status — use for indeterminate progress or additional context
-Example — Completed Execution:
-&quot;status&quot; : &quot;completed&quot; ,
-&quot;finished_at&quot; : &quot;2026-02-04T10:05:32Z&quot;
-Example — Failed Execution:
-&quot;execution_id&quot; : &quot;exec_456&quot; ,
-&quot;status&quot; : &quot;failed&quot; ,
-&quot;finished_at&quot; : &quot;2026-02-04T10:02:15Z&quot; ,
-&quot;code&quot; : &quot;INTERNAL_ERROR&quot; ,
-&quot;message&quot; : &quot;Connection timeout while processing&quot; ,
-&quot;details&quot; : { &quot;step&quot; : &quot;data_fetch&quot; , &quot;attempt&quot; : 3 }
-Example — Cancelled Execution:
-&quot;execution_id&quot; : &quot;exec_789&quot; ,
-&quot;status&quot; : &quot;cancelled&quot; ,
-&quot;finished_at&quot; : &quot;2026-02-04T10:01:45Z&quot; ,
-&quot;percentage&quot; : 35 ,
-&quot;message&quot; : &quot;Cancelled by user during data processing&quot;
-8.4.4 Adapter Extensions
-Adapters MAY define additional states beyond the core set (e.g., paused , queued , retrying ). When extending the state machine:
-Custom states MUST be documented via introspection
-Custom states SHOULD map conceptually to core states for generic client compatibility
-Adapters MUST support transitions to cancelled from any non-terminal state
-Adapters SHOULD document which operations trigger each state transition
-Example Extended State Mapping: | Adapter State | Maps To | Description | |---------------|---------|-------------| | queued | pending | Waiting in job queue | | paused | running | Temporarily suspended | | retrying | running | Automatic retry in progress |
-8.4.5 Introspection Support
-EXECUTE operations that manage lifecycle SHOULD expose their supported states via introspection. The lifecycle field in operation details indicates lifecycle support:
-&quot;operation&quot; : {
-&quot;name&quot; : &quot;execute_job&quot; ,
-&quot;endpoint&quot; : &quot;EXECUTE&quot; ,
-&quot;lifecycle&quot; : {
-&quot;states&quot; : [ &quot;pending&quot; , &quot;queued&quot; , &quot;running&quot; , &quot;completed&quot; , &quot;failed&quot; , &quot;cancelled&quot; ] ,
-&quot;supports_cancel&quot; : true ,
-&quot;supports_retry&quot; : false ,
-&quot;progress_reporting&quot; : true
-See Introspection Specification for the complete schema.
-8.5 Operation Naming Grammar
-8.5.1 Canonical Verbs
-Each endpoint has one or more canonical verbs that SHOULD be used for standard operations:
-Canonical Verb
-Creating new resources
-get (single), list (multiple)
-Retrieving resources
-Modifying existing resources
-Removing resources
-execute (initiate), cancel (terminate)
-Lifecycle operations
-cancel covers both aborting a pending/queued operation and halting a currently running one. Adapters that need to distinguish these cases MAY use additional verbs (e.g., stop ) alongside cancel .
-Using canonical verbs improves cross-adapter consistency, enabling LLMs to predict operation names without requiring introspection for every adapter.
-For developers familiar with REST conventions, the following mapping provides context:
-Typical HTTP Method
-Semantics
-Add new resource
-get / list
-Retrieve resource(s)
-PUT / PATCH
-Modify resource
-Remove resource
-execute / cancel
-Lifecycle control
-8.5.2 Operation Name Format
-Operation names MUST use snake_case naming (a lowercase letter followed by lowercase letters, digits, and underscores), matching the schema pattern ^[a-z][a-z0-9_]*$ . Operations SHOULD follow the pattern: {verb}_{resource}
-Examples:
-create_user (not add_user )
-get_document (not fetch_document )
-list_items (not find_items )
-update_profile (not edit_profile )
-delete_account (not remove_account )
-execute_workflow (not run_workflow )
-Operations that act on the system as a whole (rather than a specific resource) MAY omit the resource suffix (e.g., introspect ).
-8.5.3 When to Use Non-Canonical Verbs
-Non-canonical verbs MAY be used when:
-The operation has domain-specific semantics (e.g., upload_file vs create_file when the operation involves binary transfer)
-The canonical verb would be misleading (e.g., search implies query semantics that list does not)
-Industry convention strongly favors a different verb (e.g., import / export )
-When using non-canonical verbs, adapters SHOULD:
-Document the rationale in the operation description
-Note the canonical equivalent in the operation description (e.g., "Similar to create , but handles binary upload")
-8.5.4 Reserved Operations
-The following operation names are reserved for protocol use and MUST NOT be used by adapters for other purposes:
-introspect
-Protocol introspection (Section 7)
-execute_agent
-Start execution safety loop (Section 8.6)
-record_execution_step
-Report intended action for safety evaluation (Section 8.6)
-complete_execution
-Signal normal execution completion (Section 8.6)
-abort_execution
-Signal abnormal execution termination (Section 8.6)
-confirm_operation
-Confirm a Gatekeeper-blocked operation or Autonomy Evaluator confirm tier pause (Section 8.7.3)
-verify_challenge
-Submit out-of-band verification code (Section 8.8)
-Adapters MUST NOT define custom operations with these names for other purposes. Future specification versions MAY reserve additional operation names.
-8.6 Execution Safety Loop
-The execution safety loop is an opt-in enforcement pattern that provides continuous safety evaluation of an agent's intended actions during execution. When active, it turns the execute lifecycle (Section 8.4) into a monitored enforcement boundary rather than a simple state tracker.
-Terminology Note: The "execution safety loop" is distinct from the full agent lifecycle that a specific adapter may implement. The safety loop is a protocol-level monitoring pattern; agent lifecycle management (personas, elements, state) is an adapter concern.
-Forward Reference: This section references the Autonomy Evaluator (Section 8.7) and Out-of-Band Verification (Section 8.8), which are defined as companion sections. The AutonomyDirective response type is formally defined in Section 8.7.1.
-8.6.1 Opt-In Activation
-The execution safety loop is an OPTIONAL feature. Adapters MAY support it, and clients MAY choose to enable it.
-When not enabled, the adapter operates normally without safety enforcement overhead
-Activation is explicit — via execute_agent to start a monitored execution, or via adapter configuration to enable safety-loop mode
-Adapters MUST document whether they support the execution safety loop via introspection
-Adapters that support the execution safety loop SHOULD expose this capability in their introspection response:
-&quot;capabilities&quot; : {
-&quot;execution_safety_loop&quot; : &quot;enforcing&quot;
-Valid values for execution_safety_loop :
-"enforcing"
-Full enforcement — actions are evaluated and directives are authoritative
-"monitoring"
-Actions are evaluated but continue is always true (advisory only)
-"logging"
-Actions are recorded for audit purposes without evaluation
-"disabled"
-Safety loop is supported but currently disabled
-8.6.2 Enforcement Boundary Property
-When the execution safety loop is active, it establishes a mandatory enforcement boundary : all intended actions MUST be reported before execution, and all reports MUST be evaluated before the agent proceeds.
-The enforcement chain:
-An agent starts via execute_agent , which requires explicit approval (one-time gate)
-The agent is now running inside the execution safety loop
-Every action the agent intends to take MUST be reported via record_execution_step with nextActionHint
-Each report is evaluated by the adapter's safety pipeline (Gatekeeper, Autonomy Evaluator, Danger Zone — see Sections 8.7, 8.8)
-The evaluation returns an AutonomyDirective (Section 8.7.1) indicating whether the agent may proceed
-The loop continues until complete_execution or abort_execution
-The initial execute_agent approval grants monitored trust , not blanket trust. The approval starts continuous per-action evaluation.
-Between execute_agent approval and the first record_execution_step call, the agent MAY perform internal reasoning (planning, context gathering) but MUST NOT take any externally-visible action. The first action with external effects MUST be reported before execution.
-The loop terminates via complete_execution (normal success) or abort_execution (abnormal termination, e.g., after a stop directive or user cancellation).
-8.6.3 Mandatory Action Reporting
-When the execution safety loop is active, agents MUST report all intended actions through record_execution_step with a nextActionHint describing the planned action. Actions taken without reporting are a protocol violation.
-A reportable action is any operation that causes effects beyond the agent's internal reasoning:
-Tool calls to any MCP server (including other adapters)
-File system operations (read, write, delete)
-Shell command execution
-Network requests to external services
-Database queries or mutations
-State changes in any connected system
-The record_execution_step operation accepts the following parameters:
-Parameter
-Required
-element_name
-The agent reporting the step
-stepDescription
-Description of the action just completed
-Result of the previous step: "success" , "failure" , or "skipped"
-nextActionHint
-Description of the intended next action
-findings
-Data or observations from the completed step
-The nextActionHint field MUST be a human-readable string describing the intended action with sufficient detail for safety evaluation. Examples:
-"calling write_file on project/config.json to update database URL"
-"executing shell command: npm install express"
-"sending message to #general channel via Slack MCP server"
-8.6.4 Continuous Enforcement
-Every record_execution_step call is an evaluation checkpoint. The response includes an AutonomyDirective (Section 8.7.1) that is authoritative:
-When continue is true , the agent MAY proceed with the reported action
-When continue is false , the agent MUST NOT proceed. The agent SHOULD report the pause to the user or upstream system
-When stopped is true , the agent has been hard-blocked (Section 8.8). The agent MUST cease all actions until unblocked via out-of-band verification
-Implementations MUST NOT allow agents to proceed after a stop directive. Implementations SHOULD NOT allow agents to proceed after continue: false without human intervention.
-In monitoring mode ( "monitoring" ), continue is always true and stopped MUST NOT be set to true . Monitoring mode is advisory only — it evaluates and logs but does not block. In logging mode ( "logging" ), no evaluation occurs and no directive fields are authoritative.
-8.6.5 Non-Bypass Property
-If an agent is executing through the execution safety loop, it MUST NOT perform actions outside the reported loop. This property is essential to the safety model:
-The agent MUST NOT call tools on other MCP servers without first reporting intent via record_execution_step
-The agent MUST NOT take file system or shell actions without reporting
-If the agent acts without reporting, it is a protocol violation
-Implementation Note: This property is enforced cooperatively — the agent (typically an LLM following system prompt instructions) must be instructed to check in with the safety loop before every action. The protocol defines the contract; the client integration enforces it.
-8.6.6 Scope of Monitoring
-The execution safety loop monitors ALL intended actions, not only MCP-AQL operations on the same adapter. This includes:
-Tool calls to other MCP servers in the same client session
+The execution safety loop addresses a fundamental challenge in LLM tool-calling environments: how do you enforce safety policies on an LLM's actions when those actions target multiple independent MCP servers?
+Individual MCP servers can protect their own operations, but no single server has visibility into what the LLM is doing across all connected servers. The execution safety loop solves this by providing a central checkpoint that the LLM reports to before taking any action — regardless of which server handles the actual operation.
+1.2 Status
+The execution safety loop is an optional feature defined normatively in Section 8.6 of the core specification . This document provides informative guidance on deployment models, integration patterns, and implementation strategies.
+1.3 Core Concept
+The execution safety loop is a protocol-level monitoring pattern:
+The LLM plans an action (any tool call, file operation, shell command, etc.)
+The LLM reports its intent to a safety-enabled MCP-AQL server via record_execution_step with nextActionHint
+The server evaluates the intent against its safety pipeline (Gatekeeper policies, Autonomy Evaluator, Danger Zone rules)
+The server returns an AutonomyDirective — go, pause, or hard stop
+The LLM respects the directive before proceeding
+This is distinct from the full agent lifecycle that a specific adapter (like DollhouseMCP) may implement. The safety loop is purely about monitoring and evaluating — it does not manage agent state, personas, elements, or any domain-specific functionality.
+1.4 Opt-In Design
+The execution safety loop is entirely optional at every level:
+Adapters choose whether to support it
+Clients choose whether to enable it
+Users can disable it at any time
+No adapter is required to implement the safety loop, and no client is required to use it. When disabled, the adapter operates normally without any safety enforcement overhead. See Section 8: Opting Out for details.
+2. The Safety Dongle Deployment Model
+2.1 What Is a Safety Dongle?
+A safety dongle is a standalone MCP-AQL server whose sole purpose is safety enforcement. It has no domain functionality — it does not manage files, query databases, or interact with external services. It exists only to evaluate the LLM's intended actions and return go/no-go directives.
+The name "dongle" reflects the deployment model: you plug it in alongside your existing MCP servers, and it acts as a universal firewall for all tool calls in the session.
+2.2 Architecture
+┌────────────────────────────────────────────────────────┐
+│ MCP Client (Claude, GPT, etc.) │
+│ LLM decides to take an action │
+│ 1. Report intent to safety dongle │
+│ record_execution_step { │
+│ nextActionHint: &quot;calling write_file on server X&quot; │
+│ ┌──────────────────────────────────────────┐ │
+│ │ Safety Dongle (MCP-AQL Server) │ │
+│ │ Gatekeeper → Autonomy Evaluator → │ │
+│ │ Danger Zone Enforcer │ │
+│ │ Returns: AutonomyDirective │ │
+│ │ { continue: true/false, factors: [...] }│ │
+│ └──────────────────────────────────────────┘ │
+│ 2. If continue: execute the action on target server │
+│ If !continue: pause, escalate, or abort │
+│ ┌─────────┐ ┌─────────┐ ┌─────────┐ │
+│ │ MCP │ │ MCP │ │ MCP │ │
+│ │ Server A│ │ Server B│ │ Server C│ │
+│ │ (files) │ │ (db) │ │ (slack) │ │
+│ └─────────┘ └─────────┘ └─────────┘ │
+└────────────────────────────────────────────────────────┘
+2.3 What the Dongle Does NOT Do
+A safety dongle in its minimal configuration:
+Does not manage elements (personas, skills, templates, agents, memories)
+Does not store or query domain data
+Does not interact with external services beyond safety evaluation
+Does not implement the full CRUDE pattern for domain operations
+Does not require introspection of other servers' capabilities
+It is a purpose-built safety layer with a minimal operation surface.
+2.4 Relationship to Full MCP-AQL Adapters
+The safety dongle and a full MCP-AQL adapter are both valid configurations of the same protocol. They differ only in scope:
+Safety Dongle
+Full MCP-AQL Adapter
+Safety enforcement only
+Domain operations + safety
+Operations
+~7 (safety loop + introspection)
+Dozens (full CRUDE surface)
+Elements
+Personas, skills, agents, etc.
+Execution state + policies only
+Full domain state
+Endpoints used
+CREATE, EXECUTE, READ (subset)
+All five CRUDE endpoints
+A full MCP-AQL adapter MAY embed the safety loop directly — it does not need a separate dongle. The dongle model is for environments where safety enforcement is decoupled from the adapters performing the actual work.
+3. The Execution Safety Loop
+3.1 Loop Protocol
+The execution safety loop follows a simple protocol:
+┌─────────────────────────────────────┐
+│ ┌──────────┐ │
+│ │ Plan │ LLM determines │
+│ │ action │ next action │
+│ └────┬─────┘ │
+│ │ Report │ record_execution_step│
+│ │ intent │ { nextActionHint, │
+│ │ │ outcome? } │
+│ │ Evaluate │ Gatekeeper + │
+│ │ │ Autonomy Evaluator + │
+│ │ │ Danger Zone │
+│ ┌──────────┐ ┌──────────┐ │
+│ │ continue │───▶│ Act │ │
+│ │ = true │ │ (tool │ │
+│ └──────────┘ │ call) │ │
+│ ┌───────────────┘ │
+│ │ continue │───▶│ Pause / │ │
+│ │ = false │ │ Escalate│ │
+│ └──────────┘ └──────────┘ │
+└─────────────────────────────────────┘
+Lifecycle:
+Start: execute_agent — initiates the safety loop (requires explicit approval)
+Loop: record_execution_step — report each intended action, receive directive
+End: complete_execution (success) or abort_execution (abnormal termination)
+3.2 Monitoring Scope
+The execution safety loop monitors all intended actions , not only MCP-AQL operations on the same adapter. This includes:
+Tool calls to any MCP server in the client session
 Tool calls to non-MCP-AQL MCP servers
 Built-in client capabilities (file I/O, shell access, web requests)
-Any operation that produces effects beyond the agent's reasoning context
-This broad scope is what makes the safety dongle deployment model possible: a standalone MCP-AQL server can function as a universal safety layer for all tool calls in a client session, regardless of which server handles the actual operation.
-8.6.7 Disabling the Safety Loop
-Clients or adapter configuration MAY disable the execution safety loop entirely. When disabled:
-The execution lifecycle operations ( execute_agent , record_execution_step , complete_execution , abort_execution ) are either unavailable or operate as no-op progress tracking without safety enforcement
-No AutonomyDirective evaluation occurs
-No action reporting is required
-The adapter MUST clearly indicate via introspection whether safety enforcement is active or disabled:
-&quot;execution_safety_loop&quot; : &quot;disabled&quot;
-8.7 Autonomy Evaluation
-When the execution safety loop is active, every record_execution_step call triggers an autonomy evaluation. This section defines the evaluation pipeline and the AutonomyDirective response contract.
-8.7.1 The AutonomyDirective Contract
-The AutonomyDirective is returned as part of the record_execution_step response. It is the authoritative signal for whether the agent may proceed.
-interface AutonomyDirective {
-continue : boolean ; // Whether the agent may proceed
-factors : string [] ; // Human-readable decision factors
-stopped ?: boolean ; // True if hard-blocked (Section 8.8)
-reason ?: string ; // Why paused or stopped
-stepsRemaining ?: number ; // Steps before mandatory pause
-nextStepRisk ?: SafetyTier ; // Risk tier of the evaluated action
-notifications ?: AgentNotification[] ; // Pending events (Section 8.7.3)
-type SafetyTier = &quot;advisory&quot; | &quot;confirm&quot; | &quot;verify&quot; | &quot;danger_zone&quot; ;
-Implementations MUST include continue and factors in every AutonomyDirective . All other fields are OPTIONAL except where specific sections impose MUST requirements (see Sections 8.8.1 and 8.8.2 for mandatory notifications in verify tier, danger_zone tier, and deny pattern scenarios).
-8.7.2 Evaluation Pipeline
-Implementations SHOULD evaluate actions through a multi-stage pipeline. The stages are evaluated in order; the first stage that triggers a pause or stop ends the evaluation:
-Stage 1 — Step Limit Check:
-Compares the current step count against a configurable maxAutonomousSteps threshold.
-When the step count exceeds the limit, the evaluator SHOULD return continue: false with reason: "Step limit exceeded"
-The default limit is implementation-defined but SHOULD be documented via introspection
-Implementations MUST support configuring the step limit
-Stage 2 — Previous Step Outcome:
-If the outcome field of the current record_execution_step call reports "failure" , the evaluator SHOULD return continue: false .
-Pausing after failure prevents cascading errors from autonomous recovery attempts
-The agent SHOULD report the failure to the user or upstream system before retrying
-If outcome is omitted, this stage is skipped
-Stage 3 — Action Pattern Matching:
-Matches the nextActionHint string against configurable glob patterns:
-deny patterns → continue: false , stopped: true (triggers out-of-band verification — Section 8.8)
-requiresApproval patterns → continue: false (human review needed)
-autoApprove patterns → continue: true (skip remaining stages)
-Resolution order: deny &gt; requiresApproval &gt; autoApprove
-Unmatched actions fall through to Stage 4
-Pattern examples:
-deny : [ &quot;drop_*&quot; , &quot;delete_all*&quot; , &quot;rm -rf*&quot; ] ,
-requiresApproval : [ &quot;delete_*&quot; , &quot;*force*&quot; , &quot;deploy_*&quot; , &quot;git push*&quot; ] ,
-autoApprove : [ &quot;read_*&quot; , &quot;list_*&quot; , &quot;get_*&quot; , &quot;search_*&quot; ]
-Stage 4 — Safety Tier Evaluation:
-Assigns a risk score (0-100) to the action and maps it to a safety tier:
-Risk Score
-Default Behavior
-advisory
-Continue (log only)
-Pause for human review via confirm_operation
-Pause + out-of-band verification via verify_challenge (Section 8.8)
-danger_zone
-Hard stop + out-of-band verification via verify_challenge (Section 8.8)
-The verify and danger_zone tiers both use the out-of-band verification protocol defined in Section 8.8. The difference is enforcement severity: verify sets continue: false (pause — the agent may resume after verification), while danger_zone sets stopped: true (hard block — the agent is blocked at the agent level until verified).
-Risk scoring MAY use pattern matching against known dangerous operations, LLM-provided risk assessments, or adapter-specific heuristics.
-Stage 5 — Risk Tolerance Threshold:
-Compares the risk score against the agent's configured tolerance:
-Tolerance
-Threshold
-Behavior
-conservative
-Pause for any risk above 25
-moderate
-Pause for risk above 50 (default)
-aggressive
-Pause only for high risk above 75
-Actions with risk scores below the threshold in the advisory tier MAY proceed without pausing.
-8.7.3 Agent Notification System
-Notifications inform the agent of events that occurred since the last record_execution_step call. They are included in the AutonomyDirective response.
-interface AgentNotification {
-type : NotificationType ;
-message : string ; // Human-readable description
-metadata ?: {
-operation ?: string ; // Operation that triggered the event
-reason ?: string ; // Detailed reason
-level ?: string ; // Permission level that caused the block
-verificationId ?: string ; // For verify and danger_zone challenges
-timestamp : string ; // ISO 8601
-type NotificationType =
-| &quot;permission_pending&quot; // Gatekeeper blocked an operation
-| &quot;autonomy_pause&quot; // Autonomy Evaluator paused execution
-| &quot;danger_zone&quot; // Danger Zone hard block (system-wide broadcast)
-| &quot;status&quot; // Informational status update
-| &quot;error&quot; ; // Error condition
-Notification sources:
-permission_pending : Generated when the Gatekeeper denies an operation that requires confirmation. Cleared when confirm_operation is called with a valid confirmation token for the blocked operation. Failed or invalid confirmation attempts do not clear the notification.
-autonomy_pause : Generated when the Autonomy Evaluator returns continue: false . Provides the reason and contributing factors. For confirm tier pauses, cleared when confirm_operation is called for the paused action. For verify tier pauses, MUST include verificationId in metadata; cleared when verify_challenge succeeds for the associated challenge ID or the challenge expires.
-danger_zone : Broadcast to ALL executing agents (including the affected agent) when any agent triggers a hard block ( danger_zone tier or deny pattern match). MUST include the verificationId for the affected agent. Cleared when the blocked agent is unblocked via successful verify_challenge or admin override.
-The notification system is pull-based : notifications accumulate between record_execution_step calls and are delivered in the response. There is no push channel.
-Self-Approval Prevention: When permission_pending notifications expose the blocked operation name, the executing agent could attempt to call confirm_operation to approve its own blocked operations. Implementations MUST prevent self-approval — the entity confirming an operation MUST NOT be the same agent that triggered the block. Server-side controls such as caller identity validation, confirmation tokens bound to a human-only channel, or out-of-band confirmation delivery satisfy this requirement.
-8.7.4 Configurable Elements
-The following elements of the evaluation pipeline SHOULD be configurable per agent or per adapter:
-maxAutonomousSteps
-Maximum steps before mandatory pause
-riskTolerance
-"conservative" , "moderate" , or "aggressive"
+Any operation that produces effects beyond the LLM's reasoning context
+This broad scope is what makes the safety dongle deployment model possible: the dongle does not need to understand or proxy the actual operations — it only needs to evaluate the LLM's description of what it intends to do.
+3.3 The record_execution_step Parameters
+The record_execution_step operation accepts several parameters. The full parameter table is defined normatively in Section 8.6.3 of the core specification . The two most important fields are:
+nextActionHint (MUST) — describes the intended next action for safety evaluation
+outcome (SHOULD) — reports the result of the previous step ( "success" , "failure" , or "skipped" ), which drives Stage 2 of the Autonomy Evaluator pipeline (Section 8.7.2)
+The nextActionHint is a human-readable string describing the intended action with sufficient detail for safety evaluation.
+Good nextActionHint examples:
+// Specific tool call with target
+&quot;calling write_file on project/config.json to update database URL&quot;
+// Shell command with detail
+&quot;executing shell command: npm install express&quot;
+// Cross-server operation
+&quot;sending message to #general channel via Slack MCP server&quot;
+// Destructive operation
+&quot;deleting all records from staging_users table via database MCP server&quot;
+// File system operation
+&quot;reading /etc/passwd to check user configuration&quot;
+Poor nextActionHint examples:
+// Too vague — cannot evaluate risk
+&quot;doing something&quot;
+// No target information
+&quot;writing a file&quot;
+// Missing context for risk assessment
+&quot;running a command&quot;
+The quality of safety evaluation depends directly on the quality of the nextActionHint . LLM system prompts SHOULD instruct the model to provide specific, detailed action descriptions.
+3.4 The AutonomyDirective Response
+Every record_execution_step call returns an AutonomyDirective indicating whether the LLM may proceed. See Section 8.7 of the core specification for the full type definition.
+Key fields:
+Description
+continue
+Whether the LLM may proceed with the reported action
 string[]
-Glob patterns that trigger hard block and out-of-band verification (Section 8.8)
-requiresApproval
-Glob patterns that always require human review
-autoApprove
-Glob patterns that bypass evaluation
-Adapters SHOULD document their default configuration and supported configuration options via introspection.
-8.7.5 Minimum Viable Implementation
-Not all stages of the evaluation pipeline are equally important. The following defines the minimum requirements:
-Requirement
-Step Limit
-Prevents runaway autonomous execution
-Previous Outcome
-Prevents cascading failures
-Pattern Matching
-Primary safety control mechanism
-Safety Tier
-Requires risk scoring capability
-Risk Tolerance
-Depends on Safety Tier implementation
-An implementation that supports only the Step Limit stage (with a configurable limit and hard pause at the threshold) is a conformant minimum viable implementation.
-8.8 Out-of-Band Verification
-When the Autonomy Evaluator assigns a verify or danger_zone safety tier (Section 8.7.2, Stage 4), the system MUST require out-of-band human verification before the agent may proceed. Out-of-band verification requires a human to provide a verification code through a channel that the AI cannot access, creating cryptographic proof that a human reviewed and approved the action. The verify tier pauses the agent; the danger_zone tier hard-blocks it.
-8.8.1 Trigger Conditions
-Out-of-band verification is triggered when:
-The safety tier evaluation assigns verify (risk score 61-85) or danger_zone (risk score 86-100), OR
-The nextActionHint matches a hard-block ( deny ) pattern configured in the adapter (Section 8.7.2, Stage 3)
-For danger_zone and deny pattern triggers, the AutonomyDirective MUST return stopped: true and MUST include a danger_zone notification broadcast to all executing agents. For verify triggers, the AutonomyDirective returns continue: false (pause) without stopped: true — the agent is paused but not permanently blocked.
-8.8.2 Challenge Protocol
-The verification protocol follows these steps:
-1. Challenge Generation:
-The adapter generates a verification code with at least 128 bits of entropy from a cryptographically secure random source
-The adapter generates a unique challenge ID (UUID v4 recommended)
-The code MUST be cryptographically unpredictable (not sequential, not time-based)
-2. Out-of-Band Display:
-The verification code MUST be displayed through a channel inaccessible to the AI agent
-The code MUST NOT appear in any MCP response, tool result, _meta field, or log accessible to the AI
-Valid display channels include (but are not limited to):
-OS-native dialogs (AppleScript on macOS, zenity on Linux, PowerShell on Windows)
-Hardware security tokens
-SMS or email to a registered operator
-Dedicated security dashboard
-The AI agent receives only the challenge ID and a human-readable prompt — never the code itself
-The initial AutonomyDirective MUST include the challenge ID via a notification: autonomy_pause with metadata.verificationId for verify tier, or danger_zone with metadata.verificationId for danger_zone tier and deny pattern matches
-3. Verification:
-The human provides the code via the verify_challenge operation with the challenge ID and code
-On successful verification, the blocked agent is unblocked and execution may resume
-On failed verification, the code is invalidated (one-time use)
-4. Expiration:
-Verification challenges SHOULD expire after a configurable timeout (default: 5 minutes)
-Expired challenges MUST be treated as failed
-8.8.3 Blocking Semantics
-When an agent is hard-blocked by any event that sets stopped: true (a danger_zone safety tier assignment, a deny pattern match, or equivalent adapter-specific trigger):
+Human-readable explanations of the evaluation decision
+Whether the agent has been hard-blocked (Danger Zone)
+Why the agent was paused or stopped
+stepsRemaining
+Steps remaining before mandatory pause
+nextStepRisk
+SafetyTier
+Safety tier assigned to the reported action
+notifications
+AgentNotification[]
+Gatekeeper blocks, danger alerts, and other events
+Decision tree:
+If stopped === true → Hard stop. Agent MUST cease all actions until unblocked via out-of-band verification.
+If continue === false → Pause. Agent MUST NOT proceed. Report the pause to the user or upstream system.
+If continue === true → Proceed. Agent MAY execute the reported action.
+4. Minimal Operation Surface
+4.1 Required Operations
+A safety dongle implements a minimal set of operations:
+Operation
+Endpoint
+execute_agent
+Start the execution safety loop
+record_execution_step
+Report intended action, receive AutonomyDirective
+complete_execution
+Signal normal completion of the safety loop
+abort_execution
+Signal abnormal termination
+confirm_operation
+Confirm Gatekeeper blocks or Autonomy Evaluator confirm tier pauses
+verify_challenge
+Submit out-of-band verification code ( verify tier and Danger Zone)
+introspect
+Discover available operations and capabilities
+This is 7 operations across 3 endpoints — a fraction of a full MCP-AQL adapter's surface.
+4.2 Endpoint Classification
+The endpoint placement of these operations is critical to the permission architecture:
+Default Permission
+Rationale
+AUTO_APPROVE
+Zero friction for discovery
+CONFIRM_SESSION
+record_execution_step , verify_challenge
+Approve once, then frictionless for the session
+CONFIRM_SINGLE_USE
+execute_agent , complete_execution , abort_execution , confirm_operation
+Each invocation requires explicit approval
+The key design decision: record_execution_step is on CREATE (not EXECUTE) because it runs on every loop cycle. If it were on EXECUTE, the client would need to either:
+Auto-approve all EXECUTE operations — which also auto-approves confirm_operation , collapsing the Gatekeeper permission architecture
+Manually approve every loop cycle — making the safety loop unusable in practice
+By placing it on CREATE with CONFIRM_SESSION semantics, the user approves it once at the start of the session, and subsequent calls are frictionless. Meanwhile, confirm_operation stays on EXECUTE with CONFIRM_SINGLE_USE , preserving the permission model.
+4.3 Permission Architecture
+The CRUDE endpoint classification directly determines default friction levels:
+READ (AUTO_APPROVE)
+└── introspect → Zero friction
+CREATE (CONFIRM_SESSION)
+├── record_execution_step → Approve once, then frictionless
+└── verify_challenge → Approve once, then frictionless
+EXECUTE (CONFIRM_SINGLE_USE)
+├── execute_agent → Explicit approval each time
+├── complete_execution → Explicit approval each time
+├── abort_execution → Explicit approval each time
+└── confirm_operation → AUTO_APPROVE override (avoids &quot;confirm to confirm&quot; loop)
+Implementation Note: confirm_operation has an AUTO_APPROVE override despite being on the EXECUTE endpoint. This prevents an infinite confirmation loop where confirming an operation itself requires confirmation.
+Security Note: Because confirm_operation is auto-approved, the LLM could theoretically call it to approve its own blocked operations (Gatekeeper blocks or Autonomy Evaluator confirm tier pauses) without human involvement. Implementations MUST prevent self-approval — the entity confirming an operation MUST NOT be the same agent that triggered the block. Server-side controls (caller identity validation, confirmation tokens bound to a human channel, or out-of-band confirmation delivery) are required. See Section 8.7.3 for the normative requirement.
+5. Integration with Gatekeeper
+5.1 How the Dongle Evaluates Actions
+The safety dongle uses the same Gatekeeper architecture as a full MCP-AQL adapter, but scoped to the execution safety loop:
+Layer 1 — Route Validation: Verifies the operation is called via the correct CRUDE endpoint
+Layer 2 — Safety Tier: Evaluates the endpoint's permission characteristics
+Layer 3 — Policy Evaluation: Checks nextActionHint against configured policies
+Layer 4 — Confirmation: Issues confirmation tokens for operations requiring acknowledgment
+For the safety dongle, Layer 3 is the most important: it evaluates the LLM's stated intent against configurable patterns.
+5.2 Policy Model
+Policies control which actions are allowed, denied, or require confirmation. Policies are matched against the nextActionHint string using glob patterns:
+// Example policy configuration
+deny : [
+&quot;drop_*&quot; , // Block any drop operations
+&quot;delete_all*&quot; , // Block bulk deletions
+&quot;*_production*&quot; , // Block anything targeting production
+&quot;rm -rf*&quot; // Block recursive force deletions
+requiresApproval : [
+&quot;delete_*&quot; , // Require approval for deletions
+&quot;*force*&quot; , // Require approval for force operations
+&quot;deploy_*&quot; , // Require approval for deployments
+&quot;git push*&quot; // Require approval for git pushes
+autoApprove : [
+&quot;read_*&quot; , // Auto-approve reads
+&quot;list_*&quot; , // Auto-approve listings
+&quot;get_*&quot; , // Auto-approve getters
+&quot;search_*&quot; // Auto-approve searches
+Resolution order: deny &gt; requiresApproval &gt; autoApprove &gt; default (evaluate via Autonomy Evaluator)
+5.3 Notification System
+When the Gatekeeper blocks an operation or the Autonomy Evaluator pauses execution, notifications are included in the AutonomyDirective response:
+continue : false ,
+reason : &quot;Action requires approval: delete_user&quot; ,
+factors : [ &quot;Pattern match: delete_* requires approval&quot; ] ,
+notifications : [
+type : &quot;permission_pending&quot; ,
+message : &quot;Operation &#39;delete_user&#39; requires confirmation&quot; ,
+metadata : {
+operation : &quot;delete_user&quot; ,
+level : &quot;CONFIRM_SINGLE_USE&quot;
+timestamp : &quot;2026-02-25T14:30:00Z&quot;
+Notification types:
+Action Required
+permission_pending
+Gatekeeper blocked an operation
+Call confirm_operation to approve
+autonomy_pause
+Autonomy Evaluator returned continue: false
+For confirm tier: call confirm_operation ; for verify tier: out-of-band verify_challenge (Section 6)
+danger_zone
+Hard block triggered ( danger_zone tier or deny pattern)
+Out-of-band verify_challenge required (Section 6)
+The notification system is pull-based : notifications are included in record_execution_step responses. There is no push channel — the LLM must call record_execution_step to discover pending events. This aligns with the MCP protocol's request-response model.
+6. Integration with Danger Zone
+6.1 Danger Level Escalation During Execution
+When the Autonomy Evaluator assigns a high risk score to a nextActionHint , the action escalates through safety tiers defined in the Danger Levels specification :
+Risk Score
+Behavior
+advisory
+Log and continue
+Pause for human review ( continue: false )
+Pause + out-of-band verification via verify_challenge (Section 8.8)
+Hard stop + out-of-band verification via verify_challenge (Section 8.8)
+6.2 Out-of-Band Verification
+Both the verify and danger_zone tiers trigger out-of-band verification, but with different enforcement severity.
+Danger Zone hard stop ( danger_zone tier or deny pattern match):
 The AutonomyDirective returns stopped: true
-All subsequent execution operations for the blocked agent MUST be rejected until unblocked
-The blocked state MUST persist across server restarts (file-based or database storage)
-Only successful verification via verify_challenge or an explicit admin override can unblock the agent
-Adapters MUST NOT allow an agent to bypass a hard block by starting a new execution. The block is applied at the agent level, not the execution level.
-For verify tier challenges (where stopped is not true ), the agent is paused rather than blocked. While a verify challenge is pending, subsequent record_execution_step calls for the same agent SHOULD return continue: false with the pending challenge ID in the reason field, until the challenge is completed or expires. Unlike hard blocks, verify pauses do not persist across server restarts and do not prevent starting new executions. When a verify challenge expires, the pause is lifted and subsequent record_execution_step calls SHOULD re-evaluate the action normally — if the same action is reported again, a new challenge is generated.
-8.8.4 Channel Separation Requirements
-The security of out-of-band verification depends entirely on channel separation. The verification code:
-MUST NOT appear in any MCP tool response or result
-MUST NOT appear in any _meta field of an MCP response
-MUST NOT be logged in any location accessible to the AI agent
-MUST NOT be included in error messages, debug output, or diagnostic information accessible to the AI
-MUST NOT be derivable from any information available to the AI (e.g., timestamps, sequential IDs)
-Security Principle: Even a fully prompt-injected LLM that has been instructed to bypass safety checks cannot complete out-of-band verification, because the code exists only in a channel the LLM cannot observe.
+A verification challenge is generated with a cryptographically random code
+The code is displayed through a channel inaccessible to the AI (OS dialog, hardware token, SMS, etc.)
+The agent is blocked at the agent level until a human provides the correct code via verify_challenge
+The block persists across server restarts
+Verify tier pause ( verify tier):
+The AutonomyDirective returns continue: false (without stopped: true )
+A verification challenge is generated and displayed out-of-band (same as above)
+The agent is paused — subsequent record_execution_step calls return continue: false until verified
+Unlike Danger Zone blocks, verify pauses do not persist across restarts and do not prevent new executions
+See Section 8.8 of the core specification for the full out-of-band verification protocol.
+Security Principle: The verification code MUST NOT appear in any MCP response, tool result, log accessible to the AI, or _meta field. The AI can only see the challenge ID — never the code itself. This ensures that even a prompt-injected LLM cannot self-verify.
+7. Deployment Examples
+7.1 Minimal Safety Dongle
+A standalone MCP-AQL server with no domain functionality:
+// MCP client configuration
+mcpServers : {
+// Safety dongle — evaluates all actions
+&quot;safety&quot; : {
+command : &quot;mcpaql-safety-dongle&quot; ,
+args : [ &quot;--policy&quot; , &quot;./safety-policies.json&quot; ]
+// Domain servers — do the actual work
+&quot;filesystem&quot; : { command : &quot;mcp-filesystem&quot; , args : [ &quot;/workspace&quot; ] } ,
+&quot;database&quot; : { command : &quot;mcp-postgres&quot; , args : [ &quot;--connection&quot; , &quot;...&quot; ] } ,
+&quot;slack&quot; : { command : &quot;mcp-slack&quot; , args : [ &quot;--token&quot; , &quot;...&quot; ] }
+The LLM's system prompt includes:
+Before taking any action (tool call, file operation, shell command),
+you MUST report your intent to the safety server via
+record_execution_step with a detailed nextActionHint.
+Only proceed if the AutonomyDirective returns continue: true.
+7.2 Safety Dongle + Multiple MCP Servers
+In a multi-server environment, the safety dongle monitors actions across all servers:
+┌─────────────────────────────────────────────────┐
+│ MCP Client │
+│ ┌─────────────┐ │
+│ │ Safety │ ◄── report ALL intended actions│
+│ │ Dongle │ ──► go/no-go directives │
+│ │ (MCP-AQL) │ │
+│ └─────────────┘ │
+│ ┌──────┐ ┌──────┐ ┌──────┐ ┌──────┐ │
+│ │FS │ │DB │ │Slack │ │Git │ │
+│ │Server│ │Server│ │Server│ │Server│ │
+│ └──────┘ └──────┘ └──────┘ └──────┘ │
+└─────────────────────────────────────────────────┘
+The domain servers do not need to know about the safety dongle. They are standard MCP servers — the safety evaluation happens between the LLM and the dongle, before the LLM calls any tool on any server.
+7.3 Full MCP-AQL Adapter with Embedded Safety
+A full MCP-AQL adapter can embed the execution safety loop directly — no separate dongle needed:
+// Single adapter with full CRUDE surface + embedded safety
+&quot;dollhouse&quot; : {
+command : &quot;dollhouse-mcp&quot; ,
+args : [ &quot;--safety-mode&quot; , &quot;enforcing&quot; ]
+In this model, the adapter handles both domain operations (elements, personas, agents) and safety enforcement (Gatekeeper, Autonomy Evaluator, Danger Zone) in the same server. The execution safety loop is just one feature among many.
+8. Opting Out
+8.1 When to Disable
+The execution safety loop may be unnecessary or undesirable in several scenarios:
+Trusted environments: Development machines, sandboxed containers, or testing environments where safety enforcement adds friction without benefit
+Performance-sensitive workloads: The loop adds latency to every action (one round-trip per tool call)
+Simple automation: Scripts or pipelines where the action sequence is predetermined and does not need LLM-level safety evaluation
+User preference: Some users may prefer to operate without safety constraints
+8.2 How to Disable
+Adapters indicate their safety loop status via introspection:
+// Safety loop actively enforcing
+{ capabilities : { execution_safety_loop : &quot;enforcing&quot; } }
+// Safety loop in monitoring mode (advisory only)
+{ capabilities : { execution_safety_loop : &quot;monitoring&quot; } }
+// Safety loop logging only (no evaluation)
+{ capabilities : { execution_safety_loop : &quot;logging&quot; } }
+// Safety loop supported but currently disabled
+{ capabilities : { execution_safety_loop : &quot;disabled&quot; } }
+// Adapter does not support the safety loop (field omitted entirely)
+Disabling is typically done via adapter configuration:
+// Adapter startup configuration
+{ safetyLoop : { mode : &quot;disabled&quot; } }
+// Or via environment variable
+// MCPAQL_SAFETY_LOOP=disabled
+8.3 Partial Modes
+Between full enforcement and fully disabled, adapters MAY support intermediate modes:
+Monitoring mode ( "monitoring" ):
+Actions are evaluated by the full safety pipeline
+AutonomyDirective is returned with accurate factors and risk assessment
+continue is always true — the directive is advisory, never blocking
+stopped MUST NOT be set to true
+Useful for: observing what the safety loop would block without actually blocking, gradual rollout, policy tuning
+Logging mode ( "logging" ):
+Actions are recorded for audit purposes
+No evaluation occurs — the safety pipeline is not invoked
+Useful for: compliance auditing, post-incident analysis, establishing baseline action patterns
+9. Implementation Requirements
+This section provides a compliance checklist for adapters implementing the execution safety loop. Every requirement listed here corresponds to a normative MUST, SHOULD, or MAY in Sections 8.6–8.8 of the core specification . See Section 9.4 for the complete mapping between normative sections and compliance bullets.
+9.1 MUST Requirements
+Adapters that support the execution safety loop:
+Core Operations &amp; Introspection:
+MUST document whether they support the execution safety loop via introspection ( Section 8.6.1 )
+MUST clearly indicate via introspection whether safety enforcement is active or disabled ( Section 8.6.7 )
+MUST implement execute_agent , record_execution_step , complete_execution , and abort_execution ( Section 8.6.2 )
+MUST place record_execution_step on the CREATE endpoint ( Section 8.5.4 )
+MUST place execute_agent , complete_execution , and abort_execution on the EXECUTE endpoint ( Section 8.5.4 )
+AutonomyDirective Contract:
+MUST return an AutonomyDirective on every record_execution_step call ( Section 8.7.1 )
+MUST include continue and factors in every AutonomyDirective ( Section 8.7.1 )
+MUST NOT allow agents to proceed after a stop directive ( stopped: true ) ( Section 8.6.4 )
+MUST NOT set stopped: true when operating in monitoring mode ( Section 8.6.4 )
+MUST return stopped: true in the AutonomyDirective for danger_zone tier and deny pattern triggers ( Section 8.8.1 )
+Step Limit:
+MUST implement the Step Limit stage with a configurable maxAutonomousSteps threshold ( Section 8.7.5 )
+Notifications &amp; Self-Approval:
+MUST include a danger_zone notification broadcast to all executing agents when returning stopped: true ( Section 8.8.1 )
+MUST include a danger_zone notification with metadata.verificationId for danger_zone tier and deny pattern challenges ( Section 8.8.2 )
+MUST include an autonomy_pause notification with metadata.verificationId when issuing a verify tier challenge ( Section 8.8.2 )
+MUST prevent self-approval — the entity confirming an operation MUST NOT be the same agent that triggered the block ( Section 8.7.3 )
+Out-of-Band Verification (when the adapter implements verify or danger_zone tier evaluation, or deny pattern matching):
+MUST require out-of-band human verification when a verify or danger_zone safety tier is assigned, or when a deny pattern matches ( Section 8.8 )
+MUST generate verification codes with at least 128 bits of entropy from a cryptographically secure random source; codes MUST be cryptographically unpredictable ( Section 8.8.2 )
+MUST display verification codes through a channel inaccessible to the AI agent — codes MUST NOT appear in any MCP response, tool result, _meta field, log, error message, or diagnostic output accessible to the AI, and MUST NOT be derivable from any information available to the AI (e.g., timestamps, sequential IDs) ( Sections 8.8.2 , 8.8.4 )
+MUST treat expired verification challenges as failed ( Section 8.8.2 )
+Blocking Semantics (when the adapter implements stopped: true behavior):
+MUST reject all subsequent execution operations for a hard-blocked agent until unblocked via verify_challenge or admin override ( Section 8.8.3 )
+MUST NOT allow an agent to bypass a hard block by starting a new execution — blocks apply at the agent level, not the execution level ( Section 8.8.3 )
+MUST persist hard-blocked agent state across server restarts (file-based or database storage) ( Section 8.8.3 )
+9.2 SHOULD Requirements
+Evaluation Pipeline:
+SHOULD evaluate actions through the multi-stage pipeline defined in Section 8.7.2
+SHOULD return continue: false with an appropriate reason when the step limit is exceeded ( Section 8.7.2, Stage 1 )
+SHOULD document the default step limit via introspection ( Section 8.7.2, Stage 1 )
+SHOULD evaluate the outcome field in record_execution_step calls and return continue: false on reported failures ( Section 8.7.2, Stage 2 )
+SHOULD support configurable policy patterns ( deny , requiresApproval , autoApprove ) ( Section 8.7.2, Stage 3 )
+SHOULD NOT allow agents to proceed after continue: false without human intervention ( Section 8.6.4 )
+Operations:
+SHOULD implement confirm_operation for Gatekeeper blocks and confirm tier pauses ( Section 8.7.3 )
+SHOULD implement verify_challenge for verify tier pauses and Danger Zone unblocking ( Section 8.8 )
+Configuration &amp; Introspection:
+SHOULD expose the execution_safety_loop capability value in the introspection response ( Section 8.6.1 )
+SHOULD make evaluation pipeline elements configurable per agent or per adapter ( Section 8.7.4 )
+SHOULD document default configuration and supported options via introspection ( Section 8.7.4 )
+Notifications:
+SHOULD include notifications in AutonomyDirective responses for non-hard-block events (note: verify tier autonomy_pause with metadata.verificationId and danger_zone notifications are MUST — see Section 9.1) ( Section 8.7.3 )
+Verify Tier Behavior:
+SHOULD return continue: false with the pending challenge ID for subsequent record_execution_step calls while a verify challenge is pending ( Section 8.8.3 )
+SHOULD re-evaluate actions normally when a verify challenge expires, generating a new challenge if the same action is reported again ( Section 8.8.3 )
+SHOULD expire verification challenges after a configurable timeout (default: 5 minutes) ( Section 8.8.2 )
+Rate Limiting:
+SHOULD rate-limit failed verification attempts (no more than 10 per 60-second window per agent) ( Section 8.8.5 )
+SHOULD reject subsequent verification attempts after the rate limit is exceeded ( Section 8.8.5 )
+SHOULD persist rate limit state across server restarts ( Section 8.8.5 )
+SHOULD trigger security audit events on failed verification attempts ( Section 8.8.5 )
+Monitoring &amp; Audit:
+SHOULD support the "monitoring" partial mode for gradual rollout ( Section 8.6.7 )
+9.3 MAY Requirements
+MAY support the "logging" partial mode ( Section 8.6.7 )
+MAY implement Safety Tier evaluation (Stage 4) using pattern matching, LLM-provided risk assessments, or adapter-specific heuristics for risk scoring ( Section 8.7.2, Stage 4 )
+MAY support configurable risk tolerance thresholds ( conservative , moderate , aggressive ) ( Section 8.7.2, Stage 5 )
+MAY apply progressive lockout (e.g., doubling the window duration) after repeated rate-limit violations ( Section 8.8.5 )
+MAY use OS dialogs, hardware tokens, SMS/email, or other display channels for presenting verification codes to operators ( Section 8.8.6 )
+9.4 Normative Cross-Reference
+The following table maps each normative section to its corresponding Section 9 requirements, providing an audit trail for compliance verification.
+Normative Section
+Key Requirements
+Section 9 Coverage
+8.6.1 Opt-In Activation
+MUST document support; SHOULD expose capability value
+9.1 (introspection); 9.2 (capability value)
+8.6.2 Enforcement Boundary
+MUST report and evaluate all actions
+9.1 (operations, AutonomyDirective on every call)
+8.6.3 Action Reporting
+MUST/SHOULD/MAY parameter requirements
+9.1 (operations — parameter validation is part of implementing record_execution_step )
+8.6.4 Continuous Enforcement
+MUST NOT proceed after stop; SHOULD NOT after pause; MUST NOT stopped in monitoring
+9.1 (stop directive, monitoring mode); 9.2 (SHOULD NOT after pause)
+8.6.5 Non-Bypass Property
+Agent MUST NOT act outside loop
+Agent-side protocol obligation (not adapter-specific)
+8.6.6 Scope of Monitoring
+Monitors all actions (informative)
+Described in Sections 3.2, 2.2 of this document
+8.6.7 Disabling
+MAY disable; MUST indicate via introspection
+9.1 (introspection); 9.2 (monitoring); 9.3 (logging)
+8.7.1 AutonomyDirective
+MUST include continue + factors
+9.1 (AutonomyDirective fields)
+8.7.2 Pipeline Stages 1–5
+MUST step limit; SHOULD stages 2–3; MAY stages 4–5
+9.1 (step limit MUST); 9.2 (stage 1 documentation SHOULDs, stages 2–3 SHOULDs); 9.3 (stages 4–5)
+8.7.3 Notifications
+MUST notification contents; MUST prevent self-approval
+9.1 (notifications, self-approval); 9.2 (non-hard-block notifications)
+8.7.4 Configurable Elements
+SHOULD configurable; SHOULD document
+9.2 (configuration, introspection)
+8.7.5 Minimum Viable
+MUST Step Limit; SHOULD Previous Outcome + Pattern Matching; MAY Safety Tier + Risk Tolerance
+9.1 (step limit); 9.2 (outcome, patterns); 9.3 (tier, tolerance)
+8.8 Introduction
+MUST require OOB for verify / danger_zone
+9.1 (OOB verification)
+8.8.1 Trigger Conditions
+MUST stopped: true + danger_zone notification
+9.1 ( stopped: true , notification broadcast)
+8.8.2 Challenge Protocol
+MUST entropy, display, notification, expiration
+9.1 (code generation, display, challenge ID, expiration); 9.2 (timeout)
+8.8.3 Blocking Semantics
+MUST reject, persist, no bypass; SHOULD verify behavior
+9.1 (blocking); 9.2 (verify tier)
+8.8.4 Channel Separation
+MUST NOT expose code (5 specific prohibitions)
+9.1 (display/channel separation — consolidated)
 8.8.5 Rate Limiting
-Failed verification attempts SHOULD be rate-limited to prevent brute-force attacks:
-Implementations SHOULD allow no more than 10 failed attempts per 60-second window per agent
-After exceeding the rate limit, subsequent verification attempts SHOULD be rejected with an appropriate error
-The failure counter resets after the window expires (sliding or fixed window); however, implementations MAY apply progressive lockout (e.g., doubling the window duration) after repeated rate-limit violations
-Rate limit state SHOULD persist across server restarts
-Failed verification attempts SHOULD trigger security audit events
+SHOULD rate-limit, persist, audit; MAY progressive lockout
+9.2 (rate limiting); 9.3 (lockout)
 8.8.6 Implementation Flexibility
-This specification defines the verification protocol , not the display mechanism. Implementations MAY use any display channel that satisfies the channel separation requirements (Section 8.8.4):
-Platform
-OS dialog
-AppleScript, zenity, PowerShell
-Hardware token
-Physical device with display
-SMS/Email
-Requires operator contact info
-Security dashboard
-Dedicated approval interface
-Mobile push notification
-Requires companion app
-The only requirement is that the channel is inaccessible to the AI agent performing the action.
-9. Type System
-9.1 Protocol Types
-MCP-AQL defines these protocol-level types:
-EndpointCategory (enum)
-CREATE | READ | UPDATE | DELETE | EXECUTE
-OperationResult (union)
-OperationSuccess | OperationFailure
-See Appendix D: JSON Schemas for formal schema definitions.
-9.2 Adapter Types
-Adapters define their own domain-specific types, which MUST be discoverable via the introspect operation with query: "types" .
-9.3 Request Concurrency
-MCP allows request pipelining, enabling clients to send multiple requests without waiting for responses. MCP-AQL defines ordering guarantees for batch operations (see Operations Reference Section 7) but does not mandate ordering for concurrent independent requests.
-9.3.1 Concurrency Requirements
-Adapters MUST document their concurrency behavior. The following concurrency categories are defined:
-Category
-serialized
-All requests processed sequentially in arrival order
-read-concurrent
-READ operations may execute concurrently; writes serialized
-fully-concurrent
-All operations may execute concurrently
-resource-locked
-Concurrent on different resources; serialized per resource
-9.3.2 State-Modifying Operations
-Adapters supporting concurrent state modification SHOULD implement optimistic concurrency control:
-ETag/Version Response: Include _etag or _version field in responses for mutable resources
-Precondition Request: Accept if_match parameter for conditional updates
-Conflict Detection: Return CONFLICT_VERSION_MISMATCH error when precondition fails
-Example response with version:
-&quot;id&quot; : &quot;doc_123&quot; ,
-&quot;title&quot; : &quot;My Document&quot; ,
-&quot;_etag&quot; : &quot;W/ \&quot; a1b2c3d4 \&quot; &quot;
-Example conditional update:
-&quot;operation&quot; : &quot;update_document&quot; ,
-&quot;title&quot; : &quot;Updated Title&quot; ,
-&quot;if_match&quot; : &quot;W/ \&quot; a1b2c3d4 \&quot; &quot;
-9.3.3 Concurrency Metadata
-Adapters MAY expose concurrency behavior via introspection in protocol metadata:
-&quot;concurrency&quot; : &quot;resource-locked&quot; ,
-&quot;supports_etag&quot; : true ,
-&quot;max_concurrent_requests&quot; : 10
-10. Conformance
-10.1 Conformance Levels
-Level 1: Basic Conformance
-MUST support at least one endpoint mode (CRUDE or Single)
-MUST implement the introspect operation
-MUST use standard request/response formats
-MUST classify operations correctly into CRUDE endpoints
-MUST reject operations sent to wrong endpoints (CRUDE mode)
-Level 2: Full Conformance
-MUST meet Level 1 requirements
-MUST support both CRUDE and Single endpoint modes
-MUST pass the conformance test suite
-SHOULD implement field selection
-SHOULD implement batch operations
-10.2 Claiming Conformance
-Implementations claiming MCP-AQL conformance MUST:
-State their conformance level
-Document their operations via introspection
-Document any extensions
-10.3 Extensions
-Implementations MAY extend MCP-AQL with additional:
-Features (field selection, batch operations, etc.)
-Response metadata fields
-Extensions MUST be documented and MUST NOT conflict with core specification behavior.
-Appendix A: Token Efficiency
-A.1 Measured Token Costs
-Configuration
-Reduction
-Discrete Tools
-Baseline
-CRUDE Mode
-Single Mode
-A.2 Introspection Pattern
-Total context for 10 operations with introspection:
-- Tool registration: ~1,100 tokens
-- 10 × introspect calls: ~1,500 tokens
-- Total: ~2,600 tokens (vs ~29,600 baseline)
-Appendix B: References
-Core Documentation
-Operations Reference
-Endpoint Modes
-MCP Integration
-Introspection Specification
-Implementation Documentation
-Architecture Overview (in mcpaql-adapter repo)
-Universal Adapter Runtime (in mcpaql-adapter repo)
-Plugin System Implementation (in mcpaql-adapter repo)
-Development Guide (in mcpaql-adapter repo)
-Examples
-GitHub API Adapter (in examples repo)
-Process &amp; Decision Records
-External References
-Model Context Protocol Specification (note: may be unreachable)
-RFC 2119 - Key words for use in RFCs
-Appendix C: Change Log
-1.0.0-draft
-2026-01-05
-Initial draft specification
-2026-01-14
-Revised to be adapter-agnostic
-2026-01-16
-Added schema references, updated documentation links, renamed EndpointCategory
-Appendix D: JSON Schemas
-Formal JSON Schema definitions are provided for validation:
-operation-input.schema.json
-Request format validation
-operation-result.schema.json
-Response format validation
-introspection-response.schema.json
-Introspection response validation
-danger-level.schema.json
-Operation danger classification
-Schemas use JSON Schema 2020-12 draft and are normative for this specification.
+MAY any display channel
+9.3 (display channels)
+Related Specifications
+Core Specification — Section 8.6: Execution Safety Loop — Normative requirements
+Core Specification — Section 8.7: Autonomy Evaluation — AutonomyDirective contract and evaluation pipeline
+Core Specification — Section 8.8: Out-of-Band Verification — Out-of-band verification protocol ( verify tier and Danger Zone)
+Gatekeeper Specification — Multi-layer access control architecture
+Danger Levels Specification — Risk classification and trust-to-danger gating
+Confirmation Tokens Specification — Token protocol for operation confirmation
 &copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
 Docs Library
 MCPAQL Organization

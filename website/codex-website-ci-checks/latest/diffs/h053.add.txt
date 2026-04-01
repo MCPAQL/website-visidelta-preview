@@ -302,6 +302,8 @@ CONTRIBUTING.md - General contribution guidelines
 RFC Issue Template - Template for RFC submissions
 Branching Strategy - Branch naming conventions
 This document is part of the MCP-AQL specification. See LICENSING.md for license information.
+Previous spec page
+Next spec page
 &copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
 Docs Library
 MCPAQL Organization

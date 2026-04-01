@@ -2,6 +2,7 @@ Getting Started
 Error Model
 Adapter Contracts
 Release Notes
+Related reading
 Go Deeper In The Full Spec
 The detail behind compatibility claims and test scope lives in the longer conformance-oriented spec pages.
 Conformance Testing Specification
@@ -15,3 +16,5 @@ Live conformance-related issues
 #199 structured error surface alignment
 #57 introspection must document handler-supported parameters
 #10 conformance test suite
+Previous page
+Next page

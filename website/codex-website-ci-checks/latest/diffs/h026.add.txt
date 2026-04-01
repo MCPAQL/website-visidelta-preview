@@ -101,6 +101,8 @@ Learning curve : Developers must understand when to use Execute vs other endpoin
 References
 Protocol Specification: Endpoints
 ADR-004: Schema-Driven Operations
+Previous spec page
+Next spec page
 &copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
 Docs Library
 MCPAQL Organization

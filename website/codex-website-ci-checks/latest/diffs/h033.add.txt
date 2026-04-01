@@ -97,6 +97,8 @@ Follow the naming convention: ADR-NNN-short-title.md
 Use RFC 2119 keywords (MUST, SHOULD, MAY) for normative statements
 Focus on protocol-level decisions, not implementation details
 Update this index when adding new ADRs
+Previous spec page
+Next spec page
 &copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
 Docs Library
 MCPAQL Organization

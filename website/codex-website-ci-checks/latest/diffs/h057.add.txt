@@ -154,6 +154,8 @@ For the authoritative path-based scope rules, see spec/LICENSING.md .
 Commercial licenses are available. See COMMERCIAL-LICENSE.md or contact licensing@mcpaql.org .
 Acknowledgments
 MCP-AQL builds upon the Model Context Protocol specification by Anthropic.
+Previous spec page
+Next spec page
 &copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
 Docs Library
 MCPAQL Organization

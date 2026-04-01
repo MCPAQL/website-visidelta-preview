@@ -16,6 +16,7 @@ MCP-AQL uses a discriminated success/error envelope and a structured error objec
 missing resources, permissions, and server failures without parsing free-form text.
 Error Codes Spec
 Issue #199
+Related reading
 Go Deeper In The Full Spec
 The structured error behavior lives in the spec itself, with the issue tracker only used for the remaining alignment work.
 Structured Error Codes Specification
@@ -47,6 +48,8 @@ Exact schema and prose alignment across all response definitions
 Conformance checks that validate machine-readable error surfacing
 Live spec issue #199 tracks the remaining alignment work between the error-code registry,
 response envelope requirements, and implementation-facing schemas.
+Previous page
+Next page
 &copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
 Docs Library
 Portal Home

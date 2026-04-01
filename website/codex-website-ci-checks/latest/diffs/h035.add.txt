@@ -390,6 +390,9 @@ Operations Specification
 GitHub Issue #10 - Conformance test suite
 GitHub Issue #55 - Conformance test requirements
 GitHub Issue #56 - LLM semantic evaluation
+Reference overview
+Full Spec Reference
+Next spec page
 &copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
 Docs Library
 MCPAQL Organization

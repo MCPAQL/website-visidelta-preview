@@ -36,7 +36,7 @@ Developer Guides
 MCP-AQL Breaking Change Policy
 Preliminary Public Launch Checklist
 RFC Process for MCP-AQL Specification
-Versioning strategy
+Versioning Strategy
 Changelog
 Architecture
 Architecture Documentation
@@ -460,6 +460,8 @@ Initial draft specification for MCP-AQL (Model Context Protocol - AQL Query Lang
 CRUDE pattern defining five operation categories: Create, Read, Update, Delete, Execute
 Introspection system for runtime schema and capability discovery
 Operations reference documenting standard operations and parameters
+Previous spec page
+Next spec page
 &copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
 Docs Library
 MCPAQL Organization

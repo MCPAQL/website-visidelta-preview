@@ -58,6 +58,9 @@ Support document
 Source: spec/docs/adr/README.md
 Open Source Markdown
 Browse Full Spec Reference
+Previous spec page
+Back to index
+Full Spec Reference
 &copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
 Docs Library
 MCPAQL Organization

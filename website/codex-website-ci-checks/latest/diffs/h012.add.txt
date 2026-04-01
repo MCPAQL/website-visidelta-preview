@@ -2,6 +2,7 @@ Getting Started
 Error Model
 Adapter Contracts
 Release Notes
+Related reading
 Go Deeper In The Full Spec
 This summary is the fast map. These pages carry the fuller protocol requirements and supporting detail.
 Normative Draft
@@ -19,3 +20,5 @@ Batch and payload considerations
 Batch operations are first-class, but launch messaging should still treat resource-limit requirements as in progress.
 Payload size, encoding, and response shape constraints are part of interoperability, not optional polish.
 Issue #197 tracks the remaining batch-limit hardening work.
+Previous page
+Next page

@@ -295,6 +295,8 @@ References
 Error Codes Specification
 Plugin System Implementation (implementation details)
 GitHub Issue: #62
+Previous spec page
+Next spec page
 &copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
 Docs Library
 MCPAQL Organization

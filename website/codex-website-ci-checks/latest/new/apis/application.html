@@ -1,93 +1,157 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="MCP-AQL application integration guidance.">
-    <title>Application Integration | MCP-AQL</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="MCP-AQL application integration guidance.">
+  <title>Application Integration | MCP-AQL</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-    <header>
-        <div class="container">
-            <nav>
-                <a class="logo" href="../index.html"><span class="logo-mark"></span>MCP-AQL</a>
-                <ul class="nav-links">
-                    <li><a href="../index.html">Home</a></li>
-                    <li><a href="../docs/index.html">Docs</a></li>
-                    <li><a href="../launch-checklist.html">Launch Checklist</a></li>
-                    <li><a href="mcp-server.html">Adapter Patterns</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
+  <header>
+    <div class="container">
+      <nav>
+        <a class="logo" href="../index.html"><span class="logo-mark"></span>MCP-AQL</a>
+        <ul class="nav-links">
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="../docs/index.html">Docs</a></li>
+          <li><a href="../launch-checklist.html">Launch Checklist</a></li>
+          <li><a href="mcp-server.html">Adapter Patterns</a></li>
+        </ul>
+        <form class="site-search" data-search-form data-index-url="../data/search-index.json" role="search">
+          <label class="sr-only" for="site-search-input">Search MCP-AQL docs</label>
+          <input id="site-search-input" data-search-input type="search" placeholder="Search MCP-AQL docs, spec pages, and adapter patterns...">
+          <span class="search-count" data-search-count></span>
+          <ul class="search-results" data-search-results hidden></ul>
+        </form>
+      </nav>
+    </div>
+  </header>
 
-    <main class="api-layout">
-        <div class="container">
-            <section class="hero api-hero">
-                <div class="hero-inner">
-                    <span class="status-pill">DRAFT GUIDANCE - NO PUBLIC ADAPTER YET</span>
-                    <h1>Application API Patterns</h1>
-                    <p class="lede">Desktop and mobile app adapters benefit from operation consolidation when feature surfaces are broad and evolve rapidly.</p>
-                    <p class="callout">This is conceptual guidance. A public application adapter reference is not published yet.</p>
-                </div>
-            </section>
+  <main>
+    <div class="container docs-shell">
+      <aside class="docs-side">
+        <h2>Adapter Patterns</h2>
+        <p class="docs-side-note">Conceptual integration profiles that connect the protocol rules to common target-system shapes.</p>
+        <ul>
+          <li><a href="mcp-server.html">MCP Server</a></li>
+          <li><a class="current" aria-current="page" href="application.html">Application</a></li>
+          <li><a href="cloud-service.html">Cloud Service</a></li>
+          <li><a href="operating-system.html">Operating System</a></li>
+          <li><a href="website.html">Website / Web API</a></li>
+        </ul>
+      </aside>
 
-            <section>
-                <h2 class="section-title">Design Guidance</h2>
-                <div class="grid cols-2">
-                    <article class="card">
-                        <h3>Modeling</h3>
-                        <ul>
-                            <li>Expose user-facing actions as named operations.</li>
-                            <li>Prefer explicit parameter schemas over opaque payload blobs.</li>
-                            <li>Use introspection for dynamic capability discovery.</li>
-                        </ul>
-                    </article>
-                    <article class="card">
-                        <h3>Runtime Behavior</h3>
-                        <ul>
-                            <li>Document operation side effects clearly.</li>
-                            <li>Normalize validation and error handling across endpoints.</li>
-                            <li>Add idempotency semantics where retries are expected.</li>
-                        </ul>
-                    </article>
-                </div>
-            </section>
+      <article class="docs-main">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+          <ol>
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="../docs/index.html">Docs</a></li>
+            <li><a href="mcp-server.html">Adapter Patterns</a></li>
+            <li><span class="current">Application</span></li>
+          </ol>
+        </nav>
 
-            <section>
-                <h2 class="section-title">Conceptual Example</h2>
-                <div class="card">
-                    <pre class="code-box">{
+        <section class="hero docs-hero api-hero">
+          <div class="hero-inner">
+            <span class="status-pill">DRAFT GUIDANCE - NO PUBLIC ADAPTER YET</span>
+            <h1>Application API Patterns</h1>
+            <p class="lede">Desktop and mobile app adapters benefit from operation consolidation when feature surfaces are broad and evolve rapidly.</p>
+            <p class="callout">This is conceptual guidance. A public application adapter reference is not published yet.</p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="../docs/adapter-contracts.html">Adapter Contracts</a>
+              <a class="btn btn-secondary" href="../docs/implementation-profiles.html">Implementation Profiles</a>
+            </div>
+          </div>
+        </section>
+
+        <section class="topic-bridge">
+          <h2 class="sr-only">Related reading</h2>
+          <div class="grid cols-2">
+            <article class="card">
+              <h3>Read the formal docs</h3>
+              <p>These docs fill in the public contract details that sit behind this pattern page.</p>
+              <ul>
+                <li><a href="../docs/adapter-contracts.html">Adapter Contracts</a></li>
+                <li><a href="../docs/implementation-profiles.html">Implementation Profiles</a></li>
+                <li><a href="../spec/adapter/element-type.html">Element Type Specification</a></li>
+                <li><a href="../spec/adapter/generator.html">Generator Specification</a></li>
+              </ul>
+            </article>
+            <article class="card">
+              <h3>Explore more patterns</h3>
+              <p>Compare how the same core rules behave in server, OS, cloud, and web-facing adapter shapes.</p>
+              <ul>
+                <li><a href="mcp-server.html">MCP Server</a></li>
+                <li><a href="cloud-service.html">Cloud Service</a></li>
+                <li><a href="operating-system.html">Operating System</a></li>
+                <li><a href="website.html">Website / Web API</a></li>
+              </ul>
+            </article>
+          </div>
+        </section>
+
+        <section>
+          <h2 class="section-title">Design Guidance</h2>
+          <div class="grid cols-2">
+            <article class="card">
+              <h3>Modeling</h3>
+              <ul>
+                <li>Expose user-facing actions as named operations.</li>
+                <li>Prefer explicit parameter schemas over opaque payload blobs.</li>
+                <li>Use introspection for dynamic capability discovery.</li>
+              </ul>
+            </article>
+            <article class="card">
+              <h3>Runtime Behavior</h3>
+              <ul>
+                <li>Document operation side effects clearly.</li>
+                <li>Normalize validation and error handling across endpoints.</li>
+                <li>Add idempotency semantics where retries are expected.</li>
+              </ul>
+            </article>
+          </div>
+        </section>
+
+        <section>
+          <h2 class="section-title">Conceptual Example</h2>
+          <div class="card">
+            <pre class="code-box">{
   "operation": "create_ticket",
   "params": {
     "title": "Spec website gap",
     "priority": "high"
   }
 }</pre>
-                </div>
-            </section>
+          </div>
+        </section>
 
-            <section>
-                <a class="btn btn-secondary" href="../index.html">&larr; Back to portal</a>
-            </section>
-        </div>
-    </main>
+        <section>
+          <div class="hero-actions">
+            <a class="btn btn-secondary" href="../docs/index.html">Back to docs library</a>
+            <a class="btn btn-secondary" href="../index.html">&larr; Back to portal</a>
+          </div>
+        </section>
+      </article>
+    </div>
+  </main>
 
-    <footer>
-        <div class="container">
-            <p>&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.</p>
-            <div class="footer-links">
-                <a href="../docs/index.html">Documentation Library</a>
-                <a href="../index.html">Portal Home</a>
-                <a href="https://github.com/MCPAQL">MCPAQL Organization</a>
-                <a href="https://dollhouseresearch.com">Dollhouse Research</a>
-                <a href="https://github.com/DollhouseMCP/mcp-server">DollhouseMCP Production Profile</a>
-            </div>
-        </div>
-    </footer>
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.</p>
+      <div class="footer-links">
+        <a href="../docs/index.html">Documentation Library</a>
+        <a href="../index.html">Portal Home</a>
+        <a href="https://github.com/MCPAQL">MCPAQL Organization</a>
+        <a href="https://dollhouseresearch.com">Dollhouse Research</a>
+        <a href="https://github.com/DollhouseMCP/mcp-server">DollhouseMCP Production Profile</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../js/search.js"></script>
 </body>
 </html>

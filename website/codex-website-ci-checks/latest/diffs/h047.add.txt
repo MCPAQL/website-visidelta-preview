@@ -395,6 +395,8 @@ MCP-AQL Specification v1.0.0-draft
 Endpoint Modes Specification
 Operations Specification
 Model Context Protocol Specification
+Previous spec page
+Next spec page
 &copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
 Docs Library
 MCPAQL Organization

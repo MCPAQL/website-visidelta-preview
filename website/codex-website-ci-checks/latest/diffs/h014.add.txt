@@ -3,6 +3,7 @@ Error Model
 Adapter Contracts
 Release Notes
 Full Spec Reference
+Related reading
 Go Deeper In The Full Spec
 The roadmap connects directly to the process and release-management pages in the full reference.
 Browse the full spec reference
@@ -19,3 +20,5 @@ Back to the docs library
 Release coordination
 The coordinating epic is spec issue #194 .
 It ties together spec publication, proof-of-concept adapters, website readiness, and launch messaging with the Dollhouse practical profile.
+Previous page
+Next page

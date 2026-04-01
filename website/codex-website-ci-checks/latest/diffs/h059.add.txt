@@ -403,6 +403,8 @@ Dangerous Operation Classification - Confirmation flows for danger levels
 Rate Limiting Specification - Quota continuation tokens
 Security Model: Gatekeeper - Overall security architecture
 Error Codes Specification - Error code registry
+Previous spec page
+Next spec page
 &copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
 Docs Library
 MCPAQL Organization

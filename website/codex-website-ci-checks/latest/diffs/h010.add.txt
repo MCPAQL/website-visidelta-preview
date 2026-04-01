@@ -2,6 +2,7 @@ Getting Started
 Error Model
 Adapter Contracts
 Release Notes
+Related reading
 Go Deeper In The Full Spec
 The protocol authority remains on-site in the spec pages, while implementation repos stay as practical reference material.
 Spec README
@@ -14,3 +15,5 @@ Back to the docs library
 Where to look next
 Contract details
 Launch and release context
+Previous page
+Next page

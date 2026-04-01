@@ -701,6 +701,8 @@ A2A for Enterprise-Scale AI - HiveMQ
 MCP vs A2A - Auth0
 A2A GitHub Repository
 A2A Protocol Architecture - DeepWiki
+Previous spec page
+Next spec page
 &copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
 Docs Library
 MCPAQL Organization

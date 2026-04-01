@@ -16,6 +16,7 @@ These notes summarize the most launch-relevant items from the spec changelog so 
 without requiring readers to scan the entire repository history.
 Full Changelog
 Release plan issue
+Related reading
 Go Deeper In The Full Spec
 The on-site changelog and process pages carry the detailed history behind the launch-facing notes on this page.
 Versioning Strategy
@@ -41,6 +42,9 @@ Still open for draft launch
 #193 MCP capability audit
 #197 batch size and resource protections
 #199 structured error surface alignment
+Previous page
+Next page
+Full Spec Reference
 &copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
 Docs Library
 Portal Home

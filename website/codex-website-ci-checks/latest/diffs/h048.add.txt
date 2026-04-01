@@ -559,6 +559,8 @@ References
 MCP-AQL Specification v1.0.0-draft
 CRUDE Pattern Specification
 Introspection Specification
+Previous spec page
+Next spec page
 &copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
 Docs Library
 MCPAQL Organization

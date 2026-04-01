@@ -711,7 +711,52 @@ footer {
 
 .docs-side a.current {
   background: rgba(11, 93, 176, 0.1);
-  color: var(--brand-700);
+  color: var(--accent-700);
+}
+
+.page-nav {
+  display: grid;
+  gap: 0.9rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.page-nav-link {
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: var(--shadow-light);
+  color: var(--ink-900);
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-height: 100%;
+  padding: 1rem 1.1rem;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+}
+
+.page-nav-link:hover {
+  border-color: #bfd0e7;
+  box-shadow: var(--shadow-soft);
+  color: var(--ink-950);
+  transform: translateY(-1px);
+}
+
+.page-nav-link.next {
+  text-align: right;
+}
+
+.page-nav-eyebrow {
+  color: var(--slate-500);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.page-nav-label {
+  color: var(--ink-900);
+  font-family: "Space Grotesk", "IBM Plex Sans", sans-serif;
+  font-size: 1rem;
 }
 
 .docs-main {
@@ -922,6 +967,14 @@ footer {
 
   .search-page-help {
     position: static;
+  }
+
+  .page-nav {
+    grid-template-columns: 1fr;
+  }
+
+  .page-nav-link.next {
+    text-align: left;
   }
 
   .data-table {

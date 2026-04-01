@@ -16,6 +16,7 @@ MCP-AQL consolidates many discrete MCP tools into a small semantic endpoint surf
 The result is less registration overhead, clearer routing, and a more scalable contract for agent-driven systems.
 Spec README
 Normative Draft
+Related reading
 Go Deeper In The Full Spec
 Use the website-hosted source pages when you want the actual protocol text instead of the onboarding summary.
 Protocol Overview
@@ -49,8 +50,10 @@ Read the versioned draft for the canonical rules.
 Use Protocol Core for routing, request shape, and endpoint semantics.
 Use Error Model and Security Model for operational expectations.
 Use Conformance and Launch Checklist to understand current draft maturity.
-&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
+Previous page
 Docs Library
+Next page
+&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
 Portal Home
 MCPAQL Organization
 Dollhouse Research

@@ -231,6 +231,8 @@ Operations Reference - Complete operation reference
 Introspection - Introspection system specification
 MCP Integration - MCP protocol integration specification
 Response Format - Response format specification
+Previous spec page
+Next spec page
 &copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
 Docs Library
 MCPAQL Organization

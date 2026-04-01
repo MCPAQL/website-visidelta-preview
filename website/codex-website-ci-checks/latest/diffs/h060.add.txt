@@ -559,6 +559,8 @@ Core Specification — Section 8.8: Out-of-Band Verification — Out-of-band ver
 Gatekeeper Specification — Multi-layer access control architecture
 Danger Levels Specification — Risk classification and trust-to-danger gating
 Confirmation Tokens Specification — Token protocol for operation confirmation
+Previous spec page
+Next spec page
 &copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
 Docs Library
 MCPAQL Organization

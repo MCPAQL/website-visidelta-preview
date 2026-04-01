@@ -205,6 +205,8 @@ Provide fallback behavior for unrecognized operations
 See Also
 Semantic Versioning 2.0.0
 Contributing Guide
+Previous spec page
+Next spec page
 &copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
 Docs Library
 MCPAQL Organization

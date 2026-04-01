@@ -92,6 +92,8 @@ Non-Goals for Preliminary Launch
 Full certification-grade conformance automation
 Complete adapter ecosystem coverage
 Closure of phase-4/phase-5 feature backlog
+Previous spec page
+Next spec page
 &copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
 Docs Library
 MCPAQL Organization

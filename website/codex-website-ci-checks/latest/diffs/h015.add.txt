@@ -2,6 +2,7 @@ Getting Started
 Error Model
 Adapter Contracts
 Release Notes
+Related reading
 Go Deeper In The Full Spec
 The full safety model is split across several dedicated spec documents hosted here on the website.
 Gatekeeper Specification
@@ -12,3 +13,5 @@ Back to the docs library
 Source documents behind this summary
 Gatekeeper
 Issue #216 safety checklist alignment audit
+Previous page
+Next page

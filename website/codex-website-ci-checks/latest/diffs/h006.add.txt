@@ -16,6 +16,7 @@ The spec does not stop at request envelopes. It also defines the declarative sha
 the responsibilities of plugin layers, and the output constraints for generators and reference implementations.
 Plugin Contracts
 Element Type Spec
+Related reading
 Go Deeper In The Full Spec
 The website-hosted source docs carry the real contract details for schema shape, plugins, and generation behavior.
 Plugin Interface Contracts
@@ -46,6 +47,8 @@ What is still open
 #211 deferred plugin types
 #196 adapter output requirements
 #204 conformance validation framework
+Previous page
+Next page
 &copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
 Docs Library
 Portal Home

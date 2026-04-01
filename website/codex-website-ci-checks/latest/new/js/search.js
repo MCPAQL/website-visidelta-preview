@@ -1,4 +1,6 @@
 (function () {
+  const GLOBAL_SEARCH_PLACEHOLDER = "Search MCP-AQL docs, spec pages, and adapter patterns...";
+
   function normalize(value) {
     return (value || "").toLowerCase().trim();
   }
@@ -101,6 +103,9 @@
     const indexUrl = form.getAttribute("data-index-url");
 
     if (!input || !resultBox || !indexUrl) return;
+
+    input.placeholder = GLOBAL_SEARCH_PLACEHOLDER;
+    input.setAttribute("enterkeyhint", "search");
 
     let indexPromise;
 
@@ -205,6 +210,7 @@
 
     if (formInput) {
       formInput.value = query;
+      formInput.placeholder = GLOBAL_SEARCH_PLACEHOLDER;
     }
 
     if (queryLabel) {

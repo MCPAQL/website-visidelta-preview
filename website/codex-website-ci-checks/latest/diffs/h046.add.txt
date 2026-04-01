@@ -661,6 +661,8 @@ no insignificant whitespace differences.
 Compute SHA-256 over the canonicalized UTF-8 bytes.
 Represent the fingerprint as sha256:&lt;hex&gt; .
 The canonicalization requirement is the important part; the exact library used can vary by language as long as it produces the same canonical bytes.
+Previous spec page
+Next spec page
 &copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
 Docs Library
 MCPAQL Organization

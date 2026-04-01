@@ -105,6 +105,8 @@ Implementations MUST follow the normative specification. This ADR provides desig
 References
 MCP-AQL Specification v1.0.0-draft — Section 4.5
 Operations Reference
+Previous spec page
+Next spec page
 &copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
 Docs Library
 MCPAQL Organization

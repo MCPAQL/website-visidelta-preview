@@ -362,6 +362,8 @@ Rate Limiting Specification
 Adapter Development Guide (in mcpaql-adapter repo)
 Universal Adapter Runtime (in mcpaql-adapter repo)
 GitHub Issue: #61
+Previous spec page
+Next spec page
 &copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
 Docs Library
 MCPAQL Organization

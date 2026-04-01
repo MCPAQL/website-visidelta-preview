@@ -1,0 +1,9 @@
+Table of Contents
+Introduction
+Introspection Query Types
+Response Structures
+Operation Discovery
+Type Discovery
+Implementation Guidance
+Token Efficiency
+Conformance Requirements

@@ -1,0 +1,5 @@
+Table of Contents
+Plugin Resolution
+MVP Plugin Implementations
+Plugin Composition
+Future Extensions

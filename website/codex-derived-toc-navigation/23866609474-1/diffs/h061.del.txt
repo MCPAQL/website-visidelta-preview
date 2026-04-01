@@ -1,0 +1,8 @@
+Table of Contents
+Introduction
+Tool Registration
+Input Schema Composition
+Error Mapping
+Progress Notifications
+Multi-Adapter Deployment
+Conformance Requirements

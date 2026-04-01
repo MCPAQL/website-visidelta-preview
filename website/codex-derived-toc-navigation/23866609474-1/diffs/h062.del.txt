@@ -1,0 +1,10 @@
+Table of Contents
+Conformance Requirements
+Operation Input Format
+Response Format
+Parameter Conventions
+Operation Schema Definition
+CRUDE Endpoint Assignment
+Batch Operations
+Error Handling
+The introspect Operation

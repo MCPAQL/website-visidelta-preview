@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="MCP-AQL documentation library with protocol, security, conformance, implementation profiles, and roadmap coverage.">
+  <title>MCP-AQL Docs | Library</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <a class="logo" href="../index.html"><span class="logo-mark"></span>MCP-AQL</a>
+        <ul class="nav-links">
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="index.html">Docs</a></li>
+          <li><a href="../launch-checklist.html">Launch Checklist</a></li>
+          <li><a href="../apis/index.html">Adapter Patterns</a></li>
+        </ul>
+        <form class="site-search" data-search-form data-index-url="../data/search-index.json" role="search">
+          <label class="sr-only" for="site-search-input">Search MCP-AQL docs</label>
+          <input id="site-search-input" data-search-input type="search" placeholder="Search MCP-AQL docs, spec pages, and adapter patterns...">
+          <span class="search-count" data-search-count></span>
+          <ul class="search-results" data-search-results hidden></ul>
+        </form>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <nav class="breadcrumbs" aria-label="Breadcrumb">
+        <ol>
+          <li><a href="../index.html">Home</a></li>
+          <li><span class="current">Docs</span></li>
+        </ol>
+      </nav>
+      <section class="hero">
+        <div class="hero-inner">
+          <span class="status-pill">DOCUMENTATION LIBRARY</span>
+          <h1>Browse MCP-AQL By Domain</h1>
+          <p class="lede">
+            This library organizes source material from the MCPAQL repositories into a protocol-site shape: core specification,
+            quick start, core semantics, structured errors, safety model, conformance, adapter contracts, implementation profiles,
+            and release-status context.
+          </p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="getting-started.html">Getting Started</a>
+            <a class="btn btn-secondary" href="error-model.html">Error Model</a>
+            <a class="btn btn-secondary" href="../spec/index.html">Full Spec Reference</a>
+            <a class="btn btn-secondary" href="adapter-contracts.html">Adapter Contracts</a>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">Core Documentation Tracks</h2>
+        <p class="section-subtitle">Each track is mapped to canonical source repositories and intended launch visibility.</p>
+        <div class="grid cols-3">
+          <article class="card">
+            <h3><a class="card-title-link" href="getting-started.html">Getting Started</a></h3>
+            <span class="state-chip live">Recommended first read</span>
+            <p>Overview, quick-start request shape, token efficiency, and reading order for the draft.</p>
+            <ul>
+              <li><a href="getting-started.html">Site summary page</a></li>
+              <li><a href="../spec/repo/README.html">Canonical README</a></li>
+            </ul>
+            <div class="card-actions">
+              <a href="getting-started.html">Open summary</a>
+              <a href="../spec/repo/README.html">Open source page</a>
+            </div>
+          </article>
+          <article class="card">
+            <h3><a class="card-title-link" href="protocol-core.html">Protocol Core</a></h3>
+            <span class="state-chip live">Required</span>
+            <p>Normative request/response model, endpoint semantics, introspection contract, and operation model.</p>
+            <ul>
+              <li><a href="protocol-core.html">Site summary page</a></li>
+              <li><a href="../spec/versions/v1.0.0-draft.html">Normative source</a></li>
+            </ul>
+            <div class="card-actions">
+              <a href="protocol-core.html">Open summary</a>
+              <a href="../spec/versions/v1.0.0-draft.html">Open source page</a>
+            </div>
+          </article>
+          <article class="card">
+            <h3><a class="card-title-link" href="error-model.html">Error Model</a></h3>
+            <span class="state-chip live">Required</span>
+            <p>Structured error envelope, machine-readable codes, and current alignment gaps between draft and implementations.</p>
+            <ul>
+              <li><a href="error-model.html">Site summary page</a></li>
+              <li><a href="../spec/error-codes.html">Canonical error code doc</a></li>
+            </ul>
+            <div class="card-actions">
+              <a href="error-model.html">Open summary</a>
+              <a href="../spec/error-codes.html">Open source page</a>
+            </div>
+          </article>
+          <article class="card">
+            <h3><a class="card-title-link" href="security-model.html">Security Model</a></h3>
+            <span class="state-chip live">Required</span>
+            <p>Gatekeeper boundaries, confirmation tokens, danger handling, and safety-loop alignment.</p>
+            <ul>
+              <li><a href="security-model.html">Site summary page</a></li>
+              <li><a href="../spec/security/gatekeeper.html">Canonical security docs</a></li>
+            </ul>
+            <div class="card-actions">
+              <a href="security-model.html">Open summary</a>
+              <a href="../spec/security/gatekeeper.html">Open source page</a>
+            </div>
+          </article>
+          <article class="card">
+            <h3><a class="card-title-link" href="conformance.html">Conformance</a></h3>
+            <span class="state-chip pending">In progress</span>
+            <p>Compatibility baseline, validation posture, and planned validator tooling.</p>
+            <ul>
+              <li><a href="conformance.html">Site summary page</a></li>
+              <li><a href="../spec/conformance-testing.html">Canonical conformance doc</a></li>
+            </ul>
+            <div class="card-actions">
+              <a href="conformance.html">Open summary</a>
+              <a href="../spec/conformance-testing.html">Open source page</a>
+            </div>
+          </article>
+          <article class="card">
+            <h3><a class="card-title-link" href="implementation-profiles.html">Implementation Profiles</a></h3>
+            <span class="state-chip live">Required</span>
+            <p>Boundary between canonical specification and practical production profile behavior.</p>
+            <ul>
+              <li><a href="implementation-profiles.html">Site summary page</a></li>
+              <li><a href="../adapter-reference/index.html">Reference adapter docs</a></li>
+            </ul>
+            <div class="card-actions">
+              <a href="implementation-profiles.html">Open summary</a>
+              <a href="../adapter-reference/index.html">Open adapter docs</a>
+            </div>
+          </article>
+          <article class="card">
+            <h3><a class="card-title-link" href="adapter-contracts.html">Adapter Contracts</a></h3>
+            <span class="state-chip live">Required</span>
+            <p>Adapter schema, plugin contract, generator-output, and example-surface expectations across the implementation toolchain.</p>
+            <ul>
+              <li><a href="adapter-contracts.html">Site summary page</a></li>
+              <li><a href="../spec/plugin-contracts.html">Canonical contract docs</a></li>
+            </ul>
+            <div class="card-actions">
+              <a href="adapter-contracts.html">Open summary</a>
+              <a href="../spec/plugin-contracts.html">Open source page</a>
+            </div>
+          </article>
+          <article class="card">
+            <h3><a class="card-title-link" href="roadmap.html">Roadmap</a></h3>
+            <span class="state-chip live">Public planning</span>
+            <p>Phase-based protocol and ecosystem trajectory with current focus areas.</p>
+            <ul>
+              <li><a href="roadmap.html">Site summary page</a></li>
+              <li><a href="https://github.com/MCPAQL/spec">Spec issue tracker source</a></li>
+            </ul>
+            <div class="card-actions">
+              <a href="roadmap.html">Open summary</a>
+              <a href="../spec/index.html">Open full spec</a>
+            </div>
+          </article>
+          <article class="card">
+            <h3><a class="card-title-link" href="release-notes.html">Release Notes</a></h3>
+            <span class="state-chip live">Change context</span>
+            <p>Recent draft changes that affect public messaging, launch framing, and docs coverage priorities.</p>
+            <ul>
+              <li><a href="release-notes.html">Site summary page</a></li>
+              <li><a href="../spec/repo/CHANGELOG.html">Canonical changelog</a></li>
+            </ul>
+            <div class="card-actions">
+              <a href="release-notes.html">Open summary</a>
+              <a href="../spec/repo/CHANGELOG.html">Open source page</a>
+            </div>
+          </article>
+          <article class="card">
+            <h3><a class="card-title-link" href="../launch-checklist.html">Launch Checklist</a></h3>
+            <span class="state-chip live">Public control</span>
+            <p>Public-facing readiness checklist and launch-scope guardrails.</p>
+            <ul>
+              <li><a href="../launch-checklist.html">Checklist page</a></li>
+              <li><a href="../spec/process/preliminary-public-launch-checklist.html">Canonical checklist source</a></li>
+            </ul>
+            <div class="card-actions">
+              <a href="../launch-checklist.html">Open summary</a>
+              <a href="../spec/process/preliminary-public-launch-checklist.html">Open source page</a>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">Repo-Synced Full Spec Reference</h2>
+        <p class="section-subtitle">The docs library now has a deeper sibling section generated from the canonical spec repo, so the website itself carries the fuller protocol material.</p>
+        <div class="grid cols-2">
+          <article class="card">
+            <h3><a class="card-title-link" href="getting-started.html">Use summaries for orientation</a></h3>
+            <p>These docs pages still provide fast, curated entry points for launch framing, implementation posture, and topic overviews.</p>
+            <div class="card-actions">
+              <a href="getting-started.html">Start with guided summaries</a>
+            </div>
+          </article>
+          <article class="card">
+            <h3><a class="card-title-link" href="../spec/index.html">Use the spec mirror for depth</a></h3>
+            <p>The generated reference mirrors the deeper content from <code>MCPAQL/spec/docs</code>, including versioned drafts and supporting material.</p>
+            <div class="card-actions">
+              <a href="../spec/index.html">Browse the full repo-synced reference</a>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">Repo-Synced Reference Adapter Docs</h2>
+        <p class="section-subtitle">Implementation guidance from the reference adapter repo is mirrored on-site too, so adapter architecture and practical build guides live alongside the protocol docs.</p>
+        <div class="grid cols-2">
+          <article class="card">
+            <h3><a class="card-title-link" href="../adapter-reference/index.html">Open the mirrored implementation docs</a></h3>
+            <p>The website now hosts the reference adapter architecture docs, development and testing guides, migration walkthrough, and implementation ADRs.</p>
+            <div class="card-actions">
+              <a href="../adapter-reference/index.html">Browse reference adapter docs</a>
+            </div>
+          </article>
+          <article class="card">
+            <h3><a class="card-title-link" href="../apis/index.html">Use adapter patterns for orientation</a></h3>
+            <p>Start with pattern selection to pick the right target-system shape, then drop into the mirrored implementation docs for the runtime details.</p>
+            <div class="card-actions">
+              <a href="../apis/index.html">Open adapter patterns</a>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">Canonical Spec Map</h2>
+        <p class="section-subtitle">The website now mirrors the major categories from the spec docs index so public readers can browse both summaries and the fuller reference without opening the repository first.</p>
+        <div class="card table-card">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Spec source</th>
+                <th>Website surface</th>
+                <th>What it covers</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><a href="../spec/repo/README.html">README.md</a></td>
+                <td><a href="getting-started.html">Getting Started</a></td>
+                <td>Repository-level protocol summary, token efficiency, and quick-start framing</td>
+              </tr>
+              <tr>
+                <td><a href="../spec/index.html">spec mirror</a></td>
+                <td><a href="../spec/index.html">Repo-Synced Spec Reference</a></td>
+                <td>Website-hosted full mirror of versioned and topical specification documents</td>
+              </tr>
+              <tr>
+                <td><a href="../spec/versions/v1.0.0-draft.html">versions/v1.0.0-draft.md</a></td>
+                <td><a href="protocol-core.html">Protocol Core</a></td>
+                <td>Normative request shape, endpoint rules, operation semantics, and routing</td>
+              </tr>
+              <tr>
+                <td><a href="../spec/error-codes.html">error-codes.md</a></td>
+                <td><a href="error-model.html">Error Model</a></td>
+                <td>Structured errors, machine-readable codes, current gaps</td>
+              </tr>
+              <tr>
+                <td><a href="../spec/plugin-contracts.html">plugin-contracts.md</a></td>
+                <td><a href="adapter-contracts.html">Adapter Contracts</a></td>
+                <td>Plugin responsibilities, schema contracts, generator outputs</td>
+              </tr>
+              <tr>
+                <td><a href="../adapter-reference/index.html">mcpaql-adapter mirror</a></td>
+                <td><a href="../adapter-reference/index.html">Reference Adapter Docs</a></td>
+                <td>Website-hosted mirror of runtime architecture, implementation guides, and ADRs</td>
+              </tr>
+              <tr>
+                <td><a href="../spec/repo/CHANGELOG.html">CHANGELOG.md</a></td>
+                <td><a href="release-notes.html">Release Notes</a></td>
+                <td>Recent draft changes and launch-relevant deltas</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">Repository Source Matrix</h2>
+        <p class="section-subtitle">The site intentionally reflects all primary MCPAQL repositories and their documentation role.</p>
+        <div class="card table-card">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Repository</th>
+                <th>Website Role</th>
+                <th>Primary Surface</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><a href="https://github.com/MCPAQL/spec">MCPAQL/spec</a></td>
+                <td>Normative authority</td>
+                <td>Protocol definitions and conformance requirements</td>
+              </tr>
+              <tr>
+                <td><a href="https://github.com/MCPAQL/mcpaql-adapter">MCPAQL/mcpaql-adapter</a></td>
+                <td>Reference implementation guidance</td>
+                <td>Architecture, runtime, plugin, and dispatch documentation</td>
+              </tr>
+              <tr>
+                <td><a href="https://github.com/MCPAQL/examples">MCPAQL/examples</a></td>
+                <td>Example patterns</td>
+                <td>Reference adapter configuration examples</td>
+              </tr>
+              <tr>
+                <td><a href="https://github.com/MCPAQL/adapter-generator">MCPAQL/adapter-generator</a></td>
+                <td>Generation policy</td>
+                <td>Output licensing and provenance constraints</td>
+              </tr>
+              <tr>
+                <td><a href="https://github.com/MCPAQL/tools">MCPAQL/tools</a></td>
+                <td>Validator/tooling track</td>
+                <td>Conformance CLI and on-spec validator workstream</td>
+              </tr>
+              <tr>
+                <td><a href="https://github.com/MCPAQL/website">MCPAQL/website</a></td>
+                <td>Public docs delivery</td>
+                <td>Readable/searchable protocol website</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.</p>
+      <div class="footer-links">
+        <a href="index.html">Docs Library</a>
+        <a href="../index.html">Portal Home</a>
+        <a href="https://github.com/MCPAQL">MCPAQL Organization</a>
+        <a href="https://dollhouseresearch.com">Dollhouse Research</a>
+        <a href="https://github.com/DollhouseMCP/mcp-server">DollhouseMCP Production Profile</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../js/search.js"></script>
+</body>
+</html>

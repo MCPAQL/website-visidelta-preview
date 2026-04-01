@@ -303,6 +303,11 @@ section {
   margin-top: 2.4rem;
 }
 
+main > .container > section:not(.hero) {
+  contain-intrinsic-size: 1px 520px;
+  content-visibility: auto;
+}
+
 .hero {
   background: linear-gradient(130deg, #ffffff 0%, #f4f8ff 55%, #ecfeff 100%);
   border: 1px solid var(--line);

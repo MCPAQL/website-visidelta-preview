@@ -1,0 +1,19 @@
+MCP-AQL Search
+Full Spec
+Launch Checklist
+Search MCP-AQL docs
+SEARCH RESULTS
+Results for all docs
+Search spans the summary docs, the repo-synced full spec reference, launch pages, adapter patterns, and key repository surfaces.
+Loading results...
+Search Tips
+Try protocol terms like crude , introspect , gatekeeper , or conformance .
+Search also covers the full website-hosted spec mirror under Full Spec .
+If you are looking for the normative draft, try v1.0.0 or versions .
+No results yet
+Try a broader term or use protocol vocabulary from the docs and spec.
+&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
+Documentation Library
+Repo-Synced Spec
+MCPAQL Organization
+Dollhouse Research

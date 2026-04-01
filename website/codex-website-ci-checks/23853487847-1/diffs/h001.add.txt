@@ -1,0 +1,17 @@
+Search MCP-AQL docs
+Conceptual integration profiles that connect the protocol rules to common target-system shapes.
+MCP Server
+Application
+Cloud Service
+Operating System
+Website / Web API
+Adapter Contracts
+Implementation Profiles
+Related reading
+Read the formal docs
+These docs fill in the public contract details that sit behind this pattern page.
+Element Type Specification
+Generator Specification
+Explore more patterns
+Compare how the same core rules behave in server, OS, cloud, and web-facing adapter shapes.
+Back to docs library

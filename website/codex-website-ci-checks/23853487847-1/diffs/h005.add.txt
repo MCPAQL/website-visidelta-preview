@@ -1,0 +1,18 @@
+Search MCP-AQL docs
+Conceptual integration profiles that connect the protocol rules to common target-system shapes.
+MCP Server
+Application
+Cloud Service
+Operating System
+Website / Web API
+Adapter Contracts
+Field Selection Spec
+Related reading
+Read the formal docs
+These references carry the deeper constraints behind read-heavy and action-heavy web integrations.
+Field Selection Specification
+Structured Error Codes
+Operations Specification
+Explore more patterns
+Use the neighboring patterns to compare web APIs with server, app, cloud, and OS command surfaces.
+Back to docs library

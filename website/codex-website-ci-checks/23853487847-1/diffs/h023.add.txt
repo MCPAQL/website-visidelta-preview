@@ -1,0 +1,658 @@
+MCP-AQL Spec | Adapter Generator Specification
+Launch Checklist
+Adapter Patterns
+Search MCP-AQL docs
+Repo-Synced Spec
+Generated from MCPAQL/spec so the website carries the deeper protocol material too.
+MCP-AQL Conformance Testing Specification
+MCP-AQL CRUDE Pattern Specification
+MCP-AQL Endpoint Modes Specification
+Structured Error Codes Specification
+MCP-AQL Introspection Specification
+MCP-AQL Licensing Options (Working Notes)
+MCP Integration Specification
+MCP-AQL Operations Specification
+MCP-AQL Protocol Overview
+Plugin Interface Contracts
+MCP-AQL Specification Documentation
+MCP-AQL Specification
+Versions
+Dangerous Operation Classification Specification
+MCP Server Discovery Bundle
+Adapter Element Type Specification
+Adapter Generator Specification
+Rate Limiting and Quota Management Specification
+Trust Levels Specification
+Security
+Confirmation Token Specification
+Execution Safety Loop Specification
+Security Model: Gatekeeper Specification
+Features
+Field Selection Specification
+Cursor-Based Pagination Specification
+Warnings Array Specification
+Protocol Comparison Guide
+Developer Guides
+MCP-AQL Breaking Change Policy
+Preliminary Public Launch Checklist
+RFC Process for MCP-AQL Specification
+Versioning Strategy
+Changelog
+Architecture
+Architecture Documentation
+Research
+Protocol Landscape: MCP vs MCP-AQL vs A2A
+Reference
+Reference Documentation
+ADR-001: CRUDE Pattern (Extending CRUD with Execute)
+ADR-002: GraphQL-Style Input Objects for Updates
+ADR-003: snake_case Parameter Convention
+ADR-004: Schema-Driven Operation Definitions
+ADR-005: GraphQL-Style Introspection System
+ADR-006: Discriminated Response Format
+Architecture Decision Records
+Full Spec
+REPO-SYNCED SPEC DOC
+This document specifies the requirements and behavior of MCP-AQL adapter generators. An adapter generator takes a schema definition as input and produces compliant adapter code with required licensing artifacts and prove
+Support document Draft 1.0.0-draft 2026-01-29
+Source: spec/docs/adapter/generator.md
+Open Source Markdown
+Browse Full Spec Reference
+Version: 1.0.0-draft Status: Draft Last Updated: 2026-01-29
+Abstract
+This document specifies the requirements and behavior of MCP-AQL adapter generators. An adapter generator takes a schema definition as input and produces compliant adapter code with required licensing artifacts and provenance information.
+Table of Contents
+Overview
+Schema Input Format
+Generated Output Structure
+Licensing Artifacts
+Provenance Information
+Language Templates
+Command-Line Interface
+Conformance Requirements
+1. Overview
+1.1 Purpose
+Adapter generators automate the creation of MCP-AQL adapters from schema definitions. This ensures:
+Consistency - All generated adapters follow the same patterns
+Compliance - Licensing and attribution requirements are met
+Traceability - Provenance information enables debugging and auditing
+Productivity - Developers focus on business logic, not boilerplate
+1.2 Generator Types
+Description
+Use Case
+Schema-to-Code
+Generates adapter source code from schema
+Development workflow
+Schema-to-Runtime
+Generates runtime configuration
+Dynamic adapter loading
+Code-to-Schema
+Extracts schema from existing adapter
+Migration, documentation
+This specification primarily covers Schema-to-Code generators.
+1.3 Scope
+In scope:
+Schema input format and validation
+Generated code structure and artifacts
+Licensing and provenance requirements
+Language-specific template guidance
+Out of scope:
+Runtime behavior (see MCP-AQL Specification )
+Adapter testing (see Conformance Testing )
+Deployment and distribution
+2. Schema Input Format
+2.1 Schema Structure
+Generators MUST accept schemas in the following format:
+interface AdapterSchema {
+* Schema format version
+schema_version : &#39;1.0&#39; ;
+* Adapter metadata
+adapter : {
+/** Unique adapter identifier */
+name : string ;
+/** Human-readable display name */
+display_name : string ;
+/** Adapter version (semver) */
+version : string ;
+/** Brief description */
+description : string ;
+/** Target API being adapted */
+target_api : {
+base_url : string ;
+version ?: string ;
+* Authentication configuration
+auth ?: {
+type : &#39;api_key&#39; | &#39;oauth2&#39; | &#39;bearer&#39; | &#39;basic&#39; | &#39;none&#39; ;
+config ?: Record &lt; string , unknown &gt;;
+* Operation definitions by endpoint
+endpoints : {
+create ?: OperationDefinition[] ;
+read ?: OperationDefinition[] ;
+update ?: OperationDefinition[] ;
+delete ?: OperationDefinition[] ;
+execute ?: OperationDefinition[] ;
+* Custom type definitions
+types ?: TypeDefinition[] ;
+interface OperationDefinition {
+/** Operation name (snake_case) */
+/** Human-readable description */
+/** Input parameters */
+params : ParameterDefinition[] ;
+/** Output schema */
+returns : TypeReference ;
+/** Danger level for security classification */
+danger_level ?: &#39;safe&#39; | &#39;reversible&#39; | &#39;destructive&#39; | &#39;dangerous&#39; | &#39;forbidden&#39; ;
+/** HTTP method and path for target API */
+http ?: {
+method : &#39;GET&#39; | &#39;POST&#39; | &#39;PUT&#39; | &#39;PATCH&#39; | &#39;DELETE&#39; ;
+path : string ;
+interface ParameterDefinition {
+type : TypeReference ;
+required : boolean ;
+description ?: string ;
+default ?: unknown ;
+type TypeReference =
+| &#39;string&#39; | &#39;integer&#39; | &#39;number&#39; | &#39;boolean&#39; | &#39;object&#39; | &#39;array&#39;
+| { array : TypeReference }
+| { object : Record &lt; string , TypeReference &gt; }
+| { ref : string } ;
+interface TypeDefinition {
+fields : ParameterDefinition[] ;
+2.2 Schema Validation
+Generators MUST validate input schemas:
+Required fields - All required fields MUST be present
+Type correctness - Field values MUST match expected types
+Reference resolution - Type references MUST resolve
+Name uniqueness - Operation and type names MUST be unique
+Naming conventions - Names MUST follow snake_case convention
+Validation error codes:
+Validation
+Error Code
+Example Message
+Missing required field
+SCHEMA_MISSING_FIELD
+"Required field 'adapter.name' is missing"
+Type mismatch
+SCHEMA_INVALID_TYPE
+"Field 'params[0].required' expected boolean, got string"
+Unresolved reference
+SCHEMA_UNRESOLVED_REF
+"Type reference 'Repository' not found in types"
+Duplicate name
+SCHEMA_DUPLICATE_NAME
+"Operation 'get_user' defined multiple times in read endpoint"
+Invalid naming
+SCHEMA_INVALID_NAME
+"Parameter name 'userName' must be snake_case (try 'user_name')"
+Example validation error response:
+&quot;success&quot; : false ,
+&quot;error&quot; : {
+&quot;code&quot; : &quot;SCHEMA_INVALID_TYPE&quot; ,
+&quot;message&quot; : &quot;Field &#39;endpoints.read[0].params[0].required&#39; expected boolean, got string&quot; ,
+&quot;details&quot; : {
+&quot;field_path&quot; : &quot;endpoints.read[0].params[0].required&quot; ,
+&quot;expected_type&quot; : &quot;boolean&quot; ,
+&quot;actual_type&quot; : &quot;string&quot; ,
+&quot;actual_value&quot; : &quot;true&quot; ,
+&quot;suggestion&quot; : &quot;Use `required: true` instead of `required: \&quot; true \&quot; `&quot;
+Validation errors MUST include:
+Field path (e.g., endpoints.read[0].params[2].name )
+Expected value/type
+Actual value/type
+Suggested fix when possible
+2.3 Schema Examples
+Minimal schema:
+schema_version : &#39;1.0&#39;
+adapter :
+name : example_api
+display_name : Example API
+version : 1.0.0
+description : Example adapter for demonstration
+target_api :
+name : Example Service
+base_url : https://api.example.com/v1
+endpoints :
+- name : get_item
+description : Retrieve an item by ID
+params :
+- name : id
+type : string
+required : true
+returns : object
+method : GET
+path : /items/{id}
+Schema with authentication and types:
+name : github_api
+display_name : GitHub API
+description : MCP-AQL adapter for GitHub REST API
+name : GitHub REST API
+base_url : https://api.github.com
+version : &#39;2022-11-28&#39;
+type : bearer
+config :
+header_name : Authorization
+prefix : &#39;Bearer &#39;
+- name : Repository
+fields :
+type : integer
+- name : name
+- name : full_name
+- name : private
+type : boolean
+- name : get_repo
+description : Get a repository by owner and name
+- name : owner
+- name : repo
+returns :
+ref : Repository
+path : /repos/{owner}/{repo}
+delete :
+- name : delete_repo
+description : Delete a repository
+danger_level : destructive
+method : DELETE
+2.4 Schema Version Evolution
+Version format rationale:
+The schema_version field uses a simplified major.minor format (e.g., '1.0' ) rather than full semver:
+Schema version ( schema_version: '1.0' ): Defines the input format the generator expects
+Adapter version ( adapter.version: '1.0.0' ): Follows semver for the generated adapter's release lifecycle
+This distinction separates concerns: schema format stability vs. adapter functionality evolution.
+Evolution strategy:
+Change Type
+Version Increment
+Breaking schema changes
+Major ( 1.0 → 2.0 )
+Removing required fields, restructuring endpoints
+New optional features
+Minor ( 1.0 → 1.1 )
+Adding auth.config.scopes field
+Clarifications, fixes
+No change
+Documentation updates, validation improvements
+Backward compatibility requirements:
+Generators SHOULD support multiple schema versions:
+Current version - Full support (REQUIRED)
+Previous major version - Conversion/migration support (RECOMMENDED)
+Older versions - Reject with clear upgrade guidance (OPTIONAL)
+Version handling in generators:
+function validateSchemaVersion (schema) {
+const supportedVersions = [ &#39;1.0&#39; , &#39;1.1&#39; ] ;
+const deprecatedVersions = [ &#39;0.9&#39; ] ;
+if (supportedVersions . includes (schema . schema_version )) {
+return { valid : true } ;
+if (deprecatedVersions . includes (schema . schema_version )) {
+return {
+valid : false ,
+code : &#39;SCHEMA_VERSION_DEPRECATED&#39; ,
+message : `Schema version &#39; ${ schema . schema_version } &#39; is deprecated` ,
+migration_guide : &#39;https://mcpaql.org/docs/schema-migration&#39;
+code : &#39;SCHEMA_VERSION_UNSUPPORTED&#39; ,
+message : `Unknown schema version &#39; ${ schema . schema_version } &#39;` ,
+supported_versions : supportedVersions
+Migration guidance:
+When schema versions change, the MCP-AQL project SHOULD provide:
+Migration guide documenting required schema changes
+Automated migration tool (when feasible)
+Deprecation period of at least 6 months for major versions
+3. Generated Output Structure
+3.1 Directory Layout
+Generators MUST produce the following directory structure.
+Note: {ext} in the structure below represents language-specific file extensions:
+TypeScript: .ts
+JavaScript: .js
+Python: .py
+Rust: .rs
+Java: .java
+generated-adapter/
+├── LICENSE # AGPL-3.0 license text
+├── NOTICE.md # Attribution notice
+├── COMMERCIAL-LICENSE.md # Commercial licensing info
+├── MCPAQL-PROVENANCE.json # Generation metadata
+├── README.md # Generated documentation
+├── src/ # Source code (language-specific)
+│ ├── index.{ext} # Main entry point
+│ ├── operations/ # Operation implementations
+│ │ ├── create.{ext}
+│ │ ├── read.{ext}
+│ │ ├── update.{ext}
+│ │ ├── delete.{ext}
+│ │ └── execute.{ext}
+│ ├── types/ # Type definitions
+│ └── utils/ # Helper utilities
+├── schema/ # Source schema (for reference)
+│ └── adapter.yaml
+└── tests/ # Generated test stubs
+└── conformance/ # Conformance test cases
+3.2 Generated Code Requirements
+Generated code MUST:
+Implement CRUDE endpoints - All five endpoints with operation dispatch
+Include introspection - Support for introspect operation
+Handle errors correctly - Use structured error codes
+Validate inputs - Parameter validation before API calls
+Transform responses - Map target API responses to MCP-AQL format
+Generated code SHOULD:
+Include inline documentation/comments
+Provide type definitions/interfaces
+Include example usage in README
+Generate test stubs for each operation
+3.3 README Generation
+Generated README.md MUST include:
+# {Adapter Display Name}
+&gt; Generated by MCP-AQL Adapter Generator v{version}
+## Overview
+{Description from schema}
+## Installation
+{Language-specific installation instructions}
+## Usage
+{Basic usage example}
+## Operations
+### Create Operations
+{List with descriptions}
+### Read Operations
+### Update Operations
+### Delete Operations
+### Execute Operations
+## Provenance
+This adapter was generated from schema `{schema_fingerprint}` .
+See MCPAQL-PROVENANCE.json for full generation metadata.
+## License
+This adapter is dual-licensed:
+- AGPL-3.0 for open source use (see LICENSE)
+- Commercial license available (see COMMERCIAL-LICENSE.md)
+4. Licensing Artifacts
+4.1 Required Files
+Generators MUST include the following licensing files:
+AGPL-3.0 full text
+Standard AGPL-3.0 license
+NOTICE.md
+Attribution notice
+Credits MCP-AQL project
+COMMERCIAL-LICENSE.md
+Commercial options
+Contact information
+4.2 LICENSE File
+The LICENSE file MUST contain the complete AGPL-3.0 license text, unmodified.
+4.3 NOTICE.md Template
+# Attribution Notice
+This software was generated using the MCP-AQL Adapter Generator.
+## MCP-AQL Project
+- Website: https://mcpaql.org
+- Specification: https://github.com/MCPAQL/spec
+- Generator: https://github.com/MCPAQL/adapter-generator
+This adapter is licensed under the GNU Affero General Public License v3.0 (AGPL-3.0).
+A commercial license is available for organizations that cannot comply with AGPL terms.
+## Third-Party Components
+{List any third-party libraries used in generated code}
+## Generation Information
+- Generator Version: {generator_version}
+- Generated: {timestamp}
+- Schema: {schema_fingerprint}
+4.4 COMMERCIAL-LICENSE.md Template
+# Commercial Licensing
+This MCP-AQL adapter is dual-licensed:
+## Open Source License (AGPL-3.0)
+The default license for this adapter is the GNU Affero General Public License v3.0.
+This license requires that:
+- Source code modifications are shared under the same license
+- Network use (e.g., SaaS) triggers distribution requirements
+- Attribution is maintained
+See the LICENSE file for full terms.
+## Commercial License
+Organizations that cannot comply with AGPL-3.0 requirements may obtain a commercial license.
+### Commercial License Benefits
+- No copyleft obligations
+- No source code disclosure requirements
+- Priority support available
+- Custom terms available
+### Contact
+For commercial licensing inquiries:
+- Email: licensing@mcpaql.org
+- Website: https://mcpaql.org/licensing
+## Contributor License Agreement
+Contributors to this adapter may be asked to sign a CLA to enable dual licensing.
+5. Provenance Information
+5.1 MCPAQL-PROVENANCE.json
+Generators MUST create a provenance file with the following structure:
+interface ProvenanceInfo {
+* MCP-AQL specification version the generator targets
+mcpaql_spec_version : string ;
+* Generator identification
+generator : {
+/** Generator name (e.g., &quot;mcpaql-adapter-generator&quot;) */
+/** Generator version (semver) */
+/** Git commit hash of generator (if available) */
+commit ?: string ;
+/** Generator repository URL */
+repository ?: string ;
+* Source schema information
+schema : {
+/** SHA-256 hash of the input schema */
+fingerprint : string ;
+/** Original schema filename */
+filename : string ;
+/** Schema version from adapter.version */
+* Generation metadata
+generation : {
+/** ISO 8601 timestamp of generation */
+timestamp : string ;
+/** Target language/platform */
+target : string ;
+/** Generator options used */
+options ?: Record &lt; string , unknown &gt;;
+* Verification information
+verification ?: {
+/** SHA-256 hash of generated code (excluding provenance file) */
+code_hash : string ;
+/** Conformance test results if run during generation */
+conformance_result ?: &#39;passed&#39; | &#39;failed&#39; | &#39;skipped&#39; ;
+5.2 Example Provenance File
+&quot;mcpaql_spec_version&quot; : &quot;1.0.0&quot; ,
+&quot;generator&quot; : {
+&quot;name&quot; : &quot;mcpaql-adapter-generator&quot; ,
+&quot;version&quot; : &quot;1.2.3&quot; ,
+&quot;commit&quot; : &quot;abc123def456&quot; ,
+&quot;repository&quot; : &quot;https://github.com/MCPAQL/adapter-generator&quot;
+&quot;schema&quot; : {
+&quot;fingerprint&quot; : &quot;sha256:a1b2c3d4e5f6...&quot; ,
+&quot;filename&quot; : &quot;github-api.yaml&quot; ,
+&quot;version&quot; : &quot;1.0.0&quot;
+&quot;generation&quot; : {
+&quot;timestamp&quot; : &quot;2026-01-29T10:30:00Z&quot; ,
+&quot;target&quot; : &quot;typescript&quot; ,
+&quot;options&quot; : {
+&quot;strict_mode&quot; : true ,
+&quot;include_tests&quot; : true
+&quot;verification&quot; : {
+&quot;code_hash&quot; : &quot;sha256:f6e5d4c3b2a1...&quot; ,
+&quot;conformance_result&quot; : &quot;passed&quot;
+5.3 Fingerprint Calculation
+Schema fingerprints MUST be calculated as follows:
+Normalize the schema (remove comments, normalize whitespace)
+Serialize to canonical JSON (sorted keys, no extra whitespace)
+Calculate SHA-256 hash
+Format as sha256:{hex_digest}
+function calculateFingerprint (schema : AdapterSchema) : string {
+// Recursively sort object keys for canonical JSON
+function sortKeys (obj : unknown ) : unknown {
+if ( Array . isArray (obj)) {
+return obj . map (sortKeys) ;
+if (obj !== null &amp;&amp; typeof obj === &#39;object&#39; ) {
+const sorted : Record &lt; string , unknown &gt; = {} ;
+for ( const key of Object . keys (obj) . sort ()) {
+sorted[key] = sortKeys ((obj as Record &lt; string , unknown &gt; )[key]) ;
+return sorted ;
+return obj ;
+const normalized = JSON . stringify ( sortKeys (schema)) ;
+const hash = crypto . createHash ( &#39;sha256&#39; ) . update (normalized) . digest ( &#39;hex&#39; ) ;
+return `sha256: ${ hash } ` ;
+6. Language Templates
+6.1 Supported Languages
+Generators SHOULD support multiple target languages:
+Language
+Template ID
+typescript
+Required
+javascript
+Recommended
+Optional
+6.2 Template Structure
+Each language template MUST provide:
+Entry point - Main adapter class/module
+Endpoint handlers - CRUDE endpoint implementations
+Type definitions - Schema types in target language
+Error handling - Structured error code support
+HTTP client - Target API communication
+6.3 TypeScript Template Example
+Entry point (index.ts):
+import { createEndpoints } from &#39;./operations&#39; ;
+import { AdapterConfig } from &#39;./types&#39; ;
+import { schema } from &#39;../schema/adapter&#39; ;
+export class Adapter {
+private config : AdapterConfig ;
+constructor (config : AdapterConfig) {
+this . config = config ;
+async handleRequest (endpoint : string , request : unknown ) {
+const endpoints = createEndpoints ( this . config ) ;
+const handler = endpoints[endpoint] ;
+if ( ! handler) {
+success : false ,
+error : {
+code : &#39;NOT_FOUND_OPERATION&#39; ,
+message : `Unknown endpoint: &#39; ${ endpoint } &#39;`
+return handler (request) ;
+getSchema () {
+return schema ;
+export { schema } ;
+6.4 Template Customization
+Generators MAY support template customization:
+strict_mode
+Enable strict type checking
+include_tests
+Generate test stubs
+inline_docs
+Include JSDoc/docstrings
+error_handling
+Error handling style
+structured
+http_client
+HTTP client library
+Language default
+7. Command-Line Interface
+7.1 CLI Invocation
+Generators MUST provide a command-line interface with the following signature:
+mcpaql-generate --schema &lt; path &gt; --target &lt; language &gt; [ options ]
+7.2 Required Arguments
+Argument
+--schema , -s
+Path to the input schema file (YAML or JSON)
+--schema adapter.yaml
+--target , -t
+Target language/platform
+--target typescript
+7.3 Optional Arguments
+--output , -o
+Output directory for generated code
+./generated
+--config , -c
+Path to generator configuration file
+--output-format
+Output format ( human or json )
+--strict
+Enable strict validation mode (fail on warnings, enforce all optional constraints)
+--dry-run
+Validate schema without generating output
+--verbose , -v
+Enable verbose output
+--quiet , -q
+Suppress non-error output
+--version
+Print generator version and exit
+--help , -h
+Print help message and exit
+--verbose and --quiet are mutually exclusive. If both are specified, generators MUST exit with code 3 (Configuration error).
+When both --config and individual CLI arguments are provided, CLI arguments MUST take precedence over configuration file settings.
+7.4 Exit Codes
+Generators MUST use consistent exit codes:
+Generation completed successfully
+Internal error
+Unexpected error (assertion failures, uncaught exceptions)
+Schema validation error
+Input schema is invalid
+Configuration error
+Invalid generator configuration
+I/O error
+File read/write failure
+Template error
+Language template processing failed
+7.5 Output Format
+Generators SHOULD support structured output for integration with other tools:
+# Human-readable output (default)
+mcpaql-generate --schema adapter.yaml --target typescript
+# JSON output for programmatic consumption
+mcpaql-generate --schema adapter.yaml --target typescript --output-format json
+JSON success output:
+&quot;success&quot; : true ,
+&quot;output_directory&quot; : &quot;./generated&quot; ,
+&quot;files_generated&quot; : [
+&quot;src/index.ts&quot; ,
+&quot;src/operations/read.ts&quot; ,
+&quot;LICENSE&quot; ,
+&quot;NOTICE.md&quot;
+&quot;provenance&quot; : {
+&quot;schema_fingerprint&quot; : &quot;sha256:abc123...&quot; ,
+&quot;generator_version&quot; : &quot;1.2.3&quot;
+&quot;warnings&quot; : []
+JSON error output:
+&quot;code&quot; : 2 ,
+&quot;type&quot; : &quot;SCHEMA_VALIDATION_ERROR&quot; ,
+&quot;message&quot; : &quot;Schema validation failed&quot; ,
+&quot;details&quot; : [
+&quot;path&quot; : &quot;endpoints.read[0].params[2].name&quot; ,
+&quot;code&quot; : &quot;SCHEMA_INVALID_NAME&quot; ,
+&quot;message&quot; : &quot;Parameter name &#39;userName&#39; must be snake_case&quot; ,
+&quot;suggestion&quot; : &quot;Use &#39;user_name&#39; instead&quot;
+7.6 Example Usage
+Basic generation:
+mcpaql-generate --schema github-api.yaml --target typescript --output ./adapters/github
+With configuration and verbose output:
+mcpaql-generate \
+--schema adapter.yaml \
+--target typescript \
+--output ./generated \
+--config generator.config.json \
+--verbose
+Validation only (dry run):
+mcpaql-generate --schema adapter.yaml --target typescript --dry-run
+8. Conformance Requirements
+8.1 Generator Conformance
+A conformant generator MUST:
+Accept valid schemas without error
+Reject invalid schemas with descriptive errors
+Produce all required output files
+Include valid licensing artifacts
+Generate correct provenance information
+Produce code that passes basic syntax checks
+8.2 Generated Adapter Conformance
+Generated adapters MUST:
+Implement all five CRUDE endpoints
+Support the introspect operation
+Return discriminated responses ( success: true/false )
+Use structured error codes from the specification
+Handle missing/invalid parameters correctly
+8.3 Conformance Testing
+Generators SHOULD include conformance test generation:
+# Run conformance tests on generated adapter
+mcpaql-conformance test ./generated-adapter
+See Conformance Testing Specification for test requirements.
+References
+CRUDE Pattern
+Error Codes Specification
+Conformance Testing Specification
+Dangerous Operation Classification
+GitHub Issue: #21
+Previous spec page
+Next spec page
+&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
+Docs Library
+MCPAQL Organization
+Dollhouse Research

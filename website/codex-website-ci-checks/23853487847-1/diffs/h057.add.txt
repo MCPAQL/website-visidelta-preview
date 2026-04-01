@@ -1,0 +1,162 @@
+MCP-AQL Spec | MCP-AQL Specification
+Launch Checklist
+Adapter Patterns
+Search MCP-AQL docs
+Repo-Synced Spec
+Generated from MCPAQL/spec so the website carries the deeper protocol material too.
+MCP-AQL Conformance Testing Specification
+MCP-AQL CRUDE Pattern Specification
+MCP-AQL Endpoint Modes Specification
+Structured Error Codes Specification
+MCP-AQL Introspection Specification
+MCP-AQL Licensing Options (Working Notes)
+MCP Integration Specification
+MCP-AQL Operations Specification
+MCP-AQL Protocol Overview
+Plugin Interface Contracts
+MCP-AQL Specification Documentation
+MCP-AQL Specification
+Versions
+Dangerous Operation Classification Specification
+MCP Server Discovery Bundle
+Adapter Element Type Specification
+Adapter Generator Specification
+Rate Limiting and Quota Management Specification
+Trust Levels Specification
+Security
+Confirmation Token Specification
+Execution Safety Loop Specification
+Security Model: Gatekeeper Specification
+Features
+Field Selection Specification
+Cursor-Based Pagination Specification
+Warnings Array Specification
+Protocol Comparison Guide
+Developer Guides
+MCP-AQL Breaking Change Policy
+Preliminary Public Launch Checklist
+RFC Process for MCP-AQL Specification
+Versioning Strategy
+Changelog
+Architecture
+Architecture Documentation
+Research
+Protocol Landscape: MCP vs MCP-AQL vs A2A
+Reference
+Reference Documentation
+ADR-001: CRUDE Pattern (Extending CRUD with Execute)
+ADR-002: GraphQL-Style Input Objects for Updates
+ADR-003: snake_case Parameter Convention
+ADR-004: Schema-Driven Operation Definitions
+ADR-005: GraphQL-Style Introspection System
+ADR-006: Discriminated Response Format
+Architecture Decision Records
+Full Spec
+REPO-SYNCED SPEC DOC
+Model Context Protocol - Advanced Agent API Adapter Query Language
+Repository source
+Source: spec/README.md
+Open Source Markdown
+Browse Full Spec Reference
+MCP-AQL is both a protocol specification and a concrete implementation toolkit, including an interrogator (introspection), compiler (schema-driven dispatch), and adapter generator.
+Overview
+MCP-AQL is a protocol specification that consolidates multiple MCP (Model Context Protocol) tools into semantic endpoints, providing approximately 96% token reduction while maintaining full functionality. It enables structured communication between AI models and context-providing services through a unified query language.
+Preliminary Draft Positioning
+The current publication target is a preliminary public draft of MCP-AQL.
+This draft is intended to:
+Demonstrate protocol viability and real-world utility
+Show how semantic endpoint consolidation reduces token bloat
+Validate flexibility for modular integrations (security, execution, code/compute workflows)
+This draft is not yet a final certification baseline. Some conformance automation and ecosystem hardening work is still in progress.
+The CRUDE Pattern
+MCP-AQL extends traditional CRUD with an Execute endpoint, creating the CRUDE pattern:
+Endpoint
+Description
+Non-destructive
+Additive operations that create new state
+Read-only
+Safe operations that query state
+Modifying
+Operations that modify existing state
+Destructive
+Operations that remove state
+Stateful
+Runtime lifecycle operations (non-idempotent)
+Token Efficiency
+MCP-AQL dramatically reduces token consumption for LLM interactions.
+Per-tool overhead: A typical MCP tool definition consumes ~500-700 tokens in context.
+Configuration
+Tool Count
+Token Cost
+Reduction
+Discrete Tools
+~30 tools
+Baseline
+~50 tools
+CRUDE Mode
+5 endpoints
+Single Mode
+1 endpoint
+The savings scale with adapter complexity - the more operations your adapter supports, the greater the benefit of consolidation.
+Key Features
+Unified Query Syntax - Consistent grammar for operations across all endpoints
+GraphQL-Style Introspection - On-demand operation discovery at runtime
+Schema-Driven Dispatch - Declarative operation definitions with automatic validation
+Flexible Parameter Resolution - Multiple sources checked for each parameter
+Batch Operations - Execute multiple operations in a single request
+Field Selection - Control response payload size for additional token savings
+Quick Start
+Discover Available Operations
+operation : &quot;introspect&quot; ,
+params : { query : &quot;operations&quot; }
+Get Operation Details
+params : { query : &quot;operations&quot; , name : &quot;create_user&quot; }
+Execute an Operation
+// Operations are adapter-specific - this example from a user management adapter
+operation : &quot;create_user&quot; ,
+params : {
+email : &quot;alice@example.com&quot; ,
+name : &quot;Alice&quot; ,
+role : &quot;admin&quot;
+Specification Documents
+Document
+Specification v1.0.0-draft
+Current working draft
+CRUDE Pattern
+Detailed endpoint semantics
+Introspection
+Discovery system specification
+Operations Guide
+Operation design patterns
+Interrogation bundle contract for MCP-to-MCP-AQL generation
+Documentation Index
+Full documentation structure
+Version history
+Reference Profile
+DollhouseMCP serves as a practical reference profile for MCP-AQL.
+It demonstrates the protocol in a large, production-oriented server, including security-loop integrations (Gatekeeper and Danger Zone). It is not the canonical definition of the protocol itself; normative behavior is defined by this repository's specification documents.
+Conformance
+Implementations claiming MCP-AQL conformance MUST:
+Implement the introspect operation for runtime discovery
+Use the CRUDE endpoint pattern (or single endpoint mode)
+Return discriminated union responses ( { success, data } or { success, error } )
+Document supported operations via introspection
+Implementations SHOULD also pass the conformance test suite in tests/ .
+Status Note: Schema/example validation is implemented in this repository. The full cross-implementation conformance runner described in docs/conformance-testing.md is still being finalized.
+Contributing
+We welcome contributions to the specification. Please see CONTRIBUTING.md for guidelines.
+This repository uses split licensing:
+Specification text (docs) : Creative Commons Attribution 4.0 International (CC BY 4.0). See LICENSE-DOCS .
+Applies to: spec/docs/ , spec/README.md , and other narrative documentation content.
+Code and other software artifacts : GNU Affero General Public License v3.0 (AGPL-3.0). See LICENSE .
+Applies to: spec/schemas/ , spec/tests/ , and any code/scripts included in this repository.
+For the authoritative path-based scope rules, see spec/LICENSING.md .
+Commercial licenses are available. See COMMERCIAL-LICENSE.md or contact licensing@mcpaql.org .
+Acknowledgments
+MCP-AQL builds upon the Model Context Protocol specification by Anthropic.
+Previous spec page
+Next spec page
+&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
+Docs Library
+MCPAQL Organization
+Dollhouse Research

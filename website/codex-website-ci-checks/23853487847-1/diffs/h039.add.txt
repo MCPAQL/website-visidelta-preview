@@ -1,0 +1,185 @@
+MCP-AQL Spec | Field Selection Specification
+Launch Checklist
+Adapter Patterns
+Search MCP-AQL docs
+Repo-Synced Spec
+Generated from MCPAQL/spec so the website carries the deeper protocol material too.
+MCP-AQL Conformance Testing Specification
+MCP-AQL CRUDE Pattern Specification
+MCP-AQL Endpoint Modes Specification
+Structured Error Codes Specification
+MCP-AQL Introspection Specification
+MCP-AQL Licensing Options (Working Notes)
+MCP Integration Specification
+MCP-AQL Operations Specification
+MCP-AQL Protocol Overview
+Plugin Interface Contracts
+MCP-AQL Specification Documentation
+MCP-AQL Specification
+Versions
+Dangerous Operation Classification Specification
+MCP Server Discovery Bundle
+Adapter Element Type Specification
+Adapter Generator Specification
+Rate Limiting and Quota Management Specification
+Trust Levels Specification
+Security
+Confirmation Token Specification
+Execution Safety Loop Specification
+Security Model: Gatekeeper Specification
+Features
+Field Selection Specification
+Cursor-Based Pagination Specification
+Warnings Array Specification
+Protocol Comparison Guide
+Developer Guides
+MCP-AQL Breaking Change Policy
+Preliminary Public Launch Checklist
+RFC Process for MCP-AQL Specification
+Versioning Strategy
+Changelog
+Architecture
+Architecture Documentation
+Research
+Protocol Landscape: MCP vs MCP-AQL vs A2A
+Reference
+Reference Documentation
+ADR-001: CRUDE Pattern (Extending CRUD with Execute)
+ADR-002: GraphQL-Style Input Objects for Updates
+ADR-003: snake_case Parameter Convention
+ADR-004: Schema-Driven Operation Definitions
+ADR-005: GraphQL-Style Introspection System
+ADR-006: Discriminated Response Format
+Architecture Decision Records
+Full Spec
+REPO-SYNCED SPEC DOC
+This document specifies the optional field selection feature that enables clients to request only specific fields in responses, reducing payload size and token consumption.
+Support document Draft 1.0.0-draft 2026-01-14
+Source: spec/docs/features/field-selection.md
+Open Source Markdown
+Browse Full Spec Reference
+Version: 1.0.0-draft Status: Draft Last Updated: 2026-01-14
+Abstract
+Table of Contents
+Introduction
+Request Format
+Response Format
+Implementation Requirements
+1. Introduction
+1.1 Purpose
+Field selection allows clients to specify which fields to include in responses, providing:
+Token efficiency - Smaller payloads consume fewer tokens
+Bandwidth savings - Reduced data transfer
+Client control - Fetch only what's needed
+Consistent interface - Same pattern across operations
+1.2 Status
+Field selection is an optional feature. Adapters MAY implement it for Level 2 conformance.
+1.3 Token Impact
+Scenario
+Without Selection
+With Selection
+List 10 items (full)
+~2,500 tokens
+~800 tokens
+Get single item (full)
+~350 tokens
+~120 tokens
+Search results (20 items)
+~4,000 tokens
+~1,200 tokens
+2. Request Format
+2.1 Fields Parameter
+The fields parameter accepts an array of field names:
+operation : &quot;list_users&quot; ,
+params : {
+fields : [ &quot;id&quot; , &quot;name&quot; , &quot;email&quot; ]
+2.2 Preset Parameter
+The preset parameter selects a predefined field set:
+preset : &quot;minimal&quot;
+2.3 Combined Usage
+When both are specified, fields extends the preset:
+preset : &quot;minimal&quot; ,
+fields : [ &quot;created_at&quot; ] // Adds to minimal preset
+2.4 Nested Fields
+Dot notation accesses nested properties:
+operation : &quot;get_user&quot; ,
+fields : [ &quot;id&quot; , &quot;name&quot; , &quot;settings.theme&quot; , &quot;settings.language&quot; ]
+3. Presets
+3.1 Standard Presets
+Adapters implementing field selection SHOULD support these presets:
+3.1.1 Minimal
+Essential identification fields only.
+Use case: Quick listings, autocomplete, selection UI.
+3.1.2 Standard
+Common fields for typical use.
+Use case: Default listing view, basic info display.
+3.1.3 Full
+All available fields.
+Use case: Detailed view, export, debugging.
+3.2 Default Behavior
+When neither fields nor preset is specified:
+Single item operations: Return full
+Collection operations: Return standard
+Search operations: Return minimal
+3.3 Custom Presets
+Adapters MAY define additional presets specific to their domain:
+// Example custom presets for a user adapter
+&quot;contact&quot; : [ &quot;id&quot; , &quot;name&quot; , &quot;email&quot; , &quot;phone&quot; ]
+&quot;profile&quot; : [ &quot;id&quot; , &quot;name&quot; , &quot;bio&quot; , &quot;avatar_url&quot; ]
+Custom presets SHOULD be discoverable via introspection.
+4. Response Format
+4.1 Filtered Response
+Only requested fields appear in response:
+Request:
+user_id : &quot;123&quot; ,
+fields : [ &quot;id&quot; , &quot;name&quot; ]
+Response:
+success : true ,
+data : {
+id : &quot;123&quot; ,
+name : &quot;Alice&quot;
+4.2 Collection Response
+For collections, selection applies to each item:
+items : [
+{ id : &quot;1&quot; , name : &quot;Alice&quot; } ,
+{ id : &quot;2&quot; , name : &quot;Bob&quot; }
+pagination : { ... } // Pagination not affected by selection
+4.3 Missing Fields
+If a requested field doesn't exist on an item:
+Omit the field - Don't include in response
+No error - Silently skip
+Consistent behavior - Same across all items
+5. Implementation Requirements
+5.1 MUST Requirements
+Adapters implementing field selection MUST:
+Support the fields parameter on READ operations
+Support the preset parameter
+Handle nested field access via dot notation
+Preserve structure for nested fields
+5.2 SHOULD Requirements
+Adapters implementing field selection SHOULD:
+Implement minimal , standard , and full presets
+Document available fields per resource type
+Support field selection on search results
+Validate field names against known fields
+5.3 Introspection
+Field selection options SHOULD be discoverable:
+operation : &quot;introspect&quot; ,
+params : { query : &quot;types&quot; , name : &quot;FieldSelection&quot; }
+// Response:
+type : {
+name : &quot;FieldSelection&quot; ,
+kind : &quot;object&quot; ,
+description : &quot;Field selection configuration&quot; ,
+fields : [
+{ name : &quot;presets&quot; , type : &quot;array&quot; , description : &quot;Available presets&quot; } ,
+{ name : &quot;fields&quot; , type : &quot;object&quot; , description : &quot;Available fields by type&quot; }
+References
+Operations Guide
+Introspection Specification
+Previous spec page
+Next spec page
+&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
+Docs Library
+MCPAQL Organization
+Dollhouse Research

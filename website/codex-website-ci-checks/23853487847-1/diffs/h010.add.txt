@@ -1,0 +1,19 @@
+Getting Started
+Error Model
+Adapter Contracts
+Release Notes
+Related reading
+Go Deeper In The Full Spec
+The protocol authority remains on-site in the spec pages, while implementation repos stay as practical reference material.
+Spec README
+Generator specification
+Normative Draft
+Browse the full spec reference
+Related Summary Pages
+These pages are the closest summary-layer companions to the profile and implementation story.
+Back to the docs library
+Where to look next
+Contract details
+Launch and release context
+Previous page
+Next page

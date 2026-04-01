@@ -1,0 +1,411 @@
+MCP-AQL Spec | Confirmation Token Specification
+Launch Checklist
+Adapter Patterns
+Search MCP-AQL docs
+Repo-Synced Spec
+Generated from MCPAQL/spec so the website carries the deeper protocol material too.
+MCP-AQL Conformance Testing Specification
+MCP-AQL CRUDE Pattern Specification
+MCP-AQL Endpoint Modes Specification
+Structured Error Codes Specification
+MCP-AQL Introspection Specification
+MCP-AQL Licensing Options (Working Notes)
+MCP Integration Specification
+MCP-AQL Operations Specification
+MCP-AQL Protocol Overview
+Plugin Interface Contracts
+MCP-AQL Specification Documentation
+MCP-AQL Specification
+Versions
+Dangerous Operation Classification Specification
+MCP Server Discovery Bundle
+Adapter Element Type Specification
+Adapter Generator Specification
+Rate Limiting and Quota Management Specification
+Trust Levels Specification
+Security
+Confirmation Token Specification
+Execution Safety Loop Specification
+Security Model: Gatekeeper Specification
+Features
+Field Selection Specification
+Cursor-Based Pagination Specification
+Warnings Array Specification
+Protocol Comparison Guide
+Developer Guides
+MCP-AQL Breaking Change Policy
+Preliminary Public Launch Checklist
+RFC Process for MCP-AQL Specification
+Versioning Strategy
+Changelog
+Architecture
+Architecture Documentation
+Research
+Protocol Landscape: MCP vs MCP-AQL vs A2A
+Reference
+Reference Documentation
+ADR-001: CRUDE Pattern (Extending CRUD with Execute)
+ADR-002: GraphQL-Style Input Objects for Updates
+ADR-003: snake_case Parameter Convention
+ADR-004: Schema-Driven Operation Definitions
+ADR-005: GraphQL-Style Introspection System
+ADR-006: Discriminated Response Format
+Architecture Decision Records
+Full Spec
+REPO-SYNCED SPEC DOC
+This document specifies the confirmation token mechanism used by MCP-AQL adapters to gate dangerous operations and quota continuations. Confirmation tokens provide a secure, time-limited method for clients to acknowledge
+Support document Draft 1.0.0-draft 2026-01-28
+Source: spec/docs/security/confirmation-tokens.md
+Open Source Markdown
+Browse Full Spec Reference
+Version: 1.0.0-draft Status: Draft Last Updated: 2026-01-28
+Abstract
+This document specifies the confirmation token mechanism used by MCP-AQL adapters to gate dangerous operations and quota continuations. Confirmation tokens provide a secure, time-limited method for clients to acknowledge and proceed with operations that require explicit consent.
+Table of Contents
+Overview
+Token Format
+Token Generation
+Token Validation
+Token Lifecycle
+Security Considerations
+Implementation Requirements
+1. Overview
+1.1 Purpose
+Confirmation tokens serve as cryptographic proof that a client has acknowledged a warning and explicitly consents to proceed with a gated operation. They are used in two primary contexts:
+Dangerous operation confirmation - Operations requiring explicit consent due to their danger level (see Dangerous Operation Classification )
+Quota continuation - Proceeding past soft quota limits (see Rate Limiting Specification )
+1.2 Design Principles
+Single-use by default - Tokens SHOULD be consumed upon successful use
+Time-bounded - Tokens MUST have an expiration time
+Scope-bound - Tokens are tied to a specific operation and parameters
+Tamper-resistant - Tokens cannot be forged or modified by clients
+Auditable - Token issuance and redemption are logged
+1.3 Token Flow
+Client Request
+┌─────────────────┐
+│ Gatekeeper │
+│ (confirmation │
+│ required) │
+└────────┬────────┘
+┌─────────────────┐ Token + Expiry
+│ Issue Token │─────────────────────► Client
+└─────────────────┘
+Client Retry (with token)
+│ Validate Token │
+│ (scope, expiry, │
+│ single-use) │
+│ Execute │
+│ Operation │
+2. Token Format
+2.1 Token Structure
+Tokens are opaque strings with a prefix indicating their purpose:
+Dangerous operation confirmation
+conf_a1b2c3d4e5f6g7h8
+quota_continue_
+Quota pause continuation
+quota_continue_def456
+2.2 Token Syntax
+token = prefix &quot;_&quot; identifier
+prefix = &quot;conf&quot; | &quot;quota_continue&quot;
+identifier = 1*64(ALPHA / DIGIT / &quot;_&quot; / &quot;-&quot;)
+Constraints:
+Total token length: 8-80 characters
+Identifier: URL-safe characters only (alphanumeric, underscore, hyphen)
+Case-sensitive
+2.3 Token Payload (Internal)
+While tokens are opaque to clients, implementations SHOULD encode or reference:
+interface TokenPayload {
+/** Token identifier - the full token string including prefix (e.g., &#39;conf_abc123xyz789&#39;) */
+id : string ;
+/** Purpose of the token */
+type : &#39;confirmation&#39; | &#39;quota_continue&#39; ;
+/** Operation this token gates */
+operation : string ;
+/** Hash of bound parameters (prevents parameter tampering) */
+params_hash : string ;
+/** Adapter that issued the token */
+adapter_name : string ;
+/** Issuance timestamp (ISO 8601) */
+issued_at : string ;
+/** Expiration timestamp (ISO 8601) */
+expires_at : string ;
+/** Whether token has been used */
+consumed : boolean ;
+/** Additional context for audit */
+context ?: {
+danger_level ?: string ;
+quota_metric ?: string ;
+reasons ?: string [] ;
+3. Token Generation
+3.1 Entropy Requirements
+Token identifiers MUST be generated with sufficient entropy to prevent guessing:
+Requirement
+Specification
+Minimum entropy
+128 bits
+Recommended
+256 bits
+Cryptographically secure random number generator (CSPRNG)
+Acceptable generation methods:
+crypto.randomBytes(16).toString('hex') (Node.js)
+secrets.token_hex(16) (Python)
+uuid.uuid4().hex (UUID v4, 122 bits entropy)
+Unacceptable methods:
+Sequential counters
+Timestamps alone
+Math.random() or similar non-cryptographic PRNGs
+3.2 Scope Binding
+Tokens MUST be bound to the specific operation and parameters they gate.
+Hash algorithm: Implementations SHOULD use SHA-256 or stronger for parameter binding. The hash MUST be computed over a canonicalized representation of the critical parameters.
+// Token issuance binds to operation + critical parameters
+// Hash algorithm: SHA-256 or stronger
+const paramsHash = sha256 ({
+operation : &quot;delete_repo&quot; ,
+owner : &quot;acme&quot; ,
+repo : &quot;widgets&quot;
+const token = {
+id : generateTokenId () ,
+params_hash : paramsHash ,
+Critical parameters are those that affect the operation's impact:
+Resource identifiers (IDs, names, paths)
+Scope modifiers ( force , permanent , recursive )
+NOT metadata like timestamps or request IDs
+3.3 Token Response Format
+When issuing a confirmation token:
+&quot;success&quot; : false ,
+&quot;error&quot; : {
+&quot;code&quot; : &quot;CONFIRMATION_REQUIRED&quot; ,
+&quot;message&quot; : &quot;This operation requires confirmation&quot; ,
+&quot;details&quot; : {
+&quot;operation&quot; : &quot;delete_repo&quot; ,
+&quot;danger_level&quot; : &quot;destructive&quot; ,
+&quot;reasons&quot; : [
+&quot;Permanently removes repository and all contents&quot; ,
+&quot;Cannot be recovered after grace period&quot;
+&quot;confirmation_message&quot; : &quot;Delete repository &#39;acme/widgets&#39;? This cannot be undone.&quot; ,
+&quot;confirmation_token&quot; : &quot;conf_a1b2c3d4e5f6g7h8&quot; ,
+&quot;expires_at&quot; : &quot;2026-01-28T12:05:00Z&quot;
+4. Token Validation
+4.1 Validation Checks
+Token validation MUST perform all of the following checks:
+Error Code
+Description
+Token exists
+TOKEN_INVALID
+Token ID not found in store
+Not expired
+TOKEN_EXPIRED
+Current time &gt; expires_at
+Not consumed
+TOKEN_ALREADY_USED
+Token already redeemed
+Operation matches
+TOKEN_SCOPE_MISMATCH
+Token issued for different operation
+Parameters match
+Critical parameters changed
+Adapter matches
+Token issued by different adapter
+4.2 Validation Response (Failure)
+&quot;code&quot; : &quot;TOKEN_EXPIRED&quot; ,
+&quot;message&quot; : &quot;Confirmation token has expired&quot; ,
+&quot;token&quot; : &quot;conf_a1b2c3d4e5f6g7h8&quot; ,
+&quot;expired_at&quot; : &quot;2026-01-28T12:05:00Z&quot; ,
+&quot;current_time&quot; : &quot;2026-01-28T12:07:30Z&quot;
+4.3 Parameter Hash Verification
+When validating, recompute the parameter hash and compare:
+function validateToken (token , operation , params) {
+const stored = tokenStore . get (token) ;
+if ( ! stored) return { valid : false , code : &#39;TOKEN_INVALID&#39; } ;
+// Check operation match
+if (stored . operation !== operation) {
+return { valid : false , code : &#39;TOKEN_SCOPE_MISMATCH&#39; } ;
+// Recompute and compare parameter hash
+const currentHash = hashCriticalParams (operation , params) ;
+if (stored . params_hash !== currentHash) {
+// Check expiry (with optional clock skew tolerance, see Section 5.1)
+const expiryResult = checkTokenExpiry (stored , config) ;
+if ( ! expiryResult . valid ) {
+return expiryResult ;
+// Check consumption
+if (stored . consumed ) {
+return { valid : false , code : &#39;TOKEN_ALREADY_USED&#39; } ;
+return { valid : true } ;
+5. Token Lifecycle
+5.1 Expiration
+Token expiration MUST be enforced:
+Default TTL
+Maximum TTL
+Dangerous operation (destructive/dangerous - levels 2-3)
+5 minutes
+15 minutes
+Dangerous operation (forbidden - level 4)
+2 minutes
+Quota continuation
+10 minutes
+Danger level values reference the danger level enum from Dangerous Operation Classification : safe (0), reversible (1), destructive (2), dangerous (3), forbidden (4).
+Expiration is a MUST requirement:
+Tokens without expiration MUST be rejected
+Expired tokens MUST NOT be accepted under any circumstances
+Clock skew tolerance: implementations MAY allow up to 30 seconds grace (see below)
+Clock skew tolerance configurability:
+Implementations SHOULD allow operators to configure the clock skew tolerance value:
+clock_skew_tolerance_seconds
+0 disables tolerance (strictest mode)
+Configuration guidance:
+The default of 30 seconds accommodates typical NTP-synchronized systems
+Environments with known clock synchronization issues (e.g., air-gapped systems, certain IoT deployments) MAY need higher values
+Security-sensitive deployments MAY reduce this to 0-5 seconds
+Values above 60 seconds SHOULD trigger a warning in logs, as they significantly increase the window for replay attacks (see Section 6.1 )
+Deployment environment recommendations:
+Environment
+Recommended Value
+Rationale
+Typical (NTP-synced)
+30s (default)
+Accommodates normal clock drift
+Air-gapped systems
+May have significant clock sync drift
+IoT / embedded
+Often lack reliable NTP access
+High-security
+Minimize replay attack window
+Zero-trust
+Strict timing, requires synchronized clocks
+Example configuration:
+const tokenConfig = {
+// Default: 30 seconds
+clock_skew_tolerance_seconds : 30 ,
+// Strict mode for high-security environments
+// clock_skew_tolerance_seconds: 5,
+// Relaxed mode for environments with clock sync issues
+// clock_skew_tolerance_seconds: 120,
+Applying tolerance in validation:
+The tolerance is added to the expiry time, accepting tokens that expired within the tolerance window:
+function checkTokenExpiry (stored , config) {
+const now = new Date () ;
+const expiresAt = new Date (stored . expires_at ) ;
+// Add tolerance to expiry time (not subtract from current time)
+// This accepts tokens expired within the tolerance window
+const toleranceMs = (config . clock_skew_tolerance_seconds || 30 ) * 1000 ;
+const expiryWithTolerance = new Date (expiresAt . getTime () + toleranceMs) ;
+if (now &gt; expiryWithTolerance) {
+return { valid : false , code : &#39;TOKEN_EXPIRED&#39; } ;
+5.2 Single-Use Enforcement
+Tokens SHOULD be single-use by default:
+function redeemToken (tokenId) {
+const token = tokenStore . get (tokenId) ;
+if ( ! token || token . consumed ) {
+return { valid : false } ;
+// Mark as consumed BEFORE executing operation
+token . consumed = true ;
+token . consumed_at = new Date () . toISOString () ;
+tokenStore . update (token) ;
+Multi-use tokens MAY be supported for specific scenarios:
+Session-scoped confirmations (see Section 5.4)
+Batch operations with the same parameters
+5.3 Revocation
+Tokens MAY be revoked before expiration:
+Automatic revocation triggers:
+Session termination (MCP connection ends; see Section 2.3 of the core specification)
+User logout
+Adapter configuration change
+Security event detection
+Manual revocation:
+operation : &quot;introspect&quot; ,
+params : {
+query : &quot;revoke_token&quot; ,
+token : &quot;conf_a1b2c3d4e5f6g7h8&quot;
+5.4 Session-Scoped Tokens
+Implementations MAY support session-scoped confirmations for improved UX:
+interface SessionScopedToken extends TokenPayload {
+/** Session this token is valid for */
+session_id : string ;
+/** Number of times token can be used (default: 1) */
+max_uses ?: number ;
+/** Current use count */
+use_count : number ;
+Session tokens:
+Are invalidated when the MCP connection terminates (see Section 2.3 of the core specification)
+MAY be reused within the session for identical operations
+MUST still respect expiration time
+5.5 Storage Requirements
+Persistence
+At minimum, in-memory with TTL eviction
+Expired tokens SHOULD be purged within 1 hour
+Capacity
+SHOULD support at least 1000 active tokens per adapter
+6. Security Considerations
+6.1 Replay Attack Prevention
+Tokens MUST NOT be replayable:
+Single-use enforcement - Default behavior prevents replay
+Scope binding - Token only valid for original operation + parameters
+Time limits - Short TTL reduces replay window
+Session binding - Optional additional protection
+6.2 Token Tampering
+Tokens MUST be tamper-resistant:
+Server-side storage (RECOMMENDED):
+Token ID is a random lookup key
+All payload data stored server-side
+Client cannot modify scope or expiration
+Signed tokens (ALTERNATIVE):
+If tokens encode payload, use HMAC-SHA256 or similar
+Signature covers all payload fields
+Signature key MUST NOT be exposed to clients
+6.3 Information Disclosure
+Token responses SHOULD limit information disclosure:
+Provide confirmation message explaining the action
+Include expiration time
+List reasons for confirmation requirement
+Include internal system details in token
+Expose parameter values in error messages for failed validation
+Return different errors for "token not found" vs "token invalid"
+6.4 Audit Requirements
+All token operations MUST be logged:
+interface TokenAuditEntry {
+timestamp : string ;
+event : &#39;TOKEN_ISSUED&#39; | &#39;TOKEN_VALIDATED&#39; | &#39;TOKEN_REJECTED&#39; | &#39;TOKEN_REVOKED&#39; ;
+token_id : string ;
+outcome : &#39;success&#39; | &#39;failure&#39; ;
+failure_reason ?: string ;
+client_context ?: {
+session_id ?: string ;
+user_id ?: string ;
+6.5 Rate Limiting Token Requests
+Implementations SHOULD rate limit token-related operations to prevent abuse:
+Token issuance: Limit repeated CONFIRMATION_REQUIRED responses
+Token validation: Limit failed validation attempts
+Token revocation: Limit revocation requests
+7. Implementation Requirements
+7.1 MUST Requirements
+Implementations using confirmation tokens MUST:
+Generate tokens with at least 128 bits of entropy from a cryptographically secure random source
+Enforce expiration times on all tokens
+Bind tokens to specific operations and critical parameters
+Reject tokens that fail any validation check
+Log token issuance and redemption events
+Return appropriate error codes for token failures
+7.2 SHOULD Requirements
+Implementations using confirmation tokens SHOULD:
+Use single-use tokens by default
+Store token state server-side (not in the token itself)
+Purge expired tokens within 1 hour
+Support token revocation
+Rate limit token-related operations
+7.3 MAY Requirements
+Implementations using confirmation tokens MAY:
+Support session-scoped tokens for improved UX
+Support multi-use tokens for batch scenarios
+Implement signed tokens for stateless validation
+Provide introspection queries for token status
+References
+Dangerous Operation Classification - Confirmation flows for danger levels
+Rate Limiting Specification - Quota continuation tokens
+Security Model: Gatekeeper - Overall security architecture
+Error Codes Specification - Error code registry
+Previous spec page
+Next spec page
+&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
+Docs Library
+MCPAQL Organization
+Dollhouse Research

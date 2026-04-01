@@ -1,0 +1,58 @@
+MCP-AQL Docs | Error Model
+Launch Checklist
+Adapter Patterns
+Search MCP-AQL docs
+In This Library
+Getting Started
+Protocol Core
+ERROR MODEL
+Security Model
+Conformance
+Adapter Contracts
+Implementation Profiles
+Release Notes
+Machine-readable failures are part of the public contract
+MCP-AQL uses a discriminated success/error envelope and a structured error object so clients can distinguish validation problems,
+missing resources, permissions, and server failures without parsing free-form text.
+Error Codes Spec
+Issue #199
+Related reading
+Go Deeper In The Full Spec
+The structured error behavior lives in the spec itself, with the issue tracker only used for the remaining alignment work.
+Structured Error Codes Specification
+Normative Draft
+Browse the full spec reference
+Related Summary Pages
+Error handling is easiest to understand alongside routing, safety, and conformance expectations.
+Back to the docs library
+Canonical response envelope
+"success": true,
+"data": { ... }
+"success": false,
+"error": {
+"code": "VALIDATION_MISSING_PARAM",
+"message": "Missing required parameter 'owner'"
+Why the code field matters
+LLMs and client code can tell "fix your request" failures from "server-side problem" failures.
+Adapters can map target-system failures into a predictable registry.
+Monitoring and analytics can group failures by category instead of message text.
+Localized or rewritten human messages do not break programmatic recovery.
+Current draft focus
+Defined today
+Structured error.code and error.message fields
+MVP registry with validation, not-found, permission, and internal categories
+Optional details object for additional context
+Still being aligned
+Implementation surfaces that still emit string-only failures
+Exact schema and prose alignment across all response definitions
+Conformance checks that validate machine-readable error surfacing
+Live spec issue #199 tracks the remaining alignment work between the error-code registry,
+response envelope requirements, and implementation-facing schemas.
+Previous page
+Next page
+&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
+Docs Library
+Portal Home
+MCPAQL Organization
+Dollhouse Research
+DollhouseMCP Production Profile

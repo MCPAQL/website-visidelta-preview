@@ -1,0 +1,24 @@
+Getting Started
+Error Model
+Adapter Contracts
+Release Notes
+Related reading
+Go Deeper In The Full Spec
+This summary is the fast map. These pages carry the fuller protocol requirements and supporting detail.
+Normative Draft
+CRUDE Pattern
+Operations Specification
+Related Summary Pages
+These summary pages help connect the core semantics to safety, errors, and launch posture.
+Back to the docs library
+Operational rules readers usually miss
+Naming and parameter rules
+Operation names are case-sensitive snake_case identifiers.
+Public parameter names are snake_case, even if implementations accept aliases internally.
+Unknown parameters should be rejected instead of ignored so clients can correct requests.
+Batch and payload considerations
+Batch operations are first-class, but launch messaging should still treat resource-limit requirements as in progress.
+Payload size, encoding, and response shape constraints are part of interoperability, not optional polish.
+Issue #197 tracks the remaining batch-limit hardening work.
+Previous page
+Next page

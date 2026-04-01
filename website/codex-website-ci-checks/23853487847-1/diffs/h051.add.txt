@@ -1,0 +1,297 @@
+MCP-AQL Spec | MCP-AQL Breaking Change Policy
+Launch Checklist
+Adapter Patterns
+Search MCP-AQL docs
+Repo-Synced Spec
+Generated from MCPAQL/spec so the website carries the deeper protocol material too.
+MCP-AQL Conformance Testing Specification
+MCP-AQL CRUDE Pattern Specification
+MCP-AQL Endpoint Modes Specification
+Structured Error Codes Specification
+MCP-AQL Introspection Specification
+MCP-AQL Licensing Options (Working Notes)
+MCP Integration Specification
+MCP-AQL Operations Specification
+MCP-AQL Protocol Overview
+Plugin Interface Contracts
+MCP-AQL Specification Documentation
+MCP-AQL Specification
+Versions
+Dangerous Operation Classification Specification
+MCP Server Discovery Bundle
+Adapter Element Type Specification
+Adapter Generator Specification
+Rate Limiting and Quota Management Specification
+Trust Levels Specification
+Security
+Confirmation Token Specification
+Execution Safety Loop Specification
+Security Model: Gatekeeper Specification
+Features
+Field Selection Specification
+Cursor-Based Pagination Specification
+Warnings Array Specification
+Protocol Comparison Guide
+Developer Guides
+MCP-AQL Breaking Change Policy
+Preliminary Public Launch Checklist
+RFC Process for MCP-AQL Specification
+Versioning Strategy
+Changelog
+Architecture
+Architecture Documentation
+Research
+Protocol Landscape: MCP vs MCP-AQL vs A2A
+Reference
+Reference Documentation
+ADR-001: CRUDE Pattern (Extending CRUD with Execute)
+ADR-002: GraphQL-Style Input Objects for Updates
+ADR-003: snake_case Parameter Convention
+ADR-004: Schema-Driven Operation Definitions
+ADR-005: GraphQL-Style Introspection System
+ADR-006: Discriminated Response Format
+Architecture Decision Records
+Full Spec
+REPO-SYNCED SPEC DOC
+This document defines how breaking changes are handled in the MCP-AQL specification, including change classification, deprecation procedures, migration requirements, and communication standards.
+Support document Draft 1.0.0-draft 2026-01-14
+Source: spec/docs/process/breaking-changes.md
+Open Source Markdown
+Browse Full Spec Reference
+Version: 1.0.0-draft Status: Draft Last Updated: 2026-01-14
+Abstract
+Table of Contents
+Introduction
+Change Classification
+Deprecation Policy
+Migration Guides
+Communication
+1. Introduction
+1.1 What is a Breaking Change?
+A breaking change is any modification to the MCP-AQL specification that could cause existing conforming implementations to:
+Fail to compile or build
+Produce errors at runtime
+Behave differently than documented
+Become non-conformant with the specification
+1.2 Why This Policy Exists
+MCP-AQL serves as a foundation for interoperability between AI models and MCP servers. Stability is critical because:
+Adapter Authors depend on stable interfaces to build reliable implementations
+AI Models rely on consistent behavior for effective operation discovery
+End Users expect existing integrations to continue working after updates
+This policy ensures that necessary evolution of the specification happens in a predictable, well-communicated manner that minimizes disruption to the ecosystem.
+1.3 Scope
+This policy applies to:
+The core MCP-AQL specification
+Required operations (currently only introspect )
+CRUDE endpoint definitions
+Protocol types and response structures
+Introspection response formats
+2. Change Classification
+2.1 Breaking Changes (Major Version Bump)
+Breaking changes require a major version increment (e.g., 1.x.x to 2.0.0) and trigger the full deprecation and migration process.
+Examples of Breaking Changes:
+Change Type
+Removing required operations
+Removing the introspect operation
+Incompatible request structure changes
+Changing operation field to op
+Incompatible response structure changes
+Restructuring the success/error envelope
+Removing CRUDE endpoints
+Eliminating the EXECUTE endpoint
+Changing introspection response format
+Altering the structure of OperationDetails
+Removing required fields from protocol types
+Removing endpoint from OperationInfo
+Changing field types incompatibly
+Changing required from boolean to string
+Changing endpoint routing rules
+Requiring different operation-to-endpoint mappings
+2.2 Non-Breaking Changes (Minor Version Bump)
+Non-breaking changes add new capabilities without affecting existing implementations. These require a minor version increment (e.g., 1.0.x to 1.1.0).
+Examples of Non-Breaking Changes:
+Adding new optional operations
+New validate operation on READ endpoint
+Adding new optional parameters
+Adding timeout parameter to existing operations
+Adding new fields to responses (additive)
+Adding deprecated flag to OperationInfo
+New optional features
+Field selection support
+Deprecating features (without removal)
+Marking an operation as deprecated
+Adding new optional protocol types
+New TypeInfo subtypes
+Extending enum values
+Adding new endpoint mode options
+2.3 Patch Changes (Patch Version Bump)
+Patch changes do not affect implementation behavior. These require a patch version increment (e.g., 1.0.0 to 1.0.1).
+Examples of Patch Changes:
+Clarifications that don't change behavior
+Explaining existing edge case handling
+Typo fixes
+Correcting spelling in specification text
+Example corrections
+Fixing incorrect JSON in examples
+Documentation improvements
+Adding diagrams or additional context
+Formatting changes
+Restructuring sections for clarity
+Non-normative additions
+Adding implementation notes
+2.4 Classification Decision Tree
+Is existing conforming code affected?
+No --&gt; Is new functionality added?
+| Yes --&gt; MINOR version bump
+| No --&gt; PATCH version bump
+Yes --&gt; MAJOR version bump (Breaking Change)
+3. Deprecation Policy
+3.1 Deprecation Period
+All breaking changes MUST go through a deprecation period before removal:
+Minimum Duration: 1 minor version OR 3 months, whichever is longer
+Maximum Duration: Until the next major version release
+For example, if a feature is deprecated in version 1.2.0, it:
+MUST remain available through at least version 1.3.0
+MUST remain available for at least 3 months after 1.2.0 release
+MAY be removed in version 2.0.0
+3.2 Deprecation Communication
+When a feature is deprecated, the following communication is required:
+In Specification Documents:
+&gt; **DEPRECATED:** This feature is deprecated as of version X.Y.Z and will be
+&gt; removed in version A.0.0. Use [ alternative ] instead.
+In Introspection Responses:
+Implementations SHOULD include deprecation information in introspection:
+&quot;operation&quot; : {
+&quot;name&quot; : &quot;legacy_operation&quot; ,
+&quot;endpoint&quot; : &quot;READ&quot; ,
+&quot;deprecated&quot; : true ,
+&quot;deprecationMessage&quot; : &quot;Use &#39;new_operation&#39; instead. Will be removed in v2.0.0.&quot; ,
+&quot;deprecatedSince&quot; : &quot;1.2.0&quot; ,
+&quot;removalVersion&quot; : &quot;2.0.0&quot;
+3.3 Deprecation Warning Fields
+When implementing deprecation warnings in introspection, include:
+Required
+Description
+deprecated
+Whether the item is deprecated
+deprecationMessage
+Human-readable explanation and alternative
+deprecatedSince
+Version when deprecation began
+removalVersion
+Version when item will be removed
+3.4 Deprecation Stages
+Announced: Feature marked deprecated in specification and changelog
+Warning: Implementations begin returning deprecation warnings
+Final Notice: Last minor version before removal
+Removed: Feature removed in new major version
+4. Migration Guides
+4.1 Requirement
+Every breaking change MUST include a migration guide that enables implementers to update their code.
+4.2 Migration Guide Structure
+Migration guides MUST follow this structure:
+# Migration Guide: [Brief Description]
+**From:** Version X.Y.Z
+**To:** Version A.B.C
+**Breaking Change:** [ Category from Section 2.1 ]
+## Summary
+[ One paragraph explaining what changed and why ]
+## What&#39;s Changing
+[ Detailed explanation of the change ]
+### Before (Version X.Y.Z)
+[ Code example showing old behavior ]
+### After (Version A.B.C)
+[ Code example showing new behavior ]
+## Migration Steps
+1. [ Step-by-step instructions ]
+2. [ Include code transformations where applicable ]
+3. [ Note any automated migration tools if available ]
+## Timeline
+- **Deprecated:** Version X.Y.Z (YYYY-MM-DD)
+- **Removal:** Version A.0.0 (estimated YYYY-MM-DD)
+## Questions
+For questions about this migration, [ contact information or issue tracker link ] .
+4.3 Migration Guide Location
+Migration guides MUST be:
+Published in docs/migrations/ directory
+Named with format: vX-to-vY-[brief-description].md
+Linked from the changelog entry
+Referenced in deprecation warnings
+4.4 Example Migration Guide
+# Migration Guide: Introspection Response Restructure
+**From:** Version 1.x
+**To:** Version 2.0.0
+**Breaking Change:** Changing introspection response format
+Version 2.0.0 restructures the introspection response to provide better
+type safety and support for new features. The `data` wrapper now includes
+explicit type discriminators.
+### Before (Version 1.x)
+&quot;success&quot;: true,
+&quot;data&quot;: {
+&quot;operations&quot;: [ ... ]
+### After (Version 2.0.0)
+&quot;type&quot;: &quot;operation_list&quot;,
+&quot;items&quot;: [ ... ]
+1. Update response parsing to handle the new `type` field
+2. Change array access from `data.operations` to `data.items`
+3. Add type checking based on `data.type` value
+- **Deprecated:** Version 1.3.0 (2026-04-01)
+- **Removal:** Version 2.0.0 (estimated 2026-07-01)
+5. Communication
+5.1 Changelog Format
+Breaking changes MUST be prominently documented in the changelog using this format:
+## [2.0.0] - YYYY-MM-DD
+### BREAKING CHANGES
+- **[Category]:** Brief description of breaking change
+- Migration guide: [ link to migration guide ]
+- Deprecation notice: Deprecated in v1.X.0
+### Removed
+- [ List of removed features that were previously deprecated ]
+### Changed
+- [ List of changed behaviors ]
+5.2 Announcement Requirements
+For Major Versions (Breaking Changes):
+Changelog entry with full details
+Migration guide(s) published
+Announcement in repository README or main documentation
+Minimum 30 days notice before release
+Release notes highlighting all breaking changes
+For Minor Versions:
+Changelog entry listing new features and deprecations
+Documentation updates for new features
+Deprecation warnings added to relevant sections
+For Patch Versions:
+Changelog entry listing fixes and clarifications
+5.3 Changelog Entry Examples
+Breaking Change Entry:
+## [2.0.0] - 2026-07-01
+- **Introspection Response:** The operation list response structure has changed.
+The `operations` array is now `items` within a typed wrapper.
+- Migration guide: [ v1-to-v2-introspection-response.md ](migrations/v1-to-v2-introspection-response.md)
+- Deprecation notice: Deprecated in v1.3.0 (2026-04-01)
+- **Required Fields:** The `mcpTool` field in OperationDetails is now required
+rather than optional.
+- Migration guide: [ v1-to-v2-required-fields.md ](migrations/v1-to-v2-required-fields.md)
+- Deprecation notice: Deprecated in v1.4.0 (2026-05-01)
+Deprecation Entry:
+## [1.3.0] - 2026-04-01
+### Deprecated
+- **Introspection Response Structure:** The current `data.operations` array
+format is deprecated. Version 2.0.0 will use a typed wrapper structure.
+See [ v1-to-v2-introspection-response.md ](migrations/v1-to-v2-introspection-response.md)
+for migration guidance.
+5.4 Pre-Release Versions
+Pre-release versions (alpha, beta, release candidates) MAY contain breaking changes without following the full deprecation process. However:
+Breaking changes between pre-releases SHOULD still be documented
+Migration guidance SHOULD still be provided
+Users of pre-release versions accept the risk of breaking changes
+References
+MCP-AQL Specification v1.0.0-draft
+CRUDE Pattern Specification
+Introspection Specification
+Previous spec page
+Next spec page
+&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
+Docs Library
+MCPAQL Organization
+Dollhouse Research

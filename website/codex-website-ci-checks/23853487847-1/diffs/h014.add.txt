@@ -1,0 +1,24 @@
+Getting Started
+Error Model
+Adapter Contracts
+Release Notes
+Full Spec Reference
+Related reading
+Go Deeper In The Full Spec
+The roadmap connects directly to the process and release-management pages in the full reference.
+Browse the full spec reference
+Preliminary Public Launch Checklist
+Versioning Strategy
+Changelog
+Related Summary Pages
+These pages give the clearest summary-layer view of release timing, testing, and implementation posture.
+Back to the docs library
+#193 MCP capability alignment audit
+#197 batch/resource safeguard clarity
+#199 structured error alignment and consistency
+#204 conformance framework formalization
+Release coordination
+The coordinating epic is spec issue #194 .
+It ties together spec publication, proof-of-concept adapters, website readiness, and launch messaging with the Dollhouse practical profile.
+Previous page
+Next page

@@ -1,0 +1,18 @@
+Search MCP-AQL docs
+Conceptual integration profiles that connect the protocol rules to common target-system shapes.
+MCP Server
+Application
+Cloud Service
+Operating System
+Website / Web API
+Adapter Contracts
+Rate-Limiting Spec
+Related reading
+Read the formal docs
+The protocol-level details for quotas, batches, and output contracts live in the deeper documentation set.
+Rate-Limiting Specification
+Pagination Specification
+Structured Error Codes
+Explore more patterns
+These neighboring patterns show how similar controls change with server, app, OS, and web surfaces.
+Back to docs library

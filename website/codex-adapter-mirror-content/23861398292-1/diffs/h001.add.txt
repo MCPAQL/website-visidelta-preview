@@ -1,0 +1,57 @@
+MCP-AQL Adapter Reference | ADR-001: Plugin Pipeline Order
+Launch Checklist
+Adapter Patterns
+Search MCP-AQL docs
+Reference Adapter Docs
+Generated from MCPAQL/mcpaql-adapter so the website carries the implementation architecture, guides, and ADRs too.
+Overview
+MCP-AQL Reference Adapter
+Architecture
+Schema-Driven Dispatch
+MCP-AQL Architecture Overview
+Plugin System Implementation
+Universal Adapter Runtime Specification
+MCP-AQL Adapter Development Guide
+Migration Guide: MCP Server to MCP-AQL Adapter
+MCP-AQL Adapter Testing Guide
+ADR-001: Plugin Pipeline Order
+ADR-002: Schema-Driven Dispatch over Code Generation
+ADR-003: Stateless Singleton Plugins
+Architecture Decision Records
+Examples
+REPO-SYNCED ADAPTER DOC
+Date: 2026-01-26
+Support document Accepted
+Source: mcpaql-adapter/docs/adr/ADR-001-plugin-pipeline-order.md
+Open Source Markdown Browse Reference Adapter Docs Adapter Patterns Hub
+Status: Accepted Date: 2026-01-26
+The universal adapter runtime composes four plugin types (protocol, auth, serialization, transport) into a request pipeline. The order in which these plugins execute affects correctness:
+The protocol plugin must build the request structure before auth can attach credentials
+Auth must modify headers before serialization finalizes the body
+Serialization must set the Content-Type header before transport sends
+Transport is always last (it performs the actual I/O)
+Several orderings are possible, and getting this wrong causes subtle bugs (e.g., auth headers overwritten by serialization, or Content-Type set before the body is ready).
+Decision
+The plugin pipeline executes in this fixed order:
+Protocol — builds TransportRequest from operation definition and parameters
+Auth — attaches credentials (headers, query params) to the request
+Serialization — encodes the request body and sets Content-Type
+Transport — sends the request and returns raw response
+Response processing reverses the relevant steps:
+Serialization — decodes the response body
+Protocol — parses the response into ParsedResponse format
+Consequences
+Positive:
+Auth plugins can set headers without worrying about serialization overwriting them
+Protocol plugins produce a complete request structure that downstream plugins augment
+The fixed order eliminates a class of composition bugs
+Easy to reason about and debug
+Negative:
+Less flexible than a fully configurable pipeline
+Auth plugins that need to sign the serialized body (e.g., AWS Signature V4) will need access to the post-serialization request — deferred to future specification
+References
+Plugin Interface Contracts (spec repo)
+Previous page
+Next page
+&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
+Adapter Patterns Reference Adapter Docs Reference Adapter Repo Dollhouse Research

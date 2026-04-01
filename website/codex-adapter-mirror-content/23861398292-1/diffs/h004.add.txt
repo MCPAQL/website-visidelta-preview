@@ -1,0 +1,35 @@
+MCP-AQL Adapter Reference | Architecture Decision Records
+Launch Checklist
+Adapter Patterns
+Search MCP-AQL docs
+Reference Adapter Docs
+Generated from MCPAQL/mcpaql-adapter so the website carries the implementation architecture, guides, and ADRs too.
+Overview
+MCP-AQL Reference Adapter
+Architecture
+Schema-Driven Dispatch
+MCP-AQL Architecture Overview
+Plugin System Implementation
+Universal Adapter Runtime Specification
+MCP-AQL Adapter Development Guide
+Migration Guide: MCP Server to MCP-AQL Adapter
+MCP-AQL Adapter Testing Guide
+ADR-001: Plugin Pipeline Order
+ADR-002: Schema-Driven Dispatch over Code Generation
+ADR-003: Stateless Singleton Plugins
+Architecture Decision Records
+Examples
+REPO-SYNCED ADAPTER DOC
+This directory contains Architecture Decision Records (ADRs) for implementation decisions in the MCP-AQL adapter.
+Support document
+Source: mcpaql-adapter/docs/adr/README.md
+Open Source Markdown Browse Reference Adapter Docs Adapter Patterns Hub
+For protocol-level ADRs (CRUDE pattern, introspection, etc.), see the spec repository ADRs .
+Plugin Pipeline Order
+Accepted
+Schema-Driven Dispatch over Code Generation
+Stateless Singleton Plugins
+Previous page
+Next page
+&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
+Adapter Patterns Reference Adapter Docs Reference Adapter Repo Dollhouse Research

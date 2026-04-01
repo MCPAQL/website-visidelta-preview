@@ -1,0 +1,8 @@
+Reference adapter docs
+Universal Runtime
+Testing Guide
+Implementation Reference
+See where validation, request building, auth, and response mapping belong before you expose local operations.
+Plugin System
+Use plugins to keep policy, transport, and transformation concerns isolated around sensitive system operations.
+Cover destructive-path validation and routing constraints before enabling write or execute behavior.

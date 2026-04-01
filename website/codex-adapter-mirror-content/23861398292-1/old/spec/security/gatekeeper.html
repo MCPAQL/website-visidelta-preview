@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="This document specifies an optional security model for MCP-AQL adapters, providing multi-layer access control, confirmation requirements, and audit capabilities.">
+  <title>MCP-AQL Spec | Security Model: Gatekeeper Specification</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <a class="logo" href="../../index.html"><span class="logo-mark"></span>MCP-AQL</a>
+        <ul class="nav-links">
+          <li><a href="../../index.html">Home</a></li>
+          <li><a href="../../docs/index.html">Docs</a></li>
+          <li><a href="../../launch-checklist.html">Launch Checklist</a></li>
+          <li><a href="../../apis/index.html">Adapter Patterns</a></li>
+        </ul>
+        <form class="site-search" data-search-form data-index-url="../../data/search-index.json" role="search">
+          <label class="sr-only" for="site-search-input">Search MCP-AQL docs</label>
+          <input id="site-search-input" data-search-input type="search" placeholder="Search MCP-AQL docs, spec pages, and adapter patterns...">
+          <span class="search-count" data-search-count></span>
+          <ul class="search-results" data-search-results hidden></ul>
+        </form>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container docs-shell">
+      <aside class="docs-side">
+        <h2>Repo-Synced Spec</h2>
+        <p class="docs-side-note">Generated from <code>MCPAQL/spec</code> so the website carries the deeper protocol material too.</p>
+        <div class="docs-side-group">
+  <h3>Core</h3>
+  <ul><li><a href="../conformance-testing.html">MCP-AQL Conformance Testing Specification</a></li><li><a href="../crude-pattern.html">MCP-AQL CRUDE Pattern Specification</a></li><li><a href="../endpoint-modes.html">MCP-AQL Endpoint Modes Specification</a></li><li><a href="../error-codes.html">Structured Error Codes Specification</a></li><li><a href="../introspection.html">MCP-AQL Introspection Specification</a></li><li><a href="../licensing-options.html">MCP-AQL Licensing Options (Working Notes)</a></li><li><a href="../mcp-integration.html">MCP Integration Specification</a></li><li><a href="../operations.html">MCP-AQL Operations Specification</a></li><li><a href="../overview.html">MCP-AQL Protocol Overview</a></li><li><a href="../plugin-contracts.html">Plugin Interface Contracts</a></li><li><a href="../README.html">MCP-AQL Specification Documentation</a></li><li><a href="../repo/README.html">MCP-AQL Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Versions</h3>
+  <ul><li><a href="../versions/v1.0.0-draft.html">MCP-AQL Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Adapter</h3>
+  <ul><li><a href="../adapter/danger-levels.html">Dangerous Operation Classification Specification</a></li><li><a href="../adapter/discovery-bundle.html">MCP Server Discovery Bundle</a></li><li><a href="../adapter/element-type.html">Adapter Element Type Specification</a></li><li><a href="../adapter/generator.html">Adapter Generator Specification</a></li><li><a href="../adapter/rate-limiting.html">Rate Limiting and Quota Management Specification</a></li><li><a href="../adapter/trust-levels.html">Trust Levels Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Security</h3>
+  <ul><li><a href="confirmation-tokens.html">Confirmation Token Specification</a></li><li><a href="execution-safety-loop.html">Execution Safety Loop Specification</a></li><li><a class="current" aria-current="page" href="gatekeeper.html">Security Model: Gatekeeper Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Features</h3>
+  <ul><li><a href="../features/field-selection.html">Field Selection Specification</a></li><li><a href="../features/pagination.html">Cursor-Based Pagination Specification</a></li><li><a href="../features/warnings.html">Warnings Array Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Guides</h3>
+  <ul><li><a href="../guides/protocol-comparison.html">Protocol Comparison Guide</a></li><li><a href="../guides/README.html">Developer Guides</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Process</h3>
+  <ul><li><a href="../process/breaking-changes.html">MCP-AQL Breaking Change Policy</a></li><li><a href="../process/preliminary-public-launch-checklist.html">Preliminary Public Launch Checklist</a></li><li><a href="../process/rfc-process.html">RFC Process for MCP-AQL Specification</a></li><li><a href="../process/versioning.html">Versioning Strategy</a></li><li><a href="../repo/CHANGELOG.html">Changelog</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Architecture</h3>
+  <ul><li><a href="../architecture/README.html">Architecture Documentation</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Research</h3>
+  <ul><li><a href="../research/mcp-vs-mcpaql-vs-a2a.html">Protocol Landscape: MCP vs MCP-AQL vs A2A</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Reference</h3>
+  <ul><li><a href="../reference/README.html">Reference Documentation</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>ADRs</h3>
+  <ul><li><a href="../adr/ADR-001-crude-pattern.html">ADR-001: CRUDE Pattern (Extending CRUD with Execute)</a></li><li><a href="../adr/ADR-002-graphql-style-input.html">ADR-002: GraphQL-Style Input Objects for Updates</a></li><li><a href="../adr/ADR-003-snake-case-parameters.html">ADR-003: snake_case Parameter Convention</a></li><li><a href="../adr/ADR-004-schema-driven-operations.html">ADR-004: Schema-Driven Operation Definitions</a></li><li><a href="../adr/ADR-005-introspection-system.html">ADR-005: GraphQL-Style Introspection System</a></li><li><a href="../adr/ADR-006-discriminated-responses.html">ADR-006: Discriminated Response Format</a></li><li><a href="../adr/index.html">Architecture Decision Records</a></li><li><a href="../adr/README.html">Architecture Decision Records</a></li></ul>
+</div>
+      </aside>
+
+      <article class="docs-main">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+          <ol>
+            <li><a href="../../index.html">Home</a></li>
+            <li><a href="../index.html">Full Spec</a></li>
+            <li><span class="current">Security Model: Gatekeeper Specification</span></li>
+          </ol>
+        </nav>
+        <section class="hero docs-hero">
+          <div class="hero-inner">
+            <span class="status-pill">REPO-SYNCED SPEC DOC</span>
+            <h1>Security Model: Gatekeeper Specification</h1>
+            <p class="lede">This document specifies an optional security model for MCP-AQL adapters, providing multi-layer access control, confirmation requirements, and audit capabilities.</p>
+            <div class="spec-meta"><span class="state-chip live">Support document</span><span class="state-chip pending">Draft</span><span class="state-chip">1.0.0-draft</span><span class="state-chip">2026-01-14</span></div>
+            <p class="spec-source">Source: <a href="https://github.com/MCPAQL/spec/blob/main/docs/security/gatekeeper.md">spec/docs/security/gatekeeper.md</a></p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="https://github.com/MCPAQL/spec/blob/main/docs/security/gatekeeper.md">Open Source Markdown</a>
+              <a class="btn btn-secondary" href="../index.html">Browse Full Spec Reference</a>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <div class="card spec-prose">
+            <p><strong>Version:</strong> 1.0.0-draft <strong>Status:</strong> Draft <strong>Last Updated:</strong> 2026-01-14</p>
+<h2 id="abstract">Abstract</h2>
+<p>This document specifies an optional security model for MCP-AQL adapters, providing multi-layer access control, confirmation requirements, and audit capabilities.</p>
+<hr />
+<h2 id="table-of-contents">Table of Contents</h2>
+<ol type="1">
+<li><a href="#1-introduction">Introduction</a></li>
+<li><a href="#2-security-layers">Security Layers</a></li>
+<li><a href="#3-permission-model">Permission Model</a></li>
+<li><a href="#4-confirmation-system">Confirmation System</a></li>
+<li><a href="#5-audit-logging">Audit Logging</a></li>
+<li><a href="#6-implementation-requirements">Implementation Requirements</a></li>
+</ol>
+<hr />
+<h2 id="1-introduction">1. Introduction</h2>
+<h3 id="11-purpose">1.1 Purpose</h3>
+<p>A security layer (called "Gatekeeper" in this specification) provides centralized security enforcement for MCP-AQL operations, ensuring:</p>
+<ul>
+<li><strong>Authorization</strong> - Operations are permitted for the caller</li>
+<li><strong>Safety classification</strong> - Operations categorized by risk</li>
+<li><strong>Confirmation gates</strong> - Destructive operations require acknowledgment</li>
+<li><strong>Audit trail</strong> - Security-relevant events are logged</li>
+</ul>
+<h3 id="12-status">1.2 Status</h3>
+<p>The Gatekeeper is an <strong>optional</strong> feature. Adapters MAY implement it based on their security requirements.</p>
+<h3 id="13-core-principle">1.3 Core Principle</h3>
+<blockquote>
+<p>"LLM instructions are suggestions. Adapter policies are enforcement."</p>
+</blockquote>
+<p>Security is enforced server-side by the adapter, not by client behavior. Clients cannot bypass security through endpoint selection or parameter manipulation.</p>
+<h3 id="14-relationship-to-the-execution-safety-loop">1.4 Relationship to the Execution Safety Loop</h3>
+<p>The Gatekeeper can operate as a standalone security layer for individual operations, or as part of the <a href="execution-safety-loop.html">Execution Safety Loop</a> — a continuous monitoring pattern where the LLM reports every intended action for safety evaluation. When deployed as a safety dongle (see <a href="execution-safety-loop.html#2-the-safety-dongle-deployment-model">Section 2 of the Execution Safety Loop specification</a>), the Gatekeeper evaluates <code>nextActionHint</code> strings against configured policies, providing go/no-go directives for actions across all connected MCP servers.</p>
+<hr />
+<h2 id="2-security-layers">2. Security Layers</h2>
+<h3 id="21-defense-in-depth">2.1 Defense in Depth</h3>
+<pre><code>┌────────────────────────────────────────────────────────┐
+│                    REQUEST                             │
+└────────────────────────┬───────────────────────────────┘
+                         ▼
+┌────────────────────────────────────────────────────────┐
+│  Layer 1: Route Validation                             │
+│  - Operation exists?                                   │
+│  - Correct endpoint (CRUDE mode)?                      │
+└────────────────────────┬───────────────────────────────┘
+                         ▼
+┌────────────────────────────────────────────────────────┐
+│  Layer 2: Safety Tier                                  │
+│  - Endpoint permissions (readOnly, destructive)        │
+└────────────────────────┬───────────────────────────────┘
+                         ▼
+┌────────────────────────────────────────────────────────┐
+│  Layer 3: Operation Policy                             │
+│  - Per-operation access rules                          │
+│  - Parameter-based restrictions                        │
+└────────────────────────┬───────────────────────────────┘
+                         ▼
+┌────────────────────────────────────────────────────────┐
+│  Layer 4: Confirmation                                 │
+│  - Destructive operation acknowledgment                │
+└────────────────────────┬───────────────────────────────┘
+                         ▼
+┌────────────────────────────────────────────────────────┐
+│                    EXECUTE                             │
+└────────────────────────────────────────────────────────┘</code></pre>
+<h3 id="22-layer-1-route-validation">2.2 Layer 1: Route Validation</h3>
+<p>Validates operation routing before any processing.</p>
+<p><strong>Checks:</strong></p>
+<ul>
+<li>Operation name is recognized</li>
+<li>Operation is sent to correct endpoint (CRUDE mode)</li>
+<li>Required parameters are present</li>
+</ul>
+<p><strong>Failure Response:</strong></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">success</span><span class="op">:</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">error</span><span class="op">:</span> <span class="st">&quot;Operation &#39;create_user&#39; must be called via mcp_aql_create, not mcp_aql_read&quot;</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="23-layer-2-safety-tier">2.3 Layer 2: Safety Tier</h3>
+<p>Applies endpoint-level safety classification.</p>
+<p><strong>Endpoint Safety Matrix:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>readOnly</th>
+<th>destructive</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CREATE</td>
+<td>false</td>
+<td>false</td>
+<td>Additive only</td>
+</tr>
+<tr>
+<td>READ</td>
+<td>true</td>
+<td>false</td>
+<td>No state changes</td>
+</tr>
+<tr>
+<td>UPDATE</td>
+<td>false</td>
+<td>true</td>
+<td>May overwrite data</td>
+</tr>
+<tr>
+<td>DELETE</td>
+<td>false</td>
+<td>true</td>
+<td>Removes data permanently</td>
+</tr>
+<tr>
+<td>EXECUTE</td>
+<td>false</td>
+<td>true</td>
+<td>May have external effects</td>
+</tr>
+</tbody>
+</table>
+<h3 id="24-layer-3-operation-policy">2.4 Layer 3: Operation Policy</h3>
+<p>Per-operation access control rules.</p>
+<p><strong>Policy Structure:</strong></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> OperationPolicy {</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  operation<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  permission<span class="op">:</span> Permission<span class="op">;</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  conditions<span class="op">?:</span> Condition[]<span class="op">;</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> Permission <span class="op">=</span> <span class="st">&#39;allow&#39;</span> <span class="op">|</span> <span class="st">&#39;deny&#39;</span> <span class="op">|</span> <span class="st">&#39;confirm&#39;</span><span class="op">;</span></span></code></pre></div>
+<h3 id="25-layer-4-confirmation">2.5 Layer 4: Confirmation</h3>
+<p>Final gate for destructive operations.</p>
+<hr />
+<h2 id="3-permission-model">3. Permission Model</h2>
+<h3 id="31-permission-types">3.1 Permission Types</h3>
+<table>
+<thead>
+<tr>
+<th>Permission</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>allow</code></td>
+<td>Operation proceeds without additional checks</td>
+</tr>
+<tr>
+<td><code>deny</code></td>
+<td>Operation rejected with error</td>
+</tr>
+<tr>
+<td><code>confirm</code></td>
+<td>Operation requires explicit confirmation</td>
+</tr>
+</tbody>
+</table>
+<h3 id="32-permission-resolution">3.2 Permission Resolution</h3>
+<p>When multiple policies apply, most restrictive wins:</p>
+<pre><code>deny &gt; confirm &gt; allow</code></pre>
+<hr />
+<h2 id="4-confirmation-system">4. Confirmation System</h2>
+<p>This section provides an overview of the confirmation system. For detailed token generation, validation, and lifecycle requirements, see the <a href="confirmation-tokens.html">Confirmation Token Specification</a>.</p>
+<h3 id="41-confirmation-request">4.1 Confirmation Request</h3>
+<p>When confirmation is required:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">success</span><span class="op">:</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">error</span><span class="op">:</span> <span class="st">&quot;This operation requires confirmation&quot;</span><span class="op">,</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">errorCode</span><span class="op">:</span> <span class="st">&quot;CONFIRMATION_REQUIRED&quot;</span><span class="op">,</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">confirmation</span><span class="op">:</span> {</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;delete_user&quot;</span><span class="op">,</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">message</span><span class="op">:</span> <span class="st">&quot;Are you sure you want to delete user &#39;alice&#39;? This cannot be undone.&quot;</span><span class="op">,</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">token</span><span class="op">:</span> <span class="st">&quot;conf_abc123&quot;</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="42-confirming-operations">4.2 Confirming Operations</h3>
+<p>Client confirms by including the token:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;delete_user&quot;</span><span class="op">,</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">params</span><span class="op">:</span> {</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">user_id</span><span class="op">:</span> <span class="st">&quot;alice&quot;</span><span class="op">,</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">_confirmation</span><span class="op">:</span> <span class="st">&quot;conf_abc123&quot;</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="43-session-scoped-confirmations">4.3 Session-Scoped Confirmations</h3>
+<p>Confirmations MAY be cached per session (see <a href="../versions/v1.0.0-draft.html#23-session-lifecycle">Section 2.3</a> of the core specification):</p>
+<ul>
+<li>Confirmations expire after configurable timeout</li>
+<li>Confirmations are scoped to specific operation</li>
+<li>Session end (MCP connection termination) clears all confirmations</li>
+</ul>
+<hr />
+<h2 id="5-audit-logging">5. Audit Logging</h2>
+<h3 id="51-security-events">5.1 Security Events</h3>
+<p>Adapters implementing security SHOULD log:</p>
+<table>
+<thead>
+<tr>
+<th>Event</th>
+<th>Logged Data</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>OPERATION_DENIED</code></td>
+<td>Operation, reason</td>
+</tr>
+<tr>
+<td><code>CONFIRMATION_REQUIRED</code></td>
+<td>Operation, token</td>
+</tr>
+<tr>
+<td><code>CONFIRMATION_GRANTED</code></td>
+<td>Operation, token</td>
+</tr>
+</tbody>
+</table>
+<h3 id="52-audit-log-format">5.2 Audit Log Format</h3>
+<div class="sourceCode" id="cb7"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> AuditEntry {</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  timestamp<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  event<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  operation<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  endpoint<span class="op">:</span> CRUDEndpoint<span class="op">;</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  result<span class="op">:</span> <span class="st">&#39;allowed&#39;</span> <span class="op">|</span> <span class="st">&#39;denied&#39;</span> <span class="op">|</span> <span class="st">&#39;confirmed&#39;</span><span class="op">;</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  reason<span class="op">?:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<hr />
+<h2 id="6-implementation-requirements">6. Implementation Requirements</h2>
+<h3 id="61-must-requirements">6.1 MUST Requirements</h3>
+<p>Adapters implementing security MUST:</p>
+<ol type="1">
+<li>Enforce endpoint routing validation</li>
+<li>Apply safety tier classifications</li>
+<li>Return proper error codes for security failures</li>
+<li>Protect against parameter manipulation</li>
+</ol>
+<h3 id="62-should-requirements">6.2 SHOULD Requirements</h3>
+<p>Adapters implementing security SHOULD:</p>
+<ol type="1">
+<li>Implement confirmation system for destructive operations</li>
+<li>Maintain audit logs</li>
+<li>Support policy configuration</li>
+</ol>
+<h3 id="63-may-requirements">6.3 MAY Requirements</h3>
+<p>Adapters implementing security MAY:</p>
+<ol type="1">
+<li>Support authenticated callers with different permissions</li>
+<li>Provide policy administration API</li>
+<li>Implement rate limiting</li>
+</ol>
+<hr />
+<h2 id="7-autonomy-evaluator-integration">7. Autonomy Evaluator Integration</h2>
+<p>When the Gatekeeper operates within the <a href="execution-safety-loop.html">Execution Safety Loop</a>, it integrates with the Autonomy Evaluator (Section 8.7 of the core spec) to provide continuous per-action safety evaluation:</p>
+<h3 id="71-gatekeeper-blocks-as-notifications">7.1 Gatekeeper Blocks as Notifications</h3>
+<p>When the Gatekeeper denies an operation during execution, the block is recorded and surfaced as a <code>permission_pending</code> notification in the next <code>AutonomyDirective</code> response. This allows bridge agents and remote interfaces to relay approval requests to human operators through their communication channel.</p>
+<h3 id="72-policy-evaluation-for-nextactionhint">7.2 Policy Evaluation for <code>nextActionHint</code></h3>
+<p>In safety dongle deployments, the Gatekeeper's Layer 3 (Operation Policy) evaluates <code>nextActionHint</code> strings against configured patterns rather than operation names. The same deny/confirm/allow semantics apply, but the input is the LLM's stated intent rather than a formal operation identifier.</p>
+<h3 id="73-confirmation-flow-during-execution">7.3 Confirmation Flow During Execution</h3>
+<p>When the Gatekeeper returns <code>CONFIRMATION_REQUIRED</code> during an execution safety loop:</p>
+<ol type="1">
+<li>The <code>AutonomyDirective</code> returns <code>continue: false</code> with a <code>permission_pending</code> notification</li>
+<li>The agent (or its bridge) presents the confirmation request to a human operator</li>
+<li>The human approves via <code>confirm_operation</code></li>
+<li>The next <code>record_execution_step</code> call clears the notification and evaluation continues</li>
+</ol>
+<hr />
+<h2 id="references">References</h2>
+<ul>
+<li><a href="../versions/v1.0.0-draft.html">MCP-AQL Specification</a></li>
+<li><a href="../crude-pattern.html">CRUDE Pattern Specification</a></li>
+<li><a href="confirmation-tokens.html">Confirmation Token Specification</a></li>
+<li><a href="execution-safety-loop.html">Execution Safety Loop Specification</a></li>
+<li><a href="../adapter/danger-levels.html">Danger Levels Specification</a></li>
+<li><a href="../operations.html">Operations Guide</a></li>
+</ul>
+
+          </div>
+        </section>
+        <nav class="page-nav" aria-label="Page navigation">
+  <a class="page-nav-link prev" href="execution-safety-loop.html">
+    <span class="page-nav-eyebrow">Previous spec page</span>
+    <strong class="page-nav-label">Execution Safety Loop Specification</strong>
+  </a>
+  <a class="page-nav-link next" href="../features/field-selection.html">
+    <span class="page-nav-eyebrow">Next spec page</span>
+    <strong class="page-nav-label">Field Selection Specification</strong>
+  </a>
+</nav>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.</p>
+      <div class="footer-links">
+        <a href="../../docs/index.html">Docs Library</a>
+        <a href="../index.html">Repo-Synced Spec</a>
+        <a href="https://github.com/MCPAQL">MCPAQL Organization</a>
+        <a href="https://dollhouseresearch.com">Dollhouse Research</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../js/search.js"></script>
+</body>
+</html>

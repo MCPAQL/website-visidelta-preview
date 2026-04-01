@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Document Status: This document is informative. For normative requirements, see MCP-AQL Specification v1.0.0.">
+  <title>MCP-AQL Spec | MCP-AQL Operations Specification</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <a class="logo" href="../index.html"><span class="logo-mark"></span>MCP-AQL</a>
+        <ul class="nav-links">
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="../docs/index.html">Docs</a></li>
+          <li><a href="../launch-checklist.html">Launch Checklist</a></li>
+          <li><a href="../apis/index.html">Adapter Patterns</a></li>
+        </ul>
+        <form class="site-search" data-search-form data-index-url="../data/search-index.json" role="search">
+          <label class="sr-only" for="site-search-input">Search MCP-AQL docs</label>
+          <input id="site-search-input" data-search-input type="search" placeholder="Search MCP-AQL docs, spec pages, and adapter patterns...">
+          <span class="search-count" data-search-count></span>
+          <ul class="search-results" data-search-results hidden></ul>
+        </form>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container docs-shell">
+      <aside class="docs-side">
+        <h2>Repo-Synced Spec</h2>
+        <p class="docs-side-note">Generated from <code>MCPAQL/spec</code> so the website carries the deeper protocol material too.</p>
+        <div class="docs-side-group">
+  <h3>Core</h3>
+  <ul><li><a href="conformance-testing.html">MCP-AQL Conformance Testing Specification</a></li><li><a href="crude-pattern.html">MCP-AQL CRUDE Pattern Specification</a></li><li><a href="endpoint-modes.html">MCP-AQL Endpoint Modes Specification</a></li><li><a href="error-codes.html">Structured Error Codes Specification</a></li><li><a href="introspection.html">MCP-AQL Introspection Specification</a></li><li><a href="licensing-options.html">MCP-AQL Licensing Options (Working Notes)</a></li><li><a href="mcp-integration.html">MCP Integration Specification</a></li><li><a class="current" aria-current="page" href="operations.html">MCP-AQL Operations Specification</a></li><li><a href="overview.html">MCP-AQL Protocol Overview</a></li><li><a href="plugin-contracts.html">Plugin Interface Contracts</a></li><li><a href="README.html">MCP-AQL Specification Documentation</a></li><li><a href="repo/README.html">MCP-AQL Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Versions</h3>
+  <ul><li><a href="versions/v1.0.0-draft.html">MCP-AQL Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Adapter</h3>
+  <ul><li><a href="adapter/danger-levels.html">Dangerous Operation Classification Specification</a></li><li><a href="adapter/discovery-bundle.html">MCP Server Discovery Bundle</a></li><li><a href="adapter/element-type.html">Adapter Element Type Specification</a></li><li><a href="adapter/generator.html">Adapter Generator Specification</a></li><li><a href="adapter/rate-limiting.html">Rate Limiting and Quota Management Specification</a></li><li><a href="adapter/trust-levels.html">Trust Levels Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Security</h3>
+  <ul><li><a href="security/confirmation-tokens.html">Confirmation Token Specification</a></li><li><a href="security/execution-safety-loop.html">Execution Safety Loop Specification</a></li><li><a href="security/gatekeeper.html">Security Model: Gatekeeper Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Features</h3>
+  <ul><li><a href="features/field-selection.html">Field Selection Specification</a></li><li><a href="features/pagination.html">Cursor-Based Pagination Specification</a></li><li><a href="features/warnings.html">Warnings Array Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Guides</h3>
+  <ul><li><a href="guides/protocol-comparison.html">Protocol Comparison Guide</a></li><li><a href="guides/README.html">Developer Guides</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Process</h3>
+  <ul><li><a href="process/breaking-changes.html">MCP-AQL Breaking Change Policy</a></li><li><a href="process/preliminary-public-launch-checklist.html">Preliminary Public Launch Checklist</a></li><li><a href="process/rfc-process.html">RFC Process for MCP-AQL Specification</a></li><li><a href="process/versioning.html">Versioning Strategy</a></li><li><a href="repo/CHANGELOG.html">Changelog</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Architecture</h3>
+  <ul><li><a href="architecture/README.html">Architecture Documentation</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Research</h3>
+  <ul><li><a href="research/mcp-vs-mcpaql-vs-a2a.html">Protocol Landscape: MCP vs MCP-AQL vs A2A</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Reference</h3>
+  <ul><li><a href="reference/README.html">Reference Documentation</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>ADRs</h3>
+  <ul><li><a href="adr/ADR-001-crude-pattern.html">ADR-001: CRUDE Pattern (Extending CRUD with Execute)</a></li><li><a href="adr/ADR-002-graphql-style-input.html">ADR-002: GraphQL-Style Input Objects for Updates</a></li><li><a href="adr/ADR-003-snake-case-parameters.html">ADR-003: snake_case Parameter Convention</a></li><li><a href="adr/ADR-004-schema-driven-operations.html">ADR-004: Schema-Driven Operation Definitions</a></li><li><a href="adr/ADR-005-introspection-system.html">ADR-005: GraphQL-Style Introspection System</a></li><li><a href="adr/ADR-006-discriminated-responses.html">ADR-006: Discriminated Response Format</a></li><li><a href="adr/index.html">Architecture Decision Records</a></li><li><a href="adr/README.html">Architecture Decision Records</a></li></ul>
+</div>
+      </aside>
+
+      <article class="docs-main">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+          <ol>
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="index.html">Full Spec</a></li>
+            <li><span class="current">MCP-AQL Operations Specification</span></li>
+          </ol>
+        </nav>
+        <section class="hero docs-hero">
+          <div class="hero-inner">
+            <span class="status-pill">REPO-SYNCED SPEC DOC</span>
+            <h1>MCP-AQL Operations Specification</h1>
+            <p class="lede">Document Status: This document is informative. For normative requirements, see MCP-AQL Specification v1.0.0.</p>
+            <div class="spec-meta"><span class="state-chip live">Support document</span><span class="state-chip pending">Draft</span><span class="state-chip">1.0.0-draft</span><span class="state-chip">2026-01-16</span></div>
+            <p class="spec-source">Source: <a href="https://github.com/MCPAQL/spec/blob/main/docs/operations.md">spec/docs/operations.md</a></p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="https://github.com/MCPAQL/spec/blob/main/docs/operations.md">Open Source Markdown</a>
+              <a class="btn btn-secondary" href="index.html">Browse Full Spec Reference</a>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <div class="card spec-prose">
+            <p><strong>Version:</strong> 1.0.0-draft <strong>Status:</strong> Draft <strong>Last Updated:</strong> 2026-01-16</p>
+<blockquote>
+<p><strong>Document Status:</strong> This document is <strong>informative</strong>. For normative requirements, see <a href="versions/v1.0.0-draft.html">MCP-AQL Specification v1.0.0</a>.</p>
+</blockquote>
+<h2 id="abstract">Abstract</h2>
+<p>This document specifies how operations are defined, documented, and invoked in MCP-AQL adapters. It covers the operation input format, response format, parameter conventions, operation schemas, batch operations, and error handling patterns.</p>
+<hr />
+<h2 id="table-of-contents">Table of Contents</h2>
+<ol type="1">
+<li><a href="#1-conformance-requirements">Conformance Requirements</a></li>
+<li><a href="#2-operation-input-format">Operation Input Format</a></li>
+<li><a href="#3-response-format">Response Format</a></li>
+<li><a href="#4-parameter-conventions">Parameter Conventions</a></li>
+<li><a href="#5-operation-schema-definition">Operation Schema Definition</a></li>
+<li><a href="#6-crude-endpoint-assignment">CRUDE Endpoint Assignment</a></li>
+<li><a href="#7-batch-operations">Batch Operations</a></li>
+<li><a href="#8-error-handling">Error Handling</a></li>
+<li><a href="#9-the-introspect-operation">The introspect Operation</a></li>
+</ol>
+<hr />
+<h2 id="1-conformance-requirements">1. Conformance Requirements</h2>
+<p>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <a href="https://www.rfc-editor.org/rfc/rfc2119">RFC 2119</a>.</p>
+<p>An MCP-AQL adapter is conformant if it implements:</p>
+<ol type="1">
+<li>The operation input format as specified in Section 2</li>
+<li>The discriminated response format as specified in Section 3</li>
+<li>The <code>introspect</code> operation as specified in Section 9</li>
+<li>Correct endpoint routing based on operation semantics (Section 6)</li>
+</ol>
+<hr />
+<h2 id="2-operation-input-format">2. Operation Input Format</h2>
+<h3 id="21-standard-input-structure">2.1 Standard Input Structure</h3>
+<p>All operations MUST follow a consistent input structure:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;operation&quot;</span><span class="fu">:</span> <span class="st">&quot;&lt;operation_name&gt;&quot;</span><span class="fu">,</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;params&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="er">//</span> <span class="er">Operation-specific</span> <span class="er">parameters</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h3 id="22-required-fields">2.2 Required Fields</h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>operation</code></td>
+<td>string</td>
+<td>REQUIRED</td>
+<td>The operation to perform</td>
+</tr>
+<tr>
+<td><code>params</code></td>
+<td>object</td>
+<td>OPTIONAL</td>
+<td>Operation-specific parameters</td>
+</tr>
+</tbody>
+</table>
+<p>The <code>operation</code> field MUST be a non-empty string matching a defined operation name.</p>
+<blockquote>
+<p><strong>Terminology Note:</strong> The request field <code>params</code> (an object) carries runtime parameter values. The introspection field <code>parameters</code> (an array of <code>ParameterInfo</code>) describes the accepted parameter definitions. The keys of <code>params</code> correspond to the <code>name</code> field of each <code>ParameterInfo</code> entry. See <a href="introspection.html#33-operationdetails-detail-response">Introspection — OperationDetails</a>.</p>
+</blockquote>
+<h3 id="23-parameter-resolution">2.3 Parameter Resolution</h3>
+<p>Adapters MAY support parameter resolution from multiple locations. The RECOMMENDED resolution order is:</p>
+<ol type="1">
+<li><code>params.&lt;parameter_name&gt;</code> (preferred)</li>
+<li>Top-level <code>&lt;parameter_name&gt;</code> (convenience)</li>
+</ol>
+<p>When the same parameter appears at multiple levels, the value in <code>params</code> takes precedence.</p>
+<p><strong>Example - Equivalent Requests:</strong></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Parameters in params object (RECOMMENDED)</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;get_item&quot;</span><span class="op">,</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">params</span><span class="op">:</span> { <span class="dt">item_id</span><span class="op">:</span> <span class="st">&quot;123&quot;</span> }</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">// Parameters at top level (also valid)</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;get_item&quot;</span><span class="op">,</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="dt">item_id</span><span class="op">:</span> <span class="st">&quot;123&quot;</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="24-case-sensitivity">2.4 Case Sensitivity</h3>
+<p>Operation names MUST be case-sensitive. Operation names MUST use snake_case (a lowercase letter followed by lowercase letters, digits, and underscores), matching the schema pattern <code>^[a-z][a-z0-9_]*$</code>.</p>
+<hr />
+<h2 id="3-response-format">3. Response Format</h2>
+<h3 id="31-discriminated-union-result">3.1 Discriminated Union Result</h3>
+<p>All operations MUST return a discriminated union response. The <code>success</code> field serves as the discriminator.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> OperationResult <span class="op">=</span> OperationSuccess <span class="op">|</span> OperationFailure<span class="op">;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> OperationSuccess {</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  success<span class="op">:</span> <span class="kw">true</span><span class="op">;</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  data<span class="op">:</span> <span class="dt">unknown</span><span class="op">;</span>   <span class="co">// Operation-specific payload</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  error<span class="op">?:</span> <span class="dt">never</span><span class="op">;</span>   <span class="co">// MUST NOT be present</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> OperationFailure {</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  success<span class="op">:</span> <span class="kw">false</span><span class="op">;</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  error<span class="op">:</span> ErrorDetail<span class="op">;</span>  <span class="co">// Structured error information</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  data<span class="op">?:</span> <span class="dt">never</span><span class="op">;</span>        <span class="co">// MUST NOT be present</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> ErrorDetail {</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>  code<span class="op">:</span> <span class="dt">string</span><span class="op">;</span>     <span class="co">// Machine-readable error code (e.g., &quot;NOT_FOUND_RESOURCE&quot;)</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>  message<span class="op">:</span> <span class="dt">string</span><span class="op">;</span>  <span class="co">// Human-readable error message</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  details<span class="op">?:</span> <span class="bu">Record</span><span class="op">&lt;</span><span class="dt">string</span><span class="op">,</span> <span class="dt">unknown</span><span class="op">&gt;;</span>  <span class="co">// Optional contextual information</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<blockquote>
+<p><strong>Note:</strong> See <a href="error-codes.html">Structured Error Codes Specification</a> for the complete error code taxonomy.</p>
+</blockquote>
+<h3 id="32-success-response">3.2 Success Response</h3>
+<p>A successful operation MUST return:</p>
+<ul>
+<li><code>success</code>: The boolean value <code>true</code></li>
+<li><code>data</code>: The operation result (type varies by operation)</li>
+</ul>
+<div class="sourceCode" id="cb4"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;data&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="st">&quot;item_123&quot;</span><span class="fu">,</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;Example Item&quot;</span><span class="fu">,</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;created_at&quot;</span><span class="fu">:</span> <span class="st">&quot;2024-01-15T10:30:00Z&quot;</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h3 id="33-failure-response">3.3 Failure Response</h3>
+<p>A failed operation MUST return:</p>
+<ul>
+<li><code>success</code>: The boolean value <code>false</code></li>
+<li><code>error</code>: A structured error object with <code>code</code> and <code>message</code></li>
+</ul>
+<div class="sourceCode" id="cb5"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;error&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;code&quot;</span><span class="fu">:</span> <span class="st">&quot;NOT_FOUND_RESOURCE&quot;</span><span class="fu">,</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;Item with ID &#39;item_999&#39; not found&quot;</span><span class="fu">,</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;details&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;resource_type&quot;</span><span class="fu">:</span> <span class="st">&quot;item&quot;</span><span class="fu">,</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;resource_id&quot;</span><span class="fu">:</span> <span class="st">&quot;item_999&quot;</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h3 id="34-response-metadata">3.4 Response Metadata</h3>
+<p>Implementations MAY include metadata in responses:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;data&quot;</span><span class="fu">:</span> <span class="fu">{</span> <span class="er">...</span> <span class="fu">},</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;_meta&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;requestId&quot;</span><span class="fu">:</span> <span class="st">&quot;req_abc123&quot;</span><span class="fu">,</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;duration_ms&quot;</span><span class="fu">:</span> <span class="dv">42</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p>Metadata fields MUST be prefixed with underscore (<code>_</code>) to distinguish them from the operation payload.</p>
+<hr />
+<h2 id="4-parameter-conventions">4. Parameter Conventions</h2>
+<h3 id="41-naming-convention">4.1 Naming Convention</h3>
+<p>All public-facing parameter names MUST use <strong>snake_case</strong> (matching the pattern <code>^[a-z][a-z0-9_]*$</code>):</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Correct</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>{ <span class="dt">item_id</span><span class="op">:</span> <span class="st">&quot;123&quot;</span><span class="op">,</span> <span class="dt">created_after</span><span class="op">:</span> <span class="st">&quot;2024-01-01&quot;</span> }</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co">// Non-conforming</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>{ <span class="dt">itemId</span><span class="op">:</span> <span class="st">&quot;123&quot;</span><span class="op">,</span> <span class="dt">createdAfter</span><span class="op">:</span> <span class="st">&quot;2024-01-01&quot;</span> }</span></code></pre></div>
+<p>For backward compatibility, adapters MAY accept camelCase variants as aliases and normalize them to snake_case internally, but the canonical parameter names MUST be snake_case.</p>
+<h3 id="42-common-parameter-patterns">4.2 Common Parameter Patterns</h3>
+<p>Adapters SHOULD use consistent patterns for common functionality:</p>
+<p><strong>Pagination (offset-based):</strong></p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">page</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span>           <span class="co">// Page number (1-indexed)</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">page_size</span><span class="op">:</span> <span class="dv">25</span>      <span class="co">// Items per page</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><strong>Pagination (cursor-based):</strong></p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">cursor</span><span class="op">:</span> <span class="st">&quot;abc123&quot;</span><span class="op">,</span>  <span class="co">// Opaque cursor from previous response</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">limit</span><span class="op">:</span> <span class="dv">25</span>          <span class="co">// Maximum items to return</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><strong>Filtering:</strong></p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">filter</span><span class="op">:</span> {</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">status</span><span class="op">:</span> <span class="st">&quot;active&quot;</span><span class="op">,</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">created_after</span><span class="op">:</span> <span class="st">&quot;2024-01-01&quot;</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><strong>Sorting:</strong></p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">sort</span><span class="op">:</span> {</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">field</span><span class="op">:</span> <span class="st">&quot;created_at&quot;</span><span class="op">,</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">order</span><span class="op">:</span> <span class="st">&quot;desc&quot;</span>  <span class="co">// &quot;asc&quot; or &quot;desc&quot;</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><strong>Field Selection:</strong></p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">fields</span><span class="op">:</span> [<span class="st">&quot;id&quot;</span><span class="op">,</span> <span class="st">&quot;name&quot;</span><span class="op">,</span> <span class="st">&quot;email&quot;</span>]  <span class="co">// Only return these fields</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="43-required-vs-optional-parameters">4.3 Required vs Optional Parameters</h3>
+<p>Each parameter MUST be documented as either required or optional. The operation schema (Section 5) specifies this via the <code>required</code> attribute.</p>
+<h3 id="44-cross-cutting-parameters">4.4 Cross-Cutting Parameters</h3>
+<p>Cross-cutting parameters are parameters that apply across multiple operations. To ensure consistent discoverability, implementations SHOULD define these parameters once and reference them consistently.</p>
+<h4 id="441-standard-cross-cutting-parameters">4.4.1 Standard Cross-Cutting Parameters</h4>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Operations</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>fields</code></td>
+<td><code>string | string[]</code></td>
+<td>All READ operations returning data</td>
+<td>Field selection: preset name or array of field paths</td>
+</tr>
+<tr>
+<td><code>limit</code></td>
+<td><code>number</code></td>
+<td>List/search operations</td>
+<td>Maximum results to return</td>
+</tr>
+<tr>
+<td><code>offset</code></td>
+<td><code>number</code></td>
+<td>List/search operations</td>
+<td>Number of results to skip</td>
+</tr>
+<tr>
+<td><code>page</code></td>
+<td><code>number</code></td>
+<td>List/search operations</td>
+<td>Page number (1-indexed)</td>
+</tr>
+<tr>
+<td><code>page_size</code></td>
+<td><code>number</code></td>
+<td>List/search operations</td>
+<td>Items per page</td>
+</tr>
+<tr>
+<td><code>sort</code></td>
+<td><code>string</code></td>
+<td>List/search operations</td>
+<td>Sort field name</td>
+</tr>
+<tr>
+<td><code>order</code></td>
+<td><code>string</code></td>
+<td>List/search operations</td>
+<td>Sort order: "asc" or "desc"</td>
+</tr>
+<tr>
+<td><code>dry_run</code></td>
+<td><code>boolean</code></td>
+<td>All mutating operations</td>
+<td>Preview without executing</td>
+</tr>
+</tbody>
+</table>
+<h4 id="442-shared-parameter-definitions">4.4.2 Shared Parameter Definitions</h4>
+<p>Implementations SHOULD use a shared definition mechanism to ensure consistency:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shared_parameters</span><span class="kw">:</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">fields</span><span class="kw">:</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">name</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;fields&quot;</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">type</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;string | string[]&quot;</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">required</span><span class="kw">:</span><span class="at"> </span><span class="ch">false</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">description</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Field selection: preset (&#39;minimal&#39;, &#39;standard&#39;, &#39;full&#39;) or array of field names&quot;</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">pagination</span><span class="kw">:</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;limit&quot;</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">type</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;number&quot;</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">required</span><span class="kw">:</span><span class="at"> </span><span class="ch">false</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">description</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Maximum results to return&quot;</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">default</span><span class="kw">:</span><span class="at"> </span><span class="dv">25</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;offset&quot;</span></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">type</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;number&quot;</span></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">required</span><span class="kw">:</span><span class="at"> </span><span class="ch">false</span></span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">description</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Number of results to skip&quot;</span></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">default</span><span class="kw">:</span><span class="at"> </span><span class="dv">0</span></span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">sorting</span><span class="kw">:</span></span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;sort&quot;</span></span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">type</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;string&quot;</span></span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">required</span><span class="kw">:</span><span class="at"> </span><span class="ch">false</span></span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">description</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Field to sort by&quot;</span></span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;order&quot;</span></span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">type</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;string&quot;</span></span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">required</span><span class="kw">:</span><span class="at"> </span><span class="ch">false</span></span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">enum</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="st">&quot;asc&quot;</span><span class="kw">,</span><span class="at"> </span><span class="st">&quot;desc&quot;</span><span class="kw">]</span></span>
+<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">description</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Sort order&quot;</span></span>
+<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">default</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;asc&quot;</span></span></code></pre></div>
+<h4 id="443-cross-cutting-parameter-consistency-should">4.4.3 Cross-Cutting Parameter Consistency (SHOULD)</h4>
+<p>When a parameter applies to multiple operations:</p>
+<ol type="1">
+<li>The parameter name SHOULD be identical across operations</li>
+<li>The parameter type SHOULD be identical across operations</li>
+<li>The parameter description SHOULD be semantically equivalent</li>
+<li>Default values SHOULD be consistent where applicable</li>
+</ol>
+<h4 id="444-introspection-integration">4.4.4 Introspection Integration</h4>
+<p>When introspection is queried, shared parameters SHOULD be expanded inline with their full definitions. This ensures LLMs see consistent documentation regardless of which operation they query.</p>
+<p><strong>Example - Operations referencing shared parameters:</strong></p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">operations</span><span class="kw">:</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">list_items</span><span class="kw">:</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">params</span><span class="kw">:</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">$ref</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;#/shared_parameters/fields&quot;</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">$ref</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;#/shared_parameters/pagination&quot;</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;category&quot;</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">type</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;string&quot;</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">required</span><span class="kw">:</span><span class="at"> </span><span class="ch">false</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">description</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Filter by category&quot;</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">search_items</span><span class="kw">:</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">params</span><span class="kw">:</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">$ref</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;#/shared_parameters/fields&quot;</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">$ref</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;#/shared_parameters/pagination&quot;</span></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">$ref</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;#/shared_parameters/sorting&quot;</span></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;query&quot;</span></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">type</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;string&quot;</span></span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">required</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">description</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Search query&quot;</span></span></code></pre></div>
+<h3 id="45-update-input-pattern">4.5 UPDATE Input Pattern</h3>
+<p>UPDATE operations SHOULD use a nested <code>input</code> object to separate identifier parameters from updateable fields. See <a href="versions/v1.0.0-draft.html#45-update-input-pattern">MCP-AQL Specification Section 4.5</a> for normative requirements including deep-merge semantics and field removal. See <a href="adr/ADR-002-graphql-style-input.html">ADR-002</a> for design rationale.</p>
+<hr />
+<h2 id="5-operation-schema-definition">5. Operation Schema Definition</h2>
+<h3 id="51-schema-structure">5.1 Schema Structure</h3>
+<p>Each operation MUST be defined by a schema that specifies its behavior, parameters, and routing. Conformant adapters MUST validate requests against operation schemas before execution.</p>
+<p><strong>Schema Properties:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>endpoint</code></td>
+<td>string</td>
+<td>REQUIRED</td>
+<td>CRUDE endpoint: CREATE, READ, UPDATE, DELETE, or EXECUTE</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>string</td>
+<td>REQUIRED</td>
+<td>Human-readable description</td>
+</tr>
+<tr>
+<td><code>params</code></td>
+<td>object</td>
+<td>OPTIONAL</td>
+<td>Parameter definitions</td>
+</tr>
+<tr>
+<td><code>handler</code></td>
+<td>string</td>
+<td>OPTIONAL</td>
+<td>Internal handler reference</td>
+</tr>
+<tr>
+<td><code>dangerous</code></td>
+<td>boolean</td>
+<td>OPTIONAL</td>
+<td>If true, operation has significant side effects</td>
+</tr>
+</tbody>
+</table>
+<h3 id="52-parameter-schema">5.2 Parameter Schema</h3>
+<p>Each parameter in the <code>params</code> object MUST include:</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>type</code></td>
+<td>string</td>
+<td>REQUIRED</td>
+<td>Data type: "string", "number", "boolean", "object", "array"</td>
+</tr>
+<tr>
+<td><code>required</code></td>
+<td>boolean</td>
+<td>OPTIONAL</td>
+<td>Whether parameter is required (default: false)</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>string</td>
+<td>OPTIONAL</td>
+<td>Human-readable description</td>
+</tr>
+<tr>
+<td><code>default</code></td>
+<td>any</td>
+<td>OPTIONAL</td>
+<td>Default value if not provided</td>
+</tr>
+</tbody>
+</table>
+<p>Additional properties MAY be included:</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mapTo</code></td>
+<td>string</td>
+<td>Internal parameter name mapping</td>
+</tr>
+<tr>
+<td><code>sources</code></td>
+<td>array</td>
+<td>Ordered list of resolution paths</td>
+</tr>
+<tr>
+<td><code>enum</code></td>
+<td>array</td>
+<td>Allowed values for string parameters</td>
+</tr>
+<tr>
+<td><code>minimum</code></td>
+<td>number</td>
+<td>Minimum value for numeric parameters</td>
+</tr>
+<tr>
+<td><code>maximum</code></td>
+<td>number</td>
+<td>Maximum value for numeric parameters</td>
+</tr>
+<tr>
+<td><code>pattern</code></td>
+<td>string</td>
+<td>Regex pattern for string validation</td>
+</tr>
+</tbody>
+</table>
+<h3 id="53-example-schema-definition">5.3 Example Schema Definition</h3>
+<div class="sourceCode" id="cb15"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Schema for a create operation</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">create_item</span><span class="op">:</span> {</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">endpoint</span><span class="op">:</span> <span class="st">&quot;CREATE&quot;</span><span class="op">,</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">description</span><span class="op">:</span> <span class="st">&quot;Create a new item in the system&quot;</span><span class="op">,</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">params</span><span class="op">:</span> {</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">name</span><span class="op">:</span> {</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>        <span class="dt">type</span><span class="op">:</span> <span class="st">&quot;string&quot;</span><span class="op">,</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>        <span class="dt">required</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>        <span class="dt">description</span><span class="op">:</span> <span class="st">&quot;Item name&quot;</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>      }<span class="op">,</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>      <span class="dt">category</span><span class="op">:</span> {</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>        <span class="dt">type</span><span class="op">:</span> <span class="st">&quot;string&quot;</span><span class="op">,</span></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>        <span class="dt">required</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>        <span class="dt">description</span><span class="op">:</span> <span class="st">&quot;Item category&quot;</span><span class="op">,</span></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>        <span class="dt">enum</span><span class="op">:</span> [<span class="st">&quot;product&quot;</span><span class="op">,</span> <span class="st">&quot;service&quot;</span><span class="op">,</span> <span class="st">&quot;subscription&quot;</span>]</span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>      }<span class="op">,</span></span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>      <span class="dt">price</span><span class="op">:</span> {</span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>        <span class="dt">type</span><span class="op">:</span> <span class="st">&quot;number&quot;</span><span class="op">,</span></span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>        <span class="dt">required</span><span class="op">:</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>        <span class="dt">minimum</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span></span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>        <span class="dt">description</span><span class="op">:</span> <span class="st">&quot;Item price in cents&quot;</span></span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>      }<span class="op">,</span></span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>      <span class="dt">metadata</span><span class="op">:</span> {</span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>        <span class="dt">type</span><span class="op">:</span> <span class="st">&quot;object&quot;</span><span class="op">,</span></span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a>        <span class="dt">required</span><span class="op">:</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>        <span class="dt">description</span><span class="op">:</span> <span class="st">&quot;Additional item metadata&quot;</span></span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="54-parameter-validation">5.4 Parameter Validation</h3>
+<p>Before executing an operation, adapters MUST:</p>
+<ol type="1">
+<li>Verify all required parameters are present</li>
+<li>Validate parameter types match the schema</li>
+<li>Reject unknown parameters not defined in the operation schema (see <a href="versions/v1.0.0-draft.html#46-unknown-parameter-handling">MCP-AQL Specification Section 4.6</a>)</li>
+<li>Apply any constraints (enum, minimum, maximum, pattern)</li>
+<li>Apply default values for missing optional parameters</li>
+</ol>
+<blockquote>
+<p><strong>Note:</strong> Unknown parameter rejection (step 3) occurs before applying defaults (step 5) to ensure that typos or hallucinated parameters are caught early, before any processing occurs.</p>
+</blockquote>
+<p>Validation failures MUST return an error response (not throw exceptions).</p>
+<hr />
+<h2 id="6-crude-endpoint-assignment">6. CRUDE Endpoint Assignment</h2>
+<h3 id="61-endpoint-semantics">6.1 Endpoint Semantics</h3>
+<p>Operations MUST be assigned to endpoints based on their semantics:</p>
+<table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Semantics</th>
+<th>Characteristics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>CREATE</strong></td>
+<td>Additive, non-destructive</td>
+<td>Creates new resources; idempotent if duplicate detection enabled</td>
+</tr>
+<tr>
+<td><strong>READ</strong></td>
+<td>Safe, read-only</td>
+<td>No side effects; cacheable; always safe to retry</td>
+</tr>
+<tr>
+<td><strong>UPDATE</strong></td>
+<td>Modifying</td>
+<td>Changes existing resources; may be partially idempotent</td>
+</tr>
+<tr>
+<td><strong>DELETE</strong></td>
+<td>Destructive</td>
+<td>Removes resources; potentially irreversible</td>
+</tr>
+<tr>
+<td><strong>EXECUTE</strong></td>
+<td>Lifecycle, non-idempotent</td>
+<td>Triggers actions; manages runtime state</td>
+</tr>
+</tbody>
+</table>
+<h3 id="62-common-verbs-by-endpoint">6.2 Common Verbs by Endpoint</h3>
+<p>Each endpoint has canonical verbs (shown in bold) that SHOULD be used for standard operations, plus additional verbs for domain-specific semantics. See <a href="versions/v1.0.0-draft.html#85-operation-naming-grammar">Section 8.5</a> of the normative specification for naming requirements.</p>
+<table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Canonical</th>
+<th>Additional Verbs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CREATE</td>
+<td><strong>create</strong></td>
+<td>add, upload, register, import, insert</td>
+</tr>
+<tr>
+<td>READ</td>
+<td><strong>get</strong>, <strong>list</strong></td>
+<td>search, find, export, count</td>
+</tr>
+<tr>
+<td>UPDATE</td>
+<td><strong>update</strong></td>
+<td>edit, set, rename, move, patch, merge</td>
+</tr>
+<tr>
+<td>DELETE</td>
+<td><strong>delete</strong></td>
+<td>remove, purge, unregister, clear, drop</td>
+</tr>
+<tr>
+<td>EXECUTE</td>
+<td><strong>execute</strong>, <strong>cancel</strong></td>
+<td>run, start, stop, resume, trigger, invoke</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Note:</strong> The <code>introspect</code> operation is a reserved protocol operation and is not listed as a common verb. See <a href="versions/v1.0.0-draft.html#854-reserved-operations">Section 8.5.4</a> of the normative specification.</p>
+</blockquote>
+<h3 id="63-endpoint-routing-enforcement">6.3 Endpoint Routing Enforcement</h3>
+<p>Adapters MUST validate that operations are invoked via their designated endpoint. An operation assigned to CREATE MUST NOT execute when called via the DELETE endpoint.</p>
+<p>When an operation is routed to the wrong endpoint, adapters SHOULD return an error:</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;error&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;code&quot;</span><span class="fu">:</span> <span class="st">&quot;VALIDATION_ENDPOINT_MISMATCH&quot;</span><span class="fu">,</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;Operation &#39;create_item&#39; must use CREATE endpoint, not DELETE&quot;</span><span class="fu">,</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;details&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;operation&quot;</span><span class="fu">:</span> <span class="st">&quot;create_item&quot;</span><span class="fu">,</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;expected_endpoint&quot;</span><span class="fu">:</span> <span class="st">&quot;CREATE&quot;</span><span class="fu">,</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;actual_endpoint&quot;</span><span class="fu">:</span> <span class="st">&quot;DELETE&quot;</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h3 id="64-dangerous-operation-classification">6.4 Dangerous Operation Classification</h3>
+<p>Operations with significant consequences SHOULD be marked with <code>dangerous: true</code> in their schema. This enables clients to:</p>
+<ul>
+<li>Display confirmation prompts</li>
+<li>Log operations with enhanced audit trails</li>
+<li>Apply additional authorization checks</li>
+</ul>
+<p>Examples of dangerous operations:</p>
+<ul>
+<li>Bulk deletions</li>
+<li>Data truncation</li>
+<li>Irreversible state changes</li>
+<li>Operations affecting production data</li>
+</ul>
+<hr />
+<h2 id="7-batch-operations">7. Batch Operations</h2>
+<h3 id="71-batch-request-format">7.1 Batch Request Format</h3>
+<p>Adapters MAY support batch operations. When supported, the format MUST be:</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;operations&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span> <span class="dt">&quot;operation&quot;</span><span class="fu">:</span> <span class="st">&quot;create_item&quot;</span><span class="fu">,</span> <span class="dt">&quot;params&quot;</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;Item A&quot;</span><span class="fu">,</span> <span class="dt">&quot;category&quot;</span><span class="fu">:</span> <span class="st">&quot;product&quot;</span> <span class="fu">}</span> <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span> <span class="dt">&quot;operation&quot;</span><span class="fu">:</span> <span class="st">&quot;create_item&quot;</span><span class="fu">,</span> <span class="dt">&quot;params&quot;</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;Item B&quot;</span><span class="fu">,</span> <span class="dt">&quot;category&quot;</span><span class="fu">:</span> <span class="st">&quot;service&quot;</span> <span class="fu">}</span> <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span> <span class="dt">&quot;operation&quot;</span><span class="fu">:</span> <span class="st">&quot;create_item&quot;</span><span class="fu">,</span> <span class="dt">&quot;params&quot;</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;Item C&quot;</span><span class="fu">,</span> <span class="dt">&quot;category&quot;</span><span class="fu">:</span> <span class="st">&quot;product&quot;</span> <span class="fu">}</span> <span class="fu">}</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h3 id="72-batch-response-format">7.2 Batch Response Format</h3>
+<p>Batch responses MUST include individual results for each operation:</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;data&quot;</span><span class="fu">:</span> <span class="kw">null</span><span class="fu">,</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;results&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span> <span class="dt">&quot;index&quot;</span><span class="fu">:</span> <span class="dv">0</span><span class="fu">,</span> <span class="dt">&quot;operation&quot;</span><span class="fu">:</span> <span class="st">&quot;create_item&quot;</span><span class="fu">,</span> <span class="dt">&quot;result&quot;</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span> <span class="dt">&quot;data&quot;</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="st">&quot;item_1&quot;</span> <span class="fu">}</span> <span class="fu">}</span> <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span> <span class="dt">&quot;index&quot;</span><span class="fu">:</span> <span class="dv">1</span><span class="fu">,</span> <span class="dt">&quot;operation&quot;</span><span class="fu">:</span> <span class="st">&quot;create_item&quot;</span><span class="fu">,</span> <span class="dt">&quot;result&quot;</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span> <span class="dt">&quot;data&quot;</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="st">&quot;item_2&quot;</span> <span class="fu">}</span> <span class="fu">}</span> <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span> <span class="dt">&quot;index&quot;</span><span class="fu">:</span> <span class="dv">2</span><span class="fu">,</span> <span class="dt">&quot;operation&quot;</span><span class="fu">:</span> <span class="st">&quot;create_item&quot;</span><span class="fu">,</span> <span class="dt">&quot;result&quot;</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span> <span class="dt">&quot;error&quot;</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">&quot;code&quot;</span><span class="fu">:</span> <span class="st">&quot;CONFLICT_ALREADY_EXISTS&quot;</span><span class="fu">,</span> <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;Item with name &#39;Item C&#39; already exists&quot;</span> <span class="fu">}</span> <span class="fu">}</span> <span class="fu">}</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;summary&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;total&quot;</span><span class="fu">:</span> <span class="dv">3</span><span class="fu">,</span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;succeeded&quot;</span><span class="fu">:</span> <span class="dv">2</span><span class="fu">,</span></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;failed&quot;</span><span class="fu">:</span> <span class="dv">1</span></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h3 id="73-batch-execution-semantics">7.3 Batch Execution Semantics</h3>
+<p>Conformant batch implementations MUST follow these semantics:</p>
+<ol type="1">
+<li>Operations execute in array order</li>
+<li>Failure of one operation MUST NOT prevent subsequent operations from executing</li>
+<li>Each operation result is independent</li>
+<li>The overall <code>success</code> is <code>true</code> if the batch completed processing (even with individual failures)</li>
+<li>The overall <code>success</code> is <code>false</code> only for batch-level errors (malformed request, authentication failure)</li>
+</ol>
+<h3 id="74-cross-endpoint-batching">7.4 Cross-Endpoint Batching</h3>
+<p>When using CRUDE mode (separate endpoints), batch operations SHOULD be constrained to a single endpoint:</p>
+<ul>
+<li>All CREATE operations together in one batch to the CREATE endpoint</li>
+<li>All READ operations together in one batch to the READ endpoint</li>
+</ul>
+<p>Mixing operations across endpoints in a single batch is NOT RECOMMENDED. Implementations MAY reject mixed batches or MAY process them with explicit endpoint routing per operation.</p>
+<h3 id="75-confirmation-gated-batch-operations">7.5 Confirmation-Gated Batch Operations</h3>
+<p>When a batch operation encounters a <code>CONFIRMATION_REQUIRED</code> response, special handling is needed to maintain state consistency.</p>
+<h4 id="751-the-problem">7.5.1 The Problem</h4>
+<p>Consider a batch where operations depend on each other:</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;operations&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span> <span class="dt">&quot;operation&quot;</span><span class="fu">:</span> <span class="st">&quot;delete_user&quot;</span><span class="fu">,</span> <span class="dt">&quot;params&quot;</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">&quot;user_id&quot;</span><span class="fu">:</span> <span class="st">&quot;alice&quot;</span> <span class="fu">}</span> <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span> <span class="dt">&quot;operation&quot;</span><span class="fu">:</span> <span class="st">&quot;send_notification&quot;</span><span class="fu">,</span> <span class="dt">&quot;params&quot;</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">&quot;user_id&quot;</span><span class="fu">:</span> <span class="st">&quot;alice&quot;</span><span class="fu">,</span> <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;Account deleted&quot;</span> <span class="fu">}</span> <span class="fu">}</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p>If <code>delete_user</code> requires confirmation, executing <code>send_notification</code> anyway would create inconsistent state (notification sent, but user not deleted).</p>
+<h4 id="752-batch-halting-recommended">7.5.2 Batch Halting (RECOMMENDED)</h4>
+<p>When an operation returns <code>CONFIRMATION_REQUIRED</code>, the batch SHOULD halt:</p>
+<ol type="1">
+<li>Operations before the gated operation execute normally</li>
+<li>The gated operation returns <code>CONFIRMATION_REQUIRED</code> with a confirmation token</li>
+<li>Subsequent operations do NOT execute</li>
+<li>Response includes partial results and continuation information</li>
+</ol>
+<div class="sourceCode" id="cb20"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;data&quot;</span><span class="fu">:</span> <span class="kw">null</span><span class="fu">,</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;results&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span> <span class="dt">&quot;index&quot;</span><span class="fu">:</span> <span class="dv">0</span><span class="fu">,</span> <span class="dt">&quot;operation&quot;</span><span class="fu">:</span> <span class="st">&quot;update_user&quot;</span><span class="fu">,</span> <span class="dt">&quot;result&quot;</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span> <span class="dt">&quot;data&quot;</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="st">&quot;alice&quot;</span> <span class="fu">}</span> <span class="fu">}</span> <span class="fu">}</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;halted_at&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;index&quot;</span><span class="fu">:</span> <span class="dv">1</span><span class="fu">,</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;operation&quot;</span><span class="fu">:</span> <span class="st">&quot;delete_user&quot;</span><span class="fu">,</span></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;result&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;error&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;code&quot;</span><span class="fu">:</span> <span class="st">&quot;CONFIRMATION_REQUIRED&quot;</span><span class="fu">,</span></span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;This operation requires confirmation&quot;</span><span class="fu">,</span></span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;details&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>          <span class="dt">&quot;operation&quot;</span><span class="fu">:</span> <span class="st">&quot;delete_user&quot;</span><span class="fu">,</span></span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>          <span class="dt">&quot;danger_level&quot;</span><span class="fu">:</span> <span class="st">&quot;destructive&quot;</span><span class="fu">,</span></span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>          <span class="dt">&quot;reasons&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;Permanently deletes user account and associated data&quot;</span><span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a>          <span class="dt">&quot;confirmation_token&quot;</span><span class="fu">:</span> <span class="st">&quot;conf_abc123&quot;</span><span class="fu">,</span></span>
+<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a>          <span class="dt">&quot;expires_at&quot;</span><span class="fu">:</span> <span class="st">&quot;2026-02-04T12:05:00Z&quot;</span></span>
+<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a>        <span class="fu">}</span></span>
+<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a>      <span class="fu">}</span></span>
+<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb20-24"><a href="#cb20-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">},</span></span>
+<span id="cb20-25"><a href="#cb20-25" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;pending_operations&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb20-26"><a href="#cb20-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span> <span class="dt">&quot;index&quot;</span><span class="fu">:</span> <span class="dv">2</span><span class="fu">,</span> <span class="dt">&quot;operation&quot;</span><span class="fu">:</span> <span class="st">&quot;send_notification&quot;</span><span class="fu">,</span> <span class="dt">&quot;params&quot;</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">&quot;user_id&quot;</span><span class="fu">:</span> <span class="st">&quot;alice&quot;</span><span class="fu">,</span> <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;Account deleted&quot;</span> <span class="fu">}</span> <span class="fu">}</span></span>
+<span id="cb20-27"><a href="#cb20-27" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb20-28"><a href="#cb20-28" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;summary&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb20-29"><a href="#cb20-29" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;total&quot;</span><span class="fu">:</span> <span class="dv">3</span><span class="fu">,</span></span>
+<span id="cb20-30"><a href="#cb20-30" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;succeeded&quot;</span><span class="fu">:</span> <span class="dv">1</span><span class="fu">,</span></span>
+<span id="cb20-31"><a href="#cb20-31" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;failed&quot;</span><span class="fu">:</span> <span class="dv">0</span><span class="fu">,</span></span>
+<span id="cb20-32"><a href="#cb20-32" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;halted&quot;</span><span class="fu">:</span> <span class="dv">1</span><span class="fu">,</span></span>
+<span id="cb20-33"><a href="#cb20-33" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;pending&quot;</span><span class="fu">:</span> <span class="dv">1</span></span>
+<span id="cb20-34"><a href="#cb20-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb20-35"><a href="#cb20-35" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h4 id="753-continuation-after-confirmation">7.5.3 Continuation After Confirmation</h4>
+<p>To continue after the user confirms, submit a new batch starting from the halted operation with the confirmation token:</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;operations&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;operation&quot;</span><span class="fu">:</span> <span class="st">&quot;delete_user&quot;</span><span class="fu">,</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;params&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;user_id&quot;</span><span class="fu">:</span> <span class="st">&quot;alice&quot;</span><span class="fu">,</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;confirmation_token&quot;</span><span class="fu">:</span> <span class="st">&quot;conf_abc123&quot;</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>      <span class="fu">}</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;operation&quot;</span><span class="fu">:</span> <span class="st">&quot;send_notification&quot;</span><span class="fu">,</span></span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;params&quot;</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">&quot;user_id&quot;</span><span class="fu">:</span> <span class="st">&quot;alice&quot;</span><span class="fu">,</span> <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;Account deleted&quot;</span> <span class="fu">}</span></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span></span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p>Clients MAY use the <code>pending_operations</code> array from the halted response to construct the continuation batch.</p>
+<h4 id="754-alternative-skip-and-continue-may">7.5.4 Alternative: Skip and Continue (MAY)</h4>
+<p>Adapters MAY implement skip-and-continue behavior, where the gated operation is skipped and subsequent operations execute.</p>
+<blockquote>
+<p><strong>Mode Selection:</strong> Whether an adapter uses halt-and-wait (recommended) or skip-and-continue is an adapter configuration decision, not a per-request option. Clients can detect which mode is in use by examining the response:</p>
+<ul>
+<li><strong>Halt mode:</strong> Response includes <code>halted_at</code> and <code>pending_operations</code></li>
+<li><strong>Skip mode:</strong> Response includes results for all operations, with <code>status: "pending_confirmation"</code> on gated operations</li>
+</ul>
+</blockquote>
+<div class="sourceCode" id="cb22"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;data&quot;</span><span class="fu">:</span> <span class="kw">null</span><span class="fu">,</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;results&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span> <span class="dt">&quot;index&quot;</span><span class="fu">:</span> <span class="dv">0</span><span class="fu">,</span> <span class="dt">&quot;operation&quot;</span><span class="fu">:</span> <span class="st">&quot;update_user&quot;</span><span class="fu">,</span> <span class="dt">&quot;result&quot;</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span> <span class="dt">&quot;data&quot;</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="st">&quot;alice&quot;</span> <span class="fu">}</span> <span class="fu">}</span> <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span> <span class="dt">&quot;index&quot;</span><span class="fu">:</span> <span class="dv">1</span><span class="fu">,</span> <span class="dt">&quot;operation&quot;</span><span class="fu">:</span> <span class="st">&quot;delete_user&quot;</span><span class="fu">,</span> <span class="dt">&quot;result&quot;</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span> <span class="dt">&quot;error&quot;</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">&quot;code&quot;</span><span class="fu">:</span> <span class="st">&quot;CONFIRMATION_REQUIRED&quot;</span><span class="fu">,</span> <span class="er">...</span> <span class="fu">}</span> <span class="fu">},</span> <span class="dt">&quot;status&quot;</span><span class="fu">:</span> <span class="st">&quot;pending_confirmation&quot;</span> <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span> <span class="dt">&quot;index&quot;</span><span class="fu">:</span> <span class="dv">2</span><span class="fu">,</span> <span class="dt">&quot;operation&quot;</span><span class="fu">:</span> <span class="st">&quot;send_notification&quot;</span><span class="fu">,</span> <span class="dt">&quot;result&quot;</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span> <span class="dt">&quot;data&quot;</span><span class="fu">:</span> <span class="fu">{}</span> <span class="fu">}</span> <span class="fu">}</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;summary&quot;</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">&quot;total&quot;</span><span class="fu">:</span> <span class="dv">3</span><span class="fu">,</span> <span class="dt">&quot;succeeded&quot;</span><span class="fu">:</span> <span class="dv">2</span><span class="fu">,</span> <span class="dt">&quot;failed&quot;</span><span class="fu">:</span> <span class="dv">0</span><span class="fu">,</span> <span class="dt">&quot;pending_confirmation&quot;</span><span class="fu">:</span> <span class="dv">1</span> <span class="fu">}</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<blockquote>
+<p><strong>Warning:</strong> Skip-and-continue risks inconsistent state when operations depend on each other. This approach is NOT RECOMMENDED unless operations are known to be independent.</p>
+</blockquote>
+<h4 id="755-semantics">7.5.5 Semantics</h4>
+<p>For batch processing purposes:</p>
+<ul>
+<li><code>CONFIRMATION_REQUIRED</code> is NOT a failure — it is a halting condition</li>
+<li>The batch overall <code>success</code> is <code>true</code> (batch processing succeeded; an operation requires confirmation)</li>
+<li>Halted batches include <code>halted_at</code> and <code>pending_operations</code> for continuation</li>
+<li>The <code>summary.halted</code> count indicates operations that triggered halting</li>
+<li>The <code>summary.pending</code> count indicates operations that did not execute</li>
+</ul>
+<p>See <a href="security/confirmation-tokens.html">Confirmation Token Specification</a> for token lifecycle details and <a href="error-codes.html#54-confirmation_required">CONFIRMATION_REQUIRED Error Code</a> for the complete response format.</p>
+<hr />
+<h2 id="8-error-handling">8. Error Handling</h2>
+<h3 id="81-error-categories">8.1 Error Categories</h3>
+<p>Adapters MUST categorize errors using structured error codes. The table below shows error categories and their corresponding codes:</p>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Error Code</th>
+<th>Example Message</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Missing Parameter</td>
+<td><code>VALIDATION_MISSING_PARAM</code></td>
+<td>"Missing required parameter 'name'"</td>
+</tr>
+<tr>
+<td>Invalid Type</td>
+<td><code>VALIDATION_INVALID_TYPE</code></td>
+<td>"Parameter 'price' expected 'number', got 'string'"</td>
+</tr>
+<tr>
+<td>Resource Not Found</td>
+<td><code>NOT_FOUND_RESOURCE</code></td>
+<td>"Item 'item_999' not found"</td>
+</tr>
+<tr>
+<td>Unknown Operation</td>
+<td><code>NOT_FOUND_OPERATION</code></td>
+<td>"Unknown operation: 'create_widget'"</td>
+</tr>
+<tr>
+<td>Permission Denied</td>
+<td><code>PERMISSION_DENIED</code></td>
+<td>"Permission denied: requires 'admin' scope"</td>
+</tr>
+<tr>
+<td>Rate Limited</td>
+<td><code>RATE_LIMIT_EXCEEDED</code></td>
+<td>"API rate limit exceeded"</td>
+</tr>
+<tr>
+<td>Internal Error</td>
+<td><code>INTERNAL_ERROR</code></td>
+<td>"Internal error: database connection failed"</td>
+</tr>
+</tbody>
+</table>
+<p>See <a href="error-codes.html">Structured Error Codes Specification</a> for detailed error code definitions and usage.</p>
+<h3 id="82-error-response-structure">8.2 Error Response Structure</h3>
+<p>All error responses MUST use structured error objects:</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;error&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;code&quot;</span><span class="fu">:</span> <span class="st">&quot;NOT_FOUND_RESOURCE&quot;</span><span class="fu">,</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;Item &#39;item_999&#39; not found&quot;</span><span class="fu">,</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;details&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;resource_type&quot;</span><span class="fu">:</span> <span class="st">&quot;item&quot;</span><span class="fu">,</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;resource_id&quot;</span><span class="fu">:</span> <span class="st">&quot;item_999&quot;</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p>The <code>error</code> object:</p>
+<ul>
+<li>MUST include <code>code</code> - A machine-readable error code from the <a href="error-codes.html">error code taxonomy</a></li>
+<li>MUST include <code>message</code> - A human-readable error message</li>
+<li>MAY include <code>details</code> - Additional contextual information for debugging</li>
+</ul>
+<p>See <a href="error-codes.html">Structured Error Codes Specification</a> for the complete error code registry and usage guidelines.</p>
+<h3 id="83-standard-error-codes">8.3 Standard Error Codes</h3>
+<p>Adapters MUST use standardized error codes for programmatic handling. Common codes include:</p>
+<table>
+<thead>
+<tr>
+<th>Code</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>VALIDATION_MISSING_PARAM</code></td>
+<td>Required parameter not provided</td>
+</tr>
+<tr>
+<td><code>VALIDATION_INVALID_TYPE</code></td>
+<td>Parameter type mismatch</td>
+</tr>
+<tr>
+<td><code>NOT_FOUND_OPERATION</code></td>
+<td>Operation name not recognized</td>
+</tr>
+<tr>
+<td><code>NOT_FOUND_RESOURCE</code></td>
+<td>Resource not found</td>
+</tr>
+<tr>
+<td><code>PERMISSION_DENIED</code></td>
+<td>Operation not permitted</td>
+</tr>
+<tr>
+<td><code>RATE_LIMIT_EXCEEDED</code></td>
+<td>Too many requests</td>
+</tr>
+<tr>
+<td><code>INTERNAL_ERROR</code></td>
+<td>Server error</td>
+</tr>
+</tbody>
+</table>
+<p>See <a href="error-codes.html">Structured Error Codes Specification</a> for the complete error code registry including Phase 1 robustness codes.</p>
+<h3 id="84-error-message-guidelines">8.4 Error Message Guidelines</h3>
+<p>Error messages SHOULD be:</p>
+<ol type="1">
+<li><strong>Actionable</strong>: Tell the user what to do to fix the problem</li>
+<li><strong>Specific</strong>: Include relevant identifiers and values</li>
+<li><strong>Safe</strong>: Never expose sensitive information (passwords, tokens, internal paths)</li>
+</ol>
+<hr />
+<h2 id="9-the-introspect-operation">9. The introspect Operation</h2>
+<h3 id="91-required-implementation">9.1 Required Implementation</h3>
+<p>Every MCP-AQL adapter MUST implement the <code>introspect</code> operation on the READ endpoint. This operation enables runtime discovery of available operations and types.</p>
+<h3 id="92-operation-schema">9.2 Operation Schema</h3>
+<div class="sourceCode" id="cb24"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">introspect</span><span class="op">:</span> {</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">endpoint</span><span class="op">:</span> <span class="st">&quot;READ&quot;</span><span class="op">,</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">description</span><span class="op">:</span> <span class="st">&quot;Discover available operations and types&quot;</span><span class="op">,</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">params</span><span class="op">:</span> {</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>      <span class="dt">query</span><span class="op">:</span> {</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>        <span class="dt">type</span><span class="op">:</span> <span class="st">&quot;string&quot;</span><span class="op">,</span></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>        <span class="dt">required</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>        <span class="dt">enum</span><span class="op">:</span> [<span class="st">&quot;operations&quot;</span><span class="op">,</span> <span class="st">&quot;types&quot;</span>]<span class="op">,</span></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>        <span class="dt">description</span><span class="op">:</span> <span class="st">&quot;What to introspect&quot;</span></span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>      }<span class="op">,</span></span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>      <span class="dt">name</span><span class="op">:</span> {</span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>        <span class="dt">type</span><span class="op">:</span> <span class="st">&quot;string&quot;</span><span class="op">,</span></span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>        <span class="dt">required</span><span class="op">:</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>        <span class="dt">description</span><span class="op">:</span> <span class="st">&quot;Specific operation or type name for detailed info&quot;</span></span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="93-query-types">9.3 Query Types</h3>
+<p><strong>List all operations:</strong></p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span> <span class="dt">&quot;operation&quot;</span><span class="fu">:</span> <span class="st">&quot;introspect&quot;</span><span class="fu">,</span> <span class="dt">&quot;params&quot;</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">&quot;query&quot;</span><span class="fu">:</span> <span class="st">&quot;operations&quot;</span> <span class="fu">}</span> <span class="fu">}</span></span></code></pre></div>
+<p><strong>Get operation details:</strong></p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span> <span class="dt">&quot;operation&quot;</span><span class="fu">:</span> <span class="st">&quot;introspect&quot;</span><span class="fu">,</span> <span class="dt">&quot;params&quot;</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">&quot;query&quot;</span><span class="fu">:</span> <span class="st">&quot;operations&quot;</span><span class="fu">,</span> <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;create_item&quot;</span> <span class="fu">}</span> <span class="fu">}</span></span></code></pre></div>
+<p><strong>List all types:</strong></p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span> <span class="dt">&quot;operation&quot;</span><span class="fu">:</span> <span class="st">&quot;introspect&quot;</span><span class="fu">,</span> <span class="dt">&quot;params&quot;</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">&quot;query&quot;</span><span class="fu">:</span> <span class="st">&quot;types&quot;</span> <span class="fu">}</span> <span class="fu">}</span></span></code></pre></div>
+<p><strong>Get type details:</strong></p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span> <span class="dt">&quot;operation&quot;</span><span class="fu">:</span> <span class="st">&quot;introspect&quot;</span><span class="fu">,</span> <span class="dt">&quot;params&quot;</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">&quot;query&quot;</span><span class="fu">:</span> <span class="st">&quot;types&quot;</span><span class="fu">,</span> <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;ItemCategory&quot;</span> <span class="fu">}</span> <span class="fu">}</span></span></code></pre></div>
+<h3 id="94-operations-response">9.4 Operations Response</h3>
+<p>When <code>query</code> is "operations" without a <code>name</code>:</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;data&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;operations&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">{</span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;create_item&quot;</span><span class="fu">,</span></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;endpoint&quot;</span><span class="fu">:</span> <span class="st">&quot;CREATE&quot;</span><span class="fu">,</span></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;description&quot;</span><span class="fu">:</span> <span class="st">&quot;Create a new item&quot;</span></span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>      <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>      <span class="fu">{</span></span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;list_items&quot;</span><span class="fu">,</span></span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;endpoint&quot;</span><span class="fu">:</span> <span class="st">&quot;READ&quot;</span><span class="fu">,</span></span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;description&quot;</span><span class="fu">:</span> <span class="st">&quot;List all items&quot;</span></span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>      <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a>      <span class="fu">{</span></span>
+<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;update_item&quot;</span><span class="fu">,</span></span>
+<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;endpoint&quot;</span><span class="fu">:</span> <span class="st">&quot;UPDATE&quot;</span><span class="fu">,</span></span>
+<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;description&quot;</span><span class="fu">:</span> <span class="st">&quot;Update item properties&quot;</span></span>
+<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a>      <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb29-20"><a href="#cb29-20" aria-hidden="true" tabindex="-1"></a>      <span class="fu">{</span></span>
+<span id="cb29-21"><a href="#cb29-21" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;delete_item&quot;</span><span class="fu">,</span></span>
+<span id="cb29-22"><a href="#cb29-22" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;endpoint&quot;</span><span class="fu">:</span> <span class="st">&quot;DELETE&quot;</span><span class="fu">,</span></span>
+<span id="cb29-23"><a href="#cb29-23" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;description&quot;</span><span class="fu">:</span> <span class="st">&quot;Delete an item&quot;</span></span>
+<span id="cb29-24"><a href="#cb29-24" aria-hidden="true" tabindex="-1"></a>      <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb29-25"><a href="#cb29-25" aria-hidden="true" tabindex="-1"></a>      <span class="fu">{</span></span>
+<span id="cb29-26"><a href="#cb29-26" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;introspect&quot;</span><span class="fu">,</span></span>
+<span id="cb29-27"><a href="#cb29-27" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;endpoint&quot;</span><span class="fu">:</span> <span class="st">&quot;READ&quot;</span><span class="fu">,</span></span>
+<span id="cb29-28"><a href="#cb29-28" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;description&quot;</span><span class="fu">:</span> <span class="st">&quot;Discover available operations&quot;</span></span>
+<span id="cb29-29"><a href="#cb29-29" aria-hidden="true" tabindex="-1"></a>      <span class="fu">}</span></span>
+<span id="cb29-30"><a href="#cb29-30" aria-hidden="true" tabindex="-1"></a>    <span class="ot">]</span></span>
+<span id="cb29-31"><a href="#cb29-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb29-32"><a href="#cb29-32" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h3 id="95-operation-details-response">9.5 Operation Details Response</h3>
+<p>When <code>query</code> is "operations" with a <code>name</code>:</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;data&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;operation&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;create_item&quot;</span><span class="fu">,</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;endpoint&quot;</span><span class="fu">:</span> <span class="st">&quot;CREATE&quot;</span><span class="fu">,</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;mcpTool&quot;</span><span class="fu">:</span> <span class="st">&quot;mcp_aql_create&quot;</span><span class="fu">,</span></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;description&quot;</span><span class="fu">:</span> <span class="st">&quot;Create a new item&quot;</span><span class="fu">,</span></span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;permissions&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;readOnly&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;destructive&quot;</span><span class="fu">:</span> <span class="kw">false</span></span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>      <span class="fu">},</span></span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;parameters&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>        <span class="fu">{</span></span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a>          <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;name&quot;</span><span class="fu">,</span></span>
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a>          <span class="dt">&quot;type&quot;</span><span class="fu">:</span> <span class="st">&quot;string&quot;</span><span class="fu">,</span></span>
+<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a>          <span class="dt">&quot;required&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a>          <span class="dt">&quot;description&quot;</span><span class="fu">:</span> <span class="st">&quot;Item name&quot;</span></span>
+<span id="cb30-19"><a href="#cb30-19" aria-hidden="true" tabindex="-1"></a>        <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb30-20"><a href="#cb30-20" aria-hidden="true" tabindex="-1"></a>        <span class="fu">{</span></span>
+<span id="cb30-21"><a href="#cb30-21" aria-hidden="true" tabindex="-1"></a>          <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;category&quot;</span><span class="fu">,</span></span>
+<span id="cb30-22"><a href="#cb30-22" aria-hidden="true" tabindex="-1"></a>          <span class="dt">&quot;type&quot;</span><span class="fu">:</span> <span class="st">&quot;string&quot;</span><span class="fu">,</span></span>
+<span id="cb30-23"><a href="#cb30-23" aria-hidden="true" tabindex="-1"></a>          <span class="dt">&quot;required&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb30-24"><a href="#cb30-24" aria-hidden="true" tabindex="-1"></a>          <span class="dt">&quot;description&quot;</span><span class="fu">:</span> <span class="st">&quot;Item category&quot;</span><span class="fu">,</span></span>
+<span id="cb30-25"><a href="#cb30-25" aria-hidden="true" tabindex="-1"></a>          <span class="dt">&quot;enum&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;product&quot;</span><span class="ot">,</span> <span class="st">&quot;service&quot;</span><span class="ot">,</span> <span class="st">&quot;subscription&quot;</span><span class="ot">]</span></span>
+<span id="cb30-26"><a href="#cb30-26" aria-hidden="true" tabindex="-1"></a>        <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb30-27"><a href="#cb30-27" aria-hidden="true" tabindex="-1"></a>        <span class="fu">{</span></span>
+<span id="cb30-28"><a href="#cb30-28" aria-hidden="true" tabindex="-1"></a>          <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;price&quot;</span><span class="fu">,</span></span>
+<span id="cb30-29"><a href="#cb30-29" aria-hidden="true" tabindex="-1"></a>          <span class="dt">&quot;type&quot;</span><span class="fu">:</span> <span class="st">&quot;number&quot;</span><span class="fu">,</span></span>
+<span id="cb30-30"><a href="#cb30-30" aria-hidden="true" tabindex="-1"></a>          <span class="dt">&quot;required&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb30-31"><a href="#cb30-31" aria-hidden="true" tabindex="-1"></a>          <span class="dt">&quot;minimum&quot;</span><span class="fu">:</span> <span class="dv">0</span><span class="fu">,</span></span>
+<span id="cb30-32"><a href="#cb30-32" aria-hidden="true" tabindex="-1"></a>          <span class="dt">&quot;description&quot;</span><span class="fu">:</span> <span class="st">&quot;Item price in cents&quot;</span></span>
+<span id="cb30-33"><a href="#cb30-33" aria-hidden="true" tabindex="-1"></a>        <span class="fu">}</span></span>
+<span id="cb30-34"><a href="#cb30-34" aria-hidden="true" tabindex="-1"></a>      <span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb30-35"><a href="#cb30-35" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;returns&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb30-36"><a href="#cb30-36" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;Item&quot;</span><span class="fu">,</span></span>
+<span id="cb30-37"><a href="#cb30-37" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;kind&quot;</span><span class="fu">:</span> <span class="st">&quot;object&quot;</span><span class="fu">,</span></span>
+<span id="cb30-38"><a href="#cb30-38" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;description&quot;</span><span class="fu">:</span> <span class="st">&quot;Newly created item&quot;</span></span>
+<span id="cb30-39"><a href="#cb30-39" aria-hidden="true" tabindex="-1"></a>      <span class="fu">},</span></span>
+<span id="cb30-40"><a href="#cb30-40" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;examples&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb30-41"><a href="#cb30-41" aria-hidden="true" tabindex="-1"></a>        <span class="fu">{</span></span>
+<span id="cb30-42"><a href="#cb30-42" aria-hidden="true" tabindex="-1"></a>          <span class="dt">&quot;description&quot;</span><span class="fu">:</span> <span class="st">&quot;Create a basic item&quot;</span><span class="fu">,</span></span>
+<span id="cb30-43"><a href="#cb30-43" aria-hidden="true" tabindex="-1"></a>          <span class="dt">&quot;request&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb30-44"><a href="#cb30-44" aria-hidden="true" tabindex="-1"></a>            <span class="dt">&quot;operation&quot;</span><span class="fu">:</span> <span class="st">&quot;create_item&quot;</span><span class="fu">,</span></span>
+<span id="cb30-45"><a href="#cb30-45" aria-hidden="true" tabindex="-1"></a>            <span class="dt">&quot;params&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb30-46"><a href="#cb30-46" aria-hidden="true" tabindex="-1"></a>              <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;Widget&quot;</span><span class="fu">,</span></span>
+<span id="cb30-47"><a href="#cb30-47" aria-hidden="true" tabindex="-1"></a>              <span class="dt">&quot;category&quot;</span><span class="fu">:</span> <span class="st">&quot;product&quot;</span></span>
+<span id="cb30-48"><a href="#cb30-48" aria-hidden="true" tabindex="-1"></a>            <span class="fu">}</span></span>
+<span id="cb30-49"><a href="#cb30-49" aria-hidden="true" tabindex="-1"></a>          <span class="fu">}</span></span>
+<span id="cb30-50"><a href="#cb30-50" aria-hidden="true" tabindex="-1"></a>        <span class="fu">}</span></span>
+<span id="cb30-51"><a href="#cb30-51" aria-hidden="true" tabindex="-1"></a>      <span class="ot">]</span></span>
+<span id="cb30-52"><a href="#cb30-52" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb30-53"><a href="#cb30-53" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb30-54"><a href="#cb30-54" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h3 id="96-types-response">9.6 Types Response</h3>
+<p>When <code>query</code> is "types":</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;data&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;types&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">{</span></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;ItemCategory&quot;</span><span class="fu">,</span></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;kind&quot;</span><span class="fu">:</span> <span class="st">&quot;enum&quot;</span><span class="fu">,</span></span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;values&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;product&quot;</span><span class="ot">,</span> <span class="st">&quot;service&quot;</span><span class="ot">,</span> <span class="st">&quot;subscription&quot;</span><span class="ot">]</span></span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>      <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>      <span class="fu">{</span></span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;Item&quot;</span><span class="fu">,</span></span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;kind&quot;</span><span class="fu">:</span> <span class="st">&quot;object&quot;</span><span class="fu">,</span></span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;fields&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a>          <span class="fu">{</span> <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;id&quot;</span><span class="fu">,</span> <span class="dt">&quot;type&quot;</span><span class="fu">:</span> <span class="st">&quot;string&quot;</span> <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a>          <span class="fu">{</span> <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;name&quot;</span><span class="fu">,</span> <span class="dt">&quot;type&quot;</span><span class="fu">:</span> <span class="st">&quot;string&quot;</span> <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb31-16"><a href="#cb31-16" aria-hidden="true" tabindex="-1"></a>          <span class="fu">{</span> <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;category&quot;</span><span class="fu">,</span> <span class="dt">&quot;type&quot;</span><span class="fu">:</span> <span class="st">&quot;ItemCategory&quot;</span> <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb31-17"><a href="#cb31-17" aria-hidden="true" tabindex="-1"></a>          <span class="fu">{</span> <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;price&quot;</span><span class="fu">,</span> <span class="dt">&quot;type&quot;</span><span class="fu">:</span> <span class="st">&quot;number&quot;</span> <span class="fu">}</span></span>
+<span id="cb31-18"><a href="#cb31-18" aria-hidden="true" tabindex="-1"></a>        <span class="ot">]</span></span>
+<span id="cb31-19"><a href="#cb31-19" aria-hidden="true" tabindex="-1"></a>      <span class="fu">}</span></span>
+<span id="cb31-20"><a href="#cb31-20" aria-hidden="true" tabindex="-1"></a>    <span class="ot">]</span></span>
+<span id="cb31-21"><a href="#cb31-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb31-22"><a href="#cb31-22" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<hr />
+<h2 id="references">References</h2>
+<ul>
+<li><a href="versions/v1.0.0-draft.html">MCP-AQL Specification v1.0.0-draft</a></li>
+<li><a href="crude-pattern.html">CRUDE Pattern Specification</a></li>
+<li><a href="introspection.html">Introspection Specification</a></li>
+</ul>
+
+          </div>
+        </section>
+        <nav class="page-nav" aria-label="Page navigation">
+  <a class="page-nav-link prev" href="mcp-integration.html">
+    <span class="page-nav-eyebrow">Previous spec page</span>
+    <strong class="page-nav-label">MCP Integration Specification</strong>
+  </a>
+  <a class="page-nav-link next" href="overview.html">
+    <span class="page-nav-eyebrow">Next spec page</span>
+    <strong class="page-nav-label">MCP-AQL Protocol Overview</strong>
+  </a>
+</nav>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.</p>
+      <div class="footer-links">
+        <a href="../docs/index.html">Docs Library</a>
+        <a href="index.html">Repo-Synced Spec</a>
+        <a href="https://github.com/MCPAQL">MCPAQL Organization</a>
+        <a href="https://dollhouseresearch.com">Dollhouse Research</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../js/search.js"></script>
+</body>
+</html>

@@ -1,0 +1,5 @@
+MCP-AQL Spec | Full Spec Reference
+Full Spec Reference
+These pages are generated from MCPAQL/spec so the public site can carry the full protocol and adapter material, not just summaries and links back to GitHub.
+Read The Normative Draft Back To Docs Library
+Docs Library Repo-Synced Spec MCPAQL Organization Dollhouse Research

@@ -1,0 +1,242 @@
+MCP-AQL Adapter Reference | Migration Guide: MCP Server to MCP-AQL Adapter
+Launch Checklist
+Adapter Patterns
+Search MCP-AQL docs
+Reference Adapter Docs
+Generated from MCPAQL/mcpaql-adapter so the website carries the implementation architecture, guides, and ADRs too.
+Overview
+MCP-AQL Reference Adapter
+Architecture
+Schema-Driven Dispatch
+MCP-AQL Architecture Overview
+Plugin System Implementation
+Universal Adapter Runtime Specification
+MCP-AQL Adapter Development Guide
+Migration Guide: MCP Server to MCP-AQL Adapter
+MCP-AQL Adapter Testing Guide
+ADR-001: Plugin Pipeline Order
+ADR-002: Schema-Driven Dispatch over Code Generation
+ADR-003: Stateless Singleton Plugins
+Architecture Decision Records
+Examples
+REPO-SYNCED ADAPTER DOC
+This guide walks through the process of migrating an existing Model Context Protocol (MCP) server — one that exposes individual tools — to an MCP-AQL adapter that consolidates those tools into semantic CRUDE endpoints. T
+Support document Draft 1.0.0-draft 2026-01-26
+Source: mcpaql-adapter/docs/guides/migration.md
+Open Source Markdown Browse Reference Adapter Docs Adapter Patterns Hub
+Version: 1.0.0-draft Status: Draft Last Updated: 2026-01-26
+Note: This guide provides practical migration instructions for converting existing MCP servers to MCP-AQL adapters. For normative protocol specifications, see the spec repository .
+Abstract
+This guide walks through the process of migrating an existing Model Context Protocol (MCP) server — one that exposes individual tools — to an MCP-AQL adapter that consolidates those tools into semantic CRUDE endpoints. The result is a ~96% reduction in token overhead while preserving full functionality.
+Table of Contents
+Why Migrate
+Before You Start
+Migration Steps
+Mapping Tools to CRUDE Operations
+Converting Tool Handlers
+Adding Introspection
+Validation Checklist
+1. Why Migrate
+1.1 The Problem with Individual Tools
+A standard MCP server registers each capability as a separate tool. For a server with 50 operations, the LLM receives 50 tool definitions in its context window:
+50 tools × ~800 tokens/tool = ~40,000 tokens per request
+This creates:
+Context window pressure — Less room for user content and reasoning
+Selection confusion — LLMs struggle to choose among many similar tools
+Scaling limits — Adding operations linearly increases token cost
+1.2 What MCP-AQL Changes
+MCP-AQL consolidates all operations behind 5 CRUDE endpoints:
+5 endpoints × ~200 tokens/endpoint = ~1,000 tokens per request
+Operations are discovered at runtime via introspection rather than statically defined in the tool list.
+1.3 What Stays the Same
+Your backend logic does not change
+Your MCP server infrastructure (transport, connection) stays the same
+Parameter validation logic is reusable
+Response data structures are preserved
+2. Before You Start
+2.1 Inventory Your Tools
+List every tool your MCP server currently registers. For each tool, note:
+Tool Name
+What It Does
+Read-Only?
+Destructive?
+Side Effects?
+This inventory drives the CRUDE categorization in Step 4.
+2.2 Identify Shared Parameters
+Look for parameters that appear across multiple tools (e.g., owner , repo in a GitHub integration). These become path parameters or shared context in the adapter.
+3. Migration Steps
+3.1 Overview
+What Changes
+1. Categorize tools into CRUDE endpoints
+Tool registration
+2. Create operation router
+New component
+3. Convert tool handlers to operation handlers
+Handler signatures
+4. Add introspection
+New handler
+5. Update tool registration
+50 tools → 5 endpoints
+6. Test and validate
+Test updates
+3.2 Step-by-Step
+The following sections walk through each step with code examples.
+4. Mapping Tools to CRUDE Operations
+4.1 Categorization Rules
+CRUDE Endpoint
+Criteria
+Adds new state, non-destructive, additive
+create_file , add_tag , import_data
+Read-only, no side effects, safe to retry
+get_file , list_items , search , introspect
+Modifies existing state
+rename_file , edit_content , change_status
+Removes state, destructive
+delete_file , remove_tag , purge_cache
+Non-idempotent, runtime lifecycle, side effects
+run_build , send_email , deploy , restart
+4.2 Common Mappings
+Before (individual MCP tools):
+// 12 separate tools registered
+tools : [
+{ name : &quot;create_repo&quot; , ... } ,
+{ name : &quot;fork_repo&quot; , ... } ,
+{ name : &quot;list_repos&quot; , ... } ,
+{ name : &quot;get_repo&quot; , ... } ,
+{ name : &quot;search_repos&quot; , ... } ,
+{ name : &quot;get_readme&quot; , ... } ,
+{ name : &quot;update_repo&quot; , ... } ,
+{ name : &quot;transfer_repo&quot; , ... } ,
+{ name : &quot;delete_repo&quot; , ... } ,
+{ name : &quot;archive_repo&quot; , ... } ,
+{ name : &quot;star_repo&quot; , ... } ,
+{ name : &quot;unstar_repo&quot; , ... } ,
+After (CRUDE categorization):
+const OPERATION_ROUTES = {
+// CREATE - additive
+create_repo : { endpoint : &quot;CREATE&quot; } ,
+fork_repo : { endpoint : &quot;CREATE&quot; } ,
+star_repo : { endpoint : &quot;CREATE&quot; } ,
+// READ - safe, read-only
+list_repos : { endpoint : &quot;READ&quot; } ,
+get_repo : { endpoint : &quot;READ&quot; } ,
+search_repos : { endpoint : &quot;READ&quot; } ,
+get_readme : { endpoint : &quot;READ&quot; } ,
+introspect : { endpoint : &quot;READ&quot; } ,
+// UPDATE - modifying
+update_repo : { endpoint : &quot;UPDATE&quot; } ,
+transfer_repo : { endpoint : &quot;UPDATE&quot; } ,
+archive_repo : { endpoint : &quot;UPDATE&quot; } ,
+// DELETE - destructive
+delete_repo : { endpoint : &quot;DELETE&quot; } ,
+unstar_repo : { endpoint : &quot;DELETE&quot; } ,
+4.3 Ambiguous Cases
+Some operations could fit multiple categories. Use these tiebreakers:
+Ambiguity
+Resolution
+"Star" something
+CREATE (adding a relation)
+"Unstar" something
+DELETE (removing a relation)
+"Archive" something
+UPDATE (changing state, not removing)
+"Transfer" ownership
+UPDATE (changing attribute)
+"Fork" something
+CREATE (producing a new resource)
+"Run" or "trigger" something
+EXECUTE (side effects, non-idempotent)
+5. Converting Tool Handlers
+5.1 Before: Individual Tool Handler
+// Old: Each tool has its own handler
+server . setRequestHandler ( &quot;tools/call&quot; , async (request) =&gt; {
+switch (request . params . name ) {
+case &quot;create_repo&quot; :
+return handleCreateRepo (request . params . arguments ) ;
+case &quot;list_repos&quot; :
+return handleListRepos (request . params . arguments ) ;
+// ... 10 more cases
+5.2 After: CRUDE Router
+// New: Single router dispatches to handlers
+const { name : toolName , arguments : args } = request . params ;
+const endpoint = toolName . replace ( &quot;mcp_aql_&quot; , &quot;&quot; ) . toUpperCase () ;
+const { operation , params } = args ;
+// Validate routing
+const route = OPERATION_ROUTES[operation] ;
+if ( ! route) {
+return formatError ( `Unknown operation: ${ operation } ` ) ;
+if (route . endpoint !== endpoint) {
+return formatError (
+`Operation &#39; ${ operation } &#39; must be called via mcp_aql_ ${ route . endpoint . toLowerCase () } `
+// Dispatch to existing handler (unchanged!)
+return handlers[operation](params) ;
+5.3 Handler Signatures
+Your existing handler logic stays the same. The only change is how it's invoked:
+// This function is identical before and after migration
+async function handleCreateRepo (params : {
+name : string ;
+private ?: boolean ;
+description ?: string ;
+const repo = await github . createRepo (params) ;
+return { success : true , data : repo } ;
+6. Adding Introspection
+6.1 Required Operation
+Every MCP-AQL adapter MUST implement introspect . This operation enables runtime discovery — LLMs call it to learn what operations are available.
+function handleIntrospect (params : { query : string ; name ?: string }) {
+if (params . query === &quot;operations&quot; ) {
+if (params . name ) {
+const op = OPERATION_ROUTES[params . name ] ;
+return {
+success : true ,
+data : { operation : op ? formatOperation (params . name , op) : null } ,
+data : {
+operations : Object . entries (OPERATION_ROUTES) . map (
+([name , route]) =&gt; formatOperation (name , route)
+if (params . query === &quot;types&quot; ) {
+return { success : true , data : { types : getTypeDefinitions () } } ;
+return { success : false , error : `Unknown query: ${ params . query } ` } ;
+6.2 Building the Operation Catalog
+Generate introspection data from your existing tool definitions:
+function formatOperation (name : string , route : OperationRoute) {
+endpoint : route . endpoint ,
+description : route . description ,
+parameters : route . parameters ?. map ((p) =&gt; ({
+name : p . name ,
+type : p . type ,
+required : p . required ?? false ,
+description : p . description ,
+7. Validation Checklist
+After migration, verify:
+## Migration Validation
+### Tool Registration
+- [ ] Old individual tools are removed
+- [ ] 5 CRUDE endpoints registered (or fewer if not all are needed)
+- [ ] Tool descriptions are clear and endpoint-specific
+### Operation Routing
+- [ ] Every former tool maps to exactly one CRUDE endpoint
+- [ ] Operations are rejected on wrong endpoints
+- [ ] Unknown operations return clear error messages
+### Introspection
+- [ ] `introspect` operation works via mcp_aql_read
+- [ ] All operations are discoverable
+- [ ] Operation details include parameters and descriptions
+### Response Format
+- [ ] All responses use `{ success: true, data }` or `{ success: false, error }`
+- [ ] No raw exceptions leak to clients
+### Backwards Compatibility
+- [ ] All functionality from original tools is preserved
+- [ ] Parameter names follow snake_case convention
+- [ ] Response data structures are unchanged
+### Token Reduction
+- [ ] Tool count reduced from N to 5 (or fewer)
+- [ ] Estimated token savings calculated
+References
+Development Guide
+Testing Guide
+Architecture Overview
+CRUDE Pattern (spec repo)
+MCP-AQL Specification (spec repo)
+Previous page
+Next page
+&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
+Adapter Patterns Reference Adapter Docs Reference Adapter Repo Dollhouse Research

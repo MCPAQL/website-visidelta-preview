@@ -1,0 +1,3 @@
+Search spans the summary docs, the repo-synced full spec reference, the mirrored reference adapter docs, launch pages, adapter patterns, and key repository surfaces.
+Implementation queries also cover Reference Adapter Docs .
+Reference Adapter Docs

@@ -1,0 +1,253 @@
+MCP-AQL Adapter Reference | Schema-Driven Dispatch
+Launch Checklist
+Adapter Patterns
+Search MCP-AQL docs
+Reference Adapter Docs
+Generated from MCPAQL/mcpaql-adapter so the website carries the implementation architecture, guides, and ADRs too.
+Overview
+MCP-AQL Reference Adapter
+Architecture
+Schema-Driven Dispatch
+MCP-AQL Architecture Overview
+Plugin System Implementation
+Universal Adapter Runtime Specification
+MCP-AQL Adapter Development Guide
+Migration Guide: MCP Server to MCP-AQL Adapter
+MCP-AQL Adapter Testing Guide
+ADR-001: Plugin Pipeline Order
+ADR-002: Schema-Driven Dispatch over Code Generation
+ADR-003: Stateless Singleton Plugins
+Architecture Decision Records
+Examples
+REPO-SYNCED ADAPTER DOC
+This document specifies the schema-driven dispatch pattern that enables declarative operation definitions with automatic parameter resolution, validation, and handler invocation. This is an optional but recommended patte
+Support document Draft 1.0.0-draft 2026-01-26
+Source: mcpaql-adapter/docs/architecture/dispatch.md
+Open Source Markdown Browse Reference Adapter Docs Adapter Patterns Hub
+Version: 1.0.0-draft Status: Draft Last Updated: 2026-01-26 Moved from: MCPAQL/spec (formerly docs/architecture/schema-driven-dispatch.md )
+Note: This document describes an implementation pattern for adapter dispatch. For normative protocol specifications, see the spec repository .
+Abstract
+This document specifies the schema-driven dispatch pattern that enables declarative operation definitions with automatic parameter resolution, validation, and handler invocation. This is an optional but recommended pattern for adapter implementation.
+Table of Contents
+Introduction
+Operation Schema
+Parameter Resolution
+Handler Invocation
+Security Considerations
+Introspection Integration
+1. Introduction
+1.1 Purpose
+Schema-driven dispatch separates the definition of operations from their implementation , providing:
+Declarative configuration - Operations defined as data, not code
+Automatic validation - Parameters validated against schema
+Flexible resolution - Parameters found from multiple sources
+Generated documentation - Introspection responses auto-generated
+Consistent behavior - All operations follow same patterns
+1.2 Benefits
+Traditional
+Schema-Driven
+Adding operations
+Code changes
+Schema entry
+Parameter validation
+Manual code
+Automatic
+Introspection
+Manual sync
+Auto-generated
+Documentation
+Separate files
+Single source
+Per-operation
+Schema-based
+1.3 When to Use
+Schema-driven dispatch is recommended when:
+Adapter has many operations
+Operations have similar parameter patterns
+Introspection accuracy is critical
+Consistency is valued over flexibility
+2. Operation Schema
+2.1 Schema Structure
+interface OperationSchema {
+// Identity
+operation : string ; // Operation name (snake_case)
+endpoint : CRUDEndpoint ; // CRUDE endpoint routing
+// Handler
+handler : HandlerReference ; // How to invoke handler
+paramStyle : ParamStyle ; // Argument passing pattern
+// Parameters
+params : ParamDefinition[] ; // Parameter specifications
+// Documentation
+description : string ; // Operation description
+examples ?: Example[] ; // Usage examples
+type CRUDEndpoint = &#39;CREATE&#39; | &#39;READ&#39; | &#39;UPDATE&#39; | &#39;DELETE&#39; | &#39;EXECUTE&#39; ;
+type ParamStyle = &#39;single&#39; | &#39;named&#39; | &#39;spread&#39; ;
+2.2 Parameter Definition
+interface ParamDefinition {
+name : string ; // Parameter name (snake_case)
+type : ParamType ; // string, number, boolean, object, array
+// Requirements
+required : boolean ;
+default ?: unknown ;
+// Resolution
+sources : string [] ; // Resolution paths in priority order
+// Validation
+enum ?: string [] ; // Allowed values
+minLength ?: number ;
+maxLength ?: number ;
+min ?: number ;
+max ?: number ;
+pattern ?: string ; // Regex pattern
+description : string ;
+type ParamType = &#39;string&#39; | &#39;number&#39; | &#39;boolean&#39; | &#39;object&#39; | &#39;array&#39; ;
+2.3 Example Schema Definition
+const CREATE_USER_SCHEMA : OperationSchema = {
+operation : &#39;create_user&#39; ,
+endpoint : &#39;CREATE&#39; ,
+handler : &#39;Users.create&#39; ,
+paramStyle : &#39;named&#39; ,
+params : [
+name : &#39;email&#39; ,
+type : &#39;string&#39; ,
+required : true ,
+sources : [ &#39;params.email&#39; , &#39;email&#39; ] ,
+description : &#39;User email address&#39;
+name : &#39;name&#39; ,
+sources : [ &#39;params.name&#39; , &#39;name&#39; ] ,
+description : &#39;User display name&#39;
+name : &#39;role&#39; ,
+required : false ,
+sources : [ &#39;params.role&#39; , &#39;role&#39; ] ,
+default : &#39;user&#39; ,
+enum : [ &#39;admin&#39; , &#39;user&#39; , &#39;guest&#39; ] ,
+description : &#39;User role&#39;
+description : &#39;Create a new user account&#39; ,
+examples : [
+name : &#39;Basic user&#39; ,
+request : {
+params : {
+email : &#39;alice@example.com&#39; ,
+name : &#39;Alice&#39;
+3. Parameter Resolution
+3.1 Resolution Algorithm
+For each parameter defined in the schema:
+1. FOR each source in param.sources (in order):
+a. Parse source path (e.g., &quot;params.email&quot;)
+b. Traverse input object along path
+c. IF value found AND not undefined:
+RETURN value
+2. IF no value found:
+a. IF param.default defined:
+RETURN param.default
+b. IF param.required:
+THROW MissingParameterError
+c. ELSE:
+RETURN undefined
+3.2 Source Path Syntax
+Source paths use dot notation to traverse the input object:
+Resolves From
+input.email
+params.email
+input.params.email
+params.options.format
+input.params.options.format
+3.3 Resolution Examples
+operation : &quot;create_user&quot; ,
+email : &quot;alice@example.com&quot; ,
+name : &quot;Alice&quot;
+Resolution with sources ['params.email', 'email'] :
+Check input.params.email → " alice@example.com " ✓
+Return " alice@example.com "
+Resolution with sources ['params.role', 'role'] and default "user":
+Check input.params.role → undefined
+Check input.role → undefined
+Return default "user"
+4. Handler Invocation
+4.1 Parameter Styles
+The paramStyle field determines how resolved parameters are passed to handlers.
+4.1.1 Named Style
+Pass all parameters as a single object.
+// Schema: paramStyle: &#39;named&#39;
+// Invocation:
+handler ({ email , name , role })
+Use case: Most common - handlers with multiple parameters.
+4.1.2 Single Style
+Pass parameters as individual arguments in schema order.
+// Schema: paramStyle: &#39;single&#39;, params: [email, name, role]
+handler (email , name , role)
+Use case: Simple handlers with fixed signatures.
+4.1.3 Spread Style
+Pass primary parameter separately from options object.
+// Schema: paramStyle: &#39;spread&#39;, params: [query, limit, offset]
+handler (query , { limit , offset })
+Use case: Search operations with query + options.
+4.2 Handler Reference
+Handlers are referenced using strings that the adapter resolves:
+// Common patterns:
+&quot;Users.create&quot; // Module.method
+&quot;handlers/users:create&quot; // Path:method
+&quot;createUser&quot; // Direct function name
+The resolution mechanism is adapter-specific.
+5. Security Considerations
+5.1 Path Traversal Protection
+Source paths MUST be validated to prevent prototype pollution:
+const SAFE_PATH_PATTERN = / ^[a-zA-Z_$][a-zA-Z0-9_$.]*$ / ;
+const FORBIDDEN_PATHS = new Set ([
+&#39;__proto__&#39; ,
+&#39;constructor&#39; ,
+&#39;prototype&#39;
+function validatePath (path : string ) : boolean {
+if ( ! SAFE_PATH_PATTERN . test (path)) return false ;
+const segments = path . split ( &#39;.&#39; ) ;
+for ( const segment of segments) {
+if (FORBIDDEN_PATHS . has (segment)) return false ;
+return true ;
+5.2 Input Validation
+Before resolution, input MUST be validated:
+Type check - Input is object
+Operation check - operation field is string
+Depth limit - Nested objects limited (default: 10 levels)
+Size limit - Total input size limited
+5.3 Value Validation
+After resolution, values MUST be validated against schema:
+function validateValue (value : unknown , param : ParamDefinition) : void {
+// Type validation
+if (param . type === &#39;string&#39; &amp;&amp; typeof value !== &#39;string&#39; ) {
+throw new ValidationError ( ` ${ param . name } must be string` ) ;
+// Enum validation
+if (param . enum &amp;&amp; ! param . enum . includes (value as string )) {
+throw new ValidationError ( ` ${ param . name } must be one of: ${ param . enum . join ( &#39;, &#39; ) } ` ) ;
+// Length validation
+if (param . minLength &amp;&amp; (value as string ) . length &lt; param . minLength ) {
+throw new ValidationError ( ` ${ param . name } must be at least ${ param . minLength } characters` ) ;
+6. Introspection Integration
+6.1 Auto-Generated Responses
+Operation schemas directly generate introspection responses:
+function generateOperationInfo (schema : OperationSchema) : OperationInfo {
+return {
+name : schema . operation ,
+endpoint : schema . endpoint ,
+description : schema . description ,
+parameters : schema . params . map (p =&gt; ({
+name : p . name ,
+type : p . type ,
+required : p . required ,
+default : p . default ,
+description : p . description ,
+enum : p . enum
+examples : schema . examples
+6.2 Single Source of Truth
+The operation schema serves as the canonical source for:
+Parameter definitions
+Validation rules
+Introspection responses
+Documentation generation
+Changes to the schema automatically propagate to all consumers.
+References
+Architecture Overview
+Operations Guide
+Introspection Specification
+Previous page
+Next page
+&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
+Adapter Patterns Reference Adapter Docs Reference Adapter Repo Dollhouse Research

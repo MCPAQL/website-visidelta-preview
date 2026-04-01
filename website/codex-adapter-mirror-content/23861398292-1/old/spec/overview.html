@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="MCP-AQL (Model Context Protocol - Agent Query Language) is a protocol that consolidates discrete MCP tools into 5 CRUDE endpoints (Create, Read, Update, Delete, Execute), providing significant token reduction while maint">
+  <title>MCP-AQL Spec | MCP-AQL Protocol Overview</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <a class="logo" href="../index.html"><span class="logo-mark"></span>MCP-AQL</a>
+        <ul class="nav-links">
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="../docs/index.html">Docs</a></li>
+          <li><a href="../launch-checklist.html">Launch Checklist</a></li>
+          <li><a href="../apis/index.html">Adapter Patterns</a></li>
+        </ul>
+        <form class="site-search" data-search-form data-index-url="../data/search-index.json" role="search">
+          <label class="sr-only" for="site-search-input">Search MCP-AQL docs</label>
+          <input id="site-search-input" data-search-input type="search" placeholder="Search MCP-AQL docs, spec pages, and adapter patterns...">
+          <span class="search-count" data-search-count></span>
+          <ul class="search-results" data-search-results hidden></ul>
+        </form>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container docs-shell">
+      <aside class="docs-side">
+        <h2>Repo-Synced Spec</h2>
+        <p class="docs-side-note">Generated from <code>MCPAQL/spec</code> so the website carries the deeper protocol material too.</p>
+        <div class="docs-side-group">
+  <h3>Core</h3>
+  <ul><li><a href="conformance-testing.html">MCP-AQL Conformance Testing Specification</a></li><li><a href="crude-pattern.html">MCP-AQL CRUDE Pattern Specification</a></li><li><a href="endpoint-modes.html">MCP-AQL Endpoint Modes Specification</a></li><li><a href="error-codes.html">Structured Error Codes Specification</a></li><li><a href="introspection.html">MCP-AQL Introspection Specification</a></li><li><a href="licensing-options.html">MCP-AQL Licensing Options (Working Notes)</a></li><li><a href="mcp-integration.html">MCP Integration Specification</a></li><li><a href="operations.html">MCP-AQL Operations Specification</a></li><li><a class="current" aria-current="page" href="overview.html">MCP-AQL Protocol Overview</a></li><li><a href="plugin-contracts.html">Plugin Interface Contracts</a></li><li><a href="README.html">MCP-AQL Specification Documentation</a></li><li><a href="repo/README.html">MCP-AQL Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Versions</h3>
+  <ul><li><a href="versions/v1.0.0-draft.html">MCP-AQL Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Adapter</h3>
+  <ul><li><a href="adapter/danger-levels.html">Dangerous Operation Classification Specification</a></li><li><a href="adapter/discovery-bundle.html">MCP Server Discovery Bundle</a></li><li><a href="adapter/element-type.html">Adapter Element Type Specification</a></li><li><a href="adapter/generator.html">Adapter Generator Specification</a></li><li><a href="adapter/rate-limiting.html">Rate Limiting and Quota Management Specification</a></li><li><a href="adapter/trust-levels.html">Trust Levels Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Security</h3>
+  <ul><li><a href="security/confirmation-tokens.html">Confirmation Token Specification</a></li><li><a href="security/execution-safety-loop.html">Execution Safety Loop Specification</a></li><li><a href="security/gatekeeper.html">Security Model: Gatekeeper Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Features</h3>
+  <ul><li><a href="features/field-selection.html">Field Selection Specification</a></li><li><a href="features/pagination.html">Cursor-Based Pagination Specification</a></li><li><a href="features/warnings.html">Warnings Array Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Guides</h3>
+  <ul><li><a href="guides/protocol-comparison.html">Protocol Comparison Guide</a></li><li><a href="guides/README.html">Developer Guides</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Process</h3>
+  <ul><li><a href="process/breaking-changes.html">MCP-AQL Breaking Change Policy</a></li><li><a href="process/preliminary-public-launch-checklist.html">Preliminary Public Launch Checklist</a></li><li><a href="process/rfc-process.html">RFC Process for MCP-AQL Specification</a></li><li><a href="process/versioning.html">Versioning Strategy</a></li><li><a href="repo/CHANGELOG.html">Changelog</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Architecture</h3>
+  <ul><li><a href="architecture/README.html">Architecture Documentation</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Research</h3>
+  <ul><li><a href="research/mcp-vs-mcpaql-vs-a2a.html">Protocol Landscape: MCP vs MCP-AQL vs A2A</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Reference</h3>
+  <ul><li><a href="reference/README.html">Reference Documentation</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>ADRs</h3>
+  <ul><li><a href="adr/ADR-001-crude-pattern.html">ADR-001: CRUDE Pattern (Extending CRUD with Execute)</a></li><li><a href="adr/ADR-002-graphql-style-input.html">ADR-002: GraphQL-Style Input Objects for Updates</a></li><li><a href="adr/ADR-003-snake-case-parameters.html">ADR-003: snake_case Parameter Convention</a></li><li><a href="adr/ADR-004-schema-driven-operations.html">ADR-004: Schema-Driven Operation Definitions</a></li><li><a href="adr/ADR-005-introspection-system.html">ADR-005: GraphQL-Style Introspection System</a></li><li><a href="adr/ADR-006-discriminated-responses.html">ADR-006: Discriminated Response Format</a></li><li><a href="adr/index.html">Architecture Decision Records</a></li><li><a href="adr/README.html">Architecture Decision Records</a></li></ul>
+</div>
+      </aside>
+
+      <article class="docs-main">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+          <ol>
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="index.html">Full Spec</a></li>
+            <li><span class="current">MCP-AQL Protocol Overview</span></li>
+          </ol>
+        </nav>
+        <section class="hero docs-hero">
+          <div class="hero-inner">
+            <span class="status-pill">REPO-SYNCED SPEC DOC</span>
+            <h1>MCP-AQL Protocol Overview</h1>
+            <p class="lede">MCP-AQL (Model Context Protocol - Agent Query Language) is a protocol that consolidates discrete MCP tools into 5 CRUDE endpoints (Create, Read, Update, Delete, Execute), providing significant token reduction while maint</p>
+            <div class="spec-meta"><span class="state-chip live">Support document</span></div>
+            <p class="spec-source">Source: <a href="https://github.com/MCPAQL/spec/blob/main/docs/overview.md">spec/docs/overview.md</a></p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="https://github.com/MCPAQL/spec/blob/main/docs/overview.md">Open Source Markdown</a>
+              <a class="btn btn-secondary" href="index.html">Browse Full Spec Reference</a>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <div class="card spec-prose">
+            <blockquote>
+<p><strong>MCP-AQL</strong> (Model Context Protocol - Agent Query Language) is a protocol that consolidates discrete MCP tools into 5 CRUDE endpoints (Create, Read, Update, Delete, Execute), providing significant token reduction while maintaining full functionality.</p>
+<p><strong>Document Status:</strong> This document is <strong>informative</strong>. For normative requirements, see <a href="versions/v1.0.0-draft.html">MCP-AQL Specification v1.0.0</a>.</p>
+</blockquote>
+<h2 id="table-of-contents">Table of Contents</h2>
+<ul>
+<li><a href="#protocol-summary">Protocol Summary</a></li>
+<li><a href="#the-crude-pattern">The CRUDE Pattern</a></li>
+<li><a href="#endpoint-modes">Endpoint Modes</a></li>
+<li><a href="#token-efficiency">Token Efficiency</a></li>
+<li><a href="#core-concepts">Core Concepts</a></li>
+<li><a href="#request-flow">Request Flow</a></li>
+<li><a href="#batch-operations">Batch Operations</a></li>
+</ul>
+<hr />
+<h2 id="protocol-summary">Protocol Summary</h2>
+<p>MCP-AQL defines a schema-driven operation dispatch protocol that:</p>
+<ol type="1">
+<li><strong>Consolidates Operations</strong> - Many discrete tools into 5 semantic endpoints</li>
+<li><strong>Enables Discovery</strong> - GraphQL-style introspection for runtime operation discovery</li>
+<li><strong>Enforces Safety</strong> - Endpoint classification validates operation/endpoint matching</li>
+<li><strong>Supports Flexibility</strong> - Implementations MAY offer CRUDE mode (5 endpoints) or Single mode (1 endpoint)</li>
+</ol>
+<pre><code>+-------------------+
+|    MCP Client     |
++--------+----------+
+         |
+         v
++-------------------+
+|  MCP-AQL Layer    |
+|  +-------------+  |
+|  |  Gatekeeper |  |  Route Validation
+|  +------+------+  |
+|         |         |
+|  +------v------+  |
+|  |   Router    |  |  Endpoint Mapping
+|  +------+------+  |
+|         |         |
+|  +------v------+  |
+|  |   Schema    |  |  Operation Definitions
+|  +------+------+  |
+|         |         |
+|  +------v------+  |
+|  | Dispatcher  |  |  Handler Resolution
+|  +-------------+  |
++--------+----------+
+         |
+         v
++-------------------+
+| Target Handlers   |
++-------------------+</code></pre>
+<hr />
+<h2 id="the-crude-pattern">The CRUDE Pattern</h2>
+<p>MCP-AQL extends traditional CRUD with an <strong>EXECUTE</strong> endpoint, creating the CRUDE pattern:</p>
+<table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Safety</th>
+<th>Description</th>
+<th>Example Operations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>CREATE</strong></td>
+<td>Non-destructive</td>
+<td>Additive operations that create new state</td>
+<td><code>create_entity</code>, <code>import_resource</code></td>
+</tr>
+<tr>
+<td><strong>READ</strong></td>
+<td>Read-only</td>
+<td>Safe operations that query state</td>
+<td><code>list_entities</code>, <code>get_entity</code>, <code>search</code>, <code>introspect</code></td>
+</tr>
+<tr>
+<td><strong>UPDATE</strong></td>
+<td>Modifying</td>
+<td>Operations that modify existing state</td>
+<td><code>update_entity</code>, <code>update_resource</code></td>
+</tr>
+<tr>
+<td><strong>DELETE</strong></td>
+<td>Destructive</td>
+<td>Operations that remove state</td>
+<td><code>delete_entity</code>, <code>clear</code></td>
+</tr>
+<tr>
+<td><strong>EXECUTE</strong></td>
+<td>Runtime</td>
+<td>Lifecycle operations for executable elements</td>
+<td><code>execute_workflow</code>, <code>cancel_task</code>, <code>resume_workflow</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="permission-characteristics">Permission Characteristics</h3>
+<p>Each endpoint MUST have defined permission characteristics:</p>
+<table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Read-Only</th>
+<th>Destructive</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CREATE</td>
+<td>false</td>
+<td>false</td>
+</tr>
+<tr>
+<td>READ</td>
+<td>true</td>
+<td>false</td>
+</tr>
+<tr>
+<td>UPDATE</td>
+<td>false</td>
+<td>true</td>
+</tr>
+<tr>
+<td>DELETE</td>
+<td>false</td>
+<td>true</td>
+</tr>
+<tr>
+<td>EXECUTE</td>
+<td>false</td>
+<td>true</td>
+</tr>
+</tbody>
+</table>
+<p>Implementations MUST classify operations according to these permission characteristics and MUST NOT allow an operation to be called through an endpoint that does not match its classification.</p>
+<h3 id="why-crude-not-crud">Why CRUDE not CRUD?</h3>
+<p>The EXECUTE endpoint exists because certain operations:</p>
+<ul>
+<li>Are inherently <strong>non-idempotent</strong> (calling <code>execute</code> twice creates two separate executions)</li>
+<li>Manage <strong>runtime state</strong> rather than persistent definitions</li>
+<li>Require <strong>lifecycle management</strong> (start, update progress, complete, resume)</li>
+</ul>
+<pre><code>CRUD (Resource Definitions)          EXECUTE (Runtime Lifecycle)
++--------+                           +-------------------+
+| Create |--------------------------&gt;| execute           |
++--------+                           +--------+----------+
+| Read   |                                    |
++--------+                           +--------v----------+
+| Update |                           | get_execution_state|
++--------+                           +--------+----------+
+| Delete |                                    |
++--------+                           +--------v----------+
+                                     | update_execution   |
+                                     +--------+----------+
+                                              |
+                              +---------------+---------------+
+                              |                               |
+                     +--------v----------+           +--------v----------+
+                     | complete_execution|           | continue_execution|
+                     +-------------------+           +-------------------+</code></pre>
+<blockquote>
+<p><strong>Note:</strong> This diagram shows a runtime lifecycle flow, not endpoint classification. Operations like <code>get_execution_state</code> that query execution state belong to the READ endpoint, not EXECUTE. See <a href="crude-pattern.html#61-classification-principle">CRUDE Pattern Classification</a> for details.</p>
+</blockquote>
+<hr />
+<h2 id="endpoint-modes">Endpoint Modes</h2>
+<p>MCP-AQL supports two operational modes. Implementations MUST support at least one mode and SHOULD support both:</p>
+<h3 id="crude-mode">CRUDE Mode</h3>
+<p>Exposes 5 separate endpoints, each with semantic meaning:</p>
+<pre><code>mcp_aql_create  - CREATE operations
+mcp_aql_read    - READ operations
+mcp_aql_update  - UPDATE operations
+mcp_aql_delete  - DELETE operations
+mcp_aql_execute - EXECUTE operations</code></pre>
+<p><strong>Advantages:</strong></p>
+<ul>
+<li>Clear semantic grouping</li>
+<li>Endpoint-level permission control</li>
+<li>Clients MAY choose which endpoints to expose</li>
+</ul>
+<h3 id="single-mode">Single Mode</h3>
+<p>Exposes 1 unified endpoint that routes internally:</p>
+<pre><code>mcp_aql - All operations through single entry point</code></pre>
+<p><strong>Advantages:</strong></p>
+<ul>
+<li>Minimal token footprint</li>
+<li>Simpler client integration</li>
+<li>Server-side routing enforcement</li>
+</ul>
+<p>Implementations using Single Mode MUST still enforce endpoint classification internally. An operation classified as DELETE MUST NOT succeed if the implementation would not allow DELETE operations.</p>
+<hr />
+<h2 id="token-efficiency">Token Efficiency</h2>
+<h3 id="token-reduction">Token Reduction</h3>
+<p>The primary motivation for MCP-AQL is reducing the token cost of tool registration. Empirical measurements demonstrate:</p>
+<table>
+<thead>
+<tr>
+<th>Configuration</th>
+<th>Approximate Token Cost</th>
+<th>Reduction</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Discrete Tools (50+)</td>
+<td>~30,000 tokens</td>
+<td>baseline</td>
+</tr>
+<tr>
+<td>CRUDE Mode (5 endpoints)</td>
+<td>~4,500 tokens</td>
+<td>~85%</td>
+</tr>
+<tr>
+<td>Single Mode (1 endpoint)</td>
+<td>~1,100 tokens</td>
+<td>~96%</td>
+</tr>
+</tbody>
+</table>
+<h3 id="runtime-discovery">Runtime Discovery</h3>
+<p>Instead of parsing many tool schemas at registration time, clients use introspection at runtime:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Query all available operations</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>{ <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;introspect&quot;</span><span class="op">,</span> <span class="dt">params</span><span class="op">:</span> { <span class="dt">query</span><span class="op">:</span> <span class="st">&quot;operations&quot;</span> } }</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">// Get details for a specific operation</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>{ <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;introspect&quot;</span><span class="op">,</span> <span class="dt">params</span><span class="op">:</span> { <span class="dt">query</span><span class="op">:</span> <span class="st">&quot;operations&quot;</span><span class="op">,</span> <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;create_entity&quot;</span> } }</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">// Query available types</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>{ <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;introspect&quot;</span><span class="op">,</span> <span class="dt">params</span><span class="op">:</span> { <span class="dt">query</span><span class="op">:</span> <span class="st">&quot;types&quot;</span><span class="op">,</span> <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;EntityType&quot;</span> } }</span></code></pre></div>
+<p>Implementations MUST support the <code>introspect</code> operation on the READ endpoint.</p>
+<hr />
+<h2 id="core-concepts">Core Concepts</h2>
+<h3 id="schema-driven-operations">Schema-Driven Operations</h3>
+<p>Operations SHOULD be defined declaratively with:</p>
+<ul>
+<li><strong>name</strong> - The operation identifier</li>
+<li><strong>endpoint</strong> - The CRUDE endpoint classification</li>
+<li><strong>description</strong> - Human-readable description</li>
+<li><strong>params</strong> - Required and optional parameter definitions</li>
+<li><strong>handler</strong> - Reference to the implementation handler</li>
+</ul>
+<h3 id="gatekeeper">Gatekeeper</h3>
+<p>The Gatekeeper component enforces that operations are only callable through their designated endpoints. Implementations MUST validate that:</p>
+<ol type="1">
+<li>The operation exists</li>
+<li>The operation is allowed on the requested endpoint</li>
+<li>Required parameters are present</li>
+</ol>
+<h3 id="introspection">Introspection</h3>
+<p>MCP-AQL implementations MUST provide GraphQL-style introspection capabilities:</p>
+<ul>
+<li>List all available operations</li>
+<li>Get detailed information about specific operations</li>
+<li>Query available types and enumerations</li>
+<li>Discover parameter requirements</li>
+</ul>
+<hr />
+<h2 id="request-flow">Request Flow</h2>
+<h3 id="standard-request">Standard Request</h3>
+<pre><code>1. Client sends { operation, params } to endpoint
+2. Gatekeeper validates operation is allowed on endpoint
+3. Router resolves operation to handler
+4. Schema validates required parameters
+5. Dispatcher invokes handler with mapped parameters
+6. Handler returns result
+7. Response formatted as { success: true, data } or { success: false, error }</code></pre>
+<h3 id="response-format">Response Format</h3>
+<p>All MCP-AQL operations MUST return discriminated responses:</p>
+<p><strong>Success:</strong></p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">success</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">data</span><span class="op">:</span> { <span class="co">/* operation result */</span> }</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><strong>Failure:</strong></p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">success</span><span class="op">:</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">error</span><span class="op">:</span> {</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">code</span><span class="op">:</span> <span class="st">&quot;VALIDATION_ERROR&quot;</span><span class="op">,</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">message</span><span class="op">:</span> <span class="st">&quot;Required parameter &#39;entity_name&#39; is missing&quot;</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>Implementations SHOULD include an error <code>code</code> for programmatic handling and MUST include a human-readable <code>message</code>.</p>
+<hr />
+<h2 id="batch-operations">Batch Operations</h2>
+<p>MCP-AQL implementations MAY support batch operations for executing multiple operations in a single request.</p>
+<h3 id="batch-request-format">Batch Request Format</h3>
+<div class="sourceCode" id="cb9"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">operations</span><span class="op">:</span> [</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    { <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;create_entity&quot;</span><span class="op">,</span> <span class="dt">params</span><span class="op">:</span> { <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;entity1&quot;</span> } }<span class="op">,</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    { <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;create_entity&quot;</span><span class="op">,</span> <span class="dt">params</span><span class="op">:</span> { <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;entity2&quot;</span> } }<span class="op">,</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    { <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;activate_entity&quot;</span><span class="op">,</span> <span class="dt">params</span><span class="op">:</span> { <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;entity1&quot;</span> } }</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  ]</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="batch-response-format">Batch Response Format</h3>
+<div class="sourceCode" id="cb10"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">success</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">results</span><span class="op">:</span> [</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    { <span class="dt">index</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span> <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;create_entity&quot;</span><span class="op">,</span> <span class="dt">result</span><span class="op">:</span> { <span class="dt">success</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span> <span class="dt">data</span><span class="op">:</span> { <span class="co">/* ... */</span> } } }<span class="op">,</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    { <span class="dt">index</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span> <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;create_entity&quot;</span><span class="op">,</span> <span class="dt">result</span><span class="op">:</span> { <span class="dt">success</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span> <span class="dt">data</span><span class="op">:</span> { <span class="co">/* ... */</span> } } }<span class="op">,</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    { <span class="dt">index</span><span class="op">:</span> <span class="dv">2</span><span class="op">,</span> <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;activate_entity&quot;</span><span class="op">,</span> <span class="dt">result</span><span class="op">:</span> { <span class="dt">success</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span> <span class="dt">data</span><span class="op">:</span> { <span class="co">/* ... */</span> } } }</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  ]<span class="op">,</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">summary</span><span class="op">:</span> { <span class="dt">total</span><span class="op">:</span> <span class="dv">3</span><span class="op">,</span> <span class="dt">succeeded</span><span class="op">:</span> <span class="dv">3</span><span class="op">,</span> <span class="dt">failed</span><span class="op">:</span> <span class="dv">0</span> }</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>When batch operations are supported, implementations:</p>
+<ul>
+<li>MUST process operations in order</li>
+<li>MUST include results for all operations, including failures</li>
+<li>SHOULD continue processing after individual operation failures</li>
+<li>MAY provide a configuration option to stop on first failure</li>
+</ul>
+<hr />
+<h2 id="conformance">Conformance</h2>
+<p>An MCP-AQL implementation is conformant if it:</p>
+<ol type="1">
+<li>Implements at least one endpoint mode (CRUDE or Single)</li>
+<li>Enforces endpoint classification for all operations</li>
+<li>Provides the <code>introspect</code> operation on the READ endpoint</li>
+<li>Returns discriminated responses for all operations</li>
+<li>Validates required parameters before dispatching</li>
+</ol>
+<hr />
+<h2 id="related-specifications">Related Specifications</h2>
+<ul>
+<li><a href="operations.html">Operations Reference</a> - Complete operation reference</li>
+<li><a href="introspection.html">Introspection</a> - Introspection system specification</li>
+<li><a href="mcp-integration.html">MCP Integration</a> - MCP protocol integration specification</li>
+<li><a href="https://github.com/MCPAQL/spec/blob/main/docs/responses.md">Response Format</a> - Response format specification</li>
+</ul>
+
+          </div>
+        </section>
+        <nav class="page-nav" aria-label="Page navigation">
+  <a class="page-nav-link prev" href="operations.html">
+    <span class="page-nav-eyebrow">Previous spec page</span>
+    <strong class="page-nav-label">MCP-AQL Operations Specification</strong>
+  </a>
+  <a class="page-nav-link next" href="plugin-contracts.html">
+    <span class="page-nav-eyebrow">Next spec page</span>
+    <strong class="page-nav-label">Plugin Interface Contracts</strong>
+  </a>
+</nav>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.</p>
+      <div class="footer-links">
+        <a href="../docs/index.html">Docs Library</a>
+        <a href="index.html">Repo-Synced Spec</a>
+        <a href="https://github.com/MCPAQL">MCPAQL Organization</a>
+        <a href="https://dollhouseresearch.com">Dollhouse Research</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../js/search.js"></script>
+</body>
+</html>

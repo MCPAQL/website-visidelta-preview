@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Document Status: This document is informative. For normative requirements, see MCP-AQL Specification v1.0.0.">
+  <title>MCP-AQL Spec | MCP-AQL Endpoint Modes Specification</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <a class="logo" href="../index.html"><span class="logo-mark"></span>MCP-AQL</a>
+        <ul class="nav-links">
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="../docs/index.html">Docs</a></li>
+          <li><a href="../launch-checklist.html">Launch Checklist</a></li>
+          <li><a href="../apis/index.html">Adapter Patterns</a></li>
+        </ul>
+        <form class="site-search" data-search-form data-index-url="../data/search-index.json" role="search">
+          <label class="sr-only" for="site-search-input">Search MCP-AQL docs</label>
+          <input id="site-search-input" data-search-input type="search" placeholder="Search MCP-AQL docs, spec pages, and adapter patterns...">
+          <span class="search-count" data-search-count></span>
+          <ul class="search-results" data-search-results hidden></ul>
+        </form>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container docs-shell">
+      <aside class="docs-side">
+        <h2>Repo-Synced Spec</h2>
+        <p class="docs-side-note">Generated from <code>MCPAQL/spec</code> so the website carries the deeper protocol material too.</p>
+        <div class="docs-side-group">
+  <h3>Core</h3>
+  <ul><li><a href="conformance-testing.html">MCP-AQL Conformance Testing Specification</a></li><li><a href="crude-pattern.html">MCP-AQL CRUDE Pattern Specification</a></li><li><a class="current" aria-current="page" href="endpoint-modes.html">MCP-AQL Endpoint Modes Specification</a></li><li><a href="error-codes.html">Structured Error Codes Specification</a></li><li><a href="introspection.html">MCP-AQL Introspection Specification</a></li><li><a href="licensing-options.html">MCP-AQL Licensing Options (Working Notes)</a></li><li><a href="mcp-integration.html">MCP Integration Specification</a></li><li><a href="operations.html">MCP-AQL Operations Specification</a></li><li><a href="overview.html">MCP-AQL Protocol Overview</a></li><li><a href="plugin-contracts.html">Plugin Interface Contracts</a></li><li><a href="README.html">MCP-AQL Specification Documentation</a></li><li><a href="repo/README.html">MCP-AQL Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Versions</h3>
+  <ul><li><a href="versions/v1.0.0-draft.html">MCP-AQL Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Adapter</h3>
+  <ul><li><a href="adapter/danger-levels.html">Dangerous Operation Classification Specification</a></li><li><a href="adapter/discovery-bundle.html">MCP Server Discovery Bundle</a></li><li><a href="adapter/element-type.html">Adapter Element Type Specification</a></li><li><a href="adapter/generator.html">Adapter Generator Specification</a></li><li><a href="adapter/rate-limiting.html">Rate Limiting and Quota Management Specification</a></li><li><a href="adapter/trust-levels.html">Trust Levels Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Security</h3>
+  <ul><li><a href="security/confirmation-tokens.html">Confirmation Token Specification</a></li><li><a href="security/execution-safety-loop.html">Execution Safety Loop Specification</a></li><li><a href="security/gatekeeper.html">Security Model: Gatekeeper Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Features</h3>
+  <ul><li><a href="features/field-selection.html">Field Selection Specification</a></li><li><a href="features/pagination.html">Cursor-Based Pagination Specification</a></li><li><a href="features/warnings.html">Warnings Array Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Guides</h3>
+  <ul><li><a href="guides/protocol-comparison.html">Protocol Comparison Guide</a></li><li><a href="guides/README.html">Developer Guides</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Process</h3>
+  <ul><li><a href="process/breaking-changes.html">MCP-AQL Breaking Change Policy</a></li><li><a href="process/preliminary-public-launch-checklist.html">Preliminary Public Launch Checklist</a></li><li><a href="process/rfc-process.html">RFC Process for MCP-AQL Specification</a></li><li><a href="process/versioning.html">Versioning Strategy</a></li><li><a href="repo/CHANGELOG.html">Changelog</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Architecture</h3>
+  <ul><li><a href="architecture/README.html">Architecture Documentation</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Research</h3>
+  <ul><li><a href="research/mcp-vs-mcpaql-vs-a2a.html">Protocol Landscape: MCP vs MCP-AQL vs A2A</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Reference</h3>
+  <ul><li><a href="reference/README.html">Reference Documentation</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>ADRs</h3>
+  <ul><li><a href="adr/ADR-001-crude-pattern.html">ADR-001: CRUDE Pattern (Extending CRUD with Execute)</a></li><li><a href="adr/ADR-002-graphql-style-input.html">ADR-002: GraphQL-Style Input Objects for Updates</a></li><li><a href="adr/ADR-003-snake-case-parameters.html">ADR-003: snake_case Parameter Convention</a></li><li><a href="adr/ADR-004-schema-driven-operations.html">ADR-004: Schema-Driven Operation Definitions</a></li><li><a href="adr/ADR-005-introspection-system.html">ADR-005: GraphQL-Style Introspection System</a></li><li><a href="adr/ADR-006-discriminated-responses.html">ADR-006: Discriminated Response Format</a></li><li><a href="adr/index.html">Architecture Decision Records</a></li><li><a href="adr/README.html">Architecture Decision Records</a></li></ul>
+</div>
+      </aside>
+
+      <article class="docs-main">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+          <ol>
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="index.html">Full Spec</a></li>
+            <li><span class="current">MCP-AQL Endpoint Modes Specification</span></li>
+          </ol>
+        </nav>
+        <section class="hero docs-hero">
+          <div class="hero-inner">
+            <span class="status-pill">REPO-SYNCED SPEC DOC</span>
+            <h1>MCP-AQL Endpoint Modes Specification</h1>
+            <p class="lede">Document Status: This document is informative. For normative requirements, see MCP-AQL Specification v1.0.0.</p>
+            <div class="spec-meta"><span class="state-chip live">Support document</span><span class="state-chip pending">Draft</span><span class="state-chip">1.0.0-draft</span><span class="state-chip">2026-01-16</span></div>
+            <p class="spec-source">Source: <a href="https://github.com/MCPAQL/spec/blob/main/docs/endpoint-modes.md">spec/docs/endpoint-modes.md</a></p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="https://github.com/MCPAQL/spec/blob/main/docs/endpoint-modes.md">Open Source Markdown</a>
+              <a class="btn btn-secondary" href="index.html">Browse Full Spec Reference</a>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <div class="card spec-prose">
+            <p><strong>Version:</strong> 1.0.0-draft <strong>Status:</strong> Draft <strong>Last Updated:</strong> 2026-01-16</p>
+<blockquote>
+<p><strong>Document Status:</strong> This document is <strong>informative</strong>. For normative requirements, see <a href="versions/v1.0.0-draft.html">MCP-AQL Specification v1.0.0</a>.</p>
+</blockquote>
+<h2 id="abstract">Abstract</h2>
+<p>MCP-AQL supports two operational modes for exposing endpoints to clients: CRUDE mode (5 semantic endpoints) and Single mode (1 unified endpoint). This document specifies configuration, routing behavior, security implications, and trade-offs for each mode.</p>
+<hr />
+<h2 id="table-of-contents">Table of Contents</h2>
+<ol type="1">
+<li><a href="#1-introduction">Introduction</a></li>
+<li><a href="#2-mode-comparison">Mode Comparison</a></li>
+<li><a href="#3-configuration">Configuration</a></li>
+<li><a href="#4-crude-mode">CRUDE Mode</a></li>
+<li><a href="#5-single-mode">Single Mode</a></li>
+<li><a href="#6-security-considerations">Security Considerations</a></li>
+<li><a href="#7-tool-registration">Tool Registration</a></li>
+<li><a href="#8-conformance-requirements">Conformance Requirements</a></li>
+</ol>
+<hr />
+<h2 id="1-introduction">1. Introduction</h2>
+<h3 id="11-purpose">1.1 Purpose</h3>
+<p>Endpoint modes determine how MCP-AQL operations are exposed to clients. The choice affects:</p>
+<ul>
+<li>Token cost for tool registration</li>
+<li>Client routing complexity</li>
+<li>Permission granularity</li>
+<li>Error message specificity</li>
+</ul>
+<h3 id="12-scope">1.2 Scope</h3>
+<p>This specification covers:</p>
+<ul>
+<li>How each mode exposes operations</li>
+<li>Routing behavior in each mode</li>
+<li>Security enforcement differences</li>
+<li>Implementation requirements</li>
+</ul>
+<h3 id="13-terminology">1.3 Terminology</h3>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>CRUDE Mode</strong></td>
+<td>Five separate MCP tools, one per semantic endpoint</td>
+</tr>
+<tr>
+<td><strong>Single Mode</strong></td>
+<td>One unified MCP tool that routes internally</td>
+</tr>
+<tr>
+<td><strong>Endpoint</strong></td>
+<td>An MCP tool registered with the client</td>
+</tr>
+<tr>
+<td><strong>Operation</strong></td>
+<td>A named action within an endpoint</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="2-mode-comparison">2. Mode Comparison</h2>
+<h3 id="21-summary">2.1 Summary</h3>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>CRUDE Mode (5 Endpoints)</th>
+<th>Single Mode (1 Endpoint)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Endpoints</strong></td>
+<td>5 semantic endpoints</td>
+<td>1 unified endpoint</td>
+</tr>
+<tr>
+<td><strong>Typical Token Cost</strong></td>
+<td>~4,300 tokens</td>
+<td>~1,100 tokens</td>
+</tr>
+<tr>
+<td><strong>Routing</strong></td>
+<td>Client chooses endpoint</td>
+<td>Server routes internally</td>
+</tr>
+<tr>
+<td><strong>Permission Control</strong></td>
+<td>Endpoint-level granularity</td>
+<td>Operation-level only</td>
+</tr>
+<tr>
+<td><strong>Client Complexity</strong></td>
+<td>Client MUST select correct endpoint</td>
+<td>Simple single entry point</td>
+</tr>
+<tr>
+<td><strong>Error Messages</strong></td>
+<td>Semantic endpoint mismatch errors</td>
+<td>Generic routing errors</td>
+</tr>
+</tbody>
+</table>
+<h3 id="22-visual-comparison">2.2 Visual Comparison</h3>
+<pre><code>CRUDE Mode                          Single Mode
+============                        ===========
+
+Client                              Client
+  |                                   |
+  +---&gt; mcp_aql_create                +---&gt; mcp_aql
+  |                                         |
+  +---&gt; mcp_aql_read                        v
+  |                                   [Internal Router]
+  +---&gt; mcp_aql_update                      |
+  |                                   +-----+-----+-----+-----+
+  +---&gt; mcp_aql_delete                |     |     |     |     |
+  |                                   C     R     U     D     E
+  +---&gt; mcp_aql_execute</code></pre>
+<h3 id="23-token-efficiency">2.3 Token Efficiency</h3>
+<p>Endpoint consolidation provides significant token reduction compared to discrete tools:</p>
+<table>
+<thead>
+<tr>
+<th>Configuration</th>
+<th>Typical Token Cost</th>
+<th>Reduction</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Discrete tools (e.g., 40+ tools)</td>
+<td>~30,000 tokens</td>
+<td>baseline</td>
+</tr>
+<tr>
+<td>CRUDE mode (5 endpoints)</td>
+<td>~4,300 tokens</td>
+<td>~85%</td>
+</tr>
+<tr>
+<td>Single mode (1 endpoint)</td>
+<td>~1,100 tokens</td>
+<td>~96%</td>
+</tr>
+</tbody>
+</table>
+<p>Note: Actual token costs vary based on operation count and description length.</p>
+<hr />
+<h2 id="3-configuration">3. Configuration</h2>
+<h3 id="31-mode-selection">3.1 Mode Selection</h3>
+<p>Implementations SHOULD provide runtime configuration for endpoint mode selection.</p>
+<p><strong>Recommended Environment Variable:</strong></p>
+<pre><code>MCP_AQL_ENDPOINT_MODE=crude|single|all</code></pre>
+<p><strong>Values:</strong> | Value | Behavior | |-------|----------| | <code>crude</code> | Register 5 semantic endpoints | | <code>single</code> | Register 1 unified endpoint | | <code>all</code> | Register all 6 endpoints |</p>
+<h3 id="32-default-mode">3.2 Default Mode</h3>
+<p>If no configuration is provided, implementations SHOULD default to CRUDE mode, which provides the best balance of token efficiency and permission granularity.</p>
+<h3 id="33-runtime-configuration">3.3 Runtime Configuration</h3>
+<p>Implementations MAY support additional configuration methods:</p>
+<ul>
+<li>Configuration files</li>
+<li>Programmatic API</li>
+<li>Environment-specific defaults</li>
+</ul>
+<hr />
+<h2 id="4-crude-mode">4. CRUDE Mode</h2>
+<h3 id="41-endpoint-registration">4.1 Endpoint Registration</h3>
+<p>In CRUDE mode, five MCP tools are registered:</p>
+<table>
+<thead>
+<tr>
+<th>Tool Name</th>
+<th>Semantic Category</th>
+<th>Operations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mcp_aql_create</code></td>
+<td>Additive, non-destructive</td>
+<td>Create, add, register</td>
+</tr>
+<tr>
+<td><code>mcp_aql_read</code></td>
+<td>Safe, read-only</td>
+<td>List, get, search, introspect</td>
+</tr>
+<tr>
+<td><code>mcp_aql_update</code></td>
+<td>Modifying</td>
+<td>Edit, modify, update</td>
+</tr>
+<tr>
+<td><code>mcp_aql_delete</code></td>
+<td>Destructive</td>
+<td>Delete, remove, clear</td>
+</tr>
+<tr>
+<td><code>mcp_aql_execute</code></td>
+<td>Runtime lifecycle</td>
+<td>Run, start, stop, cancel</td>
+</tr>
+</tbody>
+</table>
+<h3 id="42-client-responsibility">4.2 Client Responsibility</h3>
+<p>In CRUDE mode, clients MUST select the correct endpoint for each operation. If a client sends an operation to the wrong endpoint, the adapter MUST reject the request.</p>
+<p><strong>Example: Correct Usage</strong></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Via mcp_aql_read endpoint</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;list_items&quot;</span><span class="op">,</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">params</span><span class="op">:</span> { <span class="dt">limit</span><span class="op">:</span> <span class="dv">10</span> }</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><strong>Example: Incorrect Usage</strong></p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Via mcp_aql_create endpoint (WRONG - list_items is a READ operation)</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;list_items&quot;</span><span class="op">,</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">params</span><span class="op">:</span> { <span class="dt">limit</span><span class="op">:</span> <span class="dv">10</span> }</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">// Response:</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">success</span><span class="op">:</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="dt">error</span><span class="op">:</span> <span class="st">&quot;Operation &#39;list_items&#39; must be called via mcp_aql_read, not mcp_aql_create&quot;</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="43-route-enforcement">4.3 Route Enforcement</h3>
+<p>Adapters MUST validate that operations are sent to their assigned endpoint.</p>
+<p><strong>Validation Logic:</strong></p>
+<ol type="1">
+<li>Extract operation name from request</li>
+<li>Look up the correct endpoint for that operation</li>
+<li>Compare with the endpoint that received the request</li>
+<li>If mismatch, return an error specifying the correct endpoint</li>
+</ol>
+<h3 id="44-endpoint-descriptions">4.4 Endpoint Descriptions</h3>
+<p>Each endpoint SHOULD include a description listing:</p>
+<ul>
+<li>The semantic category</li>
+<li>Available operations (or a sample with introspection guidance)</li>
+<li>Quick-start examples</li>
+</ul>
+<p><strong>Example Description Format:</strong></p>
+<pre><code>Additive, non-destructive operations.
+
+Supported operations: create_item, add_entry, register_callback
+
+These operations add new data without removing or overwriting existing content.
+
+Quick start example:
+{ operation: &quot;create_item&quot;, params: { name: &quot;example&quot; } }
+
+Use introspection to discover all available operations:
+{ operation: &quot;introspect&quot;, params: { query: &quot;operations&quot; } }</code></pre>
+<hr />
+<h2 id="5-single-mode">5. Single Mode</h2>
+<h3 id="51-endpoint-registration">5.1 Endpoint Registration</h3>
+<p>In Single mode, one MCP tool is registered:</p>
+<table>
+<thead>
+<tr>
+<th>Tool Name</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mcp_aql</code></td>
+<td>All operations through unified entry point</td>
+</tr>
+</tbody>
+</table>
+<h3 id="52-server-side-routing">5.2 Server-Side Routing</h3>
+<p>The adapter routes operations internally based on their classification:</p>
+<pre><code>Client Request
+     |
+     v
+mcp_aql endpoint
+     |
+     v
+[Operation Router]
+     |
+     +---&gt; Determines correct CRUDE category
+     |
+     v
+[Appropriate Handler]
+     |
+     v
+Response</code></pre>
+<h3 id="53-routing-behavior">5.3 Routing Behavior</h3>
+<p>In Single mode:</p>
+<ol type="1">
+<li>All operations are accepted through <code>mcp_aql</code></li>
+<li>The adapter determines the correct handler based on operation classification</li>
+<li>The same semantic rules apply as CRUDE mode</li>
+<li>Permission enforcement occurs server-side</li>
+</ol>
+<h3 id="54-unknown-operations">5.4 Unknown Operations</h3>
+<p>If an operation is not recognized:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">success</span><span class="op">:</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">error</span><span class="op">:</span> <span class="st">&quot;Unknown operation: &#39;invalid_op&#39;. Use introspect to discover available operations.&quot;</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="55-endpoint-description">5.5 Endpoint Description</h3>
+<p>The unified endpoint SHOULD provide:</p>
+<ul>
+<li>Overview of available operation categories</li>
+<li>Guidance to use introspection for discovery</li>
+<li>Quick-start examples</li>
+</ul>
+<p><strong>Example Description:</strong></p>
+<pre><code>Unified MCP-AQL endpoint for all operations.
+
+Operations are automatically routed based on their semantic category (Create, Read, Update, Delete, Execute).
+
+Use introspection to discover available operations:
+{ operation: &quot;introspect&quot;, params: { query: &quot;operations&quot; } }</code></pre>
+<hr />
+<h2 id="6-security-considerations">6. Security Considerations</h2>
+<h3 id="61-crude-mode-security">6.1 CRUDE Mode Security</h3>
+<p><strong>Advantages:</strong></p>
+<ul>
+<li>Endpoint-level permission blocking (e.g., disable <code>mcp_aql_delete</code> entirely)</li>
+<li>Semantic errors help clients self-correct</li>
+<li>Platform-level permission hints via MCP annotations</li>
+<li>Clear audit separation by operation category</li>
+</ul>
+<p><strong>Characteristics:</strong></p>
+<ul>
+<li>Client is responsible for endpoint selection</li>
+<li>Adapter enforces route validation</li>
+<li>Dangerous operations isolated to DELETE/EXECUTE endpoints</li>
+</ul>
+<h3 id="62-single-mode-security">6.2 Single Mode Security</h3>
+<p><strong>Advantages:</strong></p>
+<ul>
+<li>Smaller attack surface (one endpoint)</li>
+<li>Server-side routing prevents endpoint bypass</li>
+<li>Simpler client implementation reduces error risk</li>
+</ul>
+<p><strong>Characteristics:</strong></p>
+<ul>
+<li>Cannot block operations by endpoint</li>
+<li>All routing decisions made server-side</li>
+<li>Audit logging requires operation-level granularity</li>
+</ul>
+<h3 id="63-security-trade-offs">6.3 Security Trade-offs</h3>
+<table>
+<thead>
+<tr>
+<th>Security Aspect</th>
+<th>CRUDE Mode</th>
+<th>Single Mode</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Endpoint-level blocking</td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Client error prevention</td>
+<td>Better (semantic errors)</td>
+<td>Worse (generic errors)</td>
+</tr>
+<tr>
+<td>Attack surface</td>
+<td>Larger (5 endpoints)</td>
+<td>Smaller (1 endpoint)</td>
+</tr>
+<tr>
+<td>Audit granularity</td>
+<td>Endpoint + Operation</td>
+<td>Operation only</td>
+</tr>
+<tr>
+<td>Bypass resistance</td>
+<td>Client-dependent</td>
+<td>Server-enforced</td>
+</tr>
+</tbody>
+</table>
+<h3 id="64-common-security-enforcement">6.4 Common Security Enforcement</h3>
+<p>Both modes MUST:</p>
+<ul>
+<li>Validate operation parameters</li>
+<li>Enforce the same permission model</li>
+<li>Apply safety tier classifications</li>
+<li>Support confirmation for destructive operations (if implemented)</li>
+</ul>
+<hr />
+<h2 id="7-tool-registration">7. Tool Registration</h2>
+<h3 id="71-mcp-tool-annotations">7.1 MCP Tool Annotations</h3>
+<p>Adapters SHOULD include MCP tool annotations to hint at operation safety:</p>
+<p><strong>CRUDE Mode Annotations:</strong></p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;mcp_aql_read&quot;</span><span class="fu">,</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;annotations&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;readOnlyHint&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;destructiveHint&quot;</span><span class="fu">:</span> <span class="kw">false</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;mcp_aql_delete&quot;</span><span class="fu">,</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;annotations&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;readOnlyHint&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;destructiveHint&quot;</span><span class="fu">:</span> <span class="kw">true</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><strong>Single Mode Annotations:</strong></p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;mcp_aql&quot;</span><span class="fu">,</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;annotations&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;readOnlyHint&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;destructiveHint&quot;</span><span class="fu">:</span> <span class="kw">true</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p>Note: Single mode uses <code>destructiveHint: true</code> because it can route to destructive operations.</p>
+<h3 id="72-input-schema">7.2 Input Schema</h3>
+<p>Both modes use the same input schema:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;type&quot;</span><span class="fu">:</span> <span class="st">&quot;object&quot;</span><span class="fu">,</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;properties&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;operation&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;type&quot;</span><span class="fu">:</span> <span class="st">&quot;string&quot;</span><span class="fu">,</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;description&quot;</span><span class="fu">:</span> <span class="st">&quot;Operation name to execute&quot;</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">},</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;params&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;type&quot;</span><span class="fu">:</span> <span class="st">&quot;object&quot;</span><span class="fu">,</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;description&quot;</span><span class="fu">:</span> <span class="st">&quot;Operation parameters&quot;</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">},</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;required&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;operation&quot;</span><span class="ot">]</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p>Adapters MAY extend this schema with additional common properties (e.g., <code>resource_type</code>, <code>fields</code>).</p>
+<hr />
+<h2 id="8-conformance-requirements">8. Conformance Requirements</h2>
+<h3 id="81-must-requirements">8.1 MUST Requirements</h3>
+<p>Conforming implementations MUST:</p>
+<ol type="1">
+<li>Support at least one endpoint mode (CRUDE or Single)</li>
+<li>Enforce operation routing validation in CRUDE mode</li>
+<li>Return proper error responses for unknown operations</li>
+<li>Route operations to correct handlers in Single mode</li>
+<li>Apply consistent permission enforcement regardless of mode</li>
+</ol>
+<h3 id="82-should-requirements">8.2 SHOULD Requirements</h3>
+<p>Conforming implementations SHOULD:</p>
+<ol type="1">
+<li>Support both CRUDE and Single endpoint modes</li>
+<li>Provide runtime configuration for mode selection</li>
+<li>Include MCP tool annotations for permission hints</li>
+<li>Provide helpful error messages that guide clients to correct usage</li>
+<li>Document available operations via introspection</li>
+</ol>
+<h3 id="83-may-requirements">8.3 MAY Requirements</h3>
+<p>Conforming implementations MAY:</p>
+<ol type="1">
+<li>Support "all" mode exposing all 6 endpoints simultaneously</li>
+<li>Implement per-endpoint access control</li>
+<li>Provide mode-specific audit logging</li>
+<li>Support dynamic mode switching without restart</li>
+<li>Implement custom endpoint naming conventions</li>
+</ol>
+<hr />
+<h2 id="references">References</h2>
+<ul>
+<li><a href="versions/v1.0.0-draft.html">MCP-AQL Specification v1.0.0-draft</a></li>
+<li><a href="crude-pattern.html">CRUDE Pattern Specification</a></li>
+<li><a href="mcp-integration.html">MCP Integration Specification</a></li>
+<li><a href="security/gatekeeper.html">Gatekeeper Security Model</a></li>
+<li><a href="introspection.html">Introspection Specification</a></li>
+</ul>
+
+          </div>
+        </section>
+        <nav class="page-nav" aria-label="Page navigation">
+  <a class="page-nav-link prev" href="crude-pattern.html">
+    <span class="page-nav-eyebrow">Previous spec page</span>
+    <strong class="page-nav-label">MCP-AQL CRUDE Pattern Specification</strong>
+  </a>
+  <a class="page-nav-link next" href="error-codes.html">
+    <span class="page-nav-eyebrow">Next spec page</span>
+    <strong class="page-nav-label">Structured Error Codes Specification</strong>
+  </a>
+</nav>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.</p>
+      <div class="footer-links">
+        <a href="../docs/index.html">Docs Library</a>
+        <a href="index.html">Repo-Synced Spec</a>
+        <a href="https://github.com/MCPAQL">MCPAQL Organization</a>
+        <a href="https://dollhouseresearch.com">Dollhouse Research</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../js/search.js"></script>
+</body>
+</html>

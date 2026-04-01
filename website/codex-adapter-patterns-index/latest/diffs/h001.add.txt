@@ -1,0 +1,11 @@
+Use the overview to orient first, then compare the child pages to see how contract shape and safety posture change by target system.
+Overview
+When this pattern fits
+Best fit
+The source system is a product or application surface with many user-facing actions.
+You need stable operation names over a feature area that evolves quickly.
+Validation, discoverability, and side-effect labeling matter more than mirroring transport details directly.
+Watch for
+Action names that reflect UI wording instead of durable operation semantics.
+Large opaque payloads that hide parameter meaning from introspection and clients.
+Retry and idempotency assumptions that are real in practice but unstated in the contract.

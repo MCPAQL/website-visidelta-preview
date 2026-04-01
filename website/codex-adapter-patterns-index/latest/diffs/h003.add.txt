@@ -1,0 +1,54 @@
+Adapter Patterns | MCP-AQL
+Launch Checklist
+Adapter Patterns
+Search MCP-AQL docs
+Choose the closest target-system shape first, then use the child pages to understand which contract and safety decisions matter most.
+Overview
+MCP Server
+Application
+Cloud Service
+Operating System
+Website / Web API
+IMPLEMENTATION GUIDANCE
+Adapter patterns are where the protocol meets the target system
+These pages are the browse-first guide to how MCP-AQL changes shape across different environments.
+The formal rules still live in the spec and contract docs, but the pattern pages help implementers choose the right modeling, safety, and runtime posture before they drop into the details.
+Adapter Contracts
+Implementation Profiles
+MCP Integration Spec
+Related reading
+What this section is for
+Use this hub when you know you need adapter guidance, but you have not yet decided which target-system shape best matches the thing you are adapting.
+Start here to compare the major environment types quickly.
+Use the child pages for environment-specific caveats and examples.
+Cross-check each decision against the website-hosted spec pages instead of bouncing back to repo Markdown.
+How to read it alongside the spec
+The pattern pages are implementation-facing guidance, not normative rules. They narrow the problem and then route you to the correct spec material.
+Security Model
+Operations Specification
+Adapter Element Type Specification
+Pattern Library
+Pick the closest environment first. The child pages are there to turn that choice into better contract and runtime decisions.
+Primary protocol fit
+For native MCP tool surfaces that need introspection-preserving consolidation into CRUDE or single-mode MCP-AQL operations.
+Product API fit
+For desktop, mobile, and product-function surfaces where user-facing actions need a clearer operation contract.
+External API fit
+For remote APIs where quotas, retries, pagination, and provider failure semantics shape the adapter design.
+Local execution fit
+For file, process, and system-level operations where permission, confirmation, and policy controls must be explicit.
+Web workflow fit
+For retrieval-heavy or action-heavy web flows where scraping, APIs, navigation, and side effects can overlap.
+Cross-Cutting Questions
+What is being adapted?
+Name the real upstream surface clearly: tools, app actions, cloud endpoints, local system operations, or website flows.
+Where is the safety boundary?
+The right pattern often turns on where cost, permissions, confirmation, or destructive behavior actually lives.
+Which spec pages matter most?
+The hub helps answer that question early so implementers can go deeper with less wandering and less duplication.
+&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
+Documentation Library
+Portal Home
+MCPAQL Organization
+Dollhouse Research
+DollhouseMCP Production Profile

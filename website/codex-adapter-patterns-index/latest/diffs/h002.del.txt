@@ -1,0 +1,1 @@
+Conceptual integration profiles that connect the protocol rules to common target-system shapes.

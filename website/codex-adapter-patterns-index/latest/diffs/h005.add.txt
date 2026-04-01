@@ -1,0 +1,11 @@
+Use the overview to orient first, then compare the child pages to see how contract shape and safety posture change by target system.
+Overview
+When this pattern fits
+Best fit
+The adapter exposes local files, processes, or other system-level capabilities.
+You need explicit distinctions between read-only queries, state-changing actions, and true execution flows.
+Permissions, confirmations, and auditability are part of the product requirement, not optional add-ons.
+Watch for
+Destructive or execute-capable operations that are too easy to trigger accidentally.
+Insufficient scoping on file-system or process queries that can cause runaway work.
+Security models that rely on labels instead of machine-readable policy signals.

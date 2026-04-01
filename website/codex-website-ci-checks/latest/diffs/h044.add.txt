@@ -2,6 +2,7 @@ MCP-AQL Spec | Full Reference
 Launch Checklist
 Adapter Patterns
 Search MCP-AQL docs
+Full Spec
 REPO-SYNCED SPEC REFERENCE
 The deeper protocol docs now live on the website too
 These pages are generated from MCPAQL/spec so the public site can carry the full protocol and adapter material,

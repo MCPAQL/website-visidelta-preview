@@ -16,6 +16,14 @@ MCP-AQL uses a discriminated success/error envelope and a structured error objec
 missing resources, permissions, and server failures without parsing free-form text.
 Error Codes Spec
 Issue #199
+Go Deeper In The Full Spec
+The structured error behavior lives in the spec itself, with the issue tracker only used for the remaining alignment work.
+Structured Error Codes Specification
+Normative Draft
+Browse the full spec reference
+Related Summary Pages
+Error handling is easiest to understand alongside routing, safety, and conformance expectations.
+Back to the docs library
 Canonical response envelope
 "success": true,
 "data": { ... }

@@ -16,6 +16,14 @@ These notes summarize the most launch-relevant items from the spec changelog so 
 without requiring readers to scan the entire repository history.
 Full Changelog
 Release plan issue
+Go Deeper In The Full Spec
+The on-site changelog and process pages carry the detailed history behind the launch-facing notes on this page.
+Versioning Strategy
+Launch Checklist Source
+Browse the full spec reference
+Related Summary Pages
+Release context is easiest to read alongside the roadmap and public launch controls.
+Back to the docs library
 Recent highlights
 Launch framing clarified
 README and draft status language now explicitly frame MCP-AQL as a preliminary public draft.

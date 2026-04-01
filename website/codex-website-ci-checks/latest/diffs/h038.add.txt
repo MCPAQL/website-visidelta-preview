@@ -51,6 +51,7 @@ ADR-004: Schema-Driven Operation Definitions
 ADR-005: GraphQL-Style Introspection System
 ADR-006: Discriminated Response Format
 Architecture Decision Records
+Full Spec
 REPO-SYNCED SPEC DOC
 This document defines the structured error code system for MCP-AQL protocol responses. Structured error codes enable machine-readable error handling, consistent error categorization, and reliable error mapping across ada
 Support document Draft (MVP) 1.0.0-draft 2026-01-28

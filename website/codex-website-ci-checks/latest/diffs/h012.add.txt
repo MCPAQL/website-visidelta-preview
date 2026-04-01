@@ -2,6 +2,14 @@ Getting Started
 Error Model
 Adapter Contracts
 Release Notes
+Go Deeper In The Full Spec
+This summary is the fast map. These pages carry the fuller protocol requirements and supporting detail.
+Normative Draft
+CRUDE Pattern
+Operations Specification
+Related Summary Pages
+These summary pages help connect the core semantics to safety, errors, and launch posture.
+Back to the docs library
 Operational rules readers usually miss
 Naming and parameter rules
 Operation names are case-sensitive snake_case identifiers.

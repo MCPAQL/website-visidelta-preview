@@ -51,6 +51,7 @@ ADR-004: Schema-Driven Operation Definitions
 ADR-005: GraphQL-Style Introspection System
 ADR-006: Discriminated Response Format
 Architecture Decision Records
+Full Spec
 REPO-SYNCED SPEC DOC
 This document defines the trust level system for MCP-AQL adapters. Trust levels indicate the verification and validation status of an adapter, enabling systems to make informed decisions about which operations to permit
 Support document Draft 1.0.0-draft 2026-01-28

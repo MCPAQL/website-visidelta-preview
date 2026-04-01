@@ -51,6 +51,7 @@ ADR-004: Schema-Driven Operation Definitions
 ADR-005: GraphQL-Style Introspection System
 ADR-006: Discriminated Response Format
 Architecture Decision Records
+Full Spec
 REPO-SYNCED SPEC DOC
 A strategic comparison of three protocols shaping how AI agents interact with the world: where they overlap, where they diverge, and where the gaps are.
 Support document research 1.0.0

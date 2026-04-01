@@ -16,6 +16,13 @@ MCP-AQL consolidates many discrete MCP tools into a small semantic endpoint surf
 The result is less registration overhead, clearer routing, and a more scalable contract for agent-driven systems.
 Spec README
 Normative Draft
+Go Deeper In The Full Spec
+Use the website-hosted source pages when you want the actual protocol text instead of the onboarding summary.
+Protocol Overview
+Browse the full spec reference
+Keep Moving Through The Library
+Once the framing is clear, the next useful stops are the rules pages and the launch-readiness views.
+Back to the docs library
 The one-paragraph version
 MCP-AQL is a protocol specification and implementation toolkit for exposing adapter operations through either five CRUDE endpoints
 or a single routed endpoint. It keeps introspect mandatory, treats the versioned spec as canonical, and positions

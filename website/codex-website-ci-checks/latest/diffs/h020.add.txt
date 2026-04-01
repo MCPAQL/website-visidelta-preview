@@ -51,6 +51,7 @@ ADR-004: Schema-Driven Operation Definitions
 ADR-005: GraphQL-Style Introspection System
 ADR-006: Discriminated Response Format
 Architecture Decision Records
+Full Spec
 REPO-SYNCED SPEC DOC
 This document defines a standard classification system for dangerous operations in MCP-AQL adapters. Danger levels enable automatic lockdown of high-risk actions, consistent confirmation requirements, and trust-based per
 Support document Draft 1.0.0-draft 2026-01-28

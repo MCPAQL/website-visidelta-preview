@@ -51,6 +51,7 @@ ADR-004: Schema-Driven Operation Definitions
 ADR-005: GraphQL-Style Introspection System
 ADR-006: Discriminated Response Format
 Architecture Decision Records
+Full Spec
 REPO-SYNCED SPEC DOC
 This document defines the rate limiting and quota management system for MCP-AQL adapters. Rate limits enable systems to respect API constraints, prevent runaway costs, and provide graceful degradation under load.
 Support document Draft 1.0.0-draft 2026-01-28

@@ -7,10 +7,14 @@ Adapter Contracts
 Recommended first read
 Overview, quick-start request shape, token efficiency, and reading order for the draft.
 Canonical README
+Open summary
+Open source page
 Structured error envelope, machine-readable codes, and current alignment gaps between draft and implementations.
 Canonical error code doc
+Open runtime repo
 Adapter schema, plugin contract, generator-output, and example-surface expectations across the implementation toolchain.
 Canonical contract docs
+Open full spec
 Release Notes
 Change context
 Recent draft changes that affect public messaging, launch framing, and docs coverage priorities.

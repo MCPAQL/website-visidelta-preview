@@ -2,6 +2,13 @@ Getting Started
 Error Model
 Adapter Contracts
 Release Notes
+Go Deeper In The Full Spec
+The full safety model is split across several dedicated spec documents hosted here on the website.
+Gatekeeper Specification
+Browse the full spec reference
+Related Summary Pages
+Security decisions sit next to routing, error handling, and launch-readiness claims.
+Back to the docs library
 Source documents behind this summary
 Gatekeeper
 Issue #216 safety checklist alignment audit

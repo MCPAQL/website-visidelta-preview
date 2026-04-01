@@ -51,6 +51,7 @@ ADR-004: Schema-Driven Operation Definitions
 ADR-005: GraphQL-Style Introspection System
 ADR-006: Discriminated Response Format
 Architecture Decision Records
+Full Spec
 REPO-SYNCED SPEC DOC
 Informative Document: This is an informative specification that provides detailed guidance for the execution safety loop pattern defined normatively in Section 8.6 of the core specification. In case of conflict, the norm
 Support document Draft 1.0.0-draft 2026-02-25

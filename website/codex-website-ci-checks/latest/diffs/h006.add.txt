@@ -16,17 +16,23 @@ The spec does not stop at request envelopes. It also defines the declarative sha
 the responsibilities of plugin layers, and the output constraints for generators and reference implementations.
 Plugin Contracts
 Element Type Spec
+Go Deeper In The Full Spec
+The website-hosted source docs carry the real contract details for schema shape, plugins, and generation behavior.
+Plugin Interface Contracts
+Element Type Specification
+Generator specification
+Browse the full spec reference
+Related Summary Pages
+These summaries help connect adapter contracts to conformance and real implementation posture.
+Back to the docs library
 Contract layers
 Primary source
 What it governs
 Adapter element schema
-Element Type Specification
 How operations, parameters, auth, and pagination are declared
 Plugin interfaces
-Plugin Interface Contracts
 What runtime plugins must provide to implement the declared adapter surface
 Generator outputs
-Generator specification
 How generated adapters preserve provenance, policy, and output constraints
 Reference runtime
 mcpaql-adapter repo

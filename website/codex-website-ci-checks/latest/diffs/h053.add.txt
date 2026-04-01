@@ -51,6 +51,7 @@ ADR-004: Schema-Driven Operation Definitions
 ADR-005: GraphQL-Style Introspection System
 ADR-006: Discriminated Response Format
 Architecture Decision Records
+Full Spec
 REPO-SYNCED SPEC DOC
 This document describes the formal process for proposing, reviewing, and accepting changes to the MCP-AQL specification through Requests for Comments (RFCs).
 Support document Active 1.0.0

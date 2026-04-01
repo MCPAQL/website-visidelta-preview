@@ -1,0 +1,10 @@
+Table of Contents
+Introduction
+The Safety Dongle Deployment Model
+The Execution Safety Loop
+Minimal Operation Surface
+Integration with Gatekeeper
+Integration with Danger Zone
+Deployment Examples
+Opting Out
+Implementation Requirements

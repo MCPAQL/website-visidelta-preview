@@ -1,0 +1,10 @@
+Table of Contents
+Introduction
+Terminology
+Request Format
+Response Format
+CRUDE Endpoints
+Introspection
+Operation Classification
+Type System
+Conformance

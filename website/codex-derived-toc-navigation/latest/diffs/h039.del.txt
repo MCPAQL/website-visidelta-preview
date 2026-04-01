@@ -1,0 +1,8 @@
+Table of Contents
+Overview
+Trust Level Enum
+Trust Metadata Schema
+Promotion Rules
+Permission Gating
+Implementation Requirements
+Future Extensions

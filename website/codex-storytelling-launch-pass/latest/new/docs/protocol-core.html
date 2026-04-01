@@ -255,8 +255,9 @@ mcp_aql_execute</pre>
               <p>
                 MCP-AQL keeps the public endpoint surface small and makes runtime discovery part of the protocol through
                 <code>introspect</code>. That means the protocol does not require a large up-front tool-definition payload in order to begin
-                operating. Some MCP clients may already choose to load tools progressively, but that is client-specific behavior; MCP-AQL
-                makes on-demand discovery available in a client-agnostic way as long as the client speaks MCP.
+                operating. Some MCP clients already have progressive loading, but the benefit depends on which client you are using.
+                MCP-AQL makes on-demand discovery available in a client-agnostic way, so the practical benefit carries across MCP-speaking
+                clients instead of depending on a particular client implementation.
               </p>
               <ul>
                 <li><a href="../spec/introspection.html">Introspection specification</a></li>

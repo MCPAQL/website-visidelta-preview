@@ -1,0 +1,1618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="This document helps developers familiar with GraphQL, MongoDB, REST, SQL, or classic MCP understand MCP-AQL by mapping familiar concepts to their MCP-AQL equivalents.">
+  <title>MCP-AQL Spec | Protocol Comparison Guide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <a class="logo" href="../../index.html"><span class="logo-mark"></span>MCP-AQL</a>
+        <ul class="nav-links">
+          <li><a href="../../index.html">Home</a></li>
+          <li><a href="../../docs/index.html">Docs</a></li>
+          <li><a href="../../launch-checklist.html">Launch Checklist</a></li>
+          <li><a href="../../apis/mcp-server.html">Adapter Patterns</a></li>
+        </ul>
+        <form class="site-search" data-search-form data-index-url="../../data/search-index.json" role="search">
+          <label class="sr-only" for="site-search-input">Search MCP-AQL docs</label>
+          <input id="site-search-input" data-search-input type="search" placeholder="Search MCP-AQL docs, spec pages, and adapter patterns...">
+          <span class="search-count" data-search-count></span>
+          <ul class="search-results" data-search-results hidden></ul>
+        </form>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container docs-shell">
+      <aside class="docs-side">
+        <h2>Repo-Synced Spec</h2>
+        <p class="docs-side-note">Generated from <code>MCPAQL/spec</code> so the website carries the deeper protocol material too.</p>
+        <div class="docs-side-group">
+  <h3>Core</h3>
+  <ul><li><a href="../conformance-testing.html">MCP-AQL Conformance Testing Specification</a></li><li><a href="../crude-pattern.html">MCP-AQL CRUDE Pattern Specification</a></li><li><a href="../endpoint-modes.html">MCP-AQL Endpoint Modes Specification</a></li><li><a href="../error-codes.html">Structured Error Codes Specification</a></li><li><a href="../introspection.html">MCP-AQL Introspection Specification</a></li><li><a href="../licensing-options.html">MCP-AQL Licensing Options (Working Notes)</a></li><li><a href="../mcp-integration.html">MCP Integration Specification</a></li><li><a href="../operations.html">MCP-AQL Operations Specification</a></li><li><a href="../overview.html">MCP-AQL Protocol Overview</a></li><li><a href="../plugin-contracts.html">Plugin Interface Contracts</a></li><li><a href="../README.html">MCP-AQL Specification Documentation</a></li><li><a href="../repo/README.html">MCP-AQL Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Versions</h3>
+  <ul><li><a href="../versions/v1.0.0-draft.html">MCP-AQL Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Adapter</h3>
+  <ul><li><a href="../adapter/danger-levels.html">Dangerous Operation Classification Specification</a></li><li><a href="../adapter/discovery-bundle.html">MCP Server Discovery Bundle</a></li><li><a href="../adapter/element-type.html">Adapter Element Type Specification</a></li><li><a href="../adapter/generator.html">Adapter Generator Specification</a></li><li><a href="../adapter/rate-limiting.html">Rate Limiting and Quota Management Specification</a></li><li><a href="../adapter/trust-levels.html">Trust Levels Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Security</h3>
+  <ul><li><a href="../security/confirmation-tokens.html">Confirmation Token Specification</a></li><li><a href="../security/execution-safety-loop.html">Execution Safety Loop Specification</a></li><li><a href="../security/gatekeeper.html">Security Model: Gatekeeper Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Features</h3>
+  <ul><li><a href="../features/field-selection.html">Field Selection Specification</a></li><li><a href="../features/pagination.html">Cursor-Based Pagination Specification</a></li><li><a href="../features/warnings.html">Warnings Array Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Guides</h3>
+  <ul><li><a class="current" aria-current="page" href="protocol-comparison.html">Protocol Comparison Guide</a></li><li><a href="README.html">Developer Guides</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Process</h3>
+  <ul><li><a href="../process/breaking-changes.html">MCP-AQL Breaking Change Policy</a></li><li><a href="../process/preliminary-public-launch-checklist.html">Preliminary Public Launch Checklist</a></li><li><a href="../process/rfc-process.html">RFC Process for MCP-AQL Specification</a></li><li><a href="../process/versioning.html">Versioning Strategy</a></li><li><a href="../repo/CHANGELOG.html">Changelog</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Architecture</h3>
+  <ul><li><a href="../architecture/README.html">Architecture Documentation</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Research</h3>
+  <ul><li><a href="../research/mcp-vs-mcpaql-vs-a2a.html">Protocol Landscape: MCP vs MCP-AQL vs A2A</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Reference</h3>
+  <ul><li><a href="../reference/README.html">Reference Documentation</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>ADRs</h3>
+  <ul><li><a href="../adr/ADR-001-crude-pattern.html">ADR-001: CRUDE Pattern (Extending CRUD with Execute)</a></li><li><a href="../adr/ADR-002-graphql-style-input.html">ADR-002: GraphQL-Style Input Objects for Updates</a></li><li><a href="../adr/ADR-003-snake-case-parameters.html">ADR-003: snake_case Parameter Convention</a></li><li><a href="../adr/ADR-004-schema-driven-operations.html">ADR-004: Schema-Driven Operation Definitions</a></li><li><a href="../adr/ADR-005-introspection-system.html">ADR-005: GraphQL-Style Introspection System</a></li><li><a href="../adr/ADR-006-discriminated-responses.html">ADR-006: Discriminated Response Format</a></li><li><a href="../adr/index.html">Architecture Decision Records</a></li><li><a href="../adr/README.html">Architecture Decision Records</a></li></ul>
+</div>
+      </aside>
+
+      <article class="docs-main">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+          <ol>
+            <li><a href="../../index.html">Home</a></li>
+            <li><a href="../index.html">Full Spec</a></li>
+            <li><span class="current">Protocol Comparison Guide</span></li>
+          </ol>
+        </nav>
+        <section class="hero docs-hero">
+          <div class="hero-inner">
+            <span class="status-pill">REPO-SYNCED SPEC DOC</span>
+            <h1>Protocol Comparison Guide</h1>
+            <p class="lede">This document helps developers familiar with GraphQL, MongoDB, REST, SQL, or classic MCP understand MCP-AQL by mapping familiar concepts to their MCP-AQL equivalents.</p>
+            <div class="spec-meta"><span class="state-chip live">Support document</span><span class="state-chip pending">draft</span><span class="state-chip">1.0.0</span></div>
+            <p class="spec-source">Source: <a href="https://github.com/MCPAQL/spec/blob/main/docs/guides/protocol-comparison.md">spec/docs/guides/protocol-comparison.md</a></p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="https://github.com/MCPAQL/spec/blob/main/docs/guides/protocol-comparison.md">Open Source Markdown</a>
+              <a class="btn btn-secondary" href="../index.html">Browse Full Spec Reference</a>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <div class="card spec-prose">
+            <blockquote>
+<p>This document helps developers familiar with GraphQL, MongoDB, REST, SQL, or classic MCP understand MCP-AQL by mapping familiar concepts to their MCP-AQL equivalents.</p>
+</blockquote>
+<h2 id="table-of-contents">Table of Contents</h2>
+<ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#quick-reference-table">Quick Reference Table</a></li>
+<li><a href="#for-graphql-developers">For GraphQL Developers</a></li>
+<li><a href="#for-mongodb-developers">For MongoDB Developers</a></li>
+<li><a href="#for-rest-api-developers">For REST API Developers</a></li>
+<li><a href="#for-sql-developers">For SQL Developers</a></li>
+<li><a href="#for-classic-mcp-users">For Classic MCP Users</a></li>
+<li><a href="#comprehensive-concept-mapping">Comprehensive Concept Mapping</a></li>
+<li><a href="#code-examples-same-operation-across-protocols">Code Examples: Same Operation Across Protocols</a></li>
+</ul>
+<hr />
+<h2 id="introduction">Introduction</h2>
+<p><strong>MCP-AQL</strong> (Model Context Protocol - Advanced Agent API Adapter Query Language) is a <strong>protocol pattern</strong> for consolidating multiple MCP tools into semantic endpoints. The core ideas are:</p>
+<ul>
+<li><strong>CRUDE Endpoints</strong> - Categorize operations by safety: Create, Read, Update, Delete, Execute</li>
+<li><strong>Operation Routing</strong> - A single <code>operation</code> parameter dispatches to the appropriate handler</li>
+<li><strong>Schema-Driven Dispatch</strong> - Declarative operation definitions with automatic validation</li>
+<li><strong>Introspection</strong> - On-demand discovery replaces upfront schema parsing</li>
+</ul>
+<h3 id="token-efficiency-by-mode">Token Efficiency by Mode</h3>
+<p>MCP-AQL supports multiple endpoint modes with different token trade-offs:</p>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>Endpoints</th>
+<th>Token Cost</th>
+<th>Reduction</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Discrete</strong></td>
+<td>Many individual tools</td>
+<td>~30,000</td>
+<td>Baseline</td>
+<td>Traditional MCP</td>
+</tr>
+<tr>
+<td><strong>CRUDE</strong></td>
+<td>5 semantic endpoints</td>
+<td>~4,300</td>
+<td>~85%</td>
+<td>Host-level permission control</td>
+</tr>
+<tr>
+<td><strong>Single</strong></td>
+<td>1 unified endpoint</td>
+<td>~1,100</td>
+<td>~96%</td>
+<td>Maximum token efficiency</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Response Token Savings:</strong> Field selection (<code>fields</code> parameter) provides additional ~73-86% reduction in response tokens. Combined with endpoint consolidation, total savings can exceed 98%.</p>
+<h3 id="why-compare">Why Compare?</h3>
+<p>Developers often approach new protocols through the lens of what they already know. This guide provides mental models for understanding MCP-AQL by drawing parallels to:</p>
+<table>
+<thead>
+<tr>
+<th>Protocol</th>
+<th>Similarity to MCP-AQL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>GraphQL</strong></td>
+<td>Introspection, typed operations, nested input objects</td>
+</tr>
+<tr>
+<td><strong>MongoDB</strong></td>
+<td>Document-based operations, flexible queries</td>
+</tr>
+<tr>
+<td><strong>REST</strong></td>
+<td>Resource-oriented endpoints, HTTP-like semantics</td>
+</tr>
+<tr>
+<td><strong>SQL</strong></td>
+<td>Structured queries, CRUD operations</td>
+</tr>
+<tr>
+<td><strong>Classic MCP</strong></td>
+<td>Tool-based interface (what MCP-AQL can replace)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="core-design-philosophy">Core Design Philosophy</h2>
+<p>MCP-AQL optimizes for <strong>LLM token efficiency</strong> while maintaining <strong>human readability</strong>:</p>
+<ol type="1">
+<li><strong>Consolidated Endpoints</strong> - Semantic grouping instead of many discrete tools</li>
+<li><strong>On-Demand Discovery</strong> - Introspection replaces upfront schema parsing</li>
+<li><strong>Schema-Driven Dispatch</strong> - Declarative operation definitions with automatic validation</li>
+<li><strong>Flexible Parameter Resolution</strong> - Multiple sources checked for each parameter</li>
+</ol>
+<hr />
+<h2 id="quick-reference-table">Quick Reference Table</h2>
+<table>
+<thead>
+<tr>
+<th>Concept</th>
+<th>GraphQL</th>
+<th>MongoDB</th>
+<th>REST</th>
+<th>SQL</th>
+<th>MCP-AQL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Define Operation</strong></td>
+<td><code>mutation createUser</code></td>
+<td><code>db.users.insertOne()</code></td>
+<td><code>POST /users</code></td>
+<td><code>INSERT INTO users</code></td>
+<td><code>{ operation: "..." }</code></td>
+</tr>
+<tr>
+<td><strong>Specify Parameters</strong></td>
+<td><code>variables: { ... }</code></td>
+<td><code>{ filter: { ... } }</code></td>
+<td>Request body / query params</td>
+<td><code>WHERE clause</code></td>
+<td><code>params: { ... }</code></td>
+</tr>
+<tr>
+<td><strong>Target Type</strong></td>
+<td>Type in schema</td>
+<td>Collection name</td>
+<td>URL path</td>
+<td>Table name</td>
+<td>Implementation-defined</td>
+</tr>
+<tr>
+<td><strong>Read One</strong></td>
+<td><code>query { user(id) }</code></td>
+<td><code>findOne({ _id })</code></td>
+<td><code>GET /users/:id</code></td>
+<td><code>SELECT ... WHERE id=</code></td>
+<td>Read operation</td>
+</tr>
+<tr>
+<td><strong>Read Many</strong></td>
+<td><code>query { users }</code></td>
+<td><code>find({})</code></td>
+<td><code>GET /users</code></td>
+<td><code>SELECT * FROM</code></td>
+<td>List operation</td>
+</tr>
+<tr>
+<td><strong>Create</strong></td>
+<td><code>mutation { createUser }</code></td>
+<td><code>insertOne()</code></td>
+<td><code>POST /users</code></td>
+<td><code>INSERT INTO</code></td>
+<td>Create operation</td>
+</tr>
+<tr>
+<td><strong>Update</strong></td>
+<td><code>mutation { updateUser }</code></td>
+<td><code>updateOne()</code></td>
+<td><code>PUT /users/:id</code></td>
+<td><code>UPDATE ... SET</code></td>
+<td>Update operation</td>
+</tr>
+<tr>
+<td><strong>Delete</strong></td>
+<td><code>mutation { deleteUser }</code></td>
+<td><code>deleteOne()</code></td>
+<td><code>DELETE /users/:id</code></td>
+<td><code>DELETE FROM</code></td>
+<td>Delete operation</td>
+</tr>
+<tr>
+<td><strong>Search</strong></td>
+<td><code>query { search(q) }</code></td>
+<td><code>find({ $text })</code></td>
+<td><code>GET /search?q=</code></td>
+<td><code>LIKE '%term%'</code></td>
+<td>Search operation</td>
+</tr>
+<tr>
+<td><strong>Discover Schema</strong></td>
+<td><code>__schema</code> introspection</td>
+<td><code>db.getCollectionInfos()</code></td>
+<td>OpenAPI / Swagger</td>
+<td><code>DESCRIBE table</code></td>
+<td><code>introspect</code></td>
+</tr>
+<tr>
+<td><strong>Field Selection</strong></td>
+<td>Field list in query</td>
+<td>Projection <code>{ field: 1 }</code></td>
+<td><code>?fields=a,b</code></td>
+<td><code>SELECT a, b</code></td>
+<td><code>fields</code> param or preset</td>
+</tr>
+<tr>
+<td><strong>Response Format</strong></td>
+<td><code>{ data, errors }</code></td>
+<td>Document / cursor</td>
+<td>JSON body</td>
+<td>Result set</td>
+<td><code>{ success, data/error }</code></td>
+</tr>
+<tr>
+<td><strong>Error Handling</strong></td>
+<td><code>errors</code> array</td>
+<td>Exception</td>
+<td>HTTP status codes</td>
+<td>SQLSTATE</td>
+<td><code>{ success: false, error }</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="for-graphql-developers">For GraphQL Developers</h2>
+<p>If you are familiar with GraphQL, MCP-AQL will feel conceptually similar. Both protocols emphasize typed operations, introspection, and structured inputs.</p>
+<h3 id="operations--queriesmutations">Operations = Queries/Mutations</h3>
+<p>GraphQL separates read operations (queries) from write operations (mutations). MCP-AQL takes this further with the <strong>CRUDE pattern</strong> (5 semantic categories):</p>
+<table>
+<thead>
+<tr>
+<th>GraphQL</th>
+<th>MCP-AQL Endpoint</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>query</code></td>
+<td><code>mcp_aql_read</code></td>
+<td>Read-only operations</td>
+</tr>
+<tr>
+<td><code>mutation</code> (create)</td>
+<td><code>mcp_aql_create</code></td>
+<td>Additive operations</td>
+</tr>
+<tr>
+<td><code>mutation</code> (update)</td>
+<td><code>mcp_aql_update</code></td>
+<td>Modifying operations</td>
+</tr>
+<tr>
+<td><code>mutation</code> (delete)</td>
+<td><code>mcp_aql_delete</code></td>
+<td>Destructive operations</td>
+</tr>
+<tr>
+<td><code>subscription</code></td>
+<td><code>mcp_aql_execute</code></td>
+<td>Runtime/stateful operations</td>
+</tr>
+</tbody>
+</table>
+<p><strong>GraphQL:</strong></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode graphql"><code class="sourceCode graphql"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">mutation</span> CreateUser(<span class="va">$input</span>: UserInput!) {</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  createUser(<span class="kw">input</span>: <span class="va">$input</span>) {</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    name</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    email</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><strong>MCP-AQL:</strong></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;create_resource&quot;</span><span class="op">,</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">params</span><span class="op">:</span> {</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">resource_type</span><span class="op">:</span> <span class="st">&quot;user&quot;</span><span class="op">,</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">resource_id</span><span class="op">:</span> <span class="st">&quot;user-123&quot;</span><span class="op">,</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;Alice&quot;</span><span class="op">,</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">email</span><span class="op">:</span> <span class="st">&quot;alice@example.com&quot;</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="resource-types">Resource Types</h3>
+<p>In GraphQL, you query specific types (<code>User</code>, <code>Post</code>). In MCP-AQL, implementations define their own resource type parameter:</p>
+<table>
+<thead>
+<tr>
+<th>GraphQL</th>
+<th>MCP-AQL Pattern</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>type User</code></td>
+<td><code>resource_type: "user"</code></td>
+</tr>
+<tr>
+<td><code>type Post</code></td>
+<td><code>resource_type: "post"</code></td>
+</tr>
+<tr>
+<td><code>type Comment</code></td>
+<td><code>resource_type: "comment"</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="introspection-__schema-vs-introspect">Introspection: <code>__schema</code> vs <code>introspect</code></h3>
+<p>Both protocols support self-description. MCP-AQL's introspection is modeled after GraphQL:</p>
+<p><strong>GraphQL:</strong></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode graphql"><code class="sourceCode graphql"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  __schema {</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    types { name }</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    queryType { name }</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><strong>MCP-AQL:</strong></p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">// List all operations</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>{ <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;introspect&quot;</span><span class="op">,</span> <span class="dt">params</span><span class="op">:</span> { <span class="dt">query</span><span class="op">:</span> <span class="st">&quot;operations&quot;</span> } }</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">// Get specific operation details</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>{ <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;introspect&quot;</span><span class="op">,</span> <span class="dt">params</span><span class="op">:</span> { <span class="dt">query</span><span class="op">:</span> <span class="st">&quot;operations&quot;</span><span class="op">,</span> <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;create_resource&quot;</span> } }</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">// List available types</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>{ <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;introspect&quot;</span><span class="op">,</span> <span class="dt">params</span><span class="op">:</span> { <span class="dt">query</span><span class="op">:</span> <span class="st">&quot;types&quot;</span> } }</span></code></pre></div>
+<h3 id="nested-input-objects-graphql-style-updates">Nested Input Objects (GraphQL-style Updates)</h3>
+<p>MCP-AQL supports GraphQL-style nested <code>input</code> objects for updates. This allows partial updates with deep merging:</p>
+<p><strong>GraphQL:</strong></p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode graphql"><code class="sourceCode graphql"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">mutation</span> UpdateUser(<span class="va">$id</span>: <span class="dt">ID</span>!, <span class="va">$input</span>: UpdateUserInput!) {</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  updateUser(id: <span class="va">$id</span>, <span class="kw">input</span>: <span class="va">$input</span>) {</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    name</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><strong>MCP-AQL:</strong></p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;update_resource&quot;</span><span class="op">,</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">params</span><span class="op">:</span> {</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">resource_id</span><span class="op">:</span> <span class="st">&quot;user-123&quot;</span><span class="op">,</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">input</span><span class="op">:</span> {                    <span class="co">// Everything in &#39;input&#39; gets deep-merged</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>      <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;Updated Name&quot;</span><span class="op">,</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">settings</span><span class="op">:</span> { <span class="dt">theme</span><span class="op">:</span> <span class="st">&quot;dark&quot;</span> }</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="field-selection-graphql-style">Field Selection (GraphQL-style)</h3>
+<p>MCP-AQL supports GraphQL-style field selection to reduce response token usage. Implementations can support a <code>fields</code> parameter for specific fields or define presets for common use cases.</p>
+<p><strong>MCP-AQL Field Selection:</strong></p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;list_resources&quot;</span><span class="op">,</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">params</span><span class="op">:</span> {</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">resource_type</span><span class="op">:</span> <span class="st">&quot;user&quot;</span><span class="op">,</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">fields</span><span class="op">:</span> [<span class="st">&quot;name&quot;</span><span class="op">,</span> <span class="st">&quot;description&quot;</span><span class="op">,</span> <span class="st">&quot;metadata.tags&quot;</span>]</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co">// Returns only requested fields, reducing response tokens</span></span></code></pre></div>
+<p><strong>Preset Field Sets:</strong></p>
+<p>Implementations MAY define preset field sets for common use cases:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;get_resource&quot;</span><span class="op">,</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">params</span><span class="op">:</span> {</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">resource_id</span><span class="op">:</span> <span class="st">&quot;user-123&quot;</span><span class="op">,</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">fields</span><span class="op">:</span> <span class="st">&quot;minimal&quot;</span>  <span class="co">// Preset: returns only essential fields</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Preset</th>
+<th>Description</th>
+<th>Typical Token Savings</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>minimal</code></td>
+<td>Only identifier and description</td>
+<td>~86%</td>
+</tr>
+<tr>
+<td><code>standard</code></td>
+<td>Common fields for most use cases</td>
+<td>~73%</td>
+</tr>
+<tr>
+<td><code>full</code></td>
+<td>All fields (default)</td>
+<td>0%</td>
+</tr>
+</tbody>
+</table>
+<h3 id="key-differences-from-graphql">Key Differences from GraphQL</h3>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>GraphQL</th>
+<th>MCP-AQL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Field Selection</strong></td>
+<td>Client selects specific fields</td>
+<td><code>fields</code> param or presets</td>
+</tr>
+<tr>
+<td><strong>Subscriptions</strong></td>
+<td>Real-time WebSocket streams</td>
+<td>EXECUTE for stateful lifecycle</td>
+</tr>
+<tr>
+<td><strong>Schema Definition</strong></td>
+<td>SDL files</td>
+<td>Declarative operation schemas</td>
+</tr>
+<tr>
+<td><strong>Fragments/Aliases</strong></td>
+<td>Supported</td>
+<td>Not applicable</td>
+</tr>
+<tr>
+<td><strong>Batching</strong></td>
+<td>DataLoader pattern</td>
+<td>Built-in batch operations</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="for-mongodb-developers">For MongoDB Developers</h2>
+<p>If you are familiar with MongoDB, MCP-AQL's document-oriented operations and flexible query patterns will feel natural.</p>
+<h3 id="resource-types-like-collections">Resource Types (like Collections)</h3>
+<p>MongoDB organizes documents into collections. MCP-AQL implementations define resource type parameters:</p>
+<table>
+<thead>
+<tr>
+<th>MongoDB</th>
+<th>MCP-AQL Pattern</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>db.users</code></td>
+<td><code>resource_type: "user"</code></td>
+</tr>
+<tr>
+<td><code>db.posts</code></td>
+<td><code>resource_type: "post"</code></td>
+</tr>
+<tr>
+<td><code>db.comments</code></td>
+<td><code>resource_type: "comment"</code></td>
+</tr>
+<tr>
+<td>Collection name in method</td>
+<td>Passed as parameter</td>
+</tr>
+</tbody>
+</table>
+<h3 id="crud-method-mapping">CRUD Method Mapping</h3>
+<table>
+<thead>
+<tr>
+<th>MongoDB</th>
+<th>MCP-AQL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>insertOne()</code></td>
+<td><code>create_resource</code></td>
+</tr>
+<tr>
+<td><code>find()</code></td>
+<td><code>list_resources</code></td>
+</tr>
+<tr>
+<td><code>findOne()</code></td>
+<td><code>get_resource</code></td>
+</tr>
+<tr>
+<td><code>updateOne()</code></td>
+<td><code>update_resource</code></td>
+</tr>
+<tr>
+<td><code>deleteOne()</code></td>
+<td><code>delete_resource</code></td>
+</tr>
+<tr>
+<td><code>aggregate()</code></td>
+<td><code>search</code> or <code>query_resources</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>MongoDB:</strong></p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>db<span class="op">.</span><span class="at">users</span><span class="op">.</span><span class="fu">insertOne</span>({</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;Alice&quot;</span><span class="op">,</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">description</span><span class="op">:</span> <span class="st">&quot;A helpful assistant&quot;</span><span class="op">,</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">settings</span><span class="op">:</span> { <span class="dt">theme</span><span class="op">:</span> <span class="st">&quot;light&quot;</span> }</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div>
+<p><strong>MCP-AQL:</strong></p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;create_resource&quot;</span><span class="op">,</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">params</span><span class="op">:</span> {</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">resource_type</span><span class="op">:</span> <span class="st">&quot;user&quot;</span><span class="op">,</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">resource_id</span><span class="op">:</span> <span class="st">&quot;alice&quot;</span><span class="op">,</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">description</span><span class="op">:</span> <span class="st">&quot;A helpful assistant&quot;</span><span class="op">,</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">settings</span><span class="op">:</span> { <span class="dt">theme</span><span class="op">:</span> <span class="st">&quot;light&quot;</span> }</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="query-patterns">Query Patterns</h3>
+<p><strong>MongoDB Find:</strong></p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>db<span class="op">.</span><span class="at">users</span><span class="op">.</span><span class="fu">find</span>({</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">tags</span><span class="op">:</span> { <span class="dt">$in</span><span class="op">:</span> [<span class="st">&quot;creative&quot;</span><span class="op">,</span> <span class="st">&quot;writing&quot;</span>] }</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>})<span class="op">.</span><span class="fu">limit</span>(<span class="dv">10</span>)</span></code></pre></div>
+<p><strong>MCP-AQL Search:</strong></p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;search&quot;</span><span class="op">,</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">params</span><span class="op">:</span> {</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">query</span><span class="op">:</span> <span class="st">&quot;creative writing&quot;</span><span class="op">,</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">scope</span><span class="op">:</span> <span class="st">&quot;local&quot;</span><span class="op">,</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">limit</span><span class="op">:</span> <span class="dv">10</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="update-patterns">Update Patterns</h3>
+<p>MongoDB's <code>$set</code> operator is similar to MCP-AQL's deep-merge <code>input</code>:</p>
+<p><strong>MongoDB:</strong></p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>db<span class="op">.</span><span class="at">users</span><span class="op">.</span><span class="fu">updateOne</span>(</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  { <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;Alice&quot;</span> }<span class="op">,</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  { <span class="dt">$set</span><span class="op">:</span> {</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">description</span><span class="op">:</span> <span class="st">&quot;Updated&quot;</span><span class="op">,</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;metadata.triggers&quot;</span><span class="op">:</span> [<span class="st">&quot;helper&quot;</span>]</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  }}</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<p><strong>MCP-AQL:</strong></p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;update_resource&quot;</span><span class="op">,</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">params</span><span class="op">:</span> {</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">resource_id</span><span class="op">:</span> <span class="st">&quot;alice&quot;</span><span class="op">,</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">input</span><span class="op">:</span> {</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>      <span class="dt">description</span><span class="op">:</span> <span class="st">&quot;Updated&quot;</span><span class="op">,</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">metadata</span><span class="op">:</span> {</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>        <span class="dt">triggers</span><span class="op">:</span> [<span class="st">&quot;helper&quot;</span>]</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="key-differences-from-mongodb">Key Differences from MongoDB</h3>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>MongoDB</th>
+<th>MCP-AQL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Query Operators</strong></td>
+<td>Rich ($gt, $in, $regex)</td>
+<td>Simplified search/filter</td>
+</tr>
+<tr>
+<td><strong>Aggregation</strong></td>
+<td>Complex pipelines</td>
+<td>Normalized via <code>search</code> operation</td>
+</tr>
+<tr>
+<td><strong>Indexes</strong></td>
+<td>User-defined</td>
+<td>Managed by server</td>
+</tr>
+<tr>
+<td><strong>Transactions</strong></td>
+<td>Multi-document ACID</td>
+<td>Per-operation atomicity</td>
+</tr>
+<tr>
+<td><strong>Cursors</strong></td>
+<td>Iterable result sets</td>
+<td>Paginated responses</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="for-rest-api-developers">For REST API Developers</h2>
+<p>If you are familiar with REST APIs, MCP-AQL maps cleanly to RESTful patterns while adding semantic grouping and introspection.</p>
+<h3 id="http-methods--crude-endpoints">HTTP Methods = CRUDE Endpoints</h3>
+<p>REST uses HTTP methods for semantics. MCP-AQL uses 5 semantic endpoints:</p>
+<table>
+<thead>
+<tr>
+<th>HTTP Method</th>
+<th>MCP-AQL Endpoint</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>POST</code> (create)</td>
+<td><code>mcp_aql_create</code></td>
+<td>Create new resources</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>mcp_aql_read</code></td>
+<td>Read resources</td>
+</tr>
+<tr>
+<td><code>PUT</code> / <code>PATCH</code></td>
+<td><code>mcp_aql_update</code></td>
+<td>Modify resources</td>
+</tr>
+<tr>
+<td><code>DELETE</code></td>
+<td><code>mcp_aql_delete</code></td>
+<td>Remove resources</td>
+</tr>
+<tr>
+<td>N/A</td>
+<td><code>mcp_aql_execute</code></td>
+<td>Runtime operations</td>
+</tr>
+</tbody>
+</table>
+<h3 id="url-paths--operation--resource-parameters">URL Paths = operation + resource parameters</h3>
+<p>REST encodes resources in URLs. MCP-AQL uses <code>operation</code> plus implementation-defined parameters:</p>
+<table>
+<thead>
+<tr>
+<th>REST Pattern</th>
+<th>MCP-AQL Pattern</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GET /resources</code></td>
+<td><code>{ operation: "list_resources" }</code></td>
+</tr>
+<tr>
+<td><code>GET /resources/:id</code></td>
+<td><code>{ operation: "get_resource", params: { id } }</code></td>
+</tr>
+<tr>
+<td><code>POST /resources</code></td>
+<td><code>{ operation: "create_resource", params: { ... } }</code></td>
+</tr>
+<tr>
+<td><code>PUT /resources/:id</code></td>
+<td><code>{ operation: "update_resource", params: { id, input } }</code></td>
+</tr>
+<tr>
+<td><code>DELETE /resources/:id</code></td>
+<td><code>{ operation: "delete_resource", params: { id } }</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="requestresponse-patterns">Request/Response Patterns</h3>
+<p><strong>REST:</strong></p>
+<pre class="http"><code>POST /api/users HTTP/1.1
+Content-Type: application/json
+
+{
+  &quot;name&quot;: &quot;Alice&quot;,
+  &quot;description&quot;: &quot;A helpful assistant&quot;,
+  &quot;settings&quot;: { &quot;theme&quot;: &quot;light&quot; }
+}</code></pre>
+<p>Response:</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="st">&quot;123&quot;</span><span class="fu">,</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;Alice&quot;</span><span class="fu">,</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;description&quot;</span><span class="fu">:</span> <span class="st">&quot;A helpful assistant&quot;</span><span class="fu">,</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;created_at&quot;</span><span class="fu">:</span> <span class="st">&quot;2024-01-15T10:30:00Z&quot;</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><strong>MCP-AQL:</strong></p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Request</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;create_resource&quot;</span><span class="op">,</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">params</span><span class="op">:</span> {</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">resource_type</span><span class="op">:</span> <span class="st">&quot;user&quot;</span><span class="op">,</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">resource_id</span><span class="op">:</span> <span class="st">&quot;alice&quot;</span><span class="op">,</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">description</span><span class="op">:</span> <span class="st">&quot;A helpful assistant&quot;</span><span class="op">,</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">settings</span><span class="op">:</span> { <span class="dt">theme</span><span class="op">:</span> <span class="st">&quot;light&quot;</span> }</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a><span class="co">// Response</span></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>  <span class="dt">success</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>  <span class="dt">data</span><span class="op">:</span> {</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>    <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;alice&quot;</span><span class="op">,</span></span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>    <span class="dt">type</span><span class="op">:</span> <span class="st">&quot;user&quot;</span><span class="op">,</span></span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>    <span class="dt">description</span><span class="op">:</span> <span class="st">&quot;A helpful assistant&quot;</span><span class="op">,</span></span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>    <span class="co">// ... full resource data</span></span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="error-handling">Error Handling</h3>
+<table>
+<thead>
+<tr>
+<th>REST</th>
+<th>MCP-AQL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HTTP 200 OK</td>
+<td><code>{ success: true, data: ... }</code></td>
+</tr>
+<tr>
+<td>HTTP 400 Bad Request</td>
+<td><code>{ success: false, error: "Invalid parameter..." }</code></td>
+</tr>
+<tr>
+<td>HTTP 404 Not Found</td>
+<td><code>{ success: false, error: "Resource not found..." }</code></td>
+</tr>
+<tr>
+<td>HTTP 500 Internal Error</td>
+<td><code>{ success: false, error: "..." }</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="api-documentation--introspection">API Documentation = Introspection</h3>
+<p>REST APIs use OpenAPI/Swagger for documentation. MCP-AQL uses introspection:</p>
+<p><strong>OpenAPI (conceptual):</strong></p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">paths</span><span class="kw">:</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">/users</span><span class="kw">:</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">post</span><span class="kw">:</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">summary</span><span class="kw">:</span><span class="at"> Create a user</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">parameters</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">...</span><span class="kw">]</span></span></code></pre></div>
+<p><strong>MCP-AQL:</strong></p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Discover all operations</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>{ <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;introspect&quot;</span><span class="op">,</span> <span class="dt">params</span><span class="op">:</span> { <span class="dt">query</span><span class="op">:</span> <span class="st">&quot;operations&quot;</span> } }</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co">// Get specific operation docs</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>{ <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;introspect&quot;</span><span class="op">,</span> <span class="dt">params</span><span class="op">:</span> { <span class="dt">query</span><span class="op">:</span> <span class="st">&quot;operations&quot;</span><span class="op">,</span> <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;create_resource&quot;</span> } }</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="co">// Returns:</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">operation</span><span class="op">:</span> {</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;create_resource&quot;</span><span class="op">,</span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>    <span class="dt">endpoint</span><span class="op">:</span> <span class="st">&quot;CREATE&quot;</span><span class="op">,</span></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">mcpTool</span><span class="op">:</span> <span class="st">&quot;mcp_aql_create&quot;</span><span class="op">,</span></span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>    <span class="dt">description</span><span class="op">:</span> <span class="st">&quot;Create a new resource&quot;</span><span class="op">,</span></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>    <span class="dt">parameters</span><span class="op">:</span> [</span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>      { <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;resource_id&quot;</span><span class="op">,</span> <span class="dt">type</span><span class="op">:</span> <span class="st">&quot;string&quot;</span><span class="op">,</span> <span class="dt">required</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span> <span class="dt">description</span><span class="op">:</span> <span class="st">&quot;Resource identifier&quot;</span> }<span class="op">,</span></span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>      <span class="co">// ...</span></span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>    ]<span class="op">,</span></span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>    <span class="dt">examples</span><span class="op">:</span> [<span class="op">...</span>]</span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="key-differences-from-rest">Key Differences from REST</h3>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>REST</th>
+<th>MCP-AQL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Transport</strong></td>
+<td>HTTP</td>
+<td>MCP (stdio/SSE)</td>
+</tr>
+<tr>
+<td><strong>Versioning</strong></td>
+<td>URL path (<code>/v1/...</code>)</td>
+<td>Schema version in response</td>
+</tr>
+<tr>
+<td><strong>HATEOAS</strong></td>
+<td>Links in responses</td>
+<td>Introspection for discovery</td>
+</tr>
+<tr>
+<td><strong>Caching</strong></td>
+<td>HTTP headers</td>
+<td>Server-managed</td>
+</tr>
+<tr>
+<td><strong>Authentication</strong></td>
+<td>Headers (Bearer, API key)</td>
+<td>MCP session-based</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="for-sql-developers">For SQL Developers</h2>
+<p>If you are familiar with SQL, MCP-AQL's structured operations and type system will feel familiar, though the query patterns differ.</p>
+<h3 id="resource-types-like-tables">Resource Types (like Tables)</h3>
+<p>SQL organizes data into tables. MCP-AQL implementations define resource type parameters:</p>
+<table>
+<thead>
+<tr>
+<th>SQL</th>
+<th>MCP-AQL Pattern</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>users</code> table</td>
+<td><code>resource_type: "user"</code></td>
+</tr>
+<tr>
+<td><code>posts</code> table</td>
+<td><code>resource_type: "post"</code></td>
+</tr>
+<tr>
+<td><code>SELECT * FROM users</code></td>
+<td><code>list_resources</code> with <code>resource_type</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="sql-statement-mapping">SQL Statement Mapping</h3>
+<table>
+<thead>
+<tr>
+<th>SQL</th>
+<th>MCP-AQL Pattern</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>INSERT INTO</code></td>
+<td>Create operation</td>
+</tr>
+<tr>
+<td><code>SELECT * FROM</code></td>
+<td>List operation</td>
+</tr>
+<tr>
+<td><code>SELECT ... WHERE id =</code></td>
+<td>Get operation</td>
+</tr>
+<tr>
+<td><code>UPDATE ... SET</code></td>
+<td>Update operation</td>
+</tr>
+<tr>
+<td><code>DELETE FROM</code></td>
+<td>Delete operation</td>
+</tr>
+<tr>
+<td><code>SELECT ... WHERE ... LIKE</code></td>
+<td>Search operation</td>
+</tr>
+</tbody>
+</table>
+<h3 id="query-examples">Query Examples</h3>
+<p><strong>SQL INSERT:</strong></p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> users (name, description, settings)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="kw">VALUES</span> (<span class="st">&#39;alice&#39;</span>, <span class="st">&#39;A helpful assistant&#39;</span>, <span class="st">&#39;{&quot;theme&quot;: &quot;light&quot;}&#39;</span>);</span></code></pre></div>
+<p><strong>MCP-AQL:</strong></p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;create_resource&quot;</span><span class="op">,</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">params</span><span class="op">:</span> {</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">resource_type</span><span class="op">:</span> <span class="st">&quot;user&quot;</span><span class="op">,</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">resource_id</span><span class="op">:</span> <span class="st">&quot;alice&quot;</span><span class="op">,</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">description</span><span class="op">:</span> <span class="st">&quot;A helpful assistant&quot;</span><span class="op">,</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">settings</span><span class="op">:</span> { <span class="dt">theme</span><span class="op">:</span> <span class="st">&quot;light&quot;</span> }</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><strong>SQL SELECT:</strong></p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> users <span class="kw">WHERE</span> name <span class="op">=</span> <span class="st">&#39;alice&#39;</span>;</span></code></pre></div>
+<p><strong>MCP-AQL:</strong></p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;get_resource&quot;</span><span class="op">,</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">params</span><span class="op">:</span> {</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">resource_type</span><span class="op">:</span> <span class="st">&quot;user&quot;</span><span class="op">,</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">resource_id</span><span class="op">:</span> <span class="st">&quot;alice&quot;</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><strong>SQL UPDATE:</strong></p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="kw">UPDATE</span> users</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SET</span> description <span class="op">=</span> <span class="st">&#39;Updated description&#39;</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> name <span class="op">=</span> <span class="st">&#39;alice&#39;</span>;</span></code></pre></div>
+<p><strong>MCP-AQL:</strong></p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;update_resource&quot;</span><span class="op">,</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">params</span><span class="op">:</span> {</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">resource_id</span><span class="op">:</span> <span class="st">&quot;alice&quot;</span><span class="op">,</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">input</span><span class="op">:</span> { <span class="dt">description</span><span class="op">:</span> <span class="st">&quot;Updated description&quot;</span> }</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><strong>SQL SEARCH:</strong></p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> users</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> description <span class="kw">LIKE</span> <span class="st">&#39;%creative%&#39;</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>   <span class="kw">OR</span> settings <span class="kw">LIKE</span> <span class="st">&#39;%creative%&#39;</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="kw">LIMIT</span> <span class="dv">10</span>;</span></code></pre></div>
+<p><strong>MCP-AQL:</strong></p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;search&quot;</span><span class="op">,</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">params</span><span class="op">:</span> {</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">query</span><span class="op">:</span> <span class="st">&quot;creative&quot;</span><span class="op">,</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">scope</span><span class="op">:</span> <span class="st">&quot;local&quot;</span><span class="op">,</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">type</span><span class="op">:</span> <span class="st">&quot;user&quot;</span><span class="op">,</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">limit</span><span class="op">:</span> <span class="dv">10</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="schema-discovery">Schema Discovery</h3>
+<table>
+<thead>
+<tr>
+<th>SQL</th>
+<th>MCP-AQL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>DESCRIBE users</code></td>
+<td><code>introspect</code> with <code>query: "types"</code></td>
+</tr>
+<tr>
+<td><code>SHOW TABLES</code></td>
+<td><code>introspect</code> with <code>query: "operations"</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="key-differences-from-sql">Key Differences from SQL</h3>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>SQL</th>
+<th>MCP-AQL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Query Language</strong></td>
+<td>Declarative SQL</td>
+<td>Structured JSON</td>
+</tr>
+<tr>
+<td><strong>Joins</strong></td>
+<td>Complex multi-table joins</td>
+<td>Resource relationships via handlers</td>
+</tr>
+<tr>
+<td><strong>Transactions</strong></td>
+<td>BEGIN/COMMIT/ROLLBACK</td>
+<td>Per-operation atomicity</td>
+</tr>
+<tr>
+<td><strong>Indexes</strong></td>
+<td>User-defined CREATE INDEX</td>
+<td>Managed by server</td>
+</tr>
+<tr>
+<td><strong>Stored Procedures</strong></td>
+<td>User-defined functions</td>
+<td>Agent execution</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="for-classic-mcp-users">For Classic MCP Users</h2>
+<p>This section helps developers migrating from discrete MCP tool interfaces to MCP-AQL understand the consolidation benefits.</p>
+<h3 id="before-many-discrete-tools">Before: Many Discrete Tools</h3>
+<p>Traditional MCP servers expose each operation as a separate tool:</p>
+<pre><code>create_user             delete_user             list_users
+create_post             delete_post             list_posts
+create_comment          delete_comment          list_comments
+get_user                edit_user               search_users
+get_post                edit_post               search_posts
+...and more (potentially 40+ tools)</code></pre>
+<p><strong>Token cost:</strong> ~30,000 tokens for tool registrations (depending on tool count)</p>
+<h3 id="after-5-crude-endpoints">After: 5 CRUDE Endpoints</h3>
+<p>MCP-AQL consolidates into 5 semantic endpoints:</p>
+<pre><code>mcp_aql_create  - CREATE operations (create, import, activate, add entry)
+mcp_aql_read    - READ operations (list, get, search, introspect)
+mcp_aql_update  - UPDATE operations (edit)
+mcp_aql_delete  - DELETE operations (delete, clear)
+mcp_aql_execute - EXECUTE operations (execute workflows, update state)</code></pre>
+<p><strong>Token cost by mode:</strong> | Mode | Token Cost | Reduction | |------|------------|-----------| | CRUDE (5 endpoints) | ~4,300 | ~85% | | Single (1 endpoint) | ~1,100 | ~96% |</p>
+<h3 id="migration-examples">Migration Examples</h3>
+<p><strong>Before (Classic MCP):</strong></p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Tool: create_user</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;alice&quot;</span><span class="op">,</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">description</span><span class="op">:</span> <span class="st">&quot;A helpful assistant&quot;</span><span class="op">,</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">settings</span><span class="op">:</span> { <span class="dt">theme</span><span class="op">:</span> <span class="st">&quot;light&quot;</span> }</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><strong>After (MCP-AQL):</strong></p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Endpoint: mcp_aql_create</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;create_resource&quot;</span><span class="op">,</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">params</span><span class="op">:</span> {</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">resource_type</span><span class="op">:</span> <span class="st">&quot;user&quot;</span><span class="op">,</span></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">resource_id</span><span class="op">:</span> <span class="st">&quot;alice&quot;</span><span class="op">,</span></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">description</span><span class="op">:</span> <span class="st">&quot;A helpful assistant&quot;</span><span class="op">,</span></span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">settings</span><span class="op">:</span> { <span class="dt">theme</span><span class="op">:</span> <span class="st">&quot;light&quot;</span> }</span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><strong>Before (Classic MCP):</strong></p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Tool: list_users</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>{ <span class="dt">page</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span> <span class="dt">pageSize</span><span class="op">:</span> <span class="dv">10</span> }</span></code></pre></div>
+<p><strong>After (MCP-AQL):</strong></p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Endpoint: mcp_aql_read</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;list_resources&quot;</span><span class="op">,</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">params</span><span class="op">:</span> {</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">resource_type</span><span class="op">:</span> <span class="st">&quot;user&quot;</span><span class="op">,</span></span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">page</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span></span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">pageSize</span><span class="op">:</span> <span class="dv">10</span></span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="tool-to-operation-mapping">Tool to Operation Mapping</h3>
+<table>
+<thead>
+<tr>
+<th>Classic Tool Pattern</th>
+<th>MCP-AQL Operation Pattern</th>
+<th>Endpoint</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>create_&lt;type&gt;</code></td>
+<td><code>create_resource</code> + <code>resource_type</code></td>
+<td>CREATE</td>
+</tr>
+<tr>
+<td><code>list_&lt;type&gt;s</code></td>
+<td><code>list_resources</code> + <code>resource_type</code></td>
+<td>READ</td>
+</tr>
+<tr>
+<td><code>get_&lt;type&gt;</code></td>
+<td><code>get_resource</code> + <code>resource_type</code></td>
+<td>READ</td>
+</tr>
+<tr>
+<td><code>edit_&lt;type&gt;</code></td>
+<td><code>update_resource</code> + <code>resource_type</code></td>
+<td>UPDATE</td>
+</tr>
+<tr>
+<td><code>delete_&lt;type&gt;</code></td>
+<td><code>delete_resource</code> + <code>resource_type</code></td>
+<td>DELETE</td>
+</tr>
+<tr>
+<td><code>search_&lt;type&gt;s</code></td>
+<td><code>search</code></td>
+<td>READ</td>
+</tr>
+<tr>
+<td><code>execute_&lt;workflow&gt;</code></td>
+<td><code>execute_workflow</code></td>
+<td>EXECUTE</td>
+</tr>
+</tbody>
+</table>
+<h3 id="permission-model-changes">Permission Model Changes</h3>
+<p><strong>Before:</strong> Each tool had implicit permissions based on naming convention.</p>
+<p><strong>After:</strong> Explicit CRUDE endpoint permissions:</p>
+<table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>readOnly</th>
+<th>destructive</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CREATE</td>
+<td>false</td>
+<td>false</td>
+<td>Additive, non-destructive</td>
+</tr>
+<tr>
+<td>READ</td>
+<td>true</td>
+<td>false</td>
+<td>Safe, read-only</td>
+</tr>
+<tr>
+<td>UPDATE</td>
+<td>false</td>
+<td>true</td>
+<td>Modifying</td>
+</tr>
+<tr>
+<td>DELETE</td>
+<td>false</td>
+<td>true</td>
+<td>Destructive</td>
+</tr>
+<tr>
+<td>EXECUTE</td>
+<td>false</td>
+<td>true</td>
+<td>Potentially destructive, non-idempotent</td>
+</tr>
+</tbody>
+</table>
+<h3 id="discovery-changes">Discovery Changes</h3>
+<p><strong>Before:</strong> LLMs parsed all 40+ tool schemas upfront (~30,000 tokens).</p>
+<p><strong>After:</strong> LLMs use introspection for on-demand discovery:</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Step 1: Quick discovery (~50 tokens)</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>{ <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;introspect&quot;</span><span class="op">,</span> <span class="dt">params</span><span class="op">:</span> { <span class="dt">query</span><span class="op">:</span> <span class="st">&quot;operations&quot;</span> } }</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="co">// Step 2: Get details for relevant operation (~100 tokens)</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>{ <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;introspect&quot;</span><span class="op">,</span> <span class="dt">params</span><span class="op">:</span> { <span class="dt">query</span><span class="op">:</span> <span class="st">&quot;operations&quot;</span><span class="op">,</span> <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;create_resource&quot;</span> } }</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a><span class="co">// Step 3: Use the operation</span></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>{ <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;create_resource&quot;</span><span class="op">,</span> <span class="op">...</span> }</span></code></pre></div>
+<hr />
+<h2 id="comprehensive-concept-mapping">Comprehensive Concept Mapping</h2>
+<p>This table maps concepts across all compared protocols.</p>
+<table>
+<thead>
+<tr>
+<th>Concept</th>
+<th>GraphQL</th>
+<th>MongoDB</th>
+<th>REST</th>
+<th>SQL</th>
+<th>MCP-AQL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Namespace</strong></td>
+<td>Schema</td>
+<td>Database</td>
+<td>Base URL</td>
+<td>Schema</td>
+<td>Implementation-defined</td>
+</tr>
+<tr>
+<td><strong>Type/Entity</strong></td>
+<td>Type</td>
+<td>Collection</td>
+<td>Resource</td>
+<td>Table</td>
+<td>Resource type param</td>
+</tr>
+<tr>
+<td><strong>Instance</strong></td>
+<td>Object</td>
+<td>Document</td>
+<td>Resource instance</td>
+<td>Row</td>
+<td>Resource</td>
+</tr>
+<tr>
+<td><strong>Identifier</strong></td>
+<td>ID field</td>
+<td><code>_id</code></td>
+<td>Path param</td>
+<td>Primary key</td>
+<td>Resource ID</td>
+</tr>
+<tr>
+<td><strong>Create</strong></td>
+<td>Mutation</td>
+<td><code>insertOne</code></td>
+<td>POST</td>
+<td>INSERT</td>
+<td><code>create_*</code> operation</td>
+</tr>
+<tr>
+<td><strong>Read One</strong></td>
+<td>Query</td>
+<td><code>findOne</code></td>
+<td>GET /:id</td>
+<td>SELECT ... WHERE</td>
+<td><code>get_*</code> operation</td>
+</tr>
+<tr>
+<td><strong>Read Many</strong></td>
+<td>Query</td>
+<td><code>find</code></td>
+<td>GET /</td>
+<td>SELECT *</td>
+<td><code>list_*</code> operation</td>
+</tr>
+<tr>
+<td><strong>Update</strong></td>
+<td>Mutation</td>
+<td><code>updateOne</code></td>
+<td>PUT/PATCH</td>
+<td>UPDATE</td>
+<td><code>update_*</code> operation</td>
+</tr>
+<tr>
+<td><strong>Delete</strong></td>
+<td>Mutation</td>
+<td><code>deleteOne</code></td>
+<td>DELETE</td>
+<td>DELETE</td>
+<td><code>delete_*</code> operation</td>
+</tr>
+<tr>
+<td><strong>Search</strong></td>
+<td>Query</td>
+<td><code>find</code>+text</td>
+<td>GET /search</td>
+<td>LIKE/FTS</td>
+<td><code>search</code> operation</td>
+</tr>
+<tr>
+<td><strong>Schema Discovery</strong></td>
+<td><code>__schema</code></td>
+<td><code>getCollectionInfos</code></td>
+<td>OpenAPI</td>
+<td>DESCRIBE</td>
+<td><code>introspect</code></td>
+</tr>
+<tr>
+<td><strong>Parameters</strong></td>
+<td>Variables</td>
+<td>Filter/options</td>
+<td>Query/body</td>
+<td>WHERE/VALUES</td>
+<td><code>params</code> object</td>
+</tr>
+<tr>
+<td><strong>Response</strong></td>
+<td><code>{ data, errors }</code></td>
+<td>Document</td>
+<td>JSON body</td>
+<td>Result set</td>
+<td><code>{ success, data/error }</code></td>
+</tr>
+<tr>
+<td><strong>Error</strong></td>
+<td><code>errors</code> array</td>
+<td>Exception</td>
+<td>HTTP status</td>
+<td>SQLSTATE</td>
+<td><code>{ success: false, error }</code></td>
+</tr>
+<tr>
+<td><strong>Batch</strong></td>
+<td>N/A (single)</td>
+<td><code>insertMany</code></td>
+<td>Bulk endpoint</td>
+<td>Transaction</td>
+<td><code>operations</code> array</td>
+</tr>
+<tr>
+<td><strong>Pagination</strong></td>
+<td><code>first/after</code></td>
+<td><code>skip/limit</code></td>
+<td>Query params</td>
+<td>OFFSET/LIMIT</td>
+<td><code>page/pageSize</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="code-examples-same-operation-across-protocols">Code Examples: Same Operation Across Protocols</h2>
+<h3 id="example-1-create-a-resource">Example 1: Create a Resource</h3>
+<p><strong>GraphQL:</strong></p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode graphql"><code class="sourceCode graphql"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="kw">mutation</span> CreateUser(<span class="va">$input</span>: UserInput!) {</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  createUser(<span class="kw">input</span>: <span class="va">$input</span>) {</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>    id</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>    name</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>    email</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Variables</span></span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;input&quot;</span>: {</span>
+<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;name&quot;</span>: <span class="st">&quot;CreativeWriter&quot;</span>,</span>
+<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;email&quot;</span>: <span class="st">&quot;writer@example.com&quot;</span>,</span>
+<span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;bio&quot;</span>: <span class="st">&quot;A creative writing assistant&quot;</span></span>
+<span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb35-16"><a href="#cb35-16" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><strong>MongoDB:</strong></p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>db<span class="op">.</span><span class="at">users</span><span class="op">.</span><span class="fu">insertOne</span>({</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;CreativeWriter&quot;</span><span class="op">,</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">email</span><span class="op">:</span> <span class="st">&quot;writer@example.com&quot;</span><span class="op">,</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">bio</span><span class="op">:</span> <span class="st">&quot;A creative writing assistant&quot;</span><span class="op">,</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">created_at</span><span class="op">:</span> <span class="kw">new</span> <span class="bu">Date</span>()</span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div>
+<p><strong>REST:</strong></p>
+<pre class="http"><code>POST /api/users HTTP/1.1
+Content-Type: application/json
+
+{
+  &quot;name&quot;: &quot;CreativeWriter&quot;,
+  &quot;description&quot;: &quot;A creative writing assistant&quot;,
+  &quot;settings&quot;: { &quot;expertise&quot;: &quot;storytelling, poetry, imaginative content&quot; }
+}</code></pre>
+<p><strong>SQL:</strong></p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> users (name, description, settings, created_at)</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="kw">VALUES</span> (</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">&#39;CreativeWriter&#39;</span>,</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">&#39;A creative writing assistant&#39;</span>,</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">&#39;{&quot;expertise&quot;: &quot;storytelling, poetry, imaginative content&quot;}&#39;</span>,</span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>  NOW()</span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>);</span></code></pre></div>
+<p><strong>Classic MCP:</strong></p>
+<div class="sourceCode" id="cb39"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Tool: create_user</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;CreativeWriter&quot;</span><span class="op">,</span></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">description</span><span class="op">:</span> <span class="st">&quot;A creative writing assistant&quot;</span><span class="op">,</span></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">settings</span><span class="op">:</span> { <span class="dt">expertise</span><span class="op">:</span> <span class="st">&quot;storytelling, poetry, imaginative content&quot;</span> }</span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><strong>MCP-AQL:</strong></p>
+<div class="sourceCode" id="cb40"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Endpoint: mcp_aql_create</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;create_resource&quot;</span><span class="op">,</span></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">params</span><span class="op">:</span> {</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">resource_type</span><span class="op">:</span> <span class="st">&quot;user&quot;</span><span class="op">,</span></span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">resource_id</span><span class="op">:</span> <span class="st">&quot;CreativeWriter&quot;</span><span class="op">,</span></span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">description</span><span class="op">:</span> <span class="st">&quot;A creative writing assistant&quot;</span><span class="op">,</span></span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">settings</span><span class="op">:</span> { <span class="dt">expertise</span><span class="op">:</span> <span class="st">&quot;storytelling, poetry, imaginative content&quot;</span> }</span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="example-2-search-for-resources">Example 2: Search for Resources</h3>
+<p><strong>GraphQL:</strong></p>
+<div class="sourceCode" id="cb41"><pre class="sourceCode graphql"><code class="sourceCode graphql"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="kw">query</span> SearchUsers(<span class="va">$query</span>: <span class="dt">String</span>!, <span class="va">$limit</span>: <span class="dt">Int</span>) {</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  searchUsers(<span class="kw">query</span>: <span class="va">$query</span>, limit: <span class="va">$limit</span>) {</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>    results {</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>      name</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>      description</span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>    total</span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Variables</span></span>
+<span id="cb41-12"><a href="#cb41-12" aria-hidden="true" tabindex="-1"></a>{ <span class="st">&quot;query&quot;</span>: <span class="st">&quot;creative writing&quot;</span>, <span class="st">&quot;limit&quot;</span>: <span class="dv">10</span> }</span></code></pre></div>
+<p><strong>MongoDB:</strong></p>
+<div class="sourceCode" id="cb42"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>db<span class="op">.</span><span class="at">users</span><span class="op">.</span><span class="fu">find</span>({</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">$text</span><span class="op">:</span> { <span class="dt">$search</span><span class="op">:</span> <span class="st">&quot;creative writing&quot;</span> }</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>})<span class="op">.</span><span class="fu">limit</span>(<span class="dv">10</span>)<span class="op">.</span><span class="fu">toArray</span>()<span class="op">;</span></span></code></pre></div>
+<p><strong>REST:</strong></p>
+<pre class="http"><code>GET /api/users/search?q=creative+writing&amp;limit=10 HTTP/1.1</code></pre>
+<p><strong>SQL:</strong></p>
+<div class="sourceCode" id="cb44"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> users</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> description <span class="kw">LIKE</span> <span class="st">&#39;%creative%&#39;</span></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>   <span class="kw">OR</span> description <span class="kw">LIKE</span> <span class="st">&#39;%writing%&#39;</span></span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a><span class="kw">LIMIT</span> <span class="dv">10</span>;</span></code></pre></div>
+<p><strong>Classic MCP:</strong></p>
+<div class="sourceCode" id="cb45"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Tool: search_users</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">query</span><span class="op">:</span> <span class="st">&quot;creative writing&quot;</span><span class="op">,</span></span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">type</span><span class="op">:</span> <span class="st">&quot;user&quot;</span><span class="op">,</span></span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">limit</span><span class="op">:</span> <span class="dv">10</span></span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><strong>MCP-AQL:</strong></p>
+<div class="sourceCode" id="cb46"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Endpoint: mcp_aql_read</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;search&quot;</span><span class="op">,</span></span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">params</span><span class="op">:</span> {</span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">query</span><span class="op">:</span> <span class="st">&quot;creative writing&quot;</span><span class="op">,</span></span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">type</span><span class="op">:</span> <span class="st">&quot;user&quot;</span><span class="op">,</span></span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">scope</span><span class="op">:</span> <span class="st">&quot;local&quot;</span><span class="op">,</span></span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">limit</span><span class="op">:</span> <span class="dv">10</span></span>
+<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb46-10"><a href="#cb46-10" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="example-3-update-a-resource">Example 3: Update a Resource</h3>
+<p><strong>GraphQL:</strong></p>
+<div class="sourceCode" id="cb47"><pre class="sourceCode graphql"><code class="sourceCode graphql"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="kw">mutation</span> UpdateUser(<span class="va">$name</span>: <span class="dt">String</span>!, <span class="va">$input</span>: UpdateUserInput!) {</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  updateUser(name: <span class="va">$name</span>, <span class="kw">input</span>: <span class="va">$input</span>) {</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>    name</span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>    description</span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Variables</span></span>
+<span id="cb47-9"><a href="#cb47-9" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb47-10"><a href="#cb47-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;name&quot;</span>: <span class="st">&quot;CreativeWriter&quot;</span>,</span>
+<span id="cb47-11"><a href="#cb47-11" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;input&quot;</span>: {</span>
+<span id="cb47-12"><a href="#cb47-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;description&quot;</span>: <span class="st">&quot;An enhanced creative writing assistant with poetry expertise&quot;</span></span>
+<span id="cb47-13"><a href="#cb47-13" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb47-14"><a href="#cb47-14" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><strong>MongoDB:</strong></p>
+<div class="sourceCode" id="cb48"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>db<span class="op">.</span><span class="at">users</span><span class="op">.</span><span class="fu">updateOne</span>(</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>  { <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;CreativeWriter&quot;</span> }<span class="op">,</span></span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>  { <span class="dt">$set</span><span class="op">:</span> { <span class="dt">description</span><span class="op">:</span> <span class="st">&quot;An enhanced creative writing assistant with poetry expertise&quot;</span> } }</span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>)<span class="op">;</span></span></code></pre></div>
+<p><strong>REST:</strong></p>
+<pre class="http"><code>PATCH /api/users/CreativeWriter HTTP/1.1
+Content-Type: application/json
+
+{
+  &quot;description&quot;: &quot;An enhanced creative writing assistant with poetry expertise&quot;
+}</code></pre>
+<p><strong>SQL:</strong></p>
+<div class="sourceCode" id="cb50"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="kw">UPDATE</span> users</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SET</span> description <span class="op">=</span> <span class="st">&#39;An enhanced creative writing assistant with poetry expertise&#39;</span></span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> name <span class="op">=</span> <span class="st">&#39;CreativeWriter&#39;</span>;</span></code></pre></div>
+<p><strong>Classic MCP:</strong></p>
+<div class="sourceCode" id="cb51"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Tool: edit_user</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;CreativeWriter&quot;</span><span class="op">,</span></span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">description</span><span class="op">:</span> <span class="st">&quot;An enhanced creative writing assistant with poetry expertise&quot;</span></span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><strong>MCP-AQL:</strong></p>
+<div class="sourceCode" id="cb52"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Endpoint: mcp_aql_update</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;update_resource&quot;</span><span class="op">,</span></span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">params</span><span class="op">:</span> {</span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">resource_id</span><span class="op">:</span> <span class="st">&quot;CreativeWriter&quot;</span><span class="op">,</span></span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">input</span><span class="op">:</span> {</span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">description</span><span class="op">:</span> <span class="st">&quot;An enhanced creative writing assistant with poetry expertise&quot;</span></span>
+<span id="cb52-8"><a href="#cb52-8" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb52-9"><a href="#cb52-9" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb52-10"><a href="#cb52-10" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="example-4-discover-available-operations">Example 4: Discover Available Operations</h3>
+<p><strong>GraphQL:</strong></p>
+<div class="sourceCode" id="cb53"><pre class="sourceCode graphql"><code class="sourceCode graphql"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>  __schema {</span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>    mutationType {</span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>      fields {</span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>        name</span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>        description</span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb53-9"><a href="#cb53-9" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb53-10"><a href="#cb53-10" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><strong>MongoDB:</strong></p>
+<div class="sourceCode" id="cb54"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co">// No direct equivalent - typically use documentation</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>db<span class="op">.</span><span class="fu">getCollectionInfos</span>()<span class="op">;</span></span></code></pre></div>
+<p><strong>REST:</strong></p>
+<pre class="http"><code>GET /api/openapi.json HTTP/1.1
+# or
+GET /api/swagger.json HTTP/1.1</code></pre>
+<p><strong>SQL:</strong></p>
+<div class="sourceCode" id="cb56"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>SHOW <span class="kw">TABLES</span>;</span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>DESCRIBE users;</span></code></pre></div>
+<p><strong>Classic MCP:</strong></p>
+<pre><code># No dedicated operation - parsed from tool schemas
+# (Consumed ~30,000 tokens for all 40+ tools)</code></pre>
+<p><strong>MCP-AQL:</strong></p>
+<div class="sourceCode" id="cb58"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Endpoint: mcp_aql_read</span></span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a><span class="co">// List all operations</span></span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>{ <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;introspect&quot;</span><span class="op">,</span> <span class="dt">params</span><span class="op">:</span> { <span class="dt">query</span><span class="op">:</span> <span class="st">&quot;operations&quot;</span> } }</span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a><span class="co">// Get details for specific operation</span></span>
+<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a>{ <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;introspect&quot;</span><span class="op">,</span> <span class="dt">params</span><span class="op">:</span> { <span class="dt">query</span><span class="op">:</span> <span class="st">&quot;operations&quot;</span><span class="op">,</span> <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;update_resource&quot;</span> } }</span>
+<span id="cb58-7"><a href="#cb58-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-8"><a href="#cb58-8" aria-hidden="true" tabindex="-1"></a><span class="co">// List available types</span></span>
+<span id="cb58-9"><a href="#cb58-9" aria-hidden="true" tabindex="-1"></a>{ <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;introspect&quot;</span><span class="op">,</span> <span class="dt">params</span><span class="op">:</span> { <span class="dt">query</span><span class="op">:</span> <span class="st">&quot;types&quot;</span> } }</span></code></pre></div>
+<hr />
+<h2 id="summary">Summary</h2>
+<p>MCP-AQL combines the best patterns from established protocols:</p>
+<ul>
+<li><strong>From GraphQL:</strong> Introspection, typed operations, nested input objects, <strong>field selection</strong></li>
+<li><strong>From MongoDB:</strong> Flexible document operations, simple query patterns</li>
+<li><strong>From REST:</strong> Semantic endpoint grouping, clear resource addressing</li>
+<li><strong>From SQL:</strong> Structured CRUD operations, schema awareness</li>
+</ul>
+<p>The result is a protocol optimized for <strong>LLM token efficiency</strong> while remaining <strong>human-readable</strong> and <strong>developer-friendly</strong>.</p>
+<h3 id="token-efficiency-summary">Token Efficiency Summary</h3>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Token Savings</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>CRUDE Consolidation</strong></td>
+<td>~85-96%</td>
+<td>Semantic endpoints instead of discrete tools</td>
+</tr>
+<tr>
+<td><strong>On-Demand Introspection</strong></td>
+<td>~95%</td>
+<td>Query schemas as needed vs. upfront parsing</td>
+</tr>
+<tr>
+<td><strong>Field Selection</strong></td>
+<td>~70-90%</td>
+<td>Return only requested fields in responses</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="related-documentation">Related Documentation</h2>
+<ul>
+<li><a href="https://github.com/MCPAQL/spec/blob/main/docs/reference/overview.md">Overview</a> - Architecture overview</li>
+<li><a href="https://github.com/MCPAQL/spec/blob/main/docs/reference/operations.md">Operations</a> - Complete operation reference</li>
+<li><a href="https://github.com/MCPAQL/spec/blob/main/docs/reference/introspection.md">Introspection</a> - Discovery system</li>
+<li><a href="https://github.com/MCPAQL/spec/blob/main/docs/reference/design-decisions.md">Design Decisions</a> - Design rationale</li>
+</ul>
+
+          </div>
+        </section>
+        <nav class="page-nav" aria-label="Page navigation">
+  <a class="page-nav-link prev" href="../features/warnings.html">
+    <span class="page-nav-eyebrow">Previous spec page</span>
+    <strong class="page-nav-label">Warnings Array Specification</strong>
+  </a>
+  <a class="page-nav-link next" href="README.html">
+    <span class="page-nav-eyebrow">Next spec page</span>
+    <strong class="page-nav-label">Developer Guides</strong>
+  </a>
+</nav>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.</p>
+      <div class="footer-links">
+        <a href="../../docs/index.html">Docs Library</a>
+        <a href="../index.html">Repo-Synced Spec</a>
+        <a href="https://github.com/MCPAQL">MCPAQL Organization</a>
+        <a href="https://dollhouseresearch.com">Dollhouse Research</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../js/search.js"></script>
+</body>
+</html>

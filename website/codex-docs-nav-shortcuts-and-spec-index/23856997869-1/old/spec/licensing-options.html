@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="This document is a discussion aid for deciding how to license the MCP-AQL ecosystem (spec + schema artifacts + tooling + generated adapters + brand/name), while meeting these goals:">
+  <title>MCP-AQL Spec | MCP-AQL Licensing Options (Working Notes)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <a class="logo" href="../index.html"><span class="logo-mark"></span>MCP-AQL</a>
+        <ul class="nav-links">
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="../docs/index.html">Docs</a></li>
+          <li><a href="../launch-checklist.html">Launch Checklist</a></li>
+          <li><a href="../apis/mcp-server.html">Adapter Patterns</a></li>
+        </ul>
+        <form class="site-search" data-search-form data-index-url="../data/search-index.json" role="search">
+          <label class="sr-only" for="site-search-input">Search MCP-AQL docs</label>
+          <input id="site-search-input" data-search-input type="search" placeholder="Search MCP-AQL docs, spec pages, and adapter patterns...">
+          <span class="search-count" data-search-count></span>
+          <ul class="search-results" data-search-results hidden></ul>
+        </form>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container docs-shell">
+      <aside class="docs-side">
+        <h2>Repo-Synced Spec</h2>
+        <p class="docs-side-note">Generated from <code>MCPAQL/spec</code> so the website carries the deeper protocol material too.</p>
+        <div class="docs-side-group">
+  <h3>Core</h3>
+  <ul><li><a href="conformance-testing.html">MCP-AQL Conformance Testing Specification</a></li><li><a href="crude-pattern.html">MCP-AQL CRUDE Pattern Specification</a></li><li><a href="endpoint-modes.html">MCP-AQL Endpoint Modes Specification</a></li><li><a href="error-codes.html">Structured Error Codes Specification</a></li><li><a href="introspection.html">MCP-AQL Introspection Specification</a></li><li><a class="current" aria-current="page" href="licensing-options.html">MCP-AQL Licensing Options (Working Notes)</a></li><li><a href="mcp-integration.html">MCP Integration Specification</a></li><li><a href="operations.html">MCP-AQL Operations Specification</a></li><li><a href="overview.html">MCP-AQL Protocol Overview</a></li><li><a href="plugin-contracts.html">Plugin Interface Contracts</a></li><li><a href="README.html">MCP-AQL Specification Documentation</a></li><li><a href="repo/README.html">MCP-AQL Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Versions</h3>
+  <ul><li><a href="versions/v1.0.0-draft.html">MCP-AQL Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Adapter</h3>
+  <ul><li><a href="adapter/danger-levels.html">Dangerous Operation Classification Specification</a></li><li><a href="adapter/discovery-bundle.html">MCP Server Discovery Bundle</a></li><li><a href="adapter/element-type.html">Adapter Element Type Specification</a></li><li><a href="adapter/generator.html">Adapter Generator Specification</a></li><li><a href="adapter/rate-limiting.html">Rate Limiting and Quota Management Specification</a></li><li><a href="adapter/trust-levels.html">Trust Levels Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Security</h3>
+  <ul><li><a href="security/confirmation-tokens.html">Confirmation Token Specification</a></li><li><a href="security/execution-safety-loop.html">Execution Safety Loop Specification</a></li><li><a href="security/gatekeeper.html">Security Model: Gatekeeper Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Features</h3>
+  <ul><li><a href="features/field-selection.html">Field Selection Specification</a></li><li><a href="features/pagination.html">Cursor-Based Pagination Specification</a></li><li><a href="features/warnings.html">Warnings Array Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Guides</h3>
+  <ul><li><a href="guides/protocol-comparison.html">Protocol Comparison Guide</a></li><li><a href="guides/README.html">Developer Guides</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Process</h3>
+  <ul><li><a href="process/breaking-changes.html">MCP-AQL Breaking Change Policy</a></li><li><a href="process/preliminary-public-launch-checklist.html">Preliminary Public Launch Checklist</a></li><li><a href="process/rfc-process.html">RFC Process for MCP-AQL Specification</a></li><li><a href="process/versioning.html">Versioning Strategy</a></li><li><a href="repo/CHANGELOG.html">Changelog</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Architecture</h3>
+  <ul><li><a href="architecture/README.html">Architecture Documentation</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Research</h3>
+  <ul><li><a href="research/mcp-vs-mcpaql-vs-a2a.html">Protocol Landscape: MCP vs MCP-AQL vs A2A</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Reference</h3>
+  <ul><li><a href="reference/README.html">Reference Documentation</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>ADRs</h3>
+  <ul><li><a href="adr/ADR-001-crude-pattern.html">ADR-001: CRUDE Pattern (Extending CRUD with Execute)</a></li><li><a href="adr/ADR-002-graphql-style-input.html">ADR-002: GraphQL-Style Input Objects for Updates</a></li><li><a href="adr/ADR-003-snake-case-parameters.html">ADR-003: snake_case Parameter Convention</a></li><li><a href="adr/ADR-004-schema-driven-operations.html">ADR-004: Schema-Driven Operation Definitions</a></li><li><a href="adr/ADR-005-introspection-system.html">ADR-005: GraphQL-Style Introspection System</a></li><li><a href="adr/ADR-006-discriminated-responses.html">ADR-006: Discriminated Response Format</a></li><li><a href="adr/index.html">Architecture Decision Records</a></li><li><a href="adr/README.html">Architecture Decision Records</a></li></ul>
+</div>
+      </aside>
+
+      <article class="docs-main">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+          <ol>
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="index.html">Full Spec</a></li>
+            <li><span class="current">MCP-AQL Licensing Options (Working Notes)</span></li>
+          </ol>
+        </nav>
+        <section class="hero docs-hero">
+          <div class="hero-inner">
+            <span class="status-pill">REPO-SYNCED SPEC DOC</span>
+            <h1>MCP-AQL Licensing Options (Working Notes)</h1>
+            <p class="lede">This document is a discussion aid for deciding how to license the MCP-AQL ecosystem (spec + schema artifacts + tooling + generated adapters + brand/name), while meeting these goals:</p>
+            <div class="spec-meta"><span class="state-chip live">Support document</span></div>
+            <p class="spec-source">Source: <a href="https://github.com/MCPAQL/spec/blob/main/docs/licensing-options.md">spec/docs/licensing-options.md</a></p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="https://github.com/MCPAQL/spec/blob/main/docs/licensing-options.md">Open Source Markdown</a>
+              <a class="btn btn-secondary" href="index.html">Browse Full Spec Reference</a>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <div class="card spec-prose">
+            <p>This document is a discussion aid for deciding how to license the MCP-AQL ecosystem (spec + schema artifacts + tooling + generated adapters + brand/name), while meeting these goals:</p>
+<ol type="1">
+<li><strong>Attribution is required</strong> (credit matters).</li>
+<li><strong>Improvements flow back</strong> to the ecosystem when people modify/deploy your work.</li>
+<li><strong>Commercial option exists</strong> so organizations that won’t comply can still use MCP‑AQL under negotiated terms (including potentially $0 tiers under a revenue threshold).</li>
+</ol>
+<p>This is not legal advice. It’s a practical “what usually works in open source licensing” map to support a conversation with counsel and collaborators.</p>
+<hr />
+<h2 id="current-mcp-aql-decisions-as-implemented">Current MCP-AQL Decisions (As Implemented)</h2>
+<p>This document contains options and analysis, but MCP-AQL also has <strong>current, implemented choices</strong> in this repo tree. If you are an LLM or contributor implementing policy, treat this section (and Section <strong>17</strong>) as authoritative.</p>
+<ul>
+<li><strong>Spec repository split licensing</strong>:
+<ul>
+<li>Spec docs/prose: <strong>CC BY 4.0</strong> (<code>spec/LICENSE-DOCS</code>) with scope rules in <code>spec/LICENSING.md</code>.</li>
+<li>Artifacts consumed by tooling (schemas/tests/scripts): <strong>AGPL-3.0</strong> (<code>spec/LICENSE</code>).</li>
+<li>Spec version source of truth: <code>spec/SPEC_VERSION</code>.</li>
+<li>Exact path-based split: see <code>spec/LICENSING.md</code>.</li>
+</ul></li>
+<li><strong>Code/tooling repos</strong>: <strong>AGPL-3.0</strong> (<code>LICENSE</code>) with commercial licensing available (<code>COMMERCIAL-LICENSE.md</code>).</li>
+<li><strong>Commercial license policy (documented)</strong>:
+<ul>
+<li>Self-serve free commercial license option for organizations under <strong>$1,000,000 USD annual revenue</strong> via self-certification (<code>COMMERCIAL-LICENSE.md</code>).</li>
+<li>Commercial license terms include restrictions such as <strong>no reverse engineering</strong> and <strong>no competitive re-implementation</strong> (<code>spec/COMMERCIAL-LICENSE-TERMS.md</code>).</li>
+</ul></li>
+<li><strong>Generator output policy (adopted)</strong>:
+<ul>
+<li><strong>No output exception</strong> (see Section <strong>17</strong> and <code>adapter-generator/OUTPUT-POLICY.md</code>).</li>
+<li>Generated adapters must emit provenance and include <code>NOTICE.md</code>, <code>COMMERCIAL-LICENSE.md</code>, and <code>MCPAQL-PROVENANCE.json</code> (Section <strong>17</strong>).</li>
+</ul></li>
+<li><strong>Attribution artifacts (present)</strong>: <code>NOTICE.md</code> and <code>CITATION.cff</code> exist across repos and name <strong>Mick Darling</strong>.</li>
+<li><strong>Trademarks</strong>: <code>spec/TRADEMARKS.md</code> (pointer copies in other repos).</li>
+<li><strong>CLA</strong>: <code>spec/CLA.md</code> (pointer copies in other repos).</li>
+</ul>
+<hr />
+<h2 id="1-what-are-the-things-you-can-licensecontrol">1) What are the “things” you can license/control?</h2>
+<p>You can only enforce terms against things you actually own (copyright/trademark), and only against parties doing acts the law regulates (copying, distributing, making derivatives, public performance/display, etc.).</p>
+<h3 id="high-level-ecosystem-flow-spec--tools--adapters">High-level ecosystem flow (spec → tools → adapters)</h3>
+<pre class="mermaid"><code>flowchart LR
+  subgraph Inputs
+    API[MCP server / API surface]
+    SPEC[&quot;MCP-AQL spec docs + artifacts&quot;]
+  end
+
+  subgraph Tooling[Tooling]
+    I[&quot;Interrogator discover endpoints&quot;]
+    S[&quot;Schema builder encode endpoints as schema&quot;]
+    C[&quot;Compiler / Adapter generator compile schema to adapter&quot;]
+  end
+
+  subgraph Output
+    A[&quot;Generated adapter MCP server + MCP client&quot;]
+    LLM[&quot;LLM / MCP client consumes MCP-AQL endpoints&quot;]
+  end
+
+  API --&gt; I
+  SPEC --&gt; S
+  I --&gt; S
+  S --&gt; C
+  C --&gt; A
+  A --&gt;|serves MCP-AQL| LLM
+  A --&gt;|calls upstream API| API</code></pre>
+<h3 id="assets-in-the-mcpaql-ecosystem">Assets in the MCP‑AQL ecosystem</h3>
+<ul>
+<li><strong>A. Spec documents</strong>: prose + diagrams + examples.</li>
+<li><strong>B. Schema artifacts</strong>: JSON Schema, grammar files, IDLs, test vectors, introspection snapshots.</li>
+<li><strong>C. Tooling code</strong>: interrogator, schema builder, compiler, adapter generator, conformance harness.</li>
+<li><strong>D. Runtime code</strong>: any libraries or shared runtime the adapter uses at execution time.</li>
+<li><strong>E. Generated adapter output</strong>: files produced by the compiler/generator.</li>
+<li><strong>F. The name/brand</strong>: “MCP‑AQL”, logos, compatibility marks (trademark).</li>
+</ul>
+<p>Each category behaves differently under common licenses.</p>
+<hr />
+<h2 id="2-the-three-legal-levers-that-match-your-three-goals">2) The three legal levers that match your three goals</h2>
+<h3 id="goal-attribution-is-required">Goal: “Attribution is required”</h3>
+<p>You can get attribution in a few different ways:</p>
+<ol type="1">
+<li><strong>Copyright notices</strong>: most open source licenses require preservation of copyright and license notices in source and redistributions. This is the baseline.</li>
+<li><strong>Dedicated attribution license for docs</strong>: Creative Commons licenses (e.g., <strong>CC BY 4.0</strong>) are designed for documents and have clear attribution requirements.</li>
+<li><strong>Trademark policy</strong>: this is the strongest tool for “if you claim compatibility / use our name/logo, you must do it correctly and with attribution, and you must not imply endorsement.”</li>
+</ol>
+<p>Practical note: trying to impose “marketing attribution” as a requirement <em>inside</em> AGPL/GPL via extra terms can backfire (risk of being treated as an additional restriction). Trademark is the cleanest way to govern the name; CC BY is the cleanest way to require doc attribution.</p>
+<h3 id="lever-map-which-tool-controls-what">Lever map: which tool controls what?</h3>
+<pre class="mermaid"><code>flowchart TB
+  A[&quot;Attribution / Credit&quot;] --&gt; N[&quot;NOTICE preservation copyright + license notices&quot;]
+  A --&gt; CC[&quot;CC BY for spec/docs explicit attribution&quot;]
+  A --&gt; TM[&quot;Trademark policy name + logo + compatibility claims&quot;]
+
+  B[&quot;Improvements flow back&quot;] --&gt; CP[&quot;Copyleft on code AGPL for tooling/runtime&quot;]
+  B --&gt; OUT[&quot;Generated output strategy output exception vs not&quot;]
+
+  C[&quot;Commercial option&quot;] --&gt; DL[&quot;Dual licensing AGPL + commercial contract&quot;]
+  C --&gt; REV[&quot;Revenue threshold best as contract/policy&quot;]</code></pre>
+<h3 id="goal-improvements-flow-back">Goal: “Improvements flow back”</h3>
+<p>Copyleft only forces sharing when someone uses <strong>your copyrighted work</strong> in a way that creates a derivative work and then distributes or deploys it (AGPL is strong for network deployment).</p>
+<ul>
+<li>Licensing the <strong>spec text</strong> under AGPL does <em>not</em> reliably force open-sourcing of independent implementations that merely follow the spec.</li>
+<li>Licensing the <strong>tooling/runtime code</strong> under <strong>AGPL</strong> is far more effective: if they modify and deploy your tooling/runtime as a network service, AGPL obligations trigger.</li>
+</ul>
+<h3 id="goal-commercial-option-exists">Goal: “Commercial option exists”</h3>
+<p>This is usually done via <strong>dual licensing</strong>:</p>
+<ul>
+<li>Default license: strong copyleft (often AGPL‑3.0).</li>
+<li>Alternative: commercial license with negotiated terms (no source release, private modifications allowed, attribution requirements defined by contract, etc.).</li>
+</ul>
+<p>Important constraint: you generally cannot add a “revenue threshold” restriction to an OSI license like AGPL and still call it AGPL. Revenue thresholds work well as <strong>commercial license policy</strong>, not as modifications to AGPL text.</p>
+<hr />
+<h2 id="3-spec-licensing-creative-commons-vs-agpl-what-each-buys-you">3) Spec licensing: Creative Commons vs AGPL (what each buys you)</h2>
+<h3 id="option-s1-spec-under-cc-by-40-recommended-in-many-standards-ecosystems">Option S1: Spec under <strong>CC BY 4.0</strong> (recommended in many standards ecosystems)</h3>
+<p><strong>What it does well</strong></p>
+<ul>
+<li>Clear, explicit <strong>attribution requirement</strong> for document reuse.</li>
+<li>Common and expected for specifications and docs.</li>
+<li>Encourages adoption while preserving credit.</li>
+</ul>
+<p><strong>What it does not do</strong></p>
+<ul>
+<li>It does not force implementations to be open source.</li>
+<li>It does not impose network copyleft obligations.</li>
+</ul>
+<p><strong>When it fits best</strong></p>
+<ul>
+<li>You care strongly about credit for the <em>spec text</em> itself.</li>
+<li>You expect multiple independent implementations.</li>
+</ul>
+<h3 id="option-s2-spec-under-cc-bysa-40">Option S2: Spec under <strong>CC BY‑SA 4.0</strong></h3>
+<p>Adds a “share-alike” requirement for derivatives of the spec document itself.</p>
+<p><strong>Pros</strong></p>
+<ul>
+<li>Spec improvements to the document must stay open (when redistributed).</li>
+</ul>
+<p><strong>Cons</strong></p>
+<ul>
+<li>Some orgs avoid SA because it can be seen as “viral” for docs.</li>
+</ul>
+<h3 id="option-s3-spec-under-agpl30">Option S3: Spec under <strong>AGPL‑3.0</strong></h3>
+<p><strong>What it does well</strong></p>
+<ul>
+<li>Strong copyleft for software; if the spec repo also contains AGPL code, that code is covered.</li>
+</ul>
+<p><strong>What it does not do well</strong></p>
+<ul>
+<li>Spec‑as‑prose is not the typical AGPL target; attribution requirements beyond notice preservation are awkward.</li>
+<li>Doesn’t reliably force open sourcing of clean-room implementations.</li>
+</ul>
+<p><strong>When it fits best</strong></p>
+<ul>
+<li>The “spec” repo is really a combined <strong>spec + reference code</strong> repo and you want the whole thing copyleft.</li>
+</ul>
+<h3 id="a-common-hybrid-used-by-many-ecosystems">A common hybrid (used by many ecosystems)</h3>
+<ul>
+<li><strong>Spec docs</strong>: CC BY (or CC BY‑SA).</li>
+<li><strong>Reference implementation + tooling</strong>: AGPL (or GPL/LGPL, depending on goals).</li>
+<li><strong>Brand/name</strong>: trademark policy.</li>
+</ul>
+<p>This cleanly separates “credit for the document” from “copyleft for the code.”</p>
+<hr />
+<h2 id="4-toolingruntime-licensing-why-agpl-is-the-strongest-default">4) Tooling/runtime licensing: why AGPL is the strongest default</h2>
+<p>Your architecture includes:</p>
+<ul>
+<li>Interrogator → schema builder → compiler → generated adapter → adapter runs as an MCP server and talks to upstream APIs.</li>
+</ul>
+<p>If your goal is “if you modify/deploy our tooling or runtime, you must contribute back,” then AGPL is usually the strongest mainstream OSI copyleft choice because:</p>
+<ul>
+<li>It’s triggered by <strong>network interaction</strong> (not just distribution).</li>
+<li>It’s widely understood by legal teams (even if disliked).</li>
+<li>It pairs cleanly with <strong>commercial dual licensing</strong>.</li>
+</ul>
+<h3 id="agpl30only-vs-agpl30orlater">“AGPL‑3.0‑only” vs “AGPL‑3.0‑or‑later”</h3>
+<ul>
+<li><strong>AGPL‑3.0‑only</strong>: stable; no automatic upgrades to future versions.</li>
+<li><strong>AGPL‑3.0‑or‑later</strong>: future‑proof, but some adopters dislike uncertainty.</li>
+</ul>
+<p>Many projects pick <strong>only</strong> for clarity, and rely on new releases to change terms if needed.</p>
+<h3 id="deployment-view-wrapper-adapter-vs-native-mcpaql-endpoints">Deployment view: wrapper adapter vs native MCP‑AQL endpoints</h3>
+<pre class="mermaid"><code>flowchart LR
+  LLM[&quot;LLM / MCP client&quot;] --&gt;|MCP-AQL| ADAPTER[&quot;Adapter wrapper MCP server + MCP client&quot;]
+  ADAPTER --&gt;|MCP tools| UPSTREAM[MCP server / other API]
+
+  LLM2[&quot;LLM / MCP client&quot;] --&gt;|MCP-AQL| NATIVE[&quot;Native MCP-AQL server embedded endpoints&quot;]
+  NATIVE --&gt;|internal dispatch| CORE[App / server core]</code></pre>
+<hr />
+<h2 id="5-the-generated-adapter-question-output-licensing--critical-decision">5) The generated adapter question (output licensing) — critical decision</h2>
+<p>The single biggest practical licensing fork in generator ecosystems is:</p>
+<h3 id="option-g1-output-is-not-automatically-copyleft-output-exception">Option G1: “Output is NOT automatically copyleft” (output exception)</h3>
+<p>Some projects explicitly say: the generator is copyleft, but the files it generates are not automatically covered (unless they include substantial copied template code).</p>
+<p><strong>Pros</strong></p>
+<ul>
+<li>Maximizes adoption; people can generate proprietary adapters without buying a commercial license.</li>
+</ul>
+<p><strong>Cons</strong></p>
+<ul>
+<li>Weakens your “closed‑source adopters must pay” lever.</li>
+</ul>
+<h3 id="option-g2-output-is-covered--no-exception-strong-pressure-toward-commercial-licenses">Option G2: “Output IS covered / no exception” (strong pressure toward commercial licenses)</h3>
+<p>If generated output includes substantial copyrighted template/runtime code (or requires linking to an AGPL runtime), then proprietary distribution/deployment becomes harder without:</p>
+<ul>
+<li>releasing source under AGPL, or</li>
+<li>buying a commercial license.</li>
+</ul>
+<p><strong>Pros</strong></p>
+<ul>
+<li>Strong lever to prevent “free‑riding closed source adapters at scale.”</li>
+</ul>
+<p><strong>Cons</strong></p>
+<ul>
+<li>Some organizations will avoid adoption entirely.</li>
+<li>You must be disciplined about what is copied into output vs separated into a runtime library.</li>
+</ul>
+<h3 id="a-practical-pattern">A practical pattern</h3>
+<p>If you want strong leverage:</p>
+<ul>
+<li>Put meaningful code in an <strong>AGPL runtime</strong> the adapter depends on, or</li>
+<li>Generate adapters that embed substantial “core” code (templates) that are clearly yours.</li>
+</ul>
+<p>If you want broad adoption:</p>
+<ul>
+<li>Provide an output exception, or</li>
+<li>Make the runtime permissive/LGPL (but that conflicts with your anti‑free‑rider goal).</li>
+</ul>
+<hr />
+<h2 id="6-schemas-and-test-vectors-what-copyleft-does-and-does-not-enforce">6) Schemas and test vectors: what copyleft does (and does not) enforce</h2>
+<p>Publishing schema files under AGPL (or other copyleft) generally enforces:</p>
+<ul>
+<li>If someone redistributes the schema (modified or not), they must comply for that schema file.</li>
+</ul>
+<p>But it does <strong>not</strong> automatically force:</p>
+<ul>
+<li>an implementation that merely <em>reads</em> the schema as data to be open source.</li>
+</ul>
+<p>If you want “if you use our schema, you must open your implementation,” copyright licenses alone usually won’t achieve that without also requiring use of your AGPL runtime/tooling.</p>
+<hr />
+<h2 id="7-attribution-required-in-practice-what-works-reliably">7) “Attribution required” in practice: what works reliably</h2>
+<p>You said attribution is non‑negotiable. The most reliable stack is:</p>
+<h3 id="a-always-require-preservation-of-legal-notices">A. Always require preservation of legal notices</h3>
+<p>Maintain a <code>NOTICE</code> / <code>NOTICE.md</code> and require it be preserved in redistributions. This is normal and enforceable across many OSS licenses.</p>
+<h3 id="b-use-trademark-to-control-the-name-mcpaql">B. Use trademark to control the name “MCP‑AQL”</h3>
+<p>Add a <code>TRADEMARKS.md</code> policy:</p>
+<ul>
+<li>Allowed: “MCP‑AQL compatible” to describe conformance, with a standard attribution sentence.</li>
+<li>Not allowed without permission: implying endorsement, using logos, naming a fork “MCP‑AQL” in a confusing way, etc.</li>
+</ul>
+<p>This is how many ecosystems ensure credit even when implementations are clean-room.</p>
+<h3 id="c-if-you-want-attribution-in-docsspecs-use-cc-by">C. If you want attribution in docs/specs, use CC BY</h3>
+<p>CC BY has a clear, standard attribution mechanism and is accepted for docs.</p>
+<hr />
+<h2 id="8-revenue-thresholds-where-they-fit-commercial-policy-not-agpl-terms">8) Revenue thresholds: where they fit (commercial policy, not AGPL terms)</h2>
+<p>Your desired rule of thumb:</p>
+<ul>
+<li>If you comply with open terms (including attribution + sharing required code), use is free regardless of revenue.</li>
+<li>If you do <strong>not</strong> comply (no source release where required, or no attribution), you need a commercial license.</li>
+<li>Commercial license price can be <strong>$0 under $1M revenue</strong>, then paid tiers.</li>
+</ul>
+<p>This is best implemented as:</p>
+<ul>
+<li><strong>AGPL</strong> (or CC BY for spec) as the default open license, and</li>
+<li>a <strong>commercial contract</strong> with pricing + revenue threshold + attribution obligations.</li>
+</ul>
+<p>Trying to embed revenue thresholds into the open license itself generally makes it non‑standard and often non‑OSI.</p>
+<hr />
+<h2 id="9-contributor-strategy-so-you-can-keep-dual-licensing-viable">9) Contributor strategy (so you can keep dual licensing viable)</h2>
+<p>If you accept public contributions and want to keep the ability to offer commercial licenses, you usually need one of:</p>
+<ul>
+<li><strong>CLA</strong> (Contributor License Agreement) granting you rights to relicense contributions commercially, or</li>
+<li><strong>copyright assignment</strong>, or</li>
+<li>a tightly controlled contribution process (small trusted group).</li>
+</ul>
+<p>Without this, dual licensing becomes legally complicated because contributors own pieces of the copyright.</p>
+<hr />
+<h2 id="10-recommended-menu-of-coherent-licensing-packages">10) Recommended “menu” of coherent licensing packages</h2>
+<h3 id="package-p1-common--clean-cc-by-spec--agpl-tooling--trademark--commercial">Package P1 (common &amp; clean): CC BY spec + AGPL tooling + trademark + commercial</h3>
+<ul>
+<li>Spec docs: <strong>CC BY 4.0</strong></li>
+<li>Tooling/runtime/compiler/interrogator/conformance: <strong>AGPL‑3.0</strong></li>
+<li>Generated adapters: decide G1 vs G2</li>
+<li>Name/logo: <code>TRADEMARKS.md</code></li>
+<li>Commercial: contract, with your $1M threshold policy</li>
+</ul>
+<p>Best for: maximum clarity + strong attribution + strong copyleft where it matters.</p>
+<h3 id="package-p2-agpl-everywhere-simplest-but-weaker-attribution-control">Package P2: AGPL everywhere (simplest, but weaker attribution control)</h3>
+<ul>
+<li>Spec + tooling: <strong>AGPL‑3.0</strong></li>
+<li>Trademark policy still recommended</li>
+<li>Commercial: contract</li>
+</ul>
+<p>Best for: simple messaging, but attribution is still better handled by trademark/NOTICE than AGPL add‑ons.</p>
+<h3 id="package-p3-more-adoption-less-leverage-cc-by-spec--lgplapache-tooling">Package P3 (more adoption, less leverage): CC BY spec + LGPL/Apache tooling</h3>
+<p>You already dislike permissive licensing; this is listed only as a contrast.</p>
+<hr />
+<h2 id="11-how-these-packages-map-to-your-architecture-scenarios">11) How these packages map to your architecture scenarios</h2>
+<h3 id="scenario-a-clean-room-implementation-of-mcpaql-spec">Scenario A: Clean-room implementation of MCP‑AQL spec</h3>
+<ul>
+<li>Spec license (AGPL or CC BY) does not force their implementation to be open source.</li>
+<li>Trademark policy governs how they can use “MCP‑AQL” in marketing and compatibility claims.</li>
+</ul>
+<pre class="mermaid"><code>flowchart LR
+  SPEC[Spec text] --&gt; IMPL[Independent implementation]
+  SPEC -. &quot;License governs reuse of spec text&quot; .-&gt; REUSE[Redistribute/modify spec]
+  TM[Trademark policy] --&gt; NAME[&quot;Use MCP-AQL name/logo for compatibility claims&quot;]</code></pre>
+<h3 id="scenario-b-they-use-your-interrogatorcompilergenerator-as-part-of-their-product-or-service">Scenario B: They use your interrogator/compiler/generator as part of their product or service</h3>
+<ul>
+<li>If it’s AGPL and they modify/deploy it, AGPL obligations can be triggered.</li>
+<li>If they won’t comply, commercial license covers them.</li>
+</ul>
+<pre class="mermaid"><code>flowchart LR
+  THEIR[Their product/service] --&gt; USE[Uses your AGPL tooling/runtime]
+  USE --&gt;|modify/deploy| TRIGGER[AGPL obligations trigger]
+  TRIGGER --&gt;|comply| OSS[Provide source as required]
+  TRIGGER --&gt;|will not comply| COMM[Commercial license]</code></pre>
+<h3 id="scenario-c-they-generate-an-adapter-using-your-compiler">Scenario C: They generate an adapter using your compiler</h3>
+<p>This depends on G1 vs G2:</p>
+<ul>
+<li>With an output exception (G1): they can often keep the generated adapter proprietary (unless it contains substantial copied code).</li>
+<li>Without an exception / with AGPL runtime dependency (G2): proprietary use likely requires commercial licensing.</li>
+</ul>
+<pre class="mermaid"><code>flowchart TB
+  C[Your compiler/generator] --&gt; A[Generated adapter]
+  A --&gt; DEC{Output policy}
+  DEC --&gt;|G1: output exception| PVT1[&quot;Proprietary adapter possible often&quot;]
+  DEC --&gt;|G2: no exception / AGPL runtime| PVT2[&quot;Proprietary use requires commercial license&quot;]
+  DEC --&gt;|G2 + comply| OSS[&quot;Open-source adapter under AGPL&quot;]</code></pre>
+<h3 id="scenario-d-they-modify-the-spec-text">Scenario D: They modify the spec text</h3>
+<ul>
+<li>Under CC BY‑SA: derivatives of the spec must remain share-alike when redistributed.</li>
+<li>Under AGPL: modifications to the spec repo are under AGPL when distributed (but it’s still “docs under a software license” awkwardness).</li>
+</ul>
+<hr />
+<h2 id="12-practical-repository-artifacts-what-you-can-add">12) Practical repository artifacts (what you can add)</h2>
+<p>For each repo (as applicable):</p>
+<ul>
+<li><code>LICENSE</code> (AGPL‑3.0 text for code repos; CC BY text for doc repos if chosen)</li>
+<li><code>COMMERCIAL-LICENSE.md</code> (commercial off‑ramp; may include self-serve &lt;$1M option)</li>
+<li><code>NOTICE</code> or <code>NOTICE.md</code> (copyright + attribution notice to preserve)</li>
+<li><code>TRADEMARKS.md</code> (name/logo usage policy)</li>
+<li><code>CONTRIBUTING.md</code> + <code>CLA.md</code> (if you want contributions while preserving dual licensing)</li>
+</ul>
+<p>In the current MCP-AQL repos, these artifacts are implemented (see “Current MCP-AQL Decisions (As Implemented)” above).</p>
+<hr />
+<h2 id="13-open-questions-to-resolve-as-a-group">13) Open questions to resolve as a group</h2>
+<ol type="1">
+<li>Should the <strong>spec documents</strong> be CC BY (or CC BY‑SA), or remain AGPL?</li>
+<li>Should generated adapters be:
+<ul>
+<li>permissively usable output (output exception), or</li>
+<li>AGPL‑covered output / require AGPL runtime (strong commercial lever)?</li>
+</ul></li>
+<li>What is the minimal attribution statement you want to enforce via trademark/NOTICE?</li>
+<li>Do you want to allow use of the <strong>name</strong> “MCP‑AQL” for compatibility claims by default, or require registration/permission?</li>
+<li>Do you want a CLA for contributors now, or keep contributions limited until the policy is finalized?</li>
+</ol>
+<hr />
+<h2 id="14-threat-model-big-company-rebrands-it-and-claims-credit">14) Threat model: “big company rebrands it and claims credit”</h2>
+<p>This section focuses on a failure mode you explicitly care about: an organization adopts the <em>idea/architecture</em>, reimplements it under a new brand, and you get little/no credit (even if you published first).</p>
+<h3 id="141-what-open-licenses-can-and-cant-do-here">14.1 What open licenses can and can’t do here</h3>
+<ul>
+<li><strong>Licenses (AGPL/CC) control copying of your expression</strong> (your code, your text, your templates), not the underlying <em>idea</em> (“CRUDE endpoints”, “schema-driven dispatch”, “single endpoint mode”, etc.).</li>
+<li>If a company ships a <strong>clean-room reimplementation</strong> (or at least a non-literal reimplementation) under a new name, <strong>copyright licenses alone may not stop it</strong>.</li>
+<li>Where licenses <em>do</em> help: if they copy your repos, templates, docs, examples, tests, or substantial code structure, you can enforce preservation of notices and license compliance.</li>
+</ul>
+<h3 id="142-patents-are-the-main-tool-for-they-cant-just-reimplement-the-idea">14.2 Patents are the main tool for “they can’t just reimplement the idea”</h3>
+<p>If your primary concern is “they can take the concept and rebrand it”, patents are the lever that targets <strong>functionality/novel method</strong>, not just literal copying.</p>
+<p>Practical notes for a patent strategy (discussion aid, not legal advice):</p>
+<ul>
+<li><strong>File early</strong> (provisional if needed) before public release of key implementation details; treat conference/blog/competition submissions as “public disclosure” unless explicitly confidential.</li>
+<li>Consider claim families around:
+<ul>
+<li>endpoint reduction patterns (CRUDE, single-endpoint routing),</li>
+<li>introspection and schema synthesis from APIs,</li>
+<li>schema-driven dispatch + safety classification enforcement,</li>
+<li>compilation/generation pipeline producing an adapter with constrained operations,</li>
+<li>parameter-resolution and field-selection mechanisms that reduce token usage,</li>
+<li>conformance verification and runtime enforcement mechanisms.</li>
+</ul></li>
+<li>Use <strong>continuations</strong> strategically if you expect the ecosystem to evolve and you want to pursue later claims as competitors reveal implementations.</li>
+<li>Decide whether you want a <strong>patent pledge</strong> for compliant open-source use while reserving enforcement/commercial terms for noncompliant actors. (This can preserve community goodwill while keeping leverage against “credit stripping”.)</li>
+</ul>
+<h3 id="143-contracts-are-how-you-enforce-you-promised-attribution">14.3 Contracts are how you enforce “you promised attribution”</h3>
+<p>Your Claude/competition example is a classic gap: publishing first creates evidence, but it doesn’t force attribution unless there’s an enforceable obligation.</p>
+<p>When attribution is promised (contest, partnership, pilot), try to ensure it is:</p>
+<ul>
+<li>In <strong>written terms</strong> that are signed/click-accepted and specify:
+<ul>
+<li>the exact attribution string,</li>
+<li>where it must appear (docs, UI, marketing, repo),</li>
+<li>duration, and</li>
+<li>remedies for breach.</li>
+</ul></li>
+<li>Not merely in “community guidelines” or informal statements.</li>
+</ul>
+<p>If a contest sponsor says “we will attribute” but the terms are vague, enforcement becomes much harder. The best defense is tightening the terms <em>before</em> submission, or submitting only what you are willing to have copied without credit.</p>
+<h3 id="144-make-provenance-undeniable-for-reputational-and-legal-leverage">14.4 Make provenance undeniable (for reputational and legal leverage)</h3>
+<p>Even when it “didn’t work” to prevent copying, a strong provenance package is still valuable for:</p>
+<ul>
+<li>patent novelty timelines,</li>
+<li>copyright enforcement when literal copying occurs,</li>
+<li>and public credibility when you need to correct the record.</li>
+</ul>
+<p>Concrete steps:</p>
+<ul>
+<li>Add <code>CITATION.cff</code> (canonical “how to cite this”) in the main repos.</li>
+<li>Maintain signed releases/tags and hashes for spec/tooling milestones.</li>
+<li>Keep an internal timeline of disclosures (dates, links, screenshots, submission receipts, emails).</li>
+<li>Keep your copyright notices and a <code>NOTICE</code> file consistent and hard to remove without being obvious.</li>
+</ul>
+<h3 id="145-engineering-choices-that-increase-copying-risk-for-free-riders">14.5 Engineering choices that increase “copying risk” for free riders</h3>
+<p>You can (legitimately) design the ecosystem so that “just copy it and rename it” is harder without either:</p>
+<ul>
+<li>taking your AGPL code (triggering compliance), or</li>
+<li>reimplementing a lot more work (increasing cost).</li>
+</ul>
+<p>Examples:</p>
+<ul>
+<li>Put real value in the <strong>toolchain</strong> (interrogator + compiler + conformance suite + runtime enforcement), not just the high-level concept.</li>
+<li>Keep a clear separation of what is <strong>spec</strong> vs <strong>reference implementation</strong> so that copying the “real thing” is visibly copying your codebase.</li>
+</ul>
+<h3 id="146-what-success-looks-like">14.6 What success looks like</h3>
+<p>Given your threat model, the most realistic “defense-in-depth” target is:</p>
+<ul>
+<li><strong>Patents</strong> cover the key novel mechanisms (so reimplementation carries legal risk).</li>
+<li><strong>AGPL + commercial</strong> covers your toolchain/runtime (so using your code requires compliance or a commercial deal).</li>
+<li><strong>Contracts</strong> cover any “we promise attribution” relationships (so attribution isn’t merely hoped for).</li>
+<li><strong>Provenance + citation</strong> makes public credit correction easy and credible.</li>
+</ul>
+<hr />
+<h2 id="15-make-it-solid-a-practical-enforcement-playbook">15) Make it solid: a practical enforcement playbook</h2>
+<p>This section is a concrete checklist for turning “I can prove I built it first” into leverage that actually works in the real world.</p>
+<h3 id="151-decide-what-youre-enforcing-pick-your-battles">15.1 Decide what you’re enforcing (pick your battles)</h3>
+<p>There are three distinct enforcement targets:</p>
+<ol type="1">
+<li><strong>Literal copying of your code/docs/assets</strong> → copyright + license enforcement + DMCA.</li>
+<li><strong>Breach of a promise</strong> (contest terms, partnership, pilot) → contract enforcement.</li>
+<li><strong>Reimplementation of the method</strong> under a new brand → patents (not copyright).</li>
+</ol>
+<p>Trying to use DMCA for (3) usually fails and can backfire. Build a workflow for each target.</p>
+<h3 id="152-patents-file-first-then-publish-hard">15.2 Patents: file first, then publish hard</h3>
+<p>Since you already plan to patent and have counsel:</p>
+<ul>
+<li>File <strong>provisionals</strong> early for each claim family, then publish aggressively after filing.</li>
+<li>Keep a disclosure log with “filed on X date” so you can safely talk publicly without losing priority.</li>
+<li>Ask counsel about a strategy for <strong>continuations</strong> so you can adapt claims as the market reveals implementation details.</li>
+</ul>
+<h3 id="153-copyright-register-dont-just-timestamp">15.3 Copyright: register, don’t just timestamp</h3>
+<p>If you want fast, credible leverage in the U.S., ask counsel about:</p>
+<ul>
+<li><strong>Copyright registration</strong> for the core repos (tooling/runtime/docs) and major releases.</li>
+<li>Registering before infringement (or within relevant windows) can materially improve remedies and negotiation position.</li>
+</ul>
+<p>Your transcripts/recordings are excellent evidence of authorship, but registration is what often turns “proof” into “actionable.”</p>
+<h3 id="154-build-copying-canaries-that-survive-refactors">15.4 Build “copying canaries” that survive refactors</h3>
+<p>If you expect copying, make it easy to prove:</p>
+<ul>
+<li>Put a few <strong>unique, non-obvious strings</strong> (canaries) in MCP‑AQL places that tend to get copied verbatim:
+<ul>
+<li><strong>adapter generator templates</strong> (headers, default error messages, scaffolding file names),</li>
+<li><strong>spec examples</strong> (sample queries/responses that others paste into docs),</li>
+<li><strong>test vectors</strong> (golden JSON fixtures),</li>
+<li><strong>introspection example outputs</strong> (if you publish them).</li>
+</ul></li>
+<li>Keep them harmless but distinctive (not just “MCP‑AQL”).</li>
+<li>Track them in a private list so you can quickly search for them in suspicious repos.</li>
+</ul>
+<p>If a company copies your code/templates, canaries dramatically reduce debate over “independent creation.”</p>
+<p>Concrete MCP‑AQL examples that map to your architecture:</p>
+<ul>
+<li>A deterministic generated file named something like <code>MCPAQL-PROVENANCE.json</code> containing a stable canary key/value (e.g., <code>"mcpaql_canary":"&lt;opaque-string&gt;"</code>) plus generator metadata.</li>
+<li>A distinctive default error string in the adapter runtime (e.g., <code>"MCPAQL_E_SAFETY_CLASSIFICATION_REQUIRED"</code> or another unique identifier), returned when a request lacks safety metadata.</li>
+<li>A distinctive example query block in the spec docs that’s likely to get copy/pasted.</li>
+</ul>
+<h3 id="155-reduce-the-rename-and-run-surface">15.5 Reduce the “rename-and-run” surface</h3>
+<p>Engineering choices that increase enforceability:</p>
+<ul>
+<li>Concentrate value in an <strong>AGPL runtime</strong> and a <strong>conformance suite</strong> that’s hard to replace.</li>
+<li>Ensure generated adapters include:
+<ul>
+<li><code>LICENSE</code> (for your runtime/templates if included),</li>
+<li><code>NOTICE</code> (attribution/legal notices),</li>
+<li>a machine-readable provenance file (e.g., <code>MCPAQL-PROVENANCE.json</code>) listing generator version + commit hash + schema hash.</li>
+</ul></li>
+</ul>
+<p>This doesn’t stop clean-room reimplementation, but it makes “copy and strip attribution” harder and more obvious.</p>
+<p>Concrete MCP‑AQL enforcement hooks that are hard to “accidentally” recreate:</p>
+<ul>
+<li><strong>Introspection metadata</strong>: include a <code>meta</code> section in introspection responses with <code>mcpaql_spec_version</code>, <code>generator_name</code>, <code>generator_version</code>, <code>generator_commit</code>, and <code>schema_fingerprint</code>.
+<ul>
+<li>If someone ships your code and strips attribution, these fields tend to survive unless they actively remove them.</li>
+<li>If someone reimplements clean-room, they won’t match your fingerprints/canaries unless they copied.</li>
+</ul></li>
+<li><strong>Schema fingerprinting</strong>: hash normalized schema output (stable order + canonical JSON) and embed the hash in both:
+<ul>
+<li>the generated adapter, and</li>
+<li>the schema file itself.</li>
+</ul></li>
+<li><strong>Conformance tests</strong>: make the public conformance suite check for:
+<ul>
+<li>correct CRUDE routing semantics,</li>
+<li>safety classification enforcement behavior,</li>
+<li>introspection completeness,</li>
+<li><em>and</em> presence of provenance metadata fields.</li>
+</ul></li>
+</ul>
+<h3 id="156-monitoring-automate-discovery-instead-of-relying-on-luck">15.6 Monitoring: automate discovery instead of relying on luck</h3>
+<p>Set up continuous discovery for copying signals:</p>
+<ul>
+<li><strong>GitHub code search</strong> for canary strings and MCP‑AQL-specific identifiers you control, such as:
+<ul>
+<li><code>MCPAQL-PROVENANCE.json</code></li>
+<li><code>mcpaql_spec_version</code></li>
+<li><code>schema_fingerprint</code></li>
+<li><code>MCPAQL_E_</code> error identifiers</li>
+</ul></li>
+<li><strong>Search for verbatim spec phrasing</strong> that tends to get copied:
+<ul>
+<li>“CRUDE pattern”</li>
+<li>“single endpoint mode”</li>
+<li>“schema-driven dispatch”</li>
+<li>your token reduction table language/structure</li>
+</ul></li>
+<li><strong>Package registry monitoring</strong> (npm/PyPI/crates) for your canary strings.</li>
+<li><strong>Web alerts</strong> for key phrases from the spec/README.</li>
+</ul>
+<p>The faster you find copying, the easier enforcement is (less diffusion, fewer downstream forks).</p>
+<h3 id="157-dmca-use-it-only-for-expression-copying-and-package-evidence">15.7 DMCA: use it only for expression copying, and package evidence</h3>
+<p>DMCA is effective when they copied your expression. Make a “DMCA evidence pack” template:</p>
+<ul>
+<li>Your canonical source URL + commit hash/tag.</li>
+<li>The infringing URL + commit hash.</li>
+<li>A short table: file → copied section → proof (identical snippet / canary hit).</li>
+<li>Screenshots and timestamps.</li>
+</ul>
+<p>This lets you act quickly without emotional/uncertain claims.</p>
+<p>MCP‑AQL-specific evidence that makes DMCA notices go faster:</p>
+<ul>
+<li>A copied <code>MCPAQL-PROVENANCE.json</code> with your generator commit hashes and canary keys.</li>
+<li>Identical adapter scaffolding files produced by your generator (same structure, same headers, same canary strings).</li>
+<li>Identical portions of your spec docs (tables, examples, phrasing) mirrored into their docs.</li>
+</ul>
+<h3 id="158-license-enforcement-treat-it-like-a-product-process">15.8 License enforcement: treat it like a product process</h3>
+<p>If your repos are AGPL (plus commercial option), have a standard escalation ladder:</p>
+<ol type="1">
+<li>Friendly compliance email (“here are the obligations; we can help”).</li>
+<li>Formal notice from counsel.</li>
+<li>DMCA (if hosted copying is present) and/or litigation decision.</li>
+<li>Offer commercial terms as the off-ramp (including $0 tiers if that’s your policy).</li>
+</ol>
+<p>This is how dual-licensing businesses actually convert “they took it” into either compliance or revenue.</p>
+<h3 id="159-contests-and-we-promise-attribution-protect-yourself-up-front">15.9 Contests and “we promise attribution”: protect yourself up front</h3>
+<p>If you submit to a contest or partner program again:</p>
+<ul>
+<li>Treat it as <strong>hostile by default</strong> unless the terms are explicit and enforceable.</li>
+<li>Require terms to specify:
+<ul>
+<li>attribution text and placement,</li>
+<li>license scope granted to the sponsor (ideally non-exclusive, limited),</li>
+<li>confidentiality window if patent filings are pending,</li>
+<li>what happens to submissions after the contest.</li>
+</ul></li>
+</ul>
+<p>If the sponsor refuses, assume they may copy without credit and submit accordingly (or don’t submit).</p>
+<h3 id="1510-evidence-hardening-for-your-existing-voicecode-catalog">15.10 Evidence hardening for your existing voice/code catalog</h3>
+<p>You already have unusually strong provenance (voice recordings + transcripts + code history). To convert that into “hard to dispute” evidence:</p>
+<ul>
+<li>Generate periodic <strong>cryptographic digests</strong> of:
+<ul>
+<li>repo states (commit hashes are a start, but also include uncommitted work snapshots if relevant),</li>
+<li>the transcript corpus,</li>
+<li>and any key design docs.</li>
+</ul></li>
+<li>Store those digests in at least one <strong>independent timestamped system</strong> (discuss with counsel):
+<ul>
+<li>signed release artifacts,</li>
+<li>a transparency log,</li>
+<li>or any other third-party timestamping mechanism your attorney recommends.</li>
+</ul></li>
+</ul>
+<p>This doesn’t stop copying, but it drastically reduces “we independently invented it” arguments once you’re in a dispute.</p>
+<hr />
+<h2 id="16-practical-implementation-checklist-for-humans--llms">16) Practical implementation checklist (for humans + LLMs)</h2>
+<p>This section is intentionally concrete: it’s a set of repo changes and design hooks that make MCP‑AQL harder to copy-and-erase, easier to detect when copied, and easier to enforce when attribution is stripped.</p>
+<h3 id="161-add-must-preserve-attribution-artifacts-everywhere">16.1 Add “must-preserve” attribution artifacts everywhere</h3>
+<p>Implement in each repo (<code>spec/</code>, <code>adapter-generator/</code>, <code>mcpaql-adapter/</code>, <code>examples/</code>, <code>website/</code>):</p>
+<ul>
+<li>Add <code>NOTICE.md</code> with:
+<ul>
+<li>copyright owner(s),</li>
+<li>a short “Attribution” paragraph (exact wording you want),</li>
+<li>link to the canonical spec site/repo,</li>
+<li>commercial licensing contact (<code>licensing@mcpaql.org</code>).</li>
+</ul></li>
+<li>Add <code>CITATION.cff</code> (so GitHub renders a “Cite this repository” widget).</li>
+<li>Ensure <code>README.md</code> has a “License” section that references:
+<ul>
+<li><code>LICENSE</code>,</li>
+<li><code>COMMERCIAL-LICENSE.md</code>,</li>
+<li>and <code>NOTICE.md</code>.</li>
+</ul></li>
+</ul>
+<p>Do not rely on README attribution alone; make <code>NOTICE.md</code> the canonical thing people must preserve.</p>
+<h3 id="162-treat-removal-of-attribution-as-cmi-stripping-design-for-it">16.2 Treat removal of attribution as CMI stripping (design for it)</h3>
+<p>Goal: if someone copies your runtime/templates and removes attribution, that is not just “license noncompliance” but plausibly “removed Copyright Management Information (CMI)”.</p>
+<p>Implementation:</p>
+<ul>
+<li>Put a short, consistent CMI header block at the top of:
+<ul>
+<li>generator templates,</li>
+<li>runtime source files,</li>
+<li>generated adapter scaffolding.</li>
+</ul></li>
+<li>The CMI header should include:
+<ul>
+<li>project name (MCP‑AQL),</li>
+<li>copyright owner,</li>
+<li>license reference,</li>
+<li>and a canonical URL.</li>
+</ul></li>
+</ul>
+<p>Example header block (adapt wording as desired):</p>
+<pre class="text"><code>MCP-AQL
+Copyright (c) 2025-2026 Mick Darling
+Licensed under AGPL-3.0 (see LICENSE) — commercial licenses available (see COMMERCIAL-LICENSE.md)
+Canonical: https://mcpaql.org</code></pre>
+<h3 id="163-make-adapters-carry-unambiguous-provenance-generated-output">16.3 Make adapters carry unambiguous provenance (generated output)</h3>
+<p>Have the compiler/generator always emit a machine-readable provenance file at the adapter root:</p>
+<ul>
+<li>File: <code>MCPAQL-PROVENANCE.json</code></li>
+<li>Must be included in default <code>.gitignore</code> guidance (i.e., do NOT encourage ignoring it).</li>
+<li>Must be included in packaging/distribution (tarball, container, etc.).</li>
+</ul>
+<p>Suggested shape:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;format&quot;</span><span class="fu">:</span> <span class="st">&quot;mcpaql.provenance.v1&quot;</span><span class="fu">,</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;generated_at&quot;</span><span class="fu">:</span> <span class="st">&quot;2026-01-13T12:34:56Z&quot;</span><span class="fu">,</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;mcpaql_spec_version&quot;</span><span class="fu">:</span> <span class="st">&quot;v1.0.0-draft&quot;</span><span class="fu">,</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;generator&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;mcpaql-adapter-generator&quot;</span><span class="fu">,</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;version&quot;</span><span class="fu">:</span> <span class="st">&quot;0.1.0&quot;</span><span class="fu">,</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;commit&quot;</span><span class="fu">:</span> <span class="st">&quot;abcdef1234567890&quot;</span><span class="fu">,</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;source_url&quot;</span><span class="fu">:</span> <span class="st">&quot;https://github.com/MCPAQL/adapter-generator&quot;</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">},</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;schema&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;fingerprint&quot;</span><span class="fu">:</span> <span class="st">&quot;sha256:...&quot;</span><span class="fu">,</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;source&quot;</span><span class="fu">:</span> <span class="st">&quot;path/or/url/to/schema.json&quot;</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">},</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;canary&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="st">&quot;mcpaql_canary_v1&quot;</span><span class="fu">,</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;value&quot;</span><span class="fu">:</span> <span class="st">&quot;&lt;opaque-string&gt;&quot;</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p>Notes:</p>
+<ul>
+<li>The canary value should be stable for a given generator release (or stable per customer build, depending on what you want to detect).</li>
+<li>Keep the canary harmless; its value is evidence, not a security control.</li>
+</ul>
+<h3 id="164-put-provenance-into-runtime-behavior-introspection-metadata">16.4 Put provenance into runtime behavior (introspection metadata)</h3>
+<p>Have the adapter’s <code>introspect</code> response include a <code>meta</code> object with provenance fields.</p>
+<p>Example:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;operation&quot;</span><span class="fu">:</span> <span class="st">&quot;introspect&quot;</span><span class="fu">,</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;result&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;meta&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;mcpaql_spec_version&quot;</span><span class="fu">:</span> <span class="st">&quot;v1.0.0-draft&quot;</span><span class="fu">,</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;generator_name&quot;</span><span class="fu">:</span> <span class="st">&quot;mcpaql-adapter-generator&quot;</span><span class="fu">,</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;generator_version&quot;</span><span class="fu">:</span> <span class="st">&quot;0.1.0&quot;</span><span class="fu">,</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;generator_commit&quot;</span><span class="fu">:</span> <span class="st">&quot;abcdef1234567890&quot;</span><span class="fu">,</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;schema_fingerprint&quot;</span><span class="fu">:</span> <span class="st">&quot;sha256:...&quot;</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">},</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;operations&quot;</span><span class="fu">:</span> <span class="ot">[</span> <span class="er">/*</span> <span class="er">...</span> <span class="er">*/</span> <span class="ot">]</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p>This gives you three benefits:</p>
+<ul>
+<li>You can detect copying in the wild by searching for these fields/values.</li>
+<li>If someone strips them from your code, it’s a deliberate act, not an accident.</li>
+<li>It’s a conformance surface you can test.</li>
+</ul>
+<h3 id="165-define-a-stable-schema-fingerprint-algorithm-so-its-enforceable">16.5 Define a stable schema fingerprint algorithm (so it’s enforceable)</h3>
+<p>Pick one canonical algorithm and document it (then implement it everywhere):</p>
+<ol type="1">
+<li><strong>Normalize</strong> schema JSON:
+<ul>
+<li>canonical JSON encoding (stable key ordering),</li>
+<li>remove whitespace,</li>
+<li>avoid ephemeral fields (timestamps, local paths) in the hashed material.</li>
+</ul></li>
+<li>Hash with <code>SHA-256</code>.</li>
+<li>Represent as <code>sha256:&lt;hex&gt;</code>.</li>
+</ol>
+<p>If your schemas are not JSON, define the equivalent canonicalization (e.g., normalized AST serialization).</p>
+<h3 id="166-make-conformance-tests-check-provenance--safety-semantics">16.6 Make conformance tests check provenance + safety semantics</h3>
+<p>In <code>spec/tests/</code> (or the appropriate test suite repo), add tests that assert:</p>
+<ul>
+<li>CRUDE routing correctness (already part of spec conformance).</li>
+<li>Safety classification enforcement behaviors (your “red zone” semantics).</li>
+<li>Introspection completeness.</li>
+<li>Presence and correctness of:
+<ul>
+<li><code>result.meta.mcpaql_spec_version</code>,</li>
+<li><code>result.meta.schema_fingerprint</code>,</li>
+<li>and generator identity fields.</li>
+</ul></li>
+</ul>
+<p>This makes it harder for a copy to pass “official conformance” while stripping provenance.</p>
+<h3 id="167-make-copying-signatures-easy-to-search-for">16.7 Make “copying signatures” easy to search for</h3>
+<p>Define and consistently use MCP‑AQL-specific identifiers that are likely to be copied:</p>
+<ul>
+<li>Error code namespace: <code>MCPAQL_E_*</code> (e.g., <code>MCPAQL_E_SAFETY_CLASSIFICATION_REQUIRED</code>).</li>
+<li>Metadata keys: <code>mcpaql_spec_version</code>, <code>schema_fingerprint</code>, <code>generator_commit</code>.</li>
+<li>File name: <code>MCPAQL-PROVENANCE.json</code>.</li>
+</ul>
+<p>Then keep a small internal query list you can run periodically:</p>
+<ul>
+<li>GitHub code search for the identifiers above.</li>
+<li>Package registry search for the same identifiers.</li>
+<li>Web search for distinctive spec phrasing and tables.</li>
+</ul>
+<h3 id="168-decide-the-generated-adapter-licensing-posture-explicitly">16.8 Decide the “generated adapter” licensing posture explicitly</h3>
+<p>The implementation must pick one of these and document it clearly:</p>
+<ul>
+<li><strong>Output exception</strong>: generated adapters can be proprietary by default (max adoption).</li>
+<li><strong>No exception / runtime dependency</strong>: generated adapters are effectively AGPL unless commercially licensed (max leverage).</li>
+</ul>
+<p>If you choose “max leverage”, implement it technically:</p>
+<ul>
+<li>Generated adapters must include or depend on an <strong>AGPL runtime</strong> module that is not trivial to replace without rewriting.</li>
+</ul>
+<h3 id="169-make-the-commercial-off-ramp-real-so-enforcement-converts">16.9 Make the commercial off-ramp real (so enforcement converts)</h3>
+<p>Implementation tasks:</p>
+<ul>
+<li>Put a short “Commercial licensing” section in each <code>README.md</code> pointing to:
+<ul>
+<li><code>COMMERCIAL-LICENSE.md</code>,</li>
+<li>and a single canonical email address (<code>licensing@mcpaql.org</code>).</li>
+</ul></li>
+<li>Consider adding a public “commercial licensing overview” page on <code>website/</code> (even if pricing is “contact us”), because it helps support “reasonable royalty” arguments and shortens sales cycles.</li>
+</ul>
+<h3 id="1610-keep-the-specdocs-license-separate-from-the-code-license">16.10 Keep the spec/docs license separate from the code license</h3>
+<p>If you decide to use CC BY for the spec text:</p>
+<ul>
+<li>Make it explicit in <code>spec/</code>:
+<ul>
+<li><code>LICENSE</code> for the repo’s code (if any),</li>
+<li>a separate <code>LICENSE-DOCS</code> (or similar) for spec prose,</li>
+<li>and clear labeling in <code>spec/README.md</code>.</li>
+</ul></li>
+</ul>
+<p>This avoids accidentally mixing a doc license into the toolchain/code.</p>
+<hr />
+<h2 id="17-policy-to-implement-toolchain--generated-adapter-licensing-llm-ready">17) Policy to implement: toolchain + generated adapter licensing (LLM-ready)</h2>
+<p>This section is a <strong>normative policy spec</strong> for the MCP‑AQL toolchain and generated adapters. It is written so another LLM can implement it directly in the generator/compiler and related repos.</p>
+<h3 id="171-goals-what-this-policy-must-accomplish">17.1 Goals (what this policy must accomplish)</h3>
+<ol type="1">
+<li><strong>Default path</strong>: anyone can use MCP‑AQL tooling under open terms (AGPL for code; CC BY for spec docs as applicable).</li>
+<li><strong>Closed-source path</strong>: organizations that do not want to comply with AGPL obligations should be able to obtain a <strong>commercial license easily</strong> (low-friction, “email us / simple form”).</li>
+<li><strong>Deterrence</strong>: the easiest way to ship adapters is to use the official toolchain; bypassing it (clean-room reimplementation) should be meaningfully more work.</li>
+<li><strong>Attribution stickiness</strong>: when the toolchain is used, generated output must carry clear, durable attribution/notice artifacts and machine-readable provenance that is hard to remove “by accident”.</li>
+</ol>
+<h3 id="172-definitions">17.2 Definitions</h3>
+<ul>
+<li><strong>Toolchain</strong>: interrogator + schema builder + compiler/adapter generator + any runtime libraries required by generated adapters.</li>
+<li><strong>Generated adapter</strong>: the multi-file wrapper produced by the compiler/generator that runs as an MCP server (MCP‑AQL endpoints) and as an MCP client (upstream API binding).</li>
+<li><strong>Output exception</strong>: a license statement that grants permission to use generated output under terms other than the generator’s copyleft.</li>
+</ul>
+<h3 id="173-license-posture-explicit-decisions">17.3 License posture (explicit decisions)</h3>
+<ol type="1">
+<li>Toolchain code is licensed under <strong>AGPL-3.0</strong> (see <code>LICENSE</code>).</li>
+<li><strong>No output exception is granted.</strong>
+<ul>
+<li>The project will not publish an “output exception” that automatically permits proprietary use of generated adapters.</li>
+</ul></li>
+<li>Commercial licenses are available as the off‑ramp for closed-source use (see <code>COMMERCIAL-LICENSE.md</code> and contact <code>licensing@mcpaql.org</code>).</li>
+</ol>
+<p>Notes:</p>
+<ul>
+<li>This policy does <strong>not</strong> attempt to modify AGPL terms (no revenue thresholds inside open licensing text).</li>
+<li>Any revenue thresholds or “free commercial license under $X revenue” rules belong in the <strong>commercial contract</strong> and can be described (non-binding) in <code>COMMERCIAL-LICENSE.md</code>.
+<ul>
+<li>Current intent: a self-serve free commercial license option for organizations under $1,000,000 USD in annual revenue via self-certification.</li>
+</ul></li>
+</ul>
+<h3 id="174-technical-requirements-what-the-generator-must-emit">17.4 Technical requirements (what the generator must emit)</h3>
+<p>When the toolchain generates an adapter, the output <strong>MUST</strong> include the following files at the adapter root (or a documented equivalent path):</p>
+<ol type="1">
+<li><code>LICENSE</code>:
+<ul>
+<li>If the generated adapter includes or vendors MCP‑AQL runtime/template code, this file MUST contain the applicable open license text (AGPL-3.0) for that included code.</li>
+</ul></li>
+<li><code>NOTICE.md</code>:
+<ul>
+<li>MUST include an attribution statement and canonical links (see template below).</li>
+<li>MUST state that commercial licensing is available and point to the contact address.</li>
+</ul></li>
+<li><code>COMMERCIAL-LICENSE.md</code>:
+<ul>
+<li>MUST be included as a short pointer (not full terms) so downstream users can immediately find the off‑ramp.</li>
+</ul></li>
+<li><code>MCPAQL-PROVENANCE.json</code>:
+<ul>
+<li>MUST include generator identity and build metadata (commit hash, version, source URL).</li>
+<li>MUST include a stable <code>schema_fingerprint</code>.</li>
+<li>MUST include a <code>canary</code> section (see below).</li>
+</ul></li>
+</ol>
+<p>Generator identity defaults (so implementations are consistent):</p>
+<ul>
+<li><code>generator.name</code>: <code>mcpaql-adapter-generator</code></li>
+<li><code>generator.source_url</code>: <code>https://github.com/MCPAQL/adapter-generator</code></li>
+<li><code>generator.commit</code>: git commit of the generator used for the build.</li>
+<li><code>generator.version</code>: prefer a semver tag if present, else <code>0.0.0+&lt;short-commit&gt;</code>.</li>
+</ul>
+<p>Spec version source of truth:</p>
+<ul>
+<li>Read the current spec version from <code>spec/SPEC_VERSION</code> in the <code>spec</code> repo (example value: <code>v1.0.0-draft</code>).</li>
+<li>Use that value for:
+<ul>
+<li><code>mcpaql_spec_version</code> in <code>MCPAQL-PROVENANCE.json</code>, and</li>
+<li><code>result.meta.mcpaql_spec_version</code> in introspection.</li>
+</ul></li>
+</ul>
+<p>The generator <strong>SHOULD</strong> also:</p>
+<ul>
+<li>include <code>CITATION.cff</code> in generated output (optional but helpful), and</li>
+<li>include a <code>LICENSING.md</code> (short human-friendly summary of what’s included and why).</li>
+</ul>
+<h3 id="175-runtime-dependency-requirement-what-makes-this-enforceable">17.5 Runtime dependency requirement (what makes this enforceable)</h3>
+<p>To achieve the desired “use our toolchain or pay/comply” outcome, generated adapters MUST, by default, be built in a way that they:</p>
+<ul>
+<li><strong>depend on an MCP‑AQL runtime module</strong> that is part of the toolchain and is licensed under AGPL-3.0, OR</li>
+<li>embed substantial MCP‑AQL template/runtime code that is clearly copyrighted by the project.</li>
+</ul>
+<p>Implementation guidance:</p>
+<ul>
+<li>Prefer a runtime module import/dependency (cleaner engineering) over copying large template blobs into every file.</li>
+<li>The runtime should implement core behaviors that are hard to “stub out” without rewriting:
+<ul>
+<li>CRUDE routing,</li>
+<li>safety classification enforcement (your “red zone” semantics),</li>
+<li>introspection meta emission,</li>
+<li>schema fingerprint verification.</li>
+</ul></li>
+</ul>
+<h3 id="176-required-behavior-surfaces-what-the-adapter-must-expose">17.6 Required behavior surfaces (what the adapter must expose)</h3>
+<p>To make copying detectable and attribution durable, adapters produced by the toolchain MUST:</p>
+<ol type="1">
+<li>Expose provenance in introspection:
+<ul>
+<li><code>introspect</code> responses MUST include a <code>meta</code> object with:
+<ul>
+<li><code>mcpaql_spec_version</code></li>
+<li><code>generator_name</code></li>
+<li><code>generator_version</code></li>
+<li><code>generator_commit</code></li>
+<li><code>schema_fingerprint</code></li>
+</ul></li>
+</ul></li>
+<li>Use a stable error namespace:
+<ul>
+<li>Safety and policy-related errors SHOULD use <code>MCPAQL_E_*</code> identifiers.</li>
+</ul></li>
+</ol>
+<h3 id="177-canary-policy-copy-detection-not-security">17.7 Canary policy (copy detection, not security)</h3>
+<p>The generator MUST include a <code>canary</code> in <code>MCPAQL-PROVENANCE.json</code>.</p>
+<p>Policy:</p>
+<ul>
+<li>Canary value MUST be non-obvious and stable for a given generator release (or stable per “distribution channel”).</li>
+<li>Canary value MUST NOT be a secret credential; it is only an identifier for copy detection.</li>
+<li>The project should keep an internal mapping of canary values to generator releases for later verification.</li>
+</ul>
+<h3 id="178-templates-drop-in-text-for-generated-artifacts">17.8 Templates (drop-in text for generated artifacts)</h3>
+<p><code>NOTICE.md</code> template (generated adapter):</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># NOTICE</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>This adapter was generated by the MCP-AQL toolchain.</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>MCP-AQL (Model Context Protocol – Advanced Agent API Adapter Query Language)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>Copyright (c) 2025-2026 Mick Darling.</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>You must preserve this notice and other copyright and license notices in any redistribution.</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>Canonical: https://mcpaql.org</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>Toolchain source: https://github.com/MCPAQL</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>Commercial licenses are available: licensing@mcpaql.org (see COMMERCIAL-LICENSE.md).</span></code></pre></div>
+<p><code>COMMERCIAL-LICENSE.md</code> template (generated adapter):</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Commercial Licensing</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>This adapter includes MCP-AQL toolchain/runtime components licensed under AGPL-3.0. See LICENSE.</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>Commercial licenses are available for organizations that want to use, modify, or distribute this adapter without AGPL obligations.</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>If your organization has less than $1,000,000 USD in annual revenue, you may use the self-serve free commercial license option by self-certifying in writing in your own records (no correspondence required).</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>Contact: licensing@mcpaql.org</span></code></pre></div>
+<h3 id="179-non-goals-what-this-policy-is-not-trying-to-do">17.9 Non-goals (what this policy is not trying to do)</h3>
+<ul>
+<li>This policy cannot prevent a true clean-room reimplementation of the idea under a new brand.</li>
+<li>This policy is designed to:
+<ul>
+<li>make copying your actual toolchain/runtime/templates easy to detect and enforce, and</li>
+<li>make the commercial-license off‑ramp obvious and low friction.</li>
+</ul></li>
+</ul>
+<h3 id="1710-schema-fingerprinting-canonical-definition-to-implement">17.10 Schema fingerprinting (canonical definition to implement)</h3>
+<p>The <code>schema_fingerprint</code> MUST be computed using a stable canonicalization so that:</p>
+<ul>
+<li>the same schema content yields the same fingerprint across platforms/languages, and</li>
+<li>the fingerprint does not change due to whitespace, key ordering, or formatting differences.</li>
+</ul>
+<p>Definition:</p>
+<ol type="1">
+<li>Let <code>schema</code> be the schema document in JSON form.</li>
+<li>Remove any explicitly non-semantic, build-specific fields (if present), such as:
+<ul>
+<li><code>generated_at</code>, <code>generator</code>, <code>provenance</code>, or similar build metadata fields embedded inside the schema document.</li>
+</ul></li>
+<li>Canonicalize the JSON using the JSON Canonicalization Scheme (JCS, RFC 8785) or an equivalent stable canonical JSON serializer:
+<ul>
+<li>stable key ordering,</li>
+<li>UTF-8 encoding,</li>
+<li>no insignificant whitespace differences.</li>
+</ul></li>
+<li>Compute SHA-256 over the canonicalized UTF-8 bytes.</li>
+<li>Represent the fingerprint as <code>sha256:&lt;hex&gt;</code>.</li>
+</ol>
+<p>The canonicalization requirement is the important part; the exact library used can vary by language as long as it produces the same canonical bytes.</p>
+
+          </div>
+        </section>
+        <nav class="page-nav" aria-label="Page navigation">
+  <a class="page-nav-link prev" href="introspection.html">
+    <span class="page-nav-eyebrow">Previous spec page</span>
+    <strong class="page-nav-label">MCP-AQL Introspection Specification</strong>
+  </a>
+  <a class="page-nav-link next" href="mcp-integration.html">
+    <span class="page-nav-eyebrow">Next spec page</span>
+    <strong class="page-nav-label">MCP Integration Specification</strong>
+  </a>
+</nav>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.</p>
+      <div class="footer-links">
+        <a href="../docs/index.html">Docs Library</a>
+        <a href="index.html">Repo-Synced Spec</a>
+        <a href="https://github.com/MCPAQL">MCPAQL Organization</a>
+        <a href="https://dollhouseresearch.com">Dollhouse Research</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../js/search.js"></script>
+</body>
+</html>

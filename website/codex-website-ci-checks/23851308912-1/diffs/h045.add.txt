@@ -1,0 +1,540 @@
+MCP-AQL Spec | MCP-AQL Introspection Specification
+Launch Checklist
+Adapter Patterns
+Search MCP-AQL docs
+Repo-Synced Spec
+Generated from MCPAQL/spec so the website carries the deeper protocol material too.
+MCP-AQL Conformance Testing Specification
+MCP-AQL CRUDE Pattern Specification
+MCP-AQL Endpoint Modes Specification
+Structured Error Codes Specification
+MCP-AQL Introspection Specification
+MCP-AQL Licensing Options (Working Notes)
+MCP Integration Specification
+MCP-AQL Operations Specification
+MCP-AQL Protocol Overview
+Plugin Interface Contracts
+MCP-AQL Specification Documentation
+MCP-AQL Specification
+Versions
+Dangerous Operation Classification Specification
+MCP Server Discovery Bundle
+Adapter Element Type Specification
+Adapter Generator Specification
+Rate Limiting and Quota Management Specification
+Trust Levels Specification
+Security
+Confirmation Token Specification
+Execution Safety Loop Specification
+Security Model: Gatekeeper Specification
+Features
+Field Selection Specification
+Cursor-Based Pagination Specification
+Warnings Array Specification
+Protocol Comparison Guide
+Developer Guides
+MCP-AQL Breaking Change Policy
+Preliminary Public Launch Checklist
+RFC Process for MCP-AQL Specification
+Versioning Strategy
+Changelog
+Architecture
+Architecture Documentation
+Research
+Protocol Landscape: MCP vs MCP-AQL vs A2A
+Reference
+Reference Documentation
+ADR-001: CRUDE Pattern (Extending CRUD with Execute)
+ADR-002: GraphQL-Style Input Objects for Updates
+ADR-003: snake_case Parameter Convention
+ADR-004: Schema-Driven Operation Definitions
+ADR-005: GraphQL-Style Introspection System
+ADR-006: Discriminated Response Format
+Architecture Decision Records
+Full Spec
+REPO-SYNCED SPEC DOC
+Document Status: This document is informative. For normative requirements, see MCP-AQL Specification v1.0.0.
+Support document Draft 1.0.0-draft 2026-01-16
+Source: spec/docs/introspection.md
+Open Source Markdown
+Browse Full Spec Reference
+Version: 1.0.0-draft Status: Draft Last Updated: 2026-01-16
+Document Status: This document is informative . For normative requirements, see MCP-AQL Specification v1.0.0 .
+Abstract
+This document specifies the MCP-AQL introspection system, which provides GraphQL-style discovery capabilities for operations, parameters, types, and examples at runtime. The introspection system is the only operation that MCP-AQL mandates all adapters implement, enabling AI models to discover capabilities dynamically.
+Table of Contents
+Introduction
+Introspection Query Types
+Response Structures
+Operation Discovery
+Type Discovery
+Implementation Guidance
+Token Efficiency
+Conformance Requirements
+1. Introduction
+1.1 Purpose
+The introspection system enables AI models to discover available operations at runtime rather than parsing large tool schemas upfront. This provides:
+On-demand discovery - Query only what is needed
+Self-documenting API - API describes itself without external documentation
+Token efficiency - Avoid parsing many tool schemas
+Dynamic capability detection - Discover adapter-specific operations
+1.2 Design Principles
+Progressive disclosure - Start with summaries, drill into details
+Consistency - Same response structure for all queries
+Completeness - Sufficient information to construct valid requests
+Efficiency - Minimal response size while maintaining usefulness
+1.3 Introspection Flow
+The following diagram illustrates how an AI model discovers and uses operations:
+graph TB
+subgraph &quot;Introspection Flow&quot;
+LLM[AI Agent]
+INTRO[introspect operation]
+RESOLVER[Introspection Handler]
+SCHEMA[Operation Registry]
+LLM --&gt; |query: operations| INTRO
+INTRO --&gt; RESOLVER
+RESOLVER --&gt; |lookup| SCHEMA
+RESOLVER --&gt; |response| LLM
+1.4 Adapter-Defined Content
+The introspection system returns information about the adapter's operations and types. Different adapters expose different operations - MCP-AQL defines the introspection mechanism, not the operations themselves.
+2. Introspection Query Types
+2.1 The introspect Operation
+All introspection is performed through the introspect operation on the READ endpoint. This is the only operation that MCP-AQL REQUIRES all adapters to implement.
+Request Format:
+operation : &quot;introspect&quot; ,
+params : {
+query : &quot;&lt;query_type&gt;&quot; ,
+name : &quot;&lt;optional_specific_name&gt;&quot;
+2.2 Query Types
+Description
+Optional name Parameter
+operations
+List all available operations
+Get details for a specific operation
+List all available types
+Get details for a specific type
+2.3 Query Behavior
+Without name parameter: Returns a list of all items of that type with summary information.
+With name parameter: Returns detailed information for the specific item.
+2.4 Basic Usage Examples
+// List all operations
+params : { query : &quot;operations&quot; }
+// Get details for a specific operation
+params : { query : &quot;operations&quot; , name : &quot;create_entity&quot; }
+// List all types
+params : { query : &quot;types&quot; }
+// Get details for a specific type
+params : { query : &quot;types&quot; , name : &quot;EntityType&quot; }
+3. Response Structures
+3.1 Standard Response Wrapper
+All introspection responses MUST follow the standard MCP-AQL discriminated response format:
+// Success response
+success : true ,
+data : {
+// Introspection-specific payload
+// Failure response
+success : false ,
+error : {
+code : &quot;INTROSPECTION_ERROR&quot; ,
+message : &quot;Description of what went wrong&quot;
+3.2 OperationInfo (List Item)
+Summary information for an operation in list responses:
+interface OperationInfo {
+name : string ; // Operation identifier (e.g., &quot;create_entity&quot;)
+endpoint : string ; // CRUDE endpoint (e.g., &quot;CREATE&quot;)
+description : string ; // Brief description
+3.3 OperationDetails (Detail Response)
+Complete information for a specific operation:
+interface OperationDetails {
+name : string ; // Operation identifier
+endpoint : string ; // CRUDE endpoint
+mcpTool : string ; // MCP tool name (e.g., &quot;mcp_aql_create&quot;)
+description : string ; // Detailed description
+permissions : EndpointPermissions ;
+parameters : ParameterInfo[] ; // Parameter definitions (see note below)
+returns : TypeInfo ; // Return type information
+examples : OperationExample[] ; // Example invocations
+interface EndpointPermissions {
+readOnly : boolean ; // Whether operation modifies state
+destructive : boolean ; // Whether operation removes state
+interface OperationExample {
+description ?: string ; // Human-readable description of the example
+request : object ; // Example request object
+Terminology Note: The parameters array here describes the definitions of accepted parameters. At request time, callers provide parameter values via the params object (see Section 4.1 of the normative spec ). The keys of params correspond to the name field of each ParameterInfo entry.
+3.4 ParameterInfo
+Parameter definition with optional constraint metadata:
+interface ParameterInfo {
+// Core fields (required)
+name : string ; // Parameter name (snake_case recommended)
+type : string ; // Type name (e.g., &quot;string&quot;, &quot;number&quot;, &quot;boolean&quot;, &quot;array&quot;, &quot;object&quot;)
+required : boolean ; // Whether parameter is required
+// Documentation (optional)
+description ?: string ; // Parameter description
+default ?: unknown ; // Default value if any
+// Constraint fields (optional) - enable client-side validation and LLM guidance
+enum ?: unknown [] ; // Allowed values for this parameter
+minimum ?: number ; // Minimum value for numeric parameters (inclusive)
+maximum ?: number ; // Maximum value for numeric parameters (inclusive)
+minLength ?: number ; // Minimum length for string parameters
+maxLength ?: number ; // Maximum length for string parameters
+pattern ?: string ; // Regex pattern for string validation
+format ?: string ; // Semantic format hint (e.g., &quot;date-time&quot;, &quot;email&quot;, &quot;uri&quot;, &quot;uuid&quot;)
+items ?: object ; // Schema for array element types (nested ParameterInfo)
+// Security (optional)
+sensitive ?: boolean ; // Whether parameter contains sensitive data (passwords, API keys)
+3.4.1 Constraint Field Usage
+Constraint fields are the highest-value properties in the introspection system - they prevent LLM hallucination by telling agents exactly what values are valid.
+Lists all valid values; LLM can select from these
+minimum / maximum
+Numeric bounds; LLM can generate values in range
+minLength / maxLength
+String length limits
+Regex pattern for validation
+Semantic format hint (date-time, email, uri, uuid)
+Element schema for array parameters
+sensitive
+Flag for passwords/API keys; clients SHOULD mask input
+Example with constraints:
+&quot;name&quot; : &quot;page_size&quot; ,
+&quot;type&quot; : &quot;integer&quot; ,
+&quot;required&quot; : false ,
+&quot;description&quot; : &quot;Number of items per page&quot; ,
+&quot;default&quot; : 25 ,
+&quot;minimum&quot; : 1 ,
+&quot;maximum&quot; : 100
+&quot;name&quot; : &quot;status&quot; ,
+&quot;type&quot; : &quot;string&quot; ,
+&quot;required&quot; : true ,
+&quot;description&quot; : &quot;Filter by status&quot; ,
+&quot;enum&quot; : [ &quot;pending&quot; , &quot;active&quot; , &quot;completed&quot; , &quot;cancelled&quot; ]
+&quot;name&quot; : &quot;api_key&quot; ,
+&quot;description&quot; : &quot;API key for authentication&quot; ,
+&quot;sensitive&quot; : true
+3.5 TypeInfo (List Item)
+Summary information for a type:
+interface TypeInfo {
+name : string ; // Type identifier
+kind : TypeKind ; // &quot;enum&quot; | &quot;object&quot; | &quot;scalar&quot; | &quot;union&quot;
+description ?: string ; // Brief description
+3.6 TypeDetails (Detail Response)
+Complete information for a specific type:
+interface TypeDetails extends TypeInfo {
+values ?: string [] ; // For enum types: allowed values
+fields ?: ParameterInfo[] ; // For object types: field definitions
+members ?: string [] ; // For union types: member type names
+4. Operation Discovery
+4.1 Listing All Operations
+Request:
+Response (example from a resource management adapter):
+&quot;success&quot; : true ,
+&quot;data&quot; : {
+&quot;_protocol&quot; : {
+&quot;version&quot; : &quot;1.0.0-alpha.1&quot; ,
+&quot;conformance&quot; : &quot;level-1&quot; ,
+&quot;mode&quot; : &quot;crude&quot; ,
+&quot;capabilities&quot; : {
+&quot;batch&quot; : false ,
+&quot;field_selection&quot; : true ,
+&quot;warnings&quot; : true
+&quot;operations&quot; : [
+&quot;name&quot; : &quot;create_entity&quot; ,
+&quot;endpoint&quot; : &quot;CREATE&quot; ,
+&quot;description&quot; : &quot;Create a new entity&quot;
+&quot;name&quot; : &quot;list_entities&quot; ,
+&quot;endpoint&quot; : &quot;READ&quot; ,
+&quot;description&quot; : &quot;List entities with filtering and pagination&quot;
+&quot;name&quot; : &quot;get_entity&quot; ,
+&quot;description&quot; : &quot;Get an entity by identifier&quot;
+&quot;name&quot; : &quot;update_entity&quot; ,
+&quot;endpoint&quot; : &quot;UPDATE&quot; ,
+&quot;description&quot; : &quot;Update entity properties&quot;
+&quot;name&quot; : &quot;delete_entity&quot; ,
+&quot;endpoint&quot; : &quot;DELETE&quot; ,
+&quot;description&quot; : &quot;Delete an entity&quot;
+&quot;name&quot; : &quot;execute_workflow&quot; ,
+&quot;endpoint&quot; : &quot;EXECUTE&quot; ,
+&quot;description&quot; : &quot;Start execution of a workflow&quot;
+&quot;name&quot; : &quot;introspect&quot; ,
+&quot;description&quot; : &quot;Discover available operations and types&quot;
+4.1.1 Protocol Metadata
+The _protocol object in operations list responses provides version and capability information:
+Required
+MCP-AQL spec version (semver format)
+conformance
+Conformance level ("level-1", "level-2")
+Endpoint mode ("crude", "single", "all")
+capabilities
+Feature flags for optional capabilities
+Capabilities flags:
+Capability
+Supports batch operations
+field_selection
+Supports field selection in responses
+pagination
+Supports cursor-based pagination
+warnings
+Includes warnings array in responses
+confirmation
+Supports confirmation token flow
+dangerous_operations
+Has danger level classification
+Clients can use protocol metadata to:
+Adapt behavior to protocol version
+Detect available features before use
+Enable graceful degradation for older adapters
+4.2 Getting Operation Details
+Response:
+&quot;operation&quot; : {
+&quot;mcpTool&quot; : &quot;mcp_aql_create&quot; ,
+&quot;description&quot; : &quot;Create a new entity of any type&quot; ,
+&quot;permissions&quot; : {
+&quot;readOnly&quot; : false ,
+&quot;destructive&quot; : false
+&quot;parameters&quot; : [
+&quot;name&quot; : &quot;entity_name&quot; ,
+&quot;description&quot; : &quot;Entity name&quot; ,
+&quot;minLength&quot; : 1 ,
+&quot;maxLength&quot; : 100 ,
+&quot;pattern&quot; : &quot;^[a-zA-Z][a-zA-Z0-9_-]*$&quot;
+&quot;name&quot; : &quot;entity_type&quot; ,
+&quot;description&quot; : &quot;Type of entity to create&quot; ,
+&quot;enum&quot; : [ &quot;resource&quot; , &quot;item&quot; , &quot;config&quot; , &quot;workflow&quot; ]
+&quot;name&quot; : &quot;description&quot; ,
+&quot;description&quot; : &quot;Entity description&quot; ,
+&quot;maxLength&quot; : 500
+&quot;name&quot; : &quot;priority&quot; ,
+&quot;description&quot; : &quot;Priority level&quot; ,
+&quot;default&quot; : 5 ,
+&quot;maximum&quot; : 10
+&quot;name&quot; : &quot;metadata&quot; ,
+&quot;type&quot; : &quot;object&quot; ,
+&quot;description&quot; : &quot;Additional metadata&quot;
+&quot;returns&quot; : {
+&quot;name&quot; : &quot;Entity&quot; ,
+&quot;kind&quot; : &quot;object&quot; ,
+&quot;description&quot; : &quot;Newly created entity&quot;
+&quot;examples&quot; : [
+&quot;description&quot; : &quot;Create a resource entity&quot; ,
+&quot;request&quot; : {
+&quot;operation&quot; : &quot;create_entity&quot; ,
+&quot;element_type&quot; : &quot;resource&quot; ,
+&quot;params&quot; : {
+&quot;entity_name&quot; : &quot;MyResource&quot; ,
+&quot;description&quot; : &quot;A sample resource&quot;
+4.3 Unknown Operation
+When querying for an operation that does not exist, implementations MUST return a success response with null data:
+params : { query : &quot;operations&quot; , name : &quot;nonexistent_operation&quot; }
+&quot;operation&quot; : null
+5. Type Discovery
+5.1 Listing All Types
+&quot;types&quot; : [
+&quot;name&quot; : &quot;EntityType&quot; ,
+&quot;kind&quot; : &quot;enum&quot; ,
+&quot;description&quot; : &quot;Available entity types&quot;
+&quot;name&quot; : &quot;CRUDEndpoint&quot; ,
+&quot;description&quot; : &quot;CRUDE endpoint categories for operation classification&quot;
+&quot;name&quot; : &quot;OperationInput&quot; ,
+&quot;description&quot; : &quot;Standard input structure for all MCP-AQL operations&quot;
+&quot;name&quot; : &quot;OperationResult&quot; ,
+&quot;kind&quot; : &quot;union&quot; ,
+&quot;description&quot; : &quot;Standard result type for all operations&quot;
+&quot;name&quot; : &quot;OperationSuccess&quot; ,
+&quot;description&quot; : &quot;Successful operation result&quot;
+&quot;name&quot; : &quot;OperationFailure&quot; ,
+&quot;description&quot; : &quot;Failed operation result&quot;
+5.2 Getting Type Details
+5.2.1 Enum Type
+&quot;type&quot; : {
+&quot;description&quot; : &quot;Available entity types&quot; ,
+&quot;values&quot; : [ &quot;resource&quot; , &quot;item&quot; , &quot;config&quot; , &quot;workflow&quot; ]
+5.2.2 Object Type
+params : { query : &quot;types&quot; , name : &quot;OperationInput&quot; }
+&quot;description&quot; : &quot;Standard input structure for all MCP-AQL operations&quot; ,
+&quot;fields&quot; : [
+&quot;name&quot; : &quot;operation&quot; ,
+&quot;description&quot; : &quot;The operation to perform&quot;
+&quot;name&quot; : &quot;element_type&quot; ,
+&quot;description&quot; : &quot;Element type for element operations&quot;
+&quot;name&quot; : &quot;params&quot; ,
+&quot;description&quot; : &quot;Operation-specific parameters&quot;
+5.2.3 Union Type
+params : { query : &quot;types&quot; , name : &quot;OperationResult&quot; }
+&quot;description&quot; : &quot;Standard result type for all operations&quot; ,
+&quot;members&quot; : [ &quot;OperationSuccess&quot; , &quot;OperationFailure&quot; ]
+5.3 Protocol Types
+MCP-AQL defines these protocol-level types that adapters SHOULD include in their type registry:
+Type Name
+CRUDEndpoint
+Endpoints: CREATE, READ, UPDATE, DELETE, EXECUTE
+OperationInput
+Standard input structure
+OperationResult
+Success or failure result
+OperationSuccess
+Successful result with data
+OperationFailure
+Failed result with error
+EndpointPermissions
+Permission flags for operations
+Adapters define their own domain-specific types in addition to these.
+6. Implementation Guidance
+6.1 Schema-Driven Architecture
+Implementations SHOULD maintain a single source of truth for operation definitions. The introspection system derives its responses from this source:
+graph LR
+subgraph &quot;Introspection Source Resolution&quot;
+OP[Operation Name]
+SCHEMA[Operation Schema&lt;br/&gt;Single Source of Truth]
+RESPONSE[Introspection Response]
+OP --&gt; SCHEMA
+SCHEMA --&gt; RESPONSE
+6.2 Introspection Handler Architecture
+A conforming implementation typically includes these components:
+classDiagram
+class IntrospectionHandler {
++resolve(params) IntrospectionResult
+-listOperations() OperationInfo[]
+-getOperationDetails(name) OperationDetails
+-listTypes() TypeInfo[]
+-getTypeDetails(name) TypeDetails
++getOperationsByEndpoint() Record
++getSummary() string
+class OperationRegistry {
++getOperation(name) OperationSchema
++getAllOperations() OperationSchema[]
++isValidOperation(name) boolean
+class TypeRegistry {
++getType(name) TypeDefinition
++getAllTypes() TypeDefinition[]
++isValidType(name) boolean
+IntrospectionHandler --&gt; OperationRegistry : queries
+IntrospectionHandler --&gt; TypeRegistry : queries
+6.3 Utility Methods
+Implementations MAY provide utility methods for documentation and tooling:
+Operations by Endpoint:
+// Returns operations grouped by CRUDE endpoint
+getOperationsByEndpoint () : Record &lt; CRUDEndpoint , OperationInfo[] &gt;
+Summary Generation:
+// Returns a human-readable summary of all operations
+getSummary () : string
+// Example output:
+// MCP-AQL Operations:
+// CREATE: create_entity, import_entity
+// READ: list_entities, get_entity, introspect
+// UPDATE: update_entity
+// DELETE: delete_entity
+// EXECUTE: execute_workflow
+// Types: EntityType, CRUDEndpoint, OperationInput, OperationResult
+// Use introspect with name parameter for details.
+7. Token Efficiency
+7.1 Discovery Pattern
+The introspection system enables a token-efficient discovery pattern:
+Step 1: List operations (~50 tokens response)
+{ operation: &quot;introspect&quot;, params: { query: &quot;operations&quot; } }
+Step 2: Get details for relevant operation (~100 tokens response)
+{ operation: &quot;introspect&quot;, params: { query: &quot;operations&quot;, name: &quot;create_entity&quot; } }
+Step 3: Execute operation
+{ operation: &quot;create_entity&quot;, params: { ... } }
+7.2 Comparison with Discrete Tools
+Approach
+Upfront Cost
+Per-Operation Cost
+Total (10 ops)
+Discrete tools
+~29,600 tokens
+MCP-AQL + introspect
+~1,100 tokens
+~150 tokens
+7.3 Caching Recommendations
+A session is the lifetime of a single MCP connection (see Section 2.3 of the core specification).
+Implementations SHOULD:
+Cache introspection responses for the duration of the MCP connection (session)
+Return consistent results for the same query within a session
+Invalidate all cached introspection data when the session ends
+Invalidate cache mid-session only when server configuration changes
+8. Conformance Requirements
+8.1 MUST Requirements
+Conforming implementations MUST:
+Implement the introspect operation on the READ endpoint
+Support both operations and types query types
+Return OperationInfo for all supported operations when listing
+Return OperationDetails when querying a specific operation by name
+Return TypeInfo for all supported types when listing
+Return TypeDetails when querying a specific type by name
+Include accurate parameter information with required flags
+Use consistent type names across all responses
+Return null for the item (not an error) when querying a non-existent operation or type
+Follow the discriminated response format ( { success, data } or { success, error } )
+Include _protocol object in operations list responses with at least the version field
+8.1.1 Introspection Accuracy (MUST)
+Introspection responses MUST accurately reflect the actual parameter names, types, and behaviors accepted by the implementation:
+Parameter names in introspection MUST match the names expected by the operation handler
+Parameter types in introspection MUST match the types accepted by the operation handler
+Required/optional status in introspection MUST match the actual handler behavior
+8.1.2 Parameter Completeness (MUST)
+For every operation, implementations MUST ensure introspection completeness:
+Every parameter accepted by the handler implementation MUST appear in introspection metadata
+Required parameters MUST appear with required: true
+Optional parameters MUST appear with required: false
+Feature parameters (e.g., fields , limit , offset ) MUST appear with full type information
+Conformance Test:
+FOR EACH operation in introspection:
+1. Get documented parameters from introspection
+2. Attempt operation with each documented parameter
+3. Attempt operation with known cross-cutting parameters (fields, limit, offset)
+4. Compare accepted vs documented parameters
+FAIL IF: Operation accepts parameters not in introspection
+WARN IF: Introspection documents parameters not accepted
+8.1.3 Error Message Quality (MUST)
+Error responses MUST NOT expose internal implementation details:
+Error messages MUST NOT include programming language error messages
+Error messages MUST NOT include stack traces
+Error messages MUST NOT include internal class/object names or file paths
+8.2 SHOULD Requirements
+Conforming implementations SHOULD:
+Include usage examples for all operations
+Provide meaningful descriptions for all parameters
+Document default values in parameter info
+Return operations grouped by endpoint in list responses
+Include the protocol types ( CRUDEndpoint , OperationResult , etc.)
+Implement caching for introspection responses
+Include the introspect operation in the operations list
+Derive introspection data from a single source of truth (operation schema)
+8.2.1 Unknown Parameter Handling (SHOULD)
+Implementations SHOULD handle unrecognized parameters explicitly:
+Accept parameters at documented locations, OR
+Return a warning or error when unrecognized parameters are provided
+Implementations SHOULD NOT silently ignore parameters
+8.2.2 Element-Type Constraints (SHOULD)
+Introspection responses SHOULD document element-type-specific constraints:
+Read-only or append-only fields SHOULD be documented
+Required nesting (e.g., "tags must be in metadata.tags") SHOULD be documented
+Operations that don't apply to certain element types SHOULD be noted
+8.2.3 Error Message Guidance (SHOULD)
+Error responses SHOULD include actionable information:
+A clear description of what went wrong
+The correct action the user should take
+Reference to the appropriate operation if applicable
+Recommended Error Message Format:
+Missing required parameter &#39;{paramName}&#39;. Expected: {type} ({description})
+Examples:
+Missing required parameter &#39;name&#39;. Expected: string (the name of the memory to operate on)
+Missing required parameter &#39;source&#39;. Expected: string (URL or file path to import from)
+8.2.4 Deprecated Parameters (SHOULD)
+Deprecated parameters SHOULD appear in introspection with a deprecation notice
+Deprecated parameters SHOULD include migration guidance in the description
+8.3 MAY Requirements
+Conforming implementations MAY:
+Define additional custom types
+Include additional metadata in responses
+Support additional query types beyond operations and types
+Provide filtering/pagination for large operation lists
+Include utility methods for documentation generation
+Support field selection on introspection responses
+References
+MCP-AQL Specification v1.0.0-draft
+CRUDE Pattern Specification
+Operations Guide
+&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
+Docs Library
+MCPAQL Organization
+Dollhouse Research

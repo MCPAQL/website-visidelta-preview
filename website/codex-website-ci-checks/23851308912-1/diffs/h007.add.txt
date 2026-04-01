@@ -1,0 +1,17 @@
+Getting Started
+Error Model
+Adapter Contracts
+Release Notes
+Go Deeper In The Full Spec
+The detail behind compatibility claims and test scope lives in the longer conformance-oriented spec pages.
+Conformance Testing Specification
+Normative Draft
+Browse the full spec reference
+Related Summary Pages
+Conformance lands best when read alongside the protocol rules, error surface, and launch scope.
+Back to the docs library
+Live conformance-related issues
+#204 conformance validation framework
+#199 structured error surface alignment
+#57 introspection must document handler-supported parameters
+#10 conformance test suite

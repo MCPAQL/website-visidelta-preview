@@ -1,0 +1,109 @@
+MCP-AQL Spec | Full Reference
+Launch Checklist
+Adapter Patterns
+Search MCP-AQL docs
+Full Spec
+REPO-SYNCED SPEC REFERENCE
+The deeper protocol docs now live on the website too
+These pages are generated from MCPAQL/spec so the public site can carry the full protocol and adapter material,
+not just summaries and links back to GitHub.
+Read The Normative Draft
+Back To Docs Library
+How To Use This Section
+Use the summary pages in Docs Library for orientation and launch framing.
+Use this repo-synced reference for the fuller spec text hosted directly on the website.
+In case of conflict, the versioned draft under versions/ remains the normative source.
+MCP-AQL Conformance Testing Specification
+Document Status: This document is an informative conformance framework specification aligned to the normative protocol requirements in docs/versions/v1.0.0-draft.md. Implementation Status: The full mcpaql-conformance run
+Support document
+Open Page
+MCP-AQL CRUDE Pattern Specification
+Document Status: This document is informative. For normative requirements, see MCP-AQL Specification v1.0.0.
+MCP-AQL Endpoint Modes Specification
+Structured Error Codes Specification
+This document defines the structured error code system for MCP-AQL protocol responses. Structured error codes enable machine-readable error handling, consistent error categorization, and reliable error mapping across ada
+Draft (MVP)
+MCP-AQL Introspection Specification
+MCP-AQL Licensing Options (Working Notes)
+This document is a discussion aid for deciding how to license the MCP-AQL ecosystem (spec + schema artifacts + tooling + generated adapters + brand/name), while meeting these goals:
+MCP Integration Specification
+This document specifies how MCP-AQL adapters integrate with the Model Context Protocol (MCP). It defines tool registration requirements, input schema composition, error mapping between protocols, progress notification ha
+MCP-AQL Operations Specification
+MCP-AQL Protocol Overview
+MCP-AQL (Model Context Protocol - Agent Query Language) is a protocol that consolidates discrete MCP tools into 5 CRUDE endpoints (Create, Read, Update, Delete, Execute), providing significant token reduction while maint
+Plugin Interface Contracts
+This document defines the normative plugin interface contracts for the MCP-AQL adapter system. Plugins provide modular, composable functionality for transport, protocol, authentication, and serialization. This specificat
+MCP-AQL Specification Documentation
+This directory contains the MCP-AQL specification set:
+MCP-AQL Specification
+Model Context Protocol - Advanced Agent API Adapter Query Language
+Repository source
+Versions
+MCP-AQL (Model Context Protocol - Advanced Agent API Adapter Query Language) is a protocol specification that consolidates multiple MCP tools into semantic CRUDE endpoints, providing significant token reduction while ena
+Normative source
+Dangerous Operation Classification Specification
+This document defines a standard classification system for dangerous operations in MCP-AQL adapters. Danger levels enable automatic lockdown of high-risk actions, consistent confirmation requirements, and trust-based per
+MCP Server Discovery Bundle
+Document Status: This document is informative support text for the current MCP-AQL draft. The normative source of truth remains Specification v1.0.0-draft plus the published schemas in spec/schemas/.
+Adapter Element Type Specification
+This document defines the Adapter Element Type, a declarative schema format for describing how MCP-AQL CRUDE operations map to target API calls. Adapters are Markdown files with YAML front matter that a universal runtime
+Adapter Generator Specification
+This document specifies the requirements and behavior of MCP-AQL adapter generators. An adapter generator takes a schema definition as input and produces compliant adapter code with required licensing artifacts and prove
+Rate Limiting and Quota Management Specification
+This document defines the rate limiting and quota management system for MCP-AQL adapters. Rate limits enable systems to respect API constraints, prevent runaway costs, and provide graceful degradation under load.
+Trust Levels Specification
+This document defines the trust level system for MCP-AQL adapters. Trust levels indicate the verification and validation status of an adapter, enabling systems to make informed decisions about which operations to permit
+Security
+Confirmation Token Specification
+This document specifies the confirmation token mechanism used by MCP-AQL adapters to gate dangerous operations and quota continuations. Confirmation tokens provide a secure, time-limited method for clients to acknowledge
+Execution Safety Loop Specification
+Informative Document: This is an informative specification that provides detailed guidance for the execution safety loop pattern defined normatively in Section 8.6 of the core specification. In case of conflict, the norm
+Security Model: Gatekeeper Specification
+This document specifies an optional security model for MCP-AQL adapters, providing multi-layer access control, confirmation requirements, and audit capabilities.
+Features
+Field Selection Specification
+This document specifies the optional field selection feature that enables clients to request only specific fields in responses, reducing payload size and token consumption.
+Cursor-Based Pagination Specification
+This document defines cursor-based pagination semantics for MCP-AQL operations that return collections. Cursor pagination enables efficient iteration through large datasets while minimizing token usage in LLM context win
+Warnings Array Specification
+This document specifies the warnings array extension to MCP-AQL's discriminated response format. Warnings provide a mechanism to communicate non-fatal conditions to clients within successful responses, enabling proactive
+Protocol Comparison Guide
+This document helps developers familiar with GraphQL, MongoDB, REST, SQL, or classic MCP understand MCP-AQL by mapping familiar concepts to their MCP-AQL equivalents.
+Developer Guides
+Step-by-step guides for implementing and using MCP-AQL adapters.
+MCP-AQL Breaking Change Policy
+This document defines how breaking changes are handled in the MCP-AQL specification, including change classification, deprecation procedures, migration requirements, and communication standards.
+Preliminary Public Launch Checklist
+This checklist defines the minimum quality bar for a coordinated preliminary public launch of:
+RFC Process for MCP-AQL Specification
+This document describes the formal process for proposing, reviewing, and accepting changes to the MCP-AQL specification through Requests for Comments (RFCs).
+Versioning Strategy
+This document describes the version numbering scheme and release process for the MCPAQL specification.
+Changelog
+All notable changes to the MCP-AQL specification will be documented in this file.
+Architecture
+Architecture Documentation
+Implementation architecture documentation has moved to the mcpaql-adapter repository.
+research
+Protocol Landscape: MCP vs MCP-AQL vs A2A
+A strategic comparison of three protocols shaping how AI agents interact with the world: where they overlap, where they diverge, and where the gaps are.
+Reference
+Reference Documentation
+Detailed specifications for schemas, formats, and protocol structures.
+ADR-001: CRUDE Pattern (Extending CRUD with Execute)
+Date: 2026-01-16
+Accepted
+ADR-002: GraphQL-Style Input Objects for Updates
+ADR-003: snake_case Parameter Convention
+ADR-004: Schema-Driven Operation Definitions
+ADR-005: GraphQL-Style Introspection System
+ADR-006: Discriminated Response Format
+Architecture Decision Records
+This directory contains Architecture Decision Records (ADRs) documenting significant design decisions in the MCP-AQL protocol specification.
+Accepted | Proposed | Deprecated | Superseded
+See index.md for the complete list of ADRs.
+&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
+Docs Library
+Spec Repository
+MCPAQL Organization
+Dollhouse Research

@@ -1,0 +1,49 @@
+MCP-AQL Docs | Release Notes
+Launch Checklist
+Adapter Patterns
+Search MCP-AQL docs
+In This Library
+Getting Started
+Protocol Core
+Error Model
+Security Model
+Conformance
+Adapter Contracts
+Implementation Profiles
+RELEASE NOTES
+Recent draft changes that affect public understanding
+These notes summarize the most launch-relevant items from the spec changelog so the public website can reflect what changed
+without requiring readers to scan the entire repository history.
+Full Changelog
+Release plan issue
+Go Deeper In The Full Spec
+The on-site changelog and process pages carry the detailed history behind the launch-facing notes on this page.
+Versioning Strategy
+Launch Checklist Source
+Browse the full spec reference
+Related Summary Pages
+Release context is easiest to read alongside the roadmap and public launch controls.
+Back to the docs library
+Recent highlights
+Launch framing clarified
+README and draft status language now explicitly frame MCP-AQL as a preliminary public draft.
+Normative versus informative document boundaries were tightened across the spec docs.
+A coordinated preliminary launch checklist was added for spec and reference-profile messaging.
+Safety model expanded
+Execution safety loop, safety-dongle model, autonomy evaluator, and out-of-band verification are now documented.
+Section 9 compliance mappings were expanded to better align informative safety docs to normative requirements.
+Issue #216 remains the audit record for that alignment work.
+Operational contracts hardened
+Unknown parameter rejection and structured error examples were added to reduce LLM ambiguity.
+Canonical operation verbs and session lifecycle guidance were made more explicit.
+Batch confirmation behavior and payload-size constraints were documented.
+Still open for draft launch
+#193 MCP capability audit
+#197 batch size and resource protections
+#199 structured error surface alignment
+&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
+Docs Library
+Portal Home
+MCPAQL Organization
+Dollhouse Research
+DollhouseMCP Production Profile

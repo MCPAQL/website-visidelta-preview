@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="This document describes the version numbering scheme and release process for the MCPAQL specification.">
+  <title>MCP-AQL Spec | Versioning Strategy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <a class="logo" href="../../index.html"><span class="logo-mark"></span>MCP-AQL</a>
+        <ul class="nav-links">
+          <li><a href="../../index.html">Home</a></li>
+          <li><a href="../../docs/index.html">Docs</a></li>
+          <li><a href="../../launch-checklist.html">Launch Checklist</a></li>
+          <li><a href="../../apis/mcp-server.html">Adapter Patterns</a></li>
+        </ul>
+        <form class="site-search" data-search-form data-index-url="../../data/search-index.json" role="search">
+          <label class="sr-only" for="site-search-input">Search MCP-AQL docs</label>
+          <input id="site-search-input" data-search-input type="search" placeholder="Search repo-synced spec docs...">
+          <span class="search-count" data-search-count></span>
+          <ul class="search-results" data-search-results hidden></ul>
+        </form>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container docs-shell">
+      <aside class="docs-side">
+        <h2>Repo-Synced Spec</h2>
+        <p class="docs-side-note">Generated from <code>MCPAQL/spec</code> so the website carries the deeper protocol material too.</p>
+        <div class="docs-side-group">
+  <h3>Core</h3>
+  <ul><li><a href="../conformance-testing.html">MCP-AQL Conformance Testing Specification</a></li><li><a href="../crude-pattern.html">MCP-AQL CRUDE Pattern Specification</a></li><li><a href="../endpoint-modes.html">MCP-AQL Endpoint Modes Specification</a></li><li><a href="../error-codes.html">Structured Error Codes Specification</a></li><li><a href="../introspection.html">MCP-AQL Introspection Specification</a></li><li><a href="../licensing-options.html">MCP-AQL Licensing Options (Working Notes)</a></li><li><a href="../mcp-integration.html">MCP Integration Specification</a></li><li><a href="../operations.html">MCP-AQL Operations Specification</a></li><li><a href="../overview.html">MCP-AQL Protocol Overview</a></li><li><a href="../plugin-contracts.html">Plugin Interface Contracts</a></li><li><a href="../README.html">MCP-AQL Specification Documentation</a></li><li><a href="../repo/README.html">MCP-AQL Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Versions</h3>
+  <ul><li><a href="../versions/v1.0.0-draft.html">MCP-AQL Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Adapter</h3>
+  <ul><li><a href="../adapter/danger-levels.html">Dangerous Operation Classification Specification</a></li><li><a href="../adapter/discovery-bundle.html">MCP Server Discovery Bundle</a></li><li><a href="../adapter/element-type.html">Adapter Element Type Specification</a></li><li><a href="../adapter/generator.html">Adapter Generator Specification</a></li><li><a href="../adapter/rate-limiting.html">Rate Limiting and Quota Management Specification</a></li><li><a href="../adapter/trust-levels.html">Trust Levels Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Security</h3>
+  <ul><li><a href="../security/confirmation-tokens.html">Confirmation Token Specification</a></li><li><a href="../security/execution-safety-loop.html">Execution Safety Loop Specification</a></li><li><a href="../security/gatekeeper.html">Security Model: Gatekeeper Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Features</h3>
+  <ul><li><a href="../features/field-selection.html">Field Selection Specification</a></li><li><a href="../features/pagination.html">Cursor-Based Pagination Specification</a></li><li><a href="../features/warnings.html">Warnings Array Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Guides</h3>
+  <ul><li><a href="../guides/protocol-comparison.html">Protocol Comparison Guide</a></li><li><a href="../guides/README.html">Developer Guides</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Process</h3>
+  <ul><li><a href="breaking-changes.html">MCP-AQL Breaking Change Policy</a></li><li><a href="preliminary-public-launch-checklist.html">Preliminary Public Launch Checklist</a></li><li><a href="rfc-process.html">RFC Process for MCP-AQL Specification</a></li><li><a class="current" href="versioning.html">Versioning Strategy</a></li><li><a href="../repo/CHANGELOG.html">Changelog</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Architecture</h3>
+  <ul><li><a href="../architecture/README.html">Architecture Documentation</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Research</h3>
+  <ul><li><a href="../research/mcp-vs-mcpaql-vs-a2a.html">Protocol Landscape: MCP vs MCP-AQL vs A2A</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Reference</h3>
+  <ul><li><a href="../reference/README.html">Reference Documentation</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>ADRs</h3>
+  <ul><li><a href="../adr/ADR-001-crude-pattern.html">ADR-001: CRUDE Pattern (Extending CRUD with Execute)</a></li><li><a href="../adr/ADR-002-graphql-style-input.html">ADR-002: GraphQL-Style Input Objects for Updates</a></li><li><a href="../adr/ADR-003-snake-case-parameters.html">ADR-003: snake_case Parameter Convention</a></li><li><a href="../adr/ADR-004-schema-driven-operations.html">ADR-004: Schema-Driven Operation Definitions</a></li><li><a href="../adr/ADR-005-introspection-system.html">ADR-005: GraphQL-Style Introspection System</a></li><li><a href="../adr/ADR-006-discriminated-responses.html">ADR-006: Discriminated Response Format</a></li><li><a href="../adr/index.html">Architecture Decision Records</a></li><li><a href="../adr/README.html">Architecture Decision Records</a></li></ul>
+</div>
+      </aside>
+
+      <article class="docs-main">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+          <ol>
+            <li><a href="../../index.html">Home</a></li>
+            <li><a href="../index.html">Full Spec</a></li>
+            <li><span class="current">Versioning Strategy</span></li>
+          </ol>
+        </nav>
+        <section class="hero docs-hero">
+          <div class="hero-inner">
+            <span class="status-pill">REPO-SYNCED SPEC DOC</span>
+            <h1>Versioning Strategy</h1>
+            <p class="lede">This document describes the version numbering scheme and release process for the MCPAQL specification.</p>
+            <div class="spec-meta"><span class="state-chip live">Support document</span><span class="state-chip pending">draft</span><span class="state-chip">1.0.0-draft</span></div>
+            <p class="spec-source">Source: <a href="https://github.com/MCPAQL/spec/blob/main/docs/process/versioning.md">spec/docs/process/versioning.md</a></p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="https://github.com/MCPAQL/spec/blob/main/docs/process/versioning.md">Open Source Markdown</a>
+              <a class="btn btn-secondary" href="../index.html">Browse Full Spec Reference</a>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <div class="card spec-prose">
+            <p>This document describes the version numbering scheme and release process for the MCPAQL specification.</p>
+<h2 id="overview">Overview</h2>
+<p>MCPAQL follows <a href="https://semver.org/">Semantic Versioning 2.0.0</a> (SemVer) for core <code>MAJOR.MINOR.PATCH</code> compatibility signaling. For publication stages, MCP-AQL also uses project-specific draft lifecycle tags (<code>draft</code>, <code>alpha.N</code>, <code>beta.N</code>, <code>rc.N</code>) to communicate spec maturity.</p>
+<h2 id="version-format">Version Format</h2>
+<pre><code>MAJOR.MINOR.PATCH[-PRERELEASE]</code></pre>
+<h3 id="components">Components</h3>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MAJOR</td>
+<td>Breaking changes that require implementation updates</td>
+</tr>
+<tr>
+<td>MINOR</td>
+<td>New features, backward compatible</td>
+</tr>
+<tr>
+<td>PATCH</td>
+<td>Bug fixes, clarifications, backward compatible</td>
+</tr>
+<tr>
+<td>PRERELEASE</td>
+<td>Optional tag indicating release maturity</td>
+</tr>
+</tbody>
+</table>
+<h3 id="examples">Examples</h3>
+<table>
+<thead>
+<tr>
+<th>Version</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>1.0.0-draft</code></td>
+<td>Current working draft</td>
+</tr>
+<tr>
+<td><code>1.0.0</code></td>
+<td>First stable release</td>
+</tr>
+<tr>
+<td><code>1.1.0</code></td>
+<td>New features added (backward compatible)</td>
+</tr>
+<tr>
+<td><code>1.1.1</code></td>
+<td>Bug fixes or clarifications</td>
+</tr>
+<tr>
+<td><code>2.0.0</code></td>
+<td>Breaking changes from v1.x</td>
+</tr>
+</tbody>
+</table>
+<h2 id="pre-release-tags">Pre-release Tags</h2>
+<p>Pre-release versions use the following tags appended to the version number:</p>
+<h3 id="-draft"><code>-draft</code></h3>
+<p>Working draft, subject to significant change. Not recommended for production implementations.</p>
+<pre><code>1.0.0-draft</code></pre>
+<h3 id="-alphan"><code>-alpha.N</code></h3>
+<p>Early preview releases for initial feedback. APIs and behaviors may change substantially.</p>
+<pre><code>1.0.0-alpha.1
+1.0.0-alpha.2</code></pre>
+<h3 id="-betan"><code>-beta.N</code></h3>
+<p>Feature complete preview. APIs are stabilizing but may still change based on feedback.</p>
+<pre><code>1.0.0-beta.1
+1.0.0-beta.2</code></pre>
+<h3 id="-rcn"><code>-rc.N</code></h3>
+<p>Release candidate. Final testing before stable release. Only critical bug fixes expected.</p>
+<pre><code>1.0.0-rc.1
+1.0.0-rc.2</code></pre>
+<h3 id="pre-release-progression">Pre-release Progression</h3>
+<pre><code>draft -&gt; alpha.1 -&gt; alpha.N -&gt; beta.1 -&gt; beta.N -&gt; rc.1 -&gt; rc.N -&gt; stable</code></pre>
+<h3 id="draft-label-convention">Draft Label Convention</h3>
+<p><code>v1.0.0-draft</code> is intentionally treated as the active public working-draft line, even though earlier snapshots such as <code>v1.0.0-alpha.1</code> exist in repository history.</p>
+<p>This is a deliberate publication-stage convention (RFC/W3C-style draft signaling), not a strict semver precedence claim across mixed pre-release labels.</p>
+<p>Implementations and tooling SHOULD use <code>SPEC_VERSION</code> and release notes as the source of truth for the current normative draft target rather than inferring maturity solely from lexical pre-release sorting.</p>
+<h2 id="version-increment-rules">Version Increment Rules</h2>
+<h3 id="major-version-increment">MAJOR Version Increment</h3>
+<p>Increment MAJOR when making incompatible changes that require existing implementations to be updated:</p>
+<ul>
+<li>Removing or renaming required operations</li>
+<li>Changing the behavior of existing operations in breaking ways</li>
+<li>Modifying required request/response schemas incompatibly</li>
+<li>Removing or renaming required element types</li>
+<li>Changing security requirements in ways that break existing implementations</li>
+</ul>
+<p><strong>Example</strong>: Renaming the <code>list_elements</code> operation to <code>list_all</code> would require a MAJOR version bump.</p>
+<h3 id="minor-version-increment">MINOR Version Increment</h3>
+<p>Increment MINOR when adding functionality in a backward compatible manner:</p>
+<ul>
+<li>Adding new optional operations</li>
+<li>Adding new element types</li>
+<li>Adding optional fields to existing schemas</li>
+<li>Extending capabilities without breaking existing implementations</li>
+<li>Adding new pre-defined values to enumerations (when implementations ignore unknown values)</li>
+</ul>
+<p><strong>Example</strong>: Adding a new <code>archive_element</code> operation would require a MINOR version bump.</p>
+<h3 id="patch-version-increment">PATCH Version Increment</h3>
+<p>Increment PATCH for backward compatible bug fixes and clarifications:</p>
+<ul>
+<li>Correcting typos or unclear wording in the specification</li>
+<li>Adding examples or clarifications</li>
+<li>Fixing errors in documentation</li>
+<li>Non-functional improvements to the specification text</li>
+</ul>
+<p><strong>Example</strong>: Clarifying the expected behavior when an element is not found would be a PATCH release.</p>
+<h2 id="release-process">Release Process</h2>
+<h3 id="1-create-release-branch">1. Create Release Branch</h3>
+<p>Create a release branch from <code>develop</code>:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout develop</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> pull origin develop</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout <span class="at">-b</span> release/vX.Y.Z</span></code></pre></div>
+<h3 id="2-update-version-numbers">2. Update Version Numbers</h3>
+<p>Update version references throughout the repository:</p>
+<ul>
+<li>Specification document in <code>docs/versions/</code></li>
+<li>Version badges and references in <code>README.md</code></li>
+<li>Any version constants or metadata</li>
+</ul>
+<h3 id="3-update-changelog">3. Update CHANGELOG</h3>
+<p>Add a new section to <code>CHANGELOG.md</code> documenting:</p>
+<ul>
+<li>New features</li>
+<li>Changes</li>
+<li>Deprecations</li>
+<li>Bug fixes</li>
+<li>Breaking changes (if MAJOR release)</li>
+</ul>
+<h3 id="4-create-pull-request">4. Create Pull Request</h3>
+<p>Open a pull request from <code>release/vX.Y.Z</code> to <code>main</code>:</p>
+<ul>
+<li>Title: <code>Release vX.Y.Z</code></li>
+<li>Description: Summary of changes, link to CHANGELOG entry</li>
+<li>Request reviews from maintainers</li>
+</ul>
+<h3 id="5-tag-release">5. Tag Release</h3>
+<p>After PR approval and merge:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout main</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> pull origin main</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> tag <span class="at">-a</span> vX.Y.Z <span class="at">-m</span> <span class="st">&quot;Release vX.Y.Z&quot;</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push origin vX.Y.Z</span></code></pre></div>
+<h3 id="6-create-github-release">6. Create GitHub Release</h3>
+<p>Create a GitHub release from the tag:</p>
+<ul>
+<li>Title: <code>vX.Y.Z</code></li>
+<li>Description: Copy relevant CHANGELOG section</li>
+<li>Attach any release artifacts if applicable</li>
+<li>Mark as pre-release if using pre-release tags</li>
+</ul>
+<h3 id="7-post-release">7. Post-Release</h3>
+<p>After release:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout develop</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> merge main</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push origin develop</span></code></pre></div>
+<h2 id="version-locations">Version Locations</h2>
+<p>Version information is maintained in the following locations:</p>
+<table>
+<thead>
+<tr>
+<th>Location</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>docs/versions/vX.Y.Z.md</code></td>
+<td>Full specification document for each version</td>
+</tr>
+<tr>
+<td><code>CHANGELOG.md</code></td>
+<td>Complete version history with changes</td>
+</tr>
+<tr>
+<td><code>README.md</code></td>
+<td>Version badge showing current stable version</td>
+</tr>
+</tbody>
+</table>
+<h3 id="specification-document-naming">Specification Document Naming</h3>
+<p>Each version of the specification is stored as a separate document:</p>
+<pre><code>docs/versions/
+  v1.0.0-draft.md
+  v1.0.0.md
+  v1.1.0.md
+  v2.0.0.md</code></pre>
+<h2 id="release-cadence">Release Cadence</h2>
+<h3 id="patch-releases">Patch Releases</h3>
+<ul>
+<li><strong>Frequency</strong>: As needed</li>
+<li><strong>Trigger</strong>: Documentation errors, clarifications, or minor corrections</li>
+<li><strong>Review</strong>: Minimal review required</li>
+</ul>
+<h3 id="minor-releases">Minor Releases</h3>
+<ul>
+<li><strong>Frequency</strong>: Quarterly, or as features accumulate</li>
+<li><strong>Trigger</strong>: New features, enhancements, or accumulated improvements</li>
+<li><strong>Review</strong>: Full review cycle with community feedback period</li>
+</ul>
+<h3 id="major-releases">Major Releases</h3>
+<ul>
+<li><strong>Frequency</strong>: Only when breaking changes are required</li>
+<li><strong>Trigger</strong>: Fundamental changes to the specification that cannot be made backward compatible</li>
+<li><strong>Review</strong>: Extended review cycle with migration guide and deprecation period</li>
+</ul>
+<h3 id="release-schedule-considerations">Release Schedule Considerations</h3>
+<ul>
+<li>Avoid releasing during major holidays or conference periods</li>
+<li>Provide adequate notice for breaking changes (MAJOR releases)</li>
+<li>Consider implementation burden when planning release frequency</li>
+<li>Batch related changes when possible to reduce release overhead</li>
+</ul>
+<h2 id="version-compatibility">Version Compatibility</h2>
+<h3 id="backward-compatibility">Backward Compatibility</h3>
+<p>MINOR and PATCH releases maintain backward compatibility:</p>
+<ul>
+<li>Implementations conforming to vX.Y.Z should work with vX.Y+1.Z specifications</li>
+<li>New optional features may not be supported, but existing functionality remains</li>
+</ul>
+<h3 id="forward-compatibility">Forward Compatibility</h3>
+<p>Implementations should be designed for forward compatibility where possible:</p>
+<ul>
+<li>Ignore unknown fields in responses</li>
+<li>Handle unknown enumeration values gracefully</li>
+<li>Provide fallback behavior for unrecognized operations</li>
+</ul>
+<h2 id="see-also">See Also</h2>
+<ul>
+<li><a href="https://semver.org/">Semantic Versioning 2.0.0</a></li>
+<li><a href="../repo/CHANGELOG.html">CHANGELOG.md</a></li>
+<li><a href="https://github.com/MCPAQL/spec/blob/main/CONTRIBUTING.md">Contributing Guide</a></li>
+</ul>
+
+          </div>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.</p>
+      <div class="footer-links">
+        <a href="../../docs/index.html">Docs Library</a>
+        <a href="../index.html">Repo-Synced Spec</a>
+        <a href="https://github.com/MCPAQL">MCPAQL Organization</a>
+        <a href="https://dollhouseresearch.com">Dollhouse Research</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../js/search.js"></script>
+</body>
+</html>

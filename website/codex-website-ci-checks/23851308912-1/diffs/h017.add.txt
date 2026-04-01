@@ -1,0 +1,9 @@
+#193 MCP capability alignment audit
+#197 batch/resource safeguard clarity
+#199 structured error alignment
+#194 release-plan coordination
+Public docs minimum bar
+Home page must explain the draft clearly and point readers to the versioned spec.
+Docs library must cover protocol core, errors, safety, conformance, contracts, profiles, and roadmap status.
+Launch pages must link the real open issues instead of implying hidden readiness criteria.
+Public wording must keep canonical spec authority distinct from the Dollhouse practical profile.

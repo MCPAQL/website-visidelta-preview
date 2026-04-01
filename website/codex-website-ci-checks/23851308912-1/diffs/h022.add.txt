@@ -1,0 +1,368 @@
+MCP-AQL Spec | Adapter Element Type Specification
+Launch Checklist
+Adapter Patterns
+Search MCP-AQL docs
+Repo-Synced Spec
+Generated from MCPAQL/spec so the website carries the deeper protocol material too.
+MCP-AQL Conformance Testing Specification
+MCP-AQL CRUDE Pattern Specification
+MCP-AQL Endpoint Modes Specification
+Structured Error Codes Specification
+MCP-AQL Introspection Specification
+MCP-AQL Licensing Options (Working Notes)
+MCP Integration Specification
+MCP-AQL Operations Specification
+MCP-AQL Protocol Overview
+Plugin Interface Contracts
+MCP-AQL Specification Documentation
+MCP-AQL Specification
+Versions
+Dangerous Operation Classification Specification
+MCP Server Discovery Bundle
+Adapter Element Type Specification
+Adapter Generator Specification
+Rate Limiting and Quota Management Specification
+Trust Levels Specification
+Security
+Confirmation Token Specification
+Execution Safety Loop Specification
+Security Model: Gatekeeper Specification
+Features
+Field Selection Specification
+Cursor-Based Pagination Specification
+Warnings Array Specification
+Protocol Comparison Guide
+Developer Guides
+MCP-AQL Breaking Change Policy
+Preliminary Public Launch Checklist
+RFC Process for MCP-AQL Specification
+Versioning Strategy
+Changelog
+Architecture
+Architecture Documentation
+Research
+Protocol Landscape: MCP vs MCP-AQL vs A2A
+Reference
+Reference Documentation
+ADR-001: CRUDE Pattern (Extending CRUD with Execute)
+ADR-002: GraphQL-Style Input Objects for Updates
+ADR-003: snake_case Parameter Convention
+ADR-004: Schema-Driven Operation Definitions
+ADR-005: GraphQL-Style Introspection System
+ADR-006: Discriminated Response Format
+Architecture Decision Records
+Full Spec
+REPO-SYNCED SPEC DOC
+This document defines the Adapter Element Type, a declarative schema format for describing how MCP-AQL CRUDE operations map to target API calls. Adapters are Markdown files with YAML front matter that a universal runtime
+Support document Draft (MVP) 1.0.0-draft 2026-01-26
+Source: spec/docs/adapter/element-type.md
+Open Source Markdown
+Browse Full Spec Reference
+Version: 1.0.0-draft Status: Draft (MVP) Last Updated: 2026-01-26
+Abstract
+This document defines the Adapter Element Type, a declarative schema format for describing how MCP-AQL CRUDE operations map to target API calls. Adapters are Markdown files with YAML front matter that a universal runtime interprets at call time.
+Table of Contents
+Overview
+Schema Structure
+Canonical Format Rationale
+Required Fields
+Target Configuration
+Authentication
+Operations
+Parameter Types
+Example Adapter
+Future Extensions
+1. Overview
+1.1 Purpose
+Adapters enable LLMs to interact with any HTTP API using the MCP-AQL CRUDE interface. Rather than generating code for each API, adapters use a declarative schema that the runtime interprets dynamically.
+1.2 Design Principles
+Schema IS the adapter - No separate code, no compilation
+Declarative over imperative - Runtime interprets, does not execute custom code
+Introspection for free - Generated directly from schema
+Hot reloadable - Change schema, behavior changes immediately
+Human-readable - Markdown body provides documentation
+1.3 File Format
+Adapters follow the established element pattern:
+Filename: {name}-adapter.md (e.g., github-api-adapter.md )
+YAML front matter containing all configuration and operation mappings
+Markdown body for human-readable documentation
+1.4 MVP Scope
+This specification covers the Minimum Viable Product (MVP) for adapters:
+Included:
+HTTP transport only
+REST protocol only
+JSON serialization only
+Bearer token, API key, and no-auth authentication
+Basic operation definitions with parameters
+Deferred to future specifications:
+Trust levels (see #59)
+Rate limiting (see #60)
+Danger level classification (see #49)
+Pagination plugins (see #37)
+Field selection support
+Response transformation
+Alternative transports (WebSocket, serial, native)
+Alternative protocols (GraphQL, gRPC)
+Alternative serialization (XML, Protobuf)
+Advanced authentication (OAuth, mTLS)
+2. Schema Structure
+2.1 Complete Structure
+# Required fields
+name : string # Unique identifier
+type : &quot;adapter&quot; # MUST be &quot;adapter&quot;
+version : string # Semver version
+description : string # Human-readable description
+# Target configuration
+target :
+base_url : string # API base URL
+transport : &quot;http&quot; # MVP: only &quot;http&quot;
+protocol : &quot;rest&quot; # MVP: only &quot;rest&quot;
+serialization : &quot;json&quot; # MVP: only &quot;json&quot;
+# Authentication (optional)
+type : &quot;bearer&quot; | &quot;api_key&quot; | &quot;none&quot;
+token_env : string # For bearer: env var containing token
+header_name : string # For api_key: header name
+key_env : string # For api_key: env var containing key
+# Operation mappings
+operations :
+create : OperationDefinition[]
+read : OperationDefinition[]
+update : OperationDefinition[]
+delete : OperationDefinition[]
+execute : OperationDefinition[]
+# Optional metadata
+author : string
+tags : string[]
+triggers : string[]
+created : string # ISO 8601 timestamp
+modified : string # ISO 8601 timestamp
+# Markdown documentation body
+3. Canonical Format Rationale
+3.1 Why Markdown + YAML Front Matter
+The Markdown + YAML front matter format is the SHOULD (recommended) interchange format for adapter schemas. This choice is deliberate:
+Human-readable for security auditing - Adapter schemas define what API calls an LLM can make. Plain text makes it straightforward for security reviewers to inspect exactly which endpoints are exposed, what parameters are accepted, and what authentication is used.
+LLM-readable for automated review - Language models can directly read and reason about adapter schemas without specialized parsers, enabling automated security review and schema validation workflows.
+Grep-friendly for searching operations - Teams can use standard text search tools to find operations across adapter collections (e.g., grep -r "maps_to.*DELETE" adapters/ ).
+Discourages obfuscation - A text-based format makes it difficult to hide malicious configurations. Binary or compiled adapter formats would make security review harder.
+Version control friendly - Diffs are meaningful, merge conflicts are resolvable, and change history is transparent.
+3.2 Alternative Representations
+Adapter schemas MAY be stored in alternative representations (JSON, database records, programmatic builders) for implementation convenience. However:
+Alternative representations SHOULD be translatable to the canonical Markdown + YAML format for review purposes
+Tooling SHOULD support exporting to canonical format
+The canonical format is the normative reference when discrepancies exist between representations
+4. Required Fields
+4.1 name
+Type: string Required: Yes
+A unique identifier for the adapter. MUST be lowercase with hyphens for word separation.
+name : github-api
+Constraints:
+MUST match pattern ^[a-z][a-z0-9-]*[a-z0-9]$
+MUST be 2-64 characters
+SHOULD be descriptive of the target API
+4.2 type
+Type: string (literal) Required: Yes
+MUST be the literal string "adapter" . This enables tooling to identify element types without path inspection.
+type : adapter
+4.3 version
+Type: string (semver) Required: Yes
+Semantic version of the adapter schema.
+version : &quot;1.0.0&quot;
+MUST follow Semantic Versioning 2.0.0
+SHOULD be quoted to prevent YAML number parsing issues
+4.4 description
+Human-readable description of the adapter's purpose.
+description : &quot;Adapter for GitHub REST API v3, enabling repository and issue management&quot;
+SHOULD be 10-200 characters
+SHOULD describe the target API and main capabilities
+5. Target Configuration
+5.1 target Block
+The target block defines how to connect to the API.
+base_url : &quot;https://api.github.com&quot;
+transport : http
+protocol : rest
+serialization : json
+5.2 base_url
+Type: string (URL) Required: Yes
+The base URL for all API requests. Operation maps_to paths are appended to this URL.
+MUST be a valid HTTPS URL (HTTP allowed only for localhost/development)
+MUST NOT include trailing slash
+MAY include path prefix (e.g., https://api.example.com/v1 )
+5.3 transport
+Type: string (enum) Required: Yes
+The transport layer for API communication.
+MVP Values:
+http - HTTP/HTTPS transport
+Future Values (deferred):
+websocket - WebSocket transport
+serial - Serial port transport
+native - Native library bindings
+5.4 protocol
+The API protocol used by the target.
+rest - RESTful API
+graphql - GraphQL API
+grpc - gRPC API
+custom - Custom protocol with plugin
+5.5 serialization
+The serialization format for request/response bodies.
+json - JSON serialization
+xml - XML serialization
+protobuf - Protocol Buffers
+msgpack - MessagePack
+6. Authentication
+6.1 auth Block
+The auth block configures API authentication. If omitted, the adapter uses no authentication.
+6.2 type: none
+No authentication required.
+type : none
+6.3 type: bearer
+Bearer token authentication sent in the Authorization header.
+type : bearer
+token_env : GITHUB_TOKEN
+token_env (required): Environment variable name containing the bearer token
+Runtime behavior:
+Authorization: Bearer ${GITHUB_TOKEN}
+6.4 type: api_key
+API key authentication sent in a custom header.
+type : api_key
+header_name : X-API-Key
+key_env : OPENAI_API_KEY
+header_name (required): HTTP header name for the API key
+key_env (required): Environment variable name containing the key
+X-API-Key: ${OPENAI_API_KEY}
+6.5 Security Considerations
+Adapter schemas MUST NOT contain actual credentials
+Credentials MUST be loaded from environment variables at runtime
+Runtime implementations SHOULD warn if credentials are embedded in schemas
+7. Operations
+7.1 operations Block
+The operations block maps MCP-AQL CRUDE operations to target API calls.
+create :
+- name : create_repo
+maps_to : &quot;POST /user/repos&quot;
+description : &quot;Create a new repository&quot;
+params :
+name : { type : string , required : true }
+private : { type : boolean , default : false }
+- name : list_repos
+maps_to : &quot;GET /users/{username}/repos&quot;
+description : &quot;List repositories for a user&quot;
+username : { type : string , required : true }
+7.2 OperationDefinition
+Each operation in a CRUDE category is an OperationDefinition object:
+name : string # Operation name (required)
+maps_to : string # HTTP method and path (required)
+params : ParamDefinition{} # Parameter definitions
+7.3 name
+The operation identifier used in MCP-AQL requests.
+name : get_repo
+MUST be unique across all CRUDE categories
+MUST match pattern ^[a-z][a-z0-9_]*$
+SHOULD use snake_case
+7.4 maps_to
+The HTTP method and path template for the target API.
+maps_to : &quot;GET /repos/{owner}/{repo}&quot;
+Format: METHOD /path/with/{placeholders}
+Supported methods: GET, POST, PUT, PATCH, DELETE
+Path placeholders:
+Wrapped in curly braces: {param_name}
+MUST correspond to a parameter definition
+Replaced at runtime with parameter values
+7.5 description
+Type: string Required: No (recommended)
+Human-readable description of what the operation does.
+description : &quot;Get detailed information about a specific repository&quot;
+7.6 params
+Type: object mapping param names to ParamDefinition Required: No
+Parameter definitions for the operation.
+type : string
+required : true
+description : &quot;Repository owner username&quot;
+description : &quot;Repository name&quot;
+include_stats :
+type : boolean
+default : false
+description : &quot;Include repository statistics&quot;
+8. Parameter Types
+8.1 ParamDefinition
+type : string # Data type (required)
+required : boolean # Is parameter required (default: false)
+default : any # Default value if not provided
+enum : any[] # Allowed values
+8.2 type Field
+Supported types:
+Description
+Text value
+Whole number
+Decimal number
+True/false
+List of values
+[1, 2, 3]
+Key-value map
+{"key": "value"}
+8.3 required Field
+Type: boolean Default: false
+When true, the runtime MUST reject requests missing this parameter.
+8.4 description Field
+Type: string
+Human-readable description shown in introspection.
+description : &quot;The account owner of the repository&quot;
+8.5 default Field
+Type: any (matching the param type)
+Default value used when parameter is not provided.
+per_page :
+type : integer
+default : 30
+description : &quot;Results per page (max 100)&quot;
+8.6 enum Field
+Type: array
+Restricts parameter to specific values.
+enum : [ open , closed , all ]
+default : open
+description : &quot;Filter by issue state&quot;
+9. Example Adapter
+See the GitHub API Adapter in the examples repository for a complete example.
+9.1 Minimal Example
+name : minimal-api
+description : &quot;Minimal example adapter&quot;
+base_url : &quot;https://api.example.com&quot;
+- name : get_status
+maps_to : &quot;GET /status&quot;
+description : &quot;Get API status&quot;
+# Minimal API Adapter
+This adapter demonstrates the minimum required fields.
+10. Future Extensions
+The following features are deferred from the MVP and will be specified in future issues:
+10.1 Trust Levels (#59)
+level : generated | community | verified | official
+verified_by : string
+verified_at : string
+10.2 Rate Limiting (#60)
+rate_limits :
+requests_per_minute : 60
+requests_per_hour : 1000
+concurrent_requests : 5
+10.3 Danger Levels (#49)
+delete :
+- name : delete_repo
+maps_to : &quot;DELETE /repos/{owner}/{repo}&quot;
+danger_level : destructive
+requires_confirmation : true
+10.4 Pagination (#37)
+pagination :
+style : cursor | offset | page | link_header
+param_name : page
+per_page_param : per_page
+10.5 Field Selection
+- name : get_repo
+supports_fields : true
+default_fields : [ id , name , full_name , description ]
+References
+Dangerous Operation Classification
+Rate Limiting Specification
+Adapter Development Guide (in mcpaql-adapter repo)
+Universal Adapter Runtime (in mcpaql-adapter repo)
+GitHub Issue: #61
+&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
+Docs Library
+MCPAQL Organization
+Dollhouse Research

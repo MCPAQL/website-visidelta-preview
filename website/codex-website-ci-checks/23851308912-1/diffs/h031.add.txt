@@ -1,0 +1,115 @@
+MCP-AQL Spec | ADR-006: Discriminated Response Format
+Launch Checklist
+Adapter Patterns
+Search MCP-AQL docs
+Repo-Synced Spec
+Generated from MCPAQL/spec so the website carries the deeper protocol material too.
+MCP-AQL Conformance Testing Specification
+MCP-AQL CRUDE Pattern Specification
+MCP-AQL Endpoint Modes Specification
+Structured Error Codes Specification
+MCP-AQL Introspection Specification
+MCP-AQL Licensing Options (Working Notes)
+MCP Integration Specification
+MCP-AQL Operations Specification
+MCP-AQL Protocol Overview
+Plugin Interface Contracts
+MCP-AQL Specification Documentation
+MCP-AQL Specification
+Versions
+Dangerous Operation Classification Specification
+MCP Server Discovery Bundle
+Adapter Element Type Specification
+Adapter Generator Specification
+Rate Limiting and Quota Management Specification
+Trust Levels Specification
+Security
+Confirmation Token Specification
+Execution Safety Loop Specification
+Security Model: Gatekeeper Specification
+Features
+Field Selection Specification
+Cursor-Based Pagination Specification
+Warnings Array Specification
+Protocol Comparison Guide
+Developer Guides
+MCP-AQL Breaking Change Policy
+Preliminary Public Launch Checklist
+RFC Process for MCP-AQL Specification
+Versioning Strategy
+Changelog
+Architecture
+Architecture Documentation
+Research
+Protocol Landscape: MCP vs MCP-AQL vs A2A
+Reference
+Reference Documentation
+ADR-001: CRUDE Pattern (Extending CRUD with Execute)
+ADR-002: GraphQL-Style Input Objects for Updates
+ADR-003: snake_case Parameter Convention
+ADR-004: Schema-Driven Operation Definitions
+ADR-005: GraphQL-Style Introspection System
+ADR-006: Discriminated Response Format
+Architecture Decision Records
+Full Spec
+REPO-SYNCED SPEC DOC
+Date: 2026-01-16
+Support document Accepted
+Source: spec/docs/adr/ADR-006-discriminated-responses.md
+Open Source Markdown
+Browse Full Spec Reference
+Status: Accepted Date: 2026-01-16
+API responses need to clearly indicate success or failure in a way that is:
+Unambiguous for programmatic handling
+Easy for LLMs to parse and understand
+Consistent across all operations
+Informative when errors occur
+Common approaches include:
+HTTP status codes (not applicable to MCP tool responses)
+Exception throwing (varies by implementation)
+Null/undefined returns (ambiguous)
+Boolean success flags (lacks error details)
+Discriminated unions (explicit success/failure with data)
+LLMs particularly benefit from explicit, consistent response structures that do not require inference about success or failure states.
+Decision
+MCP-AQL adopts a discriminated response format where all responses include an explicit success boolean discriminator.
+Successful responses MUST have the following structure:
+success : true ,
+data : { /* operation-specific response data */ } ,
+warnings : [ /* optional array of warning objects */ ]
+The warnings field is optional and contains non-fatal conditions that warrant attention. See the Warnings Specification for details.
+Failed responses MUST have the following structure:
+success : false ,
+error : {
+code : &quot;ERROR_CODE&quot; ,
+message : &quot;Human-readable error description&quot;
+Additional fields MAY be included in error responses for debugging:
+code : &quot;VALIDATION_ERROR&quot; ,
+message : &quot;Required parameter &#39;element_name&#39; is missing&quot; ,
+details : {
+parameter : &quot;element_name&quot; ,
+operation : &quot;create_element&quot;
+Implementations MUST:
+Always include the success boolean at the top level
+Include data when success is true
+Include error with at least code and message when success is false
+Use consistent error codes across the implementation
+Include warnings array only in successful responses (when present)
+Consequences
+Positive
+Unambiguous parsing : The success field clearly indicates response state
+LLM-friendly : Explicit structure is easy for models to understand
+Consistent handling : All operations return the same response shape
+Rich error information : Structured errors enable better debugging
+Type safety : Discriminated unions enable compile-time type narrowing
+Negative
+Response overhead : Every response includes the discriminator
+Verbosity : Simple operations have wrapper structure
+Migration effort : Existing implementations must adapt response format
+References
+Warnings Specification
+Error Codes Specification
+&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
+Docs Library
+MCPAQL Organization
+Dollhouse Research

@@ -1,0 +1,47 @@
+quick start, core semantics, structured errors, safety model, conformance, adapter contracts, implementation profiles,
+and release-status context.
+Getting Started
+Error Model
+Full Spec Reference
+Adapter Contracts
+Recommended first read
+Overview, quick-start request shape, token efficiency, and reading order for the draft.
+Canonical README
+Open summary
+Open source page
+Structured error envelope, machine-readable codes, and current alignment gaps between draft and implementations.
+Canonical error code doc
+Open runtime repo
+Adapter schema, plugin contract, generator-output, and example-surface expectations across the implementation toolchain.
+Canonical contract docs
+Open full spec
+Release Notes
+Change context
+Recent draft changes that affect public messaging, launch framing, and docs coverage priorities.
+Canonical changelog
+Repo-Synced Full Spec Reference
+The docs library now has a deeper sibling section generated from the canonical spec repo, so the website itself carries the fuller protocol material.
+Use summaries for orientation
+These docs pages still provide fast, curated entry points for launch framing, implementation posture, and topic overviews.
+Start with guided summaries
+Use the spec mirror for depth
+The generated reference mirrors the deeper content from MCPAQL/spec/docs , including versioned drafts and supporting material.
+Browse the full repo-synced reference
+Canonical Spec Map
+The website now mirrors the major categories from the spec docs index so public readers can browse both summaries and the fuller reference without opening the repository first.
+Spec source
+Website surface
+What it covers
+README.md
+Repository-level protocol summary, token efficiency, and quick-start framing
+spec mirror
+Repo-Synced Spec Reference
+Website-hosted full mirror of versioned and topical specification documents
+versions/v1.0.0-draft.md
+Normative request shape, endpoint rules, operation semantics, and routing
+error-codes.md
+Structured errors, machine-readable codes, current gaps
+plugin-contracts.md
+Plugin responsibilities, schema contracts, generator outputs
+CHANGELOG.md
+Recent draft changes and launch-relevant deltas

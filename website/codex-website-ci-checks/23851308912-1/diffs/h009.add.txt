@@ -1,0 +1,57 @@
+MCP-AQL Docs | Getting Started
+Launch Checklist
+Adapter Patterns
+Search MCP-AQL docs
+In This Library
+GETTING STARTED
+Protocol Core
+Error Model
+Security Model
+Conformance
+Adapter Contracts
+Implementation Profiles
+Release Notes
+What MCP-AQL is, why it exists, and what to read first
+MCP-AQL consolidates many discrete MCP tools into a small semantic endpoint surface while preserving runtime discovery.
+The result is less registration overhead, clearer routing, and a more scalable contract for agent-driven systems.
+Spec README
+Normative Draft
+Go Deeper In The Full Spec
+Use the website-hosted source pages when you want the actual protocol text instead of the onboarding summary.
+Protocol Overview
+Browse the full spec reference
+Keep Moving Through The Library
+Once the framing is clear, the next useful stops are the rules pages and the launch-readiness views.
+Back to the docs library
+The one-paragraph version
+MCP-AQL is a protocol specification and implementation toolkit for exposing adapter operations through either five CRUDE endpoints
+or a single routed endpoint. It keeps introspect mandatory, treats the versioned spec as canonical, and positions
+production profiles like DollhouseMCP as practical references rather than the definition of the protocol.
+Why teams look at it
+Lower token overhead
+Instead of loading dozens of tool definitions, clients can register five semantic endpoints or one unified endpoint.
+Runtime discovery
+Clients discover operations, parameters, and types on demand with introspect .
+Better public contracts
+CRUDE classification, structured responses, and spec-linked docs make compatibility claims easier to inspect.
+Quick-start request shape
+Discover operations
+"operation": "introspect",
+"params": { "query": "operations" }
+Call a discovered operation
+"operation": "create_user",
+"params": {
+"email": "alice@example.com",
+"name": "Alice"
+The second example is schematic. Real operation names and parameters are adapter-defined and should be discovered first.
+Suggested reading order
+Read the versioned draft for the canonical rules.
+Use Protocol Core for routing, request shape, and endpoint semantics.
+Use Error Model and Security Model for operational expectations.
+Use Conformance and Launch Checklist to understand current draft maturity.
+&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
+Docs Library
+Portal Home
+MCPAQL Organization
+Dollhouse Research
+DollhouseMCP Production Profile

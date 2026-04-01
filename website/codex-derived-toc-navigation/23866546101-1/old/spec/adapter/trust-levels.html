@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="This document defines the trust level system for MCP-AQL adapters. Trust levels indicate the verification and validation status of an adapter, enabling systems to make informed decisions about which operations to permit ">
+  <title>MCP-AQL Spec | Trust Levels Specification</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <a class="logo" href="../../index.html"><span class="logo-mark"></span>MCP-AQL</a>
+        <ul class="nav-links">
+          <li><a href="../../index.html">Home</a></li>
+          <li><a href="../../docs/index.html">Docs</a></li>
+          <li><a href="../../launch-checklist.html">Launch Checklist</a></li>
+          <li><a href="../../apis/index.html">Adapter Patterns</a></li>
+        </ul>
+        <form class="site-search" data-search-form data-index-url="../../data/search-index.json" role="search">
+          <label class="sr-only" for="site-search-input">Search MCP-AQL docs</label>
+          <input id="site-search-input" data-search-input type="search" placeholder="Search MCP-AQL docs, spec pages, and adapter patterns...">
+          <span class="search-count" data-search-count></span>
+          <ul class="search-results" data-search-results hidden></ul>
+        </form>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container docs-shell">
+      <aside class="docs-side">
+        <h2>Repo-Synced Spec</h2>
+        <p class="docs-side-note">Generated from <code>MCPAQL/spec</code> so the website carries the deeper protocol material too.</p>
+        <div class="docs-side-group">
+  <h3>Core</h3>
+  <ul><li><a href="../conformance-testing.html">MCP-AQL Conformance Testing Specification</a></li><li><a href="../crude-pattern.html">MCP-AQL CRUDE Pattern Specification</a></li><li><a href="../endpoint-modes.html">MCP-AQL Endpoint Modes Specification</a></li><li><a href="../error-codes.html">Structured Error Codes Specification</a></li><li><a href="../introspection.html">MCP-AQL Introspection Specification</a></li><li><a href="../licensing-options.html">MCP-AQL Licensing Options (Working Notes)</a></li><li><a href="../mcp-integration.html">MCP Integration Specification</a></li><li><a href="../operations.html">MCP-AQL Operations Specification</a></li><li><a href="../overview.html">MCP-AQL Protocol Overview</a></li><li><a href="../plugin-contracts.html">Plugin Interface Contracts</a></li><li><a href="../README.html">MCP-AQL Specification Documentation</a></li><li><a href="../repo/README.html">MCP-AQL Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Versions</h3>
+  <ul><li><a href="../versions/v1.0.0-draft.html">MCP-AQL Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Adapter</h3>
+  <ul><li><a href="danger-levels.html">Dangerous Operation Classification Specification</a></li><li><a href="discovery-bundle.html">MCP Server Discovery Bundle</a></li><li><a href="element-type.html">Adapter Element Type Specification</a></li><li><a href="generator.html">Adapter Generator Specification</a></li><li><a href="rate-limiting.html">Rate Limiting and Quota Management Specification</a></li><li><a class="current" aria-current="page" href="trust-levels.html">Trust Levels Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Security</h3>
+  <ul><li><a href="../security/confirmation-tokens.html">Confirmation Token Specification</a></li><li><a href="../security/execution-safety-loop.html">Execution Safety Loop Specification</a></li><li><a href="../security/gatekeeper.html">Security Model: Gatekeeper Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Features</h3>
+  <ul><li><a href="../features/field-selection.html">Field Selection Specification</a></li><li><a href="../features/pagination.html">Cursor-Based Pagination Specification</a></li><li><a href="../features/warnings.html">Warnings Array Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Guides</h3>
+  <ul><li><a href="../guides/protocol-comparison.html">Protocol Comparison Guide</a></li><li><a href="../guides/README.html">Developer Guides</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Process</h3>
+  <ul><li><a href="../process/breaking-changes.html">MCP-AQL Breaking Change Policy</a></li><li><a href="../process/preliminary-public-launch-checklist.html">Preliminary Public Launch Checklist</a></li><li><a href="../process/rfc-process.html">RFC Process for MCP-AQL Specification</a></li><li><a href="../process/versioning.html">Versioning Strategy</a></li><li><a href="../repo/CHANGELOG.html">Changelog</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Architecture</h3>
+  <ul><li><a href="../architecture/README.html">Architecture Documentation</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Research</h3>
+  <ul><li><a href="../research/mcp-vs-mcpaql-vs-a2a.html">Protocol Landscape: MCP vs MCP-AQL vs A2A</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Reference</h3>
+  <ul><li><a href="../reference/README.html">Reference Documentation</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>ADRs</h3>
+  <ul><li><a href="../adr/ADR-001-crude-pattern.html">ADR-001: CRUDE Pattern (Extending CRUD with Execute)</a></li><li><a href="../adr/ADR-002-graphql-style-input.html">ADR-002: GraphQL-Style Input Objects for Updates</a></li><li><a href="../adr/ADR-003-snake-case-parameters.html">ADR-003: snake_case Parameter Convention</a></li><li><a href="../adr/ADR-004-schema-driven-operations.html">ADR-004: Schema-Driven Operation Definitions</a></li><li><a href="../adr/ADR-005-introspection-system.html">ADR-005: GraphQL-Style Introspection System</a></li><li><a href="../adr/ADR-006-discriminated-responses.html">ADR-006: Discriminated Response Format</a></li><li><a href="../adr/index.html">Architecture Decision Records</a></li><li><a href="../adr/README.html">Architecture Decision Records</a></li></ul>
+</div>
+      </aside>
+
+      <article class="docs-main">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+          <ol>
+            <li><a href="../../index.html">Home</a></li>
+            <li><a href="../index.html">Full Spec</a></li>
+            <li><span class="current">Trust Levels Specification</span></li>
+          </ol>
+        </nav>
+        <section class="hero docs-hero">
+          <div class="hero-inner">
+            <span class="status-pill">REPO-SYNCED SPEC DOC</span>
+            <h1>Trust Levels Specification</h1>
+            <p class="lede">This document defines the trust level system for MCP-AQL adapters. Trust levels indicate the verification and validation status of an adapter, enabling systems to make informed decisions about which operations to permit </p>
+            <div class="spec-meta"><span class="state-chip live">Support document</span><span class="state-chip pending">Draft</span><span class="state-chip">1.0.0-draft</span><span class="state-chip">2026-01-28</span></div>
+            <p class="spec-source">Source: <a href="https://github.com/MCPAQL/spec/blob/main/docs/adapter/trust-levels.md">spec/docs/adapter/trust-levels.md</a></p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="https://github.com/MCPAQL/spec/blob/main/docs/adapter/trust-levels.md">Open Source Markdown</a><a class="btn btn-secondary" href="../index.html">Browse Full Spec Reference</a>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <div class="card spec-prose">
+            <p><strong>Version:</strong> 1.0.0-draft <strong>Status:</strong> Draft <strong>Last Updated:</strong> 2026-01-28</p>
+<h2 id="abstract">Abstract</h2>
+<p>This document defines the trust level system for MCP-AQL adapters. Trust levels indicate the verification and validation status of an adapter, enabling systems to make informed decisions about which operations to permit based on adapter provenance and reliability.</p>
+<hr />
+<h2 id="table-of-contents">Table of Contents</h2>
+<ol type="1">
+<li><a href="#1-overview">Overview</a></li>
+<li><a href="#2-trust-level-enum">Trust Level Enum</a></li>
+<li><a href="#3-trust-metadata-schema">Trust Metadata Schema</a></li>
+<li><a href="#4-promotion-rules">Promotion Rules</a></li>
+<li><a href="#5-permission-gating">Permission Gating</a></li>
+<li><a href="#6-implementation-requirements">Implementation Requirements</a></li>
+<li><a href="#7-future-extensions">Future Extensions</a></li>
+</ol>
+<hr />
+<h2 id="1-overview">1. Overview</h2>
+<h3 id="11-purpose">1.1 Purpose</h3>
+<p>Adapters can originate from multiple sources with varying reliability guarantees:</p>
+<ul>
+<li><strong>Dynamically generated</strong> from API interrogation or OpenAPI specs</li>
+<li><strong>Hand-crafted</strong> by developers with domain knowledge</li>
+<li><strong>Community-contributed</strong> via collection submissions</li>
+<li><strong>Officially certified</strong> by API vendors or trusted authorities</li>
+</ul>
+<p>Trust levels provide a standardized way to communicate adapter reliability, enabling:</p>
+<ul>
+<li><strong>Progressive permission unlocking</strong> - Higher trust enables more operations</li>
+<li><strong>Risk-appropriate defaults</strong> - New adapters start with minimal permissions</li>
+<li><strong>Audit trail</strong> - Track how and when trust was established</li>
+<li><strong>Automated gating</strong> - Systems can enforce trust requirements programmatically</li>
+</ul>
+<h3 id="12-design-principles">1.2 Design Principles</h3>
+<ol type="1">
+<li><strong>Conservative defaults</strong> - Untrusted adapters have minimal permissions</li>
+<li><strong>Earned trust</strong> - Higher levels require explicit validation or certification</li>
+<li><strong>Transparent provenance</strong> - Trust metadata is auditable</li>
+<li><strong>Graceful degradation</strong> - Missing trust info treated as lowest level</li>
+</ol>
+<h3 id="13-relationship-to-danger-levels">1.3 Relationship to Danger Levels</h3>
+<p>Trust levels work in conjunction with danger levels (see <a href="danger-levels.html">Dangerous Operation Classification</a>):</p>
+<ul>
+<li><strong>Trust levels</strong> describe adapter reliability (who vouches for it)</li>
+<li><strong>Danger levels</strong> describe operation risk (what harm could occur)</li>
+<li><strong>Gating matrix</strong> combines both to determine permission</li>
+</ul>
+<hr />
+<h2 id="2-trust-level-enum">2. Trust Level Enum</h2>
+<h3 id="21-trust-level-values">2.1 Trust Level Values</h3>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Value</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Untested</td>
+<td><code>untested</code></td>
+<td>Newly created, no validation performed</td>
+</tr>
+<tr>
+<td>Generated</td>
+<td><code>generated</code></td>
+<td>Programmatically generated, basic schema validation passed</td>
+</tr>
+<tr>
+<td>Validated</td>
+<td><code>validated</code></td>
+<td>Passed programmatic test harness</td>
+</tr>
+<tr>
+<td>Community Reviewed</td>
+<td><code>community_reviewed</code></td>
+<td>Validated plus community vetting process</td>
+</tr>
+<tr>
+<td>Certified</td>
+<td><code>certified</code></td>
+<td>Official verification by vendor or trusted authority</td>
+</tr>
+</tbody>
+</table>
+<h3 id="22-level-descriptions">2.2 Level Descriptions</h3>
+<h4 id="221-untested">2.2.1 untested</h4>
+<p>The adapter has been created but not validated in any way.</p>
+<p><strong>Typical sources:</strong></p>
+<ul>
+<li>Freshly generated from API interrogation</li>
+<li>User-created adapters not yet tested</li>
+<li>Imported from unknown sources</li>
+</ul>
+<p><strong>Characteristics:</strong></p>
+<ul>
+<li>Schema may be malformed</li>
+<li>Operations may not match actual API</li>
+<li>Parameters may be incorrect or missing</li>
+</ul>
+<h4 id="222-generated">2.2.2 generated</h4>
+<p>The adapter was programmatically generated and passes basic schema validation.</p>
+<p><strong>Validation requirements:</strong></p>
+<ul>
+<li>YAML front matter parses correctly</li>
+<li>Required fields present (name, type, version, description)</li>
+<li>Target configuration is valid</li>
+<li>All operations have valid structure</li>
+</ul>
+<p><strong>Characteristics:</strong></p>
+<ul>
+<li>Schema is structurally correct</li>
+<li>No guarantee operations work at runtime</li>
+<li>May have incorrect parameter types or mappings</li>
+</ul>
+<h4 id="223-validated">2.2.3 validated</h4>
+<p>The adapter has passed automated test harness validation against the target API.</p>
+<p><strong>Validation requirements:</strong></p>
+<ul>
+<li>All <code>generated</code> requirements PLUS:</li>
+<li>Test harness executed against live API</li>
+<li>Read operations return valid responses</li>
+<li>Create operations succeed with valid inputs</li>
+<li>Error handling behaves as documented</li>
+</ul>
+<p><strong>Characteristics:</strong></p>
+<ul>
+<li>Operations verified to work at time of validation</li>
+<li>May break if API changes</li>
+<li>Validation report available for review</li>
+</ul>
+<h4 id="224-community_reviewed">2.2.4 community_reviewed</h4>
+<p>The adapter has been validated and reviewed by the community.</p>
+<p><strong>Validation requirements:</strong></p>
+<ul>
+<li>All <code>validated</code> requirements PLUS:</li>
+<li>Submitted to community collection</li>
+<li>Reviewed by at least N community members (configurable, recommended default: 2)</li>
+<li>No security concerns raised</li>
+<li>Documentation quality verified</li>
+</ul>
+<p><strong>Characteristics:</strong></p>
+<ul>
+<li>Human eyes have reviewed the adapter</li>
+<li>Security implications considered</li>
+<li>Higher confidence in production use</li>
+</ul>
+<h4 id="225-certified">2.2.5 certified</h4>
+<p>The adapter has official certification from the API vendor or a trusted authority.</p>
+<p><strong>Validation requirements:</strong></p>
+<ul>
+<li>All <code>community_reviewed</code> requirements PLUS:</li>
+<li>Vendor signature or authority attestation</li>
+<li>Formal certification process completed</li>
+<li>Ongoing maintenance commitment</li>
+</ul>
+<p><strong>Characteristics:</strong></p>
+<ul>
+<li>Highest confidence level</li>
+<li>Official support available</li>
+<li>Production-ready for all operations</li>
+</ul>
+<hr />
+<h2 id="3-trust-metadata-schema">3. Trust Metadata Schema</h2>
+<h3 id="31-schema-structure">3.1 Schema Structure</h3>
+<p>The <code>trust</code> block in adapter front matter:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">trust</span><span class="kw">:</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">level</span><span class="kw">:</span><span class="at"> validated</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">generated_at</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;2026-01-15T10:00:00Z&quot;</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">generated_by</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;mcpaql-adapter-generator-v1.2.0&quot;</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">validated_at</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;2026-01-15T12:00:00Z&quot;</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">validated_by</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;mcpaql-test-harness-v2.0.0&quot;</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">validation_report</span><span class="kw">:</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">tests_passed</span><span class="kw">:</span><span class="at"> </span><span class="dv">47</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">tests_total</span><span class="kw">:</span><span class="at"> </span><span class="dv">47</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">endpoints_verified</span><span class="kw">:</span><span class="at"> </span><span class="dv">23</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">coverage_percent</span><span class="kw">:</span><span class="at"> </span><span class="dv">95</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">last_api_response</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;2026-01-15T12:00:00Z&quot;</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">promoted_from</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;generated&quot;</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">promotion_history</span><span class="kw">:</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">from</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;untested&quot;</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">to</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;generated&quot;</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">at</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;2026-01-15T10:00:00Z&quot;</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">by</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;mcpaql-adapter-generator-v1.2.0&quot;</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">from</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;generated&quot;</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">to</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;validated&quot;</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">at</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;2026-01-15T12:00:00Z&quot;</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">by</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;mcpaql-test-harness-v2.0.0&quot;</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">certification</span><span class="kw">:</span><span class="at"> </span><span class="ch">null</span></span></code></pre></div>
+<h3 id="32-field-definitions">3.2 Field Definitions</h3>
+<h4 id="321-level-required">3.2.1 level (required)</h4>
+<p><strong>Type:</strong> string (enum) <strong>Values:</strong> <code>untested</code>, <code>generated</code>, <code>validated</code>, <code>community_reviewed</code>, <code>certified</code></p>
+<p>The current trust level of the adapter.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">level</span><span class="kw">:</span><span class="at"> validated</span></span></code></pre></div>
+<h4 id="322-generated_at">3.2.2 generated_at</h4>
+<p><strong>Type:</strong> string (ISO 8601 timestamp)</p>
+<p>When the adapter was initially generated or created.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">generated_at</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;2026-01-15T10:00:00Z&quot;</span></span></code></pre></div>
+<h4 id="323-generated_by">3.2.3 generated_by</h4>
+<p><strong>Type:</strong> string</p>
+<p>Identifier of the tool or person that created the adapter.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">generated_by</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;mcpaql-adapter-generator-v1.2.0&quot;</span></span></code></pre></div>
+<h4 id="324-validated_at">3.2.4 validated_at</h4>
+<p><strong>Type:</strong> string (ISO 8601 timestamp)</p>
+<p>When the adapter was last validated against the target API.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">validated_at</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;2026-01-15T12:00:00Z&quot;</span></span></code></pre></div>
+<h4 id="325-validated_by">3.2.5 validated_by</h4>
+<p><strong>Type:</strong> string</p>
+<p>Identifier of the validation tool or process.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">validated_by</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;mcpaql-test-harness-v2.0.0&quot;</span></span></code></pre></div>
+<h4 id="326-validation_report">3.2.6 validation_report</h4>
+<p><strong>Type:</strong> object</p>
+<p>Detailed results from the validation process.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">validation_report</span><span class="kw">:</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">tests_passed</span><span class="kw">:</span><span class="at"> </span><span class="dv">47</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">tests_total</span><span class="kw">:</span><span class="at"> </span><span class="dv">47</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">endpoints_verified</span><span class="kw">:</span><span class="at"> </span><span class="dv">23</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">coverage_percent</span><span class="kw">:</span><span class="at"> </span><span class="dv">95</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">last_api_response</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;2026-01-15T12:00:00Z&quot;</span></span></code></pre></div>
+<p><strong>Fields:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tests_passed</code></td>
+<td>integer</td>
+<td>Number of tests that passed</td>
+</tr>
+<tr>
+<td><code>tests_total</code></td>
+<td>integer</td>
+<td>Total number of tests executed</td>
+</tr>
+<tr>
+<td><code>endpoints_verified</code></td>
+<td>integer</td>
+<td>Number of API endpoints tested</td>
+</tr>
+<tr>
+<td><code>coverage_percent</code></td>
+<td>number</td>
+<td>Percentage of operations covered by tests</td>
+</tr>
+<tr>
+<td><code>last_api_response</code></td>
+<td>string</td>
+<td>Timestamp of last successful API response</td>
+</tr>
+</tbody>
+</table>
+<h4 id="327-promoted_from">3.2.7 promoted_from</h4>
+<p><strong>Type:</strong> string (enum)</p>
+<p>The previous trust level before the most recent promotion.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">promoted_from</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;generated&quot;</span></span></code></pre></div>
+<h4 id="328-promotion_history">3.2.8 promotion_history</h4>
+<p><strong>Type:</strong> array of promotion records</p>
+<p>Complete history of trust level changes.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">promotion_history</span><span class="kw">:</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">from</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;untested&quot;</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">to</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;generated&quot;</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">at</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;2026-01-15T10:00:00Z&quot;</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">by</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;mcpaql-adapter-generator-v1.2.0&quot;</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">reason</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Schema validation passed&quot;</span></span></code></pre></div>
+<p><strong>Promotion record fields:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>from</code></td>
+<td>string</td>
+<td>Previous trust level</td>
+</tr>
+<tr>
+<td><code>to</code></td>
+<td>string</td>
+<td>New trust level</td>
+</tr>
+<tr>
+<td><code>at</code></td>
+<td>string</td>
+<td>ISO 8601 timestamp</td>
+</tr>
+<tr>
+<td><code>by</code></td>
+<td>string</td>
+<td>Tool or person identifier</td>
+</tr>
+<tr>
+<td><code>reason</code></td>
+<td>string</td>
+<td>Optional explanation</td>
+</tr>
+</tbody>
+</table>
+<h4 id="329-certification">3.2.9 certification</h4>
+<p><strong>Type:</strong> object or null</p>
+<p>Certification details for <code>certified</code> level adapters.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">certification</span><span class="kw">:</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">authority</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;GitHub, Inc.&quot;</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">signature</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;base64-encoded-signature&quot;</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">certificate_id</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;GH-CERT-2026-001&quot;</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">issued_at</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;2026-01-20T00:00:00Z&quot;</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">expires_at</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;2027-01-20T00:00:00Z&quot;</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">scope</span><span class="kw">:</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="st">&quot;all_operations&quot;</span></span></code></pre></div>
+<p><strong>Certification fields:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>authority</code></td>
+<td>string</td>
+<td>Certifying organization name</td>
+</tr>
+<tr>
+<td><code>signature</code></td>
+<td>string</td>
+<td>Cryptographic signature (base64)</td>
+</tr>
+<tr>
+<td><code>certificate_id</code></td>
+<td>string</td>
+<td>Unique certificate identifier</td>
+</tr>
+<tr>
+<td><code>issued_at</code></td>
+<td>string</td>
+<td>When certification was granted</td>
+</tr>
+<tr>
+<td><code>expires_at</code></td>
+<td>string</td>
+<td>When certification expires</td>
+</tr>
+<tr>
+<td><code>scope</code></td>
+<td>array</td>
+<td>What the certification covers</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="4-promotion-rules">4. Promotion Rules</h2>
+<h3 id="41-promotion-path">4.1 Promotion Path</h3>
+<p>Trust levels follow a linear promotion path:</p>
+<pre><code>untested → generated → validated → community_reviewed → certified</code></pre>
+<p>Adapters MUST NOT skip levels during promotion. Each level builds on the requirements of previous levels.</p>
+<h3 id="42-promotion-triggers">4.2 Promotion Triggers</h3>
+<table>
+<thead>
+<tr>
+<th>Transition</th>
+<th>Trigger</th>
+<th>Requirements</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>untested → generated</td>
+<td>Schema validation</td>
+<td>YAML parses, required fields present, valid structure</td>
+</tr>
+<tr>
+<td>generated → validated</td>
+<td>Test harness pass</td>
+<td>All read ops succeed, representative create/update tested</td>
+</tr>
+<tr>
+<td>validated → community_reviewed</td>
+<td>Community review</td>
+<td>N reviewers approve, no security flags</td>
+</tr>
+<tr>
+<td>community_reviewed → certified</td>
+<td>Vendor attestation</td>
+<td>Signed certificate from recognized authority</td>
+</tr>
+</tbody>
+</table>
+<h3 id="43-demotion-rules">4.3 Demotion Rules</h3>
+<p>Trust levels MAY be demoted when:</p>
+<ol type="1">
+<li><strong>Validation failure</strong> - Re-validation against API fails</li>
+<li><strong>Security issue</strong> - Vulnerability discovered in adapter</li>
+<li><strong>API change</strong> - Target API changed, adapter no longer valid</li>
+<li><strong>Certificate expiry</strong> - Certification has expired</li>
+</ol>
+<p><strong>Demotion behavior:</strong></p>
+<ul>
+<li>Demotion MUST be recorded in <code>promotion_history</code> with negative transition</li>
+<li>Systems SHOULD notify users when adapter trust is demoted</li>
+<li>Demoted adapters retain their <code>validated_at</code> timestamp for audit purposes</li>
+</ul>
+<div class="sourceCode" id="cb12"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">promotion_history</span><span class="kw">:</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">from</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;validated&quot;</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">to</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;generated&quot;</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">at</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;2026-02-01T08:00:00Z&quot;</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">by</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;mcpaql-test-harness-v2.0.0&quot;</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">reason</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;API endpoint /users deprecated, 3 operations failing&quot;</span></span></code></pre></div>
+<h3 id="44-re-validation">4.4 Re-validation</h3>
+<p>Adapters SHOULD be periodically re-validated to maintain trust level:</p>
+<table>
+<thead>
+<tr>
+<th>Trust Level</th>
+<th>Recommended Re-validation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>generated</td>
+<td>On each use (schema check)</td>
+</tr>
+<tr>
+<td>validated</td>
+<td>Weekly or on API version change</td>
+</tr>
+<tr>
+<td>community_reviewed</td>
+<td>Monthly</td>
+</tr>
+<tr>
+<td>certified</td>
+<td>Per certification terms</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="5-permission-gating">5. Permission Gating</h2>
+<h3 id="51-trust-to-operation-gating">5.1 Trust-to-Operation Gating</h3>
+<p>Systems SHOULD enforce minimum trust levels for operations based on risk:</p>
+<table>
+<thead>
+<tr>
+<th>Operation Category</th>
+<th>Minimum Trust Level</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Introspection</td>
+<td><code>untested</code></td>
+</tr>
+<tr>
+<td>Read operations</td>
+<td><code>generated</code></td>
+</tr>
+<tr>
+<td>Safe create operations</td>
+<td><code>validated</code></td>
+</tr>
+<tr>
+<td>Update operations</td>
+<td><code>validated</code></td>
+</tr>
+<tr>
+<td>Delete operations</td>
+<td><code>community_reviewed</code></td>
+</tr>
+<tr>
+<td>Dangerous operations</td>
+<td><code>certified</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="52-trust-to-danger-matrix">5.2 Trust-to-Danger Matrix</h3>
+<p>The complete trust-to-danger gating matrix is defined in the <a href="danger-levels.html#4-trust-to-danger-gating">Dangerous Operation Classification</a> specification. The matrix determines which operations are allowed, require confirmation, or are denied based on the combination of adapter trust level and operation danger level.</p>
+<p><strong>Behavior summary:</strong></p>
+<ul>
+<li><code>allow</code> - Operation executes without additional gates</li>
+<li><code>confirm</code> - Operation requires explicit user confirmation</li>
+<li><code>deny</code> - Operation blocked with error response</li>
+<li><code>introspect_only</code> - Only introspection operations permitted; all other operations are blocked</li>
+</ul>
+<h3 id="53-configuration-override">5.3 Configuration Override</h3>
+<p>Systems MAY allow administrators to override default gating:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># System configuration</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">trust_policy</span><span class="kw">:</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">minimum_trust_for_writes</span><span class="kw">:</span><span class="at"> validated</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">minimum_trust_for_deletes</span><span class="kw">:</span><span class="at"> community_reviewed</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">allow_untested_introspection</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">require_confirmation_below</span><span class="kw">:</span><span class="at"> validated</span></span></code></pre></div>
+<h3 id="54-error-response">5.4 Error Response</h3>
+<p>When an operation is denied due to insufficient trust:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;error&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;code&quot;</span><span class="fu">:</span> <span class="st">&quot;PERMISSION_TRUST_LEVEL_INSUFFICIENT&quot;</span><span class="fu">,</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;Operation &#39;delete_user&#39; requires trust level &#39;community_reviewed&#39;, adapter has &#39;validated&#39;&quot;</span><span class="fu">,</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;details&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;operation&quot;</span><span class="fu">:</span> <span class="st">&quot;delete_user&quot;</span><span class="fu">,</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;required_trust&quot;</span><span class="fu">:</span> <span class="st">&quot;community_reviewed&quot;</span><span class="fu">,</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;actual_trust&quot;</span><span class="fu">:</span> <span class="st">&quot;validated&quot;</span><span class="fu">,</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;danger_level&quot;</span><span class="fu">:</span> <span class="dv">2</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<blockquote>
+<p><strong>Note:</strong> The <code>PERMISSION_TRUST_LEVEL_INSUFFICIENT</code> error code is introduced by this specification and should be added to the <a href="../error-codes.html">Error Codes Specification</a> as a future extension under the <code>PERMISSION_</code> category.</p>
+</blockquote>
+<hr />
+<h2 id="6-implementation-requirements">6. Implementation Requirements</h2>
+<h3 id="61-must-requirements">6.1 MUST Requirements</h3>
+<p>Implementations supporting trust levels MUST:</p>
+<ol type="1">
+<li>Default to <code>untested</code> when trust block is missing</li>
+<li>Validate trust level enum values</li>
+<li>Reject invalid trust metadata gracefully</li>
+<li>Record trust level in audit logs for security operations</li>
+</ol>
+<h3 id="62-should-requirements">6.2 SHOULD Requirements</h3>
+<p>Implementations supporting trust levels SHOULD:</p>
+<ol type="1">
+<li>Enforce the trust-to-operation gating matrix</li>
+<li>Provide introspection of current trust level</li>
+<li>Support trust level promotion workflows</li>
+<li>Preserve promotion history for audit</li>
+</ol>
+<h3 id="63-may-requirements">6.3 MAY Requirements</h3>
+<p>Implementations supporting trust levels MAY:</p>
+<ol type="1">
+<li>Implement custom gating policies</li>
+<li>Support automatic re-validation</li>
+<li>Integrate with external certification authorities</li>
+<li>Provide trust level comparison across adapters</li>
+</ol>
+<h3 id="64-introspection-support">6.4 Introspection Support</h3>
+<p>Trust information SHOULD be available via introspection:</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;introspect&quot;</span><span class="op">,</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">params</span><span class="op">:</span> { <span class="dt">query</span><span class="op">:</span> <span class="st">&quot;adapter_info&quot;</span> }</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="co">// Response</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">success</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">data</span><span class="op">:</span> {</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;github-api&quot;</span><span class="op">,</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>    <span class="dt">version</span><span class="op">:</span> <span class="st">&quot;1.0.0&quot;</span><span class="op">,</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">trust</span><span class="op">:</span> {</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>      <span class="dt">level</span><span class="op">:</span> <span class="st">&quot;validated&quot;</span><span class="op">,</span></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>      <span class="dt">validated_at</span><span class="op">:</span> <span class="st">&quot;2026-01-15T12:00:00Z&quot;</span><span class="op">,</span></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>      <span class="dt">validation_report</span><span class="op">:</span> {</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>        <span class="dt">tests_passed</span><span class="op">:</span> <span class="dv">47</span><span class="op">,</span></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>        <span class="dt">tests_total</span><span class="op">:</span> <span class="dv">47</span></span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<hr />
+<h2 id="7-future-extensions">7. Future Extensions</h2>
+<h3 id="71-scoped-trust-levels">7.1 Scoped Trust Levels</h3>
+<p>Future versions may support per-operation trust levels:</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">trust</span><span class="kw">:</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">level</span><span class="kw">:</span><span class="at"> validated</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">operation_overrides</span><span class="kw">:</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">delete_repo</span><span class="kw">:</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">level</span><span class="kw">:</span><span class="at"> certified</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">reason</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Destructive operation requires higher trust&quot;</span></span></code></pre></div>
+<h3 id="72-trust-delegation">7.2 Trust Delegation</h3>
+<p>Organizations may delegate trust decisions:</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">trust</span><span class="kw">:</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">level</span><span class="kw">:</span><span class="at"> community_reviewed</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">delegated_from</span><span class="kw">:</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">authority</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;acme-corp&quot;</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">scope</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;internal-apis&quot;</span></span></code></pre></div>
+<h3 id="73-composite-trust">7.3 Composite Trust</h3>
+<p>For adapters aggregating multiple APIs:</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">trust</span><span class="kw">:</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">composite</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">components</span><span class="kw">:</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">api</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;github&quot;</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">level</span><span class="kw">:</span><span class="at"> certified</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">api</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;slack&quot;</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">level</span><span class="kw">:</span><span class="at"> validated</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">effective_level</span><span class="kw">:</span><span class="at"> validated</span><span class="co">  # Minimum of components</span></span></code></pre></div>
+<h3 id="74-trust-attestation-protocol">7.4 Trust Attestation Protocol</h3>
+<p>A future specification may define a protocol for trust attestation exchange between systems.</p>
+<hr />
+<h2 id="references">References</h2>
+<ul>
+<li><a href="element-type.html">Adapter Element Type Specification</a></li>
+<li><a href="danger-levels.html">Dangerous Operation Classification</a></li>
+<li><a href="rate-limiting.html">Rate Limiting Specification</a></li>
+<li><a href="../security/gatekeeper.html">Security Model: Gatekeeper</a></li>
+<li><a href="../error-codes.html">Error Codes Specification</a></li>
+<li>GitHub Issue: <a href="https://github.com/MCPAQL/spec/issues/59">#59</a></li>
+</ul>
+
+          </div>
+        </section>
+        <nav class="page-nav" aria-label="Page navigation">
+  <a class="page-nav-link prev" href="rate-limiting.html">
+    <span class="page-nav-eyebrow">Previous page</span>
+    <strong class="page-nav-label">Rate Limiting and Quota Management Specification</strong>
+  </a>
+  <a class="page-nav-link next" href="../security/confirmation-tokens.html">
+    <span class="page-nav-eyebrow">Next page</span>
+    <strong class="page-nav-label">Confirmation Token Specification</strong>
+  </a>
+</nav>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.</p>
+      <div class="footer-links">
+        <a href="../../docs/index.html">Docs Library</a><a href="../index.html">Repo-Synced Spec</a><a href="https://github.com/MCPAQL">MCPAQL Organization</a><a href="https://dollhouseresearch.com">Dollhouse Research</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../js/search.js"></script>
+</body>
+</html>

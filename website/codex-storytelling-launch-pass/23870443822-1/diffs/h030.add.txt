@@ -1,0 +1,52 @@
+This page explains how the draft protocol handles approval paths, danger tiers, and safe execution behavior.
+Confirmation token flow
+What it means in practice
+Implementations classify requester trust and apply policy gates before operation dispatch. The exact trust taxonomy is
+adapter-defined, but the enforcement pattern is consistent: low-trust contexts default toward safe reads, while higher-trust
+contexts can unlock mutations or execution flows.
+Typical mediation outcome
+A validated user might be allowed to call list_files and update_profile , but blocked from
+bulk_delete until stronger review, confirmation, or out-of-band verification is available.
+Why the labels matter
+Danger labels are the bridge between semantics and policy. They help an agent distinguish advisory actions from ones that must
+pause for approval or trigger hard-stop verification.
+Danger level
+Example operation
+Likely safety tier
+Expected behavior
+list_files
+advisory
+No intervention beyond normal logging
+destructive
+delete_account
+Pause and require an approval path
+dangerous
+bulk_delete
+Mandatory pause plus stronger verification
+forbidden
+drop_database
+danger_zone
+Hard stop with out-of-band verification
+Request and required confirmation response
+"operation": "delete_repo",
+"params": {
+"owner": "acme",
+"repo": "widgets"
+"success": false,
+"error": {
+"code": "CONFIRMATION_REQUIRED",
+"message": "This operation requires confirmation",
+"details": {
+"danger_level": "destructive",
+"confirmation_message": "Delete repository 'acme/widgets'?",
+"confirmation_token": "conf_abc123xyz"
+Confirmed retry
+The client retries the same operation with the issued token. That keeps the first denial machine-readable and makes the second
+request an explicit act of confirmation.
+"repo": "widgets",
+"_confirmation": "conf_abc123xyz"
+What it means for agents
+The execution safety loop means actions are evaluated before they happen, not merely logged afterward. An agent reports intent,
+receives an autonomy decision, and only proceeds when the current step is allowed.
+Lifecycle shape
+Session-bound controls prevent stale confirmation tokens, unexpected operation drift, and hidden escalation during long-running execution.

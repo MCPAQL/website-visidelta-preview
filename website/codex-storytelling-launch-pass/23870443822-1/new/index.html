@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="MCP-AQL documentation portal for protocol specification, implementation profiles, conformance guidance, and launch readiness.">
+  <title>MCP-AQL | Protocol Documentation Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <a class="logo" href="index.html"><span class="logo-mark"></span>MCP-AQL</a>
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="docs/index.html">Docs</a></li>
+          <li><a href="launch-checklist.html">Launch Checklist</a></li>
+          <li><a href="apis/index.html">Adapter Patterns</a></li>
+        </ul>
+        <form class="site-search" data-search-form data-index-url="data/search-index.json" role="search">
+          <label class="sr-only" for="site-search-input">Search MCP-AQL docs</label>
+          <input id="site-search-input" data-search-input type="search" placeholder="Search MCP-AQL docs, spec pages, and adapter patterns...">
+          <span class="search-count" data-search-count></span>
+          <ul class="search-results" data-search-results hidden></ul>
+        </form>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <section class="hero">
+        <div class="hero-inner">
+          <span class="status-pill">PRELIMINARY PUBLIC DRAFT</span>
+          <h1>MCP-AQL tells AI clients what operations mean, not just how to call them</h1>
+          <p class="lede">
+            MCP-AQL adds semantic routing on top of MCP transport, so operation intent is explicit at the protocol layer instead of buried in tool descriptions.
+            Clients can distinguish safe reads from destructive deletes by endpoint alone, while cutting tool-definition token overhead by about 85-96%.
+          </p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="docs/getting-started.html">Start With The Quick Path</a>
+            <a class="btn btn-secondary" href="docs/index.html">Open Documentation Library</a>
+            <a class="btn btn-secondary" href="spec/index.html">Browse Full Spec Reference</a>
+            <a class="btn btn-secondary" href="launch-checklist.html">Public Launch Checklist</a>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">Why MCP-AQL Matters</h2>
+        <p class="section-subtitle">
+          MCP-AQL makes operation intent visible at the protocol layer, keeps discovery runtime-driven, and gives clients enough structure
+          to reason about safety without guessing from prose.
+        </p>
+        <div class="grid cols-3">
+          <article class="card">
+            <h3>MCP's semantics gap</h3>
+            <p>
+              In plain MCP, <code>get_user</code> and <code>drop_database</code> are structurally identical. The only clue about safety
+              or intent is the human-written description field.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Semantic routing in MCP-AQL</h3>
+            <p>
+              In MCP-AQL, routing an operation to <code>READ</code> guarantees side-effect-free intent, while routing to
+              <code>DELETE</code> declares destructive intent at the protocol layer.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Policy and agent benefit</h3>
+            <p>
+              Clients, LLMs, and policy systems can make decisions from the endpoint alone instead of burning tokens trying to infer
+              behavior from descriptive text.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">Token Efficiency In One View</h2>
+        <p class="section-subtitle">
+          The fastest way to understand why the protocol exists is to look at the registration footprint. MCP-AQL moves capability discovery
+          to runtime, so clients do not pay the full schema cost up front for operations they may never use.
+        </p>
+        <div class="card table-card">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Configuration</th>
+                <th>Approximate token cost</th>
+                <th>Reduction</th>
+                <th>What the client gets</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Discrete tools (50+)</td>
+                <td>~30,000 tokens</td>
+                <td>Baseline</td>
+                <td>Every tool definition loaded up front</td>
+              </tr>
+              <tr>
+                <td>CRUDE mode (5 endpoints)</td>
+                <td>~4,500 tokens</td>
+                <td>~85%</td>
+                <td>Semantic endpoints plus runtime discovery</td>
+              </tr>
+              <tr>
+                <td>Single mode (1 endpoint)</td>
+                <td>~1,100 tokens</td>
+                <td>~96%</td>
+                <td>One routed entrypoint plus runtime discovery</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="callout">
+          The deeper discovery math lives in the spec too: the introspection guide models a typical path dropping from about
+          <strong>29,600 tokens</strong> for discrete tools to about <strong>2,600 total</strong> for MCP-AQL plus on-demand introspection over ten operations.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="section-title">Getting Started</h2>
+        <p class="section-subtitle">
+          Start here for the shortest path from the core idea to the draft spec, operational rules, and current launch posture.
+        </p>
+        <div class="grid cols-3">
+          <article class="card">
+            <h3>1. Understand The Model</h3>
+            <p>Start with the semantics gap, token-efficiency story, and introspection-first request flow before dropping into the full draft.</p>
+            <ul>
+              <li><a href="docs/getting-started.html">Getting Started</a></li>
+              <li><a href="spec/versions/v1.0.0-draft.html">Specification v1.0.0-draft</a></li>
+              <li><a href="spec/crude-pattern.html">CRUDE Pattern</a></li>
+              <li><a href="spec/introspection.html">Introspection</a></li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>2. Learn The Operational Rules</h3>
+            <p>Read the public summaries for semantic routing, structured errors, safety controls, and conformance boundaries.</p>
+            <ul>
+              <li><a href="docs/protocol-core.html">Protocol Core</a></li>
+              <li><a href="docs/error-model.html">Error Model</a></li>
+              <li><a href="docs/security-model.html">Security Model</a></li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>3. Track Draft Readiness</h3>
+            <p>Use the launch and roadmap pages to see what is publish-ready versus what is still explicitly open in the spec.</p>
+            <ul>
+              <li><a href="docs/conformance.html">Conformance and Validator Status</a></li>
+              <li><a href="docs/roadmap.html">Protocol Roadmap</a></li>
+              <li><a href="launch-checklist.html">Public Launch Checklist</a></li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">Protocol Coverage</h2>
+        <p class="section-subtitle">Explore the protocol by core behavior, safety model, validation surface, implementation guidance, and ecosystem reference material.</p>
+        <div class="grid cols-2">
+          <article class="card">
+            <h3>Core Protocol Surface</h3>
+            <ul>
+              <li>Request and response contract model</li>
+              <li>CRUDE and single-endpoint operation routing</li>
+              <li>Runtime introspection for discoverability</li>
+              <li>Canonical verbs, parameter rules, and unknown-param handling</li>
+            </ul>
+            <a href="docs/protocol-core.html">Open Protocol Core</a>
+          </article>
+          <article class="card">
+            <h3>Error And Response Surface</h3>
+            <ul>
+              <li>Structured error envelope with code and message</li>
+              <li>MVP registry plus phase-1 robustness concerns</li>
+              <li>Current spec alignment work for error surfacing</li>
+            </ul>
+            <a href="docs/error-model.html">Open Error Model</a>
+          </article>
+          <article class="card">
+            <h3>Security And Safety Surface</h3>
+            <ul>
+              <li>Gatekeeper trust-level mediation</li>
+              <li>Danger-level and confirmation token flows</li>
+              <li>Execution loop controls and safety boundaries</li>
+              <li>Batch/resource exhaustion protections</li>
+            </ul>
+            <a href="docs/security-model.html">Open Security Model</a>
+          </article>
+          <article class="card">
+            <h3>Conformance And Tooling Surface</h3>
+            <ul>
+              <li>Required behavior for claiming MCP-AQL compatibility</li>
+              <li>Current conformance test and validator status</li>
+              <li>MVP "on-spec" validator roadmap in tools repo</li>
+            </ul>
+            <a href="docs/conformance.html">Open Conformance Guide</a>
+          </article>
+          <article class="card">
+            <h3>Implementation And Ecosystem Surface</h3>
+            <ul>
+              <li>Reference runtime and plugin architecture docs</li>
+              <li>Adapter schema and plugin contract requirements</li>
+              <li>Generator/output-policy and provenance requirements</li>
+            </ul>
+            <a href="docs/adapter-contracts.html">Open Adapter Contracts</a>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">How MCP-AQL Differs From Familiar Patterns</h2>
+        <p class="section-subtitle">See where MCP-AQL aligns with familiar patterns, and where its semantic routing and runtime discovery make it different.</p>
+        <div class="grid cols-3">
+          <article class="card">
+            <h3>MCP</h3>
+            <p>
+              MCP-AQL is a protocol layer on top of MCP transport, not a replacement. The difference is semantic endpoints,
+              runtime discovery, and built-in safety classification instead of prose-only intent.
+            </p>
+            <a href="docs/getting-started.html">Read the guided explanation</a>
+          </article>
+          <article class="card">
+            <h3>GraphQL</h3>
+            <p>
+              Both use runtime discovery, but GraphQL requires a schema language and type system. MCP-AQL keeps the existing MCP transport
+              and adds semantic routing without introducing a new SDL.
+            </p>
+            <a href="spec/guides/protocol-comparison.html">Open the comparison guide</a>
+          </article>
+          <article class="card">
+            <h3>REST</h3>
+            <p>
+              REST uses HTTP verbs for semantics. MCP-AQL applies a similar idea to the MCP tool layer, where HTTP verbs do not exist,
+              so intent stays visible even when everything would otherwise look like an undifferentiated tool call.
+            </p>
+            <a href="spec/guides/protocol-comparison.html">See the detailed comparison</a>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">Full Website-Hosted Spec Reference</h2>
+        <p class="section-subtitle">Read the canonical spec material on-site, with the same navigation and search used across the rest of the documentation portal.</p>
+        <div class="grid cols-2">
+          <article class="card">
+            <h3>What changed</h3>
+            <ul>
+              <li>The full reference is generated directly from <code>MCPAQL/spec/docs</code>.</li>
+              <li>Versioned drafts, support docs, and topic pages are hosted under the website's own navigation and search.</li>
+              <li>Summary pages still help people orient quickly, but the detailed material is no longer repo-only.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Where to go next</h3>
+            <ul>
+              <li><a href="spec/index.html">Open the full repo-synced spec reference</a></li>
+              <li><a href="spec/versions/v1.0.0-draft.html">Read the normative draft on-site</a></li>
+              <li><a href="docs/index.html">Use the docs library for guided entry points and summaries</a></li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">Reference Adapter Docs On-Site</h2>
+        <p class="section-subtitle">Reference adapter architecture, runtime, testing, and ADR material are available on-site alongside the protocol docs.</p>
+        <div class="grid cols-2">
+          <article class="card">
+            <h3>What changed</h3>
+            <ul>
+              <li>The reference adapter repo docs are hosted under the website's own navigation and search.</li>
+              <li>Architecture, runtime, testing, migration, and ADR content no longer requires a GitHub jump-out.</li>
+              <li>Adapter pattern pages can now route into implementation docs instead of ending at conceptual guidance.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Where to go next</h3>
+            <ul>
+              <li><a href="adapter-reference/index.html">Browse the reference adapter docs</a></li>
+              <li><a href="adapter-reference/architecture/overview.html">Read the adapter architecture overview</a></li>
+              <li><a href="apis/index.html">Use the adapter-pattern hub to choose the right target-system shape</a></li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">Current Draft Blockers</h2>
+        <p class="section-subtitle">These live spec issues still shape compatibility claims, launch language, and what the public draft can promise today.</p>
+        <div class="grid cols-2">
+          <article class="card">
+            <h3>Phase-1 launch gate issues</h3>
+            <ul>
+              <li><a href="https://github.com/MCPAQL/spec/issues/193">#193 MCP 0.20 capability audit</a></li>
+              <li><a href="https://github.com/MCPAQL/spec/issues/197">#197 batch and resource exhaustion protections</a></li>
+              <li><a href="https://github.com/MCPAQL/spec/issues/199">#199 structured error surface alignment</a></li>
+              <li><a href="https://github.com/MCPAQL/spec/issues/194">#194 draft publication release plan</a></li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Why they matter publicly</h3>
+            <ul>
+              <li>They define what the site can honestly call compatible today.</li>
+              <li>They affect batch safety, machine-readable errors, and MCP parity messaging.</li>
+              <li>They keep the draft positioned as real, useful, and still in progress.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">Repository Map</h2>
+        <p class="section-subtitle">Each repository has a specific role in the protocol, reference implementations, tooling, and launch readiness work.</p>
+        <div class="grid cols-3 repo-list">
+          <article class="card">
+            <h3>spec</h3>
+            <span class="state-chip live">Canonical</span>
+            <p>Normative protocol text, schemas, and versioned draft authority.</p>
+            <a href="https://github.com/MCPAQL/spec">Open Repository</a>
+          </article>
+          <article class="card">
+            <h3>mcpaql-adapter</h3>
+            <span class="state-chip pending">Reference Runtime</span>
+            <p>Schema-driven dispatch, runtime architecture, and plugin contracts in practice.</p>
+            <a href="adapter-reference/index.html">Open Adapter Docs</a>
+          </article>
+          <article class="card">
+            <h3>examples</h3>
+            <span class="state-chip pending">Reference Adapters</span>
+            <p>Pattern examples and candidate public adapters for launch-phase demonstration.</p>
+            <a href="https://github.com/MCPAQL/examples">Open Repository</a>
+          </article>
+          <article class="card">
+            <h3>adapter-generator</h3>
+            <span class="state-chip pending">Generator Track</span>
+            <p>Output policy, provenance, and generation constraints for derived adapters.</p>
+            <a href="https://github.com/MCPAQL/adapter-generator">Open Repository</a>
+          </article>
+          <article class="card">
+            <h3>tools</h3>
+            <span class="state-chip pending">Validation Track</span>
+            <p>Conformance CLI and on-spec validator workstream for third-party implementations.</p>
+            <a href="https://github.com/MCPAQL/tools">Open Repository</a>
+          </article>
+          <article class="card">
+            <h3>website</h3>
+            <span class="state-chip live">Documentation Portal</span>
+            <p>Public-facing browse and search layer for protocol launch and post-launch evolution.</p>
+            <a href="https://github.com/MCPAQL/website">Open Repository</a>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">Adapter Pattern Pages</h2>
+        <p class="section-subtitle">Start from the adapter-pattern hub, then move into the specific environment pages that match the target system you are adapting.</p>
+        <div class="grid cols-3">
+          <a class="card" href="apis/index.html"><h3>Adapter Patterns Overview</h3><span class="state-chip live">Start here</span><p>Top-level guide to choosing the right target-system pattern before diving into the child pages.</p></a>
+          <a class="card" href="apis/mcp-server.html"><h3>MCP Server Pattern</h3><span class="state-chip pending">Draft guidance</span><p>Native MCP server consolidation patterns.</p></a>
+          <a class="card" href="apis/operating-system.html"><h3>Operating System Pattern</h3><span class="state-chip pending">Draft guidance</span><p>Permission-aware local execution boundaries.</p></a>
+          <a class="card" href="apis/application.html"><h3>Application Pattern</h3><span class="state-chip pending">Draft guidance</span><p>Application APIs mapped into semantic operations.</p></a>
+          <a class="card" href="apis/cloud-service.html"><h3>Cloud Service Pattern</h3><span class="state-chip pending">Draft guidance</span><p>External API adaptation with quota and resilience posture.</p></a>
+          <a class="card" href="apis/website.html"><h3>Website Pattern</h3><span class="state-chip pending">Draft guidance</span><p>Web retrieval and action orchestration guidance.</p></a>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.</p>
+      <div class="footer-links">
+        <a href="docs/index.html">Documentation Library</a>
+        <a href="https://github.com/MCPAQL">MCPAQL Organization</a>
+        <a href="https://dollhouseresearch.com">Dollhouse Research</a>
+        <a href="https://github.com/DollhouseMCP/mcp-server">DollhouseMCP Production Profile</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/search.js"></script>
+</body>
+</html>

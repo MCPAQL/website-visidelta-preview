@@ -1,0 +1,1 @@
+Search spans the summary docs, the repo-synced full spec reference, launch pages, adapter patterns, and key repository surfaces.

@@ -1,0 +1,261 @@
+MCP-AQL Adapter Reference | MCP-AQL Adapter Testing Guide
+Launch Checklist
+Adapter Patterns
+Search MCP-AQL docs
+Reference Adapter Docs
+Generated from MCPAQL/mcpaql-adapter so the website carries the implementation architecture, guides, and ADRs too.
+Overview
+MCP-AQL Reference Adapter
+Architecture
+Schema-Driven Dispatch
+MCP-AQL Architecture Overview
+Plugin System Implementation
+Universal Adapter Runtime Specification
+MCP-AQL Adapter Development Guide
+Migration Guide: MCP Server to MCP-AQL Adapter
+MCP-AQL Adapter Testing Guide
+ADR-001: Plugin Pipeline Order
+ADR-002: Schema-Driven Dispatch over Code Generation
+ADR-003: Stateless Singleton Plugins
+Architecture Decision Records
+Examples
+REPO-SYNCED ADAPTER DOC
+This guide defines testing patterns and strategies for MCP-AQL adapter implementations. It covers unit testing, integration testing, endpoint routing validation, introspection verification, and conformance testing.
+Support document Draft 1.0.0-draft 2026-01-26
+Source: mcpaql-adapter/docs/guides/testing.md
+Open Source Markdown Browse Reference Adapter Docs Adapter Patterns Hub
+Version: 1.0.0-draft Status: Draft Last Updated: 2026-01-26
+Note: This guide provides practical testing patterns for MCP-AQL adapters. For normative protocol specifications, see the spec repository .
+Abstract
+Table of Contents
+Unit Testing
+Integration Testing
+Endpoint Routing Tests
+Introspection Tests
+Plugin Tests
+Conformance Testing
+1. Overview
+1.1 Test Pyramid
+MCP-AQL adapters follow a standard test pyramid:
+What to Test
+Individual handlers, parameter validation, response formatting
+Integration
+Full request pipeline (tool call → response)
+Conformance
+Protocol compliance against specification
+1.2 Test Framework
+Examples use Vitest , but any test runner works:
+npm install -D vitest
+2. Unit Testing
+2.1 Handler Tests
+Test each operation handler in isolation, independent of the MCP transport layer:
+import { describe , it , expect } from &quot;vitest&quot; ;
+import { createUser , getUser } from &quot;../src/handlers/users&quot; ;
+describe ( &quot;createUser&quot; , () =&gt; {
+it ( &quot;creates user with valid params&quot; , async () =&gt; {
+const result = await createUser ({
+email : &quot;alice@example.com&quot; ,
+name : &quot;Alice&quot; ,
+expect (result . success ) . toBe ( true ) ;
+expect (result . data . email ) . toBe ( &quot;alice@example.com&quot; ) ;
+expect (result . data . id ) . toBeDefined () ;
+it ( &quot;returns error for missing required field&quot; , async () =&gt; {
+const result = await createUser ({ name : &quot;Alice&quot; }) ;
+expect (result . success ) . toBe ( false ) ;
+expect (result . error ) . toContain ( &quot;email&quot; ) ;
+it ( &quot;applies default values&quot; , async () =&gt; {
+email : &quot;bob@example.com&quot; ,
+name : &quot;Bob&quot; ,
+expect (result . data . roles ) . toContain ( &quot;user&quot; ) ;
+2.2 Parameter Validation Tests
+import { validateParams } from &quot;../src/validation&quot; ;
+describe ( &quot;validateParams&quot; , () =&gt; {
+it ( &quot;passes with all required params present&quot; , () =&gt; {
+expect (() =&gt;
+validateParams ({ email : &quot;a@b.com&quot; , name : &quot;A&quot; } , [ &quot;email&quot; , &quot;name&quot; ])
+) . not . toThrow () ;
+it ( &quot;throws for missing required params&quot; , () =&gt; {
+validateParams ({ name : &quot;A&quot; } , [ &quot;email&quot; , &quot;name&quot; ])
+) . toThrow ( &quot;Missing required parameters: email&quot; ) ;
+it ( &quot;ignores extra params&quot; , () =&gt; {
+validateParams ({ email : &quot;a@b.com&quot; , name : &quot;A&quot; , extra : true } , [ &quot;email&quot; ])
+2.3 Response Format Tests
+Verify all responses use the discriminated union format:
+describe ( &quot;response format&quot; , () =&gt; {
+it ( &quot;success responses have success: true and data&quot; , async () =&gt; {
+const result = await listUsers ({}) ;
+expect (result) . toHaveProperty ( &quot;success&quot; , true ) ;
+expect (result) . toHaveProperty ( &quot;data&quot; ) ;
+expect (result) . not . toHaveProperty ( &quot;error&quot; ) ;
+it ( &quot;error responses have success: false and error&quot; , async () =&gt; {
+const result = await getUser ({ user_id : &quot;nonexistent&quot; }) ;
+expect (result) . toHaveProperty ( &quot;success&quot; , false ) ;
+expect (result) . toHaveProperty ( &quot;error&quot; ) ;
+expect ( typeof result . error ) . toBe ( &quot;string&quot; ) ;
+3. Integration Testing
+3.1 Full Pipeline Tests
+Test the complete request flow from MCP tool call to response:
+import { callTool } from &quot;./helpers/mcp-client&quot; ;
+describe ( &quot;full pipeline&quot; , () =&gt; {
+it ( &quot;handles create → read → delete lifecycle&quot; , async () =&gt; {
+// Create
+const created = await callTool ( &quot;mcp_aql_create&quot; , {
+operation : &quot;create_user&quot; ,
+params : { email : &quot;test@example.com&quot; , name : &quot;Test&quot; } ,
+expect (created . success ) . toBe ( true ) ;
+const userId = created . data . id ;
+const fetched = await callTool ( &quot;mcp_aql_read&quot; , {
+operation : &quot;get_user&quot; ,
+params : { user_id : userId } ,
+expect (fetched . success ) . toBe ( true ) ;
+expect (fetched . data . email ) . toBe ( &quot;test@example.com&quot; ) ;
+// Delete
+const deleted = await callTool ( &quot;mcp_aql_delete&quot; , {
+operation : &quot;delete_user&quot; ,
+expect (deleted . success ) . toBe ( true ) ;
+// Verify deleted
+const gone = await callTool ( &quot;mcp_aql_read&quot; , {
+expect (gone . success ) . toBe ( false ) ;
+3.2 Test Helper
+A minimal test helper for calling tools without the MCP transport:
+// tests/helpers/mcp-client.ts
+import { router } from &quot;../../src/router&quot; ;
+export async function callTool (
+toolName : string ,
+args : Record &lt; string , unknown &gt;
+) : Promise &lt; { success : boolean ; data ?: unknown ; error ?: string } &gt; {
+const endpoint = toolName . replace ( &quot;mcp_aql_&quot; , &quot;&quot; ) . toUpperCase () ;
+const { operation , params } = args as {
+operation : string ;
+params ?: Record &lt; string , unknown &gt;;
+return router . dispatch (operation , endpoint , params ?? {}) ;
+4. Endpoint Routing Tests
+4.1 Correct Routing
+Verify operations are accepted on their designated CRUDE endpoint:
+describe ( &quot;endpoint routing&quot; , () =&gt; {
+const ROUTING_TABLE = [
+{ operation : &quot;create_user&quot; , endpoint : &quot;mcp_aql_create&quot; } ,
+{ operation : &quot;list_users&quot; , endpoint : &quot;mcp_aql_read&quot; } ,
+{ operation : &quot;introspect&quot; , endpoint : &quot;mcp_aql_read&quot; } ,
+{ operation : &quot;update_user&quot; , endpoint : &quot;mcp_aql_update&quot; } ,
+{ operation : &quot;delete_user&quot; , endpoint : &quot;mcp_aql_delete&quot; } ,
+{ operation : &quot;send_verification_email&quot; , endpoint : &quot;mcp_aql_execute&quot; } ,
+for ( const { operation , endpoint } of ROUTING_TABLE) {
+it ( `routes ${ operation } to ${ endpoint } ` , async () =&gt; {
+const result = await callTool (endpoint , {
+operation ,
+params : getMinimalParams (operation) ,
+// Should not get a routing error
+if ( ! result . success ) {
+expect (result . error ) . not . toContain ( &quot;must be called via&quot; ) ;
+4.2 Routing Rejection
+Verify operations are rejected on wrong endpoints:
+describe ( &quot;endpoint rejection&quot; , () =&gt; {
+it ( &quot;rejects create_user on READ endpoint&quot; , async () =&gt; {
+const result = await callTool ( &quot;mcp_aql_read&quot; , {
+params : { email : &quot;a@b.com&quot; , name : &quot;A&quot; } ,
+expect (result . error ) . toContain ( &quot;mcp_aql_create&quot; ) ;
+it ( &quot;rejects delete_user on CREATE endpoint&quot; , async () =&gt; {
+const result = await callTool ( &quot;mcp_aql_create&quot; , {
+params : { user_id : &quot;1&quot; } ,
+expect (result . error ) . toContain ( &quot;mcp_aql_delete&quot; ) ;
+5. Introspection Tests
+5.1 Operations Discovery
+describe ( &quot;introspection - operations&quot; , () =&gt; {
+it ( &quot;lists all operations&quot; , async () =&gt; {
+operation : &quot;introspect&quot; ,
+params : { query : &quot;operations&quot; } ,
+expect (result . data . operations ) . toBeInstanceOf ( Array ) ;
+expect (result . data . operations . length ) . toBeGreaterThan ( 0 ) ;
+// Every operation must have name, endpoint, description
+for ( const op of result . data . operations ) {
+expect (op) . toHaveProperty ( &quot;name&quot; ) ;
+expect (op) . toHaveProperty ( &quot;endpoint&quot; ) ;
+expect (op) . toHaveProperty ( &quot;description&quot; ) ;
+it ( &quot;introspect itself is discoverable&quot; , async () =&gt; {
+const names = result . data . operations . map (
+(op : { name : string }) =&gt; op . name
+expect (names) . toContain ( &quot;introspect&quot; ) ;
+it ( &quot;returns single operation details&quot; , async () =&gt; {
+params : { query : &quot;operations&quot; , name : &quot;create_user&quot; } ,
+expect (result . data . operation ) . toBeDefined () ;
+expect (result . data . operation . name ) . toBe ( &quot;create_user&quot; ) ;
+it ( &quot;returns null for unknown operation&quot; , async () =&gt; {
+params : { query : &quot;operations&quot; , name : &quot;nonexistent&quot; } ,
+expect (result . data . operation ) . toBeNull () ;
+5.2 Types Discovery
+describe ( &quot;introspection - types&quot; , () =&gt; {
+it ( &quot;lists available types&quot; , async () =&gt; {
+params : { query : &quot;types&quot; } ,
+expect (result . data . types ) . toBeInstanceOf ( Array ) ;
+6. Plugin Tests
+6.1 Serialization Plugin
+import { jsonPlugin } from &quot;../src/plugins/json&quot; ;
+describe ( &quot;JSON serialization plugin&quot; , () =&gt; {
+it ( &quot;serializes objects to JSON strings&quot; , () =&gt; {
+const result = jsonPlugin . serialize ({ key : &quot;value&quot; }) ;
+expect (result) . toBe ( &#39;{&quot;key&quot;:&quot;value&quot;}&#39; ) ;
+it ( &quot;deserializes JSON strings to objects&quot; , () =&gt; {
+const result = jsonPlugin . deserialize ( &#39;{&quot;key&quot;:&quot;value&quot;}&#39; ) ;
+expect (result) . toEqual ({ key : &quot;value&quot; }) ;
+it ( &quot;throws on invalid JSON&quot; , () =&gt; {
+expect (() =&gt; jsonPlugin . deserialize ( &quot;not json&quot; )) . toThrow () ;
+it ( &quot;has correct content type&quot; , () =&gt; {
+expect (jsonPlugin . contentType ) . toBe ( &quot;application/json&quot; ) ;
+6.2 Auth Plugin
+import { bearerPlugin } from &quot;../src/plugins/bearer&quot; ;
+describe ( &quot;Bearer auth plugin&quot; , () =&gt; {
+it ( &quot;attaches Authorization header&quot; , () =&gt; {
+const request = {
+url : &quot;https://api.example.com/test&quot; ,
+method : &quot;GET&quot; ,
+headers : {} ,
+const result = bearerPlugin . authenticate (
+request ,
+{ type : &quot;bearer&quot; , token_env : &quot;TEST_TOKEN&quot; } ,
+{ getEnv : (name) =&gt; (name === &quot;TEST_TOKEN&quot; ? &quot;secret123&quot; : undefined ) }
+expect (result . headers [ &quot;Authorization&quot; ]) . toBe ( &quot;Bearer secret123&quot; ) ;
+it ( &quot;throws when token env var is missing&quot; , () =&gt; {
+const request = { url : &quot;https://api.example.com/test&quot; , method : &quot;GET&quot; , headers : {} } ;
+bearerPlugin . authenticate (
+{ type : &quot;bearer&quot; , token_env : &quot;MISSING_TOKEN&quot; } ,
+{ getEnv : () =&gt; undefined }
+) . toThrow () ;
+7. Conformance Testing
+7.1 Conformance Checklist
+Automated conformance tests verify protocol compliance:
+describe ( &quot;MCP-AQL Level 1 Conformance&quot; , () =&gt; {
+it ( &quot;implements introspect operation&quot; , async () =&gt; {
+it ( &quot;registers at least one CRUDE endpoint&quot; , async () =&gt; {
+// Adapter exposes at least mcp_aql_read (for introspect)
+const tools = await listTools () ;
+const crudeTools = tools . filter ((t : { name : string }) =&gt;
+t . name . startsWith ( &quot;mcp_aql_&quot; )
+expect (crudeTools . length ) . toBeGreaterThanOrEqual ( 1 ) ;
+it ( &quot;uses discriminated union responses&quot; , async () =&gt; {
+const success = await callTool ( &quot;mcp_aql_read&quot; , {
+expect (success) . toHaveProperty ( &quot;success&quot; , true ) ;
+expect (success) . toHaveProperty ( &quot;data&quot; ) ;
+const failure = await callTool ( &quot;mcp_aql_read&quot; , {
+operation : &quot;nonexistent_operation&quot; ,
+params : {} ,
+expect (failure) . toHaveProperty ( &quot;success&quot; , false ) ;
+expect (failure) . toHaveProperty ( &quot;error&quot; ) ;
+it ( &quot;uses snake_case for operation names&quot; , async () =&gt; {
+expect (op . name ) . toMatch ( / ^[a-z][a-z0-9_]*$ / ) ;
+7.2 Running Conformance Tests
+# Run all tests
+npx vitest
+# Run only conformance tests
+npx vitest tests/conformance
+# Run with coverage
+npx vitest --coverage
+References
+Development Guide
+Architecture Overview
+MCP-AQL Specification (spec repo)
+Structured Error Codes (spec repo)
+Previous page
+Next page
+&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
+Adapter Patterns Reference Adapter Docs Reference Adapter Repo Dollhouse Research

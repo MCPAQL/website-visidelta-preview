@@ -1,0 +1,342 @@
+MCP-AQL Adapter Reference | MCP-AQL Adapter Development Guide
+Launch Checklist
+Adapter Patterns
+Search MCP-AQL docs
+Reference Adapter Docs
+Generated from MCPAQL/mcpaql-adapter so the website carries the implementation architecture, guides, and ADRs too.
+Overview
+MCP-AQL Reference Adapter
+Architecture
+Schema-Driven Dispatch
+MCP-AQL Architecture Overview
+Plugin System Implementation
+Universal Adapter Runtime Specification
+MCP-AQL Adapter Development Guide
+Migration Guide: MCP Server to MCP-AQL Adapter
+MCP-AQL Adapter Testing Guide
+ADR-001: Plugin Pipeline Order
+ADR-002: Schema-Driven Dispatch over Code Generation
+ADR-003: Stateless Singleton Plugins
+Architecture Decision Records
+Examples
+REPO-SYNCED ADAPTER DOC
+This guide provides practical instructions for developing MCP-AQL compliant adapters. It covers the implementation steps, required components, and best practices for building adapters that wrap existing services.
+Support document Draft 1.0.0-draft 2026-01-26
+Source: mcpaql-adapter/docs/guides/development.md
+Open Source Markdown Browse Reference Adapter Docs Adapter Patterns Hub
+Version: 1.0.0-draft Status: Draft Last Updated: 2026-01-26 Moved from: MCPAQL/spec (formerly docs/adapter/development-guide.md )
+Note: This guide provides practical implementation instructions for building MCP-AQL adapters. For normative protocol specifications, see the spec repository .
+Abstract
+Table of Contents
+Prerequisites
+Implementation Steps
+Core Components
+Operation Implementation
+Conformance
+1. Overview
+1.1 What is an Adapter?
+An MCP-AQL adapter translates the MCP-AQL protocol into calls to your domain-specific backend, enabling any service to be accessed through the unified CRUDE interface.
+1.2 Adapter Responsibilities
+Your adapter must:
+Register MCP tools (CRUDE endpoints or single endpoint)
+Route operations to appropriate handlers
+Provide introspection for operation discovery
+Format responses consistently
+Your adapter may optionally: 5. Enforce security policies (see Gatekeeper ) 6. Support field selection for payload reduction 7. Support batch operations
+1.3 Development Approaches
+Approach
+Description
+Best For
+Implement all components from scratch
+Maximum control, custom requirements
+Generated
+Use adapter generator with your schema
+Standard backends, rapid development
+Extended
+Extend existing adapter implementation
+Similar domain to existing adapter
+2. Prerequisites
+2.1 Required Knowledge
+MCP (Model Context Protocol) basics
+TypeScript/JavaScript (reference implementations)
+Your domain backend's API
+2.2 Required Reading
+Before starting, review:
+MCP-AQL Specification
+CRUDE Pattern
+Operations Guide
+Architecture Overview
+2.3 Development Environment
+Dependency
+Minimum Version
+LTS recommended (20.x or 22.x)
+TypeScript
+Required for type-safe adapter development
+@modelcontextprotocol/sdk
+MCP server and transport primitives
+# Quick setup
+npm init -y
+npm install @modelcontextprotocol/sdk
+npm install -D typescript tsx @types/node
+Note: Exact version constraints will be documented in package.json once the reference implementation source code is added to this repository.
+3. Implementation Steps
+3.1 Step 1: Define Your Domain Resources
+Identify what entities your adapter will manage:
+// Example: Document management adapter
+type DocumentType = &#39;document&#39; | &#39;folder&#39; | &#39;tag&#39; | &#39;template&#39; ;
+// Example: User management adapter
+type UserRole = &#39;admin&#39; | &#39;user&#39; | &#39;guest&#39; ;
+// Example: Task management adapter
+type TaskStatus = &#39;pending&#39; | &#39;in_progress&#39; | &#39;completed&#39; ;
+3.2 Step 2: Map Operations to CRUDE Endpoints
+Determine which operations your adapter supports and their endpoint mapping:
+const OPERATION_ROUTES = {
+// CREATE - Additive operations
+create_user : { endpoint : &#39;CREATE&#39; , handler : &#39;Users.create&#39; } ,
+add_user_role : { endpoint : &#39;CREATE&#39; , handler : &#39;Users.addRole&#39; } ,
+// READ - Query operations
+list_users : { endpoint : &#39;READ&#39; , handler : &#39;Users.list&#39; } ,
+get_user : { endpoint : &#39;READ&#39; , handler : &#39;Users.get&#39; } ,
+search_users : { endpoint : &#39;READ&#39; , handler : &#39;Users.search&#39; } ,
+introspect : { endpoint : &#39;READ&#39; , handler : &#39;Introspection.query&#39; } ,
+// UPDATE - Modification operations
+update_user : { endpoint : &#39;UPDATE&#39; , handler : &#39;Users.update&#39; } ,
+change_password : { endpoint : &#39;UPDATE&#39; , handler : &#39;Users.changePassword&#39; } ,
+// DELETE - Removal operations
+delete_user : { endpoint : &#39;DELETE&#39; , handler : &#39;Users.delete&#39; } ,
+remove_user_role : { endpoint : &#39;DELETE&#39; , handler : &#39;Users.removeRole&#39; } ,
+// EXECUTE - Lifecycle operations (if applicable)
+send_verification_email : { endpoint : &#39;EXECUTE&#39; , handler : &#39;Users.sendVerification&#39; } ,
+reset_password : { endpoint : &#39;EXECUTE&#39; , handler : &#39;Users.resetPassword&#39; } ,
+3.3 Step 3: Implement the MCP Server
+import { Server } from &#39;@modelcontextprotocol/sdk/server/index.js&#39; ;
+import { StdioServerTransport } from &#39;@modelcontextprotocol/sdk/server/stdio.js&#39; ;
+const server = new Server (
+{ name : &#39;my-mcpaql-adapter&#39; , version : &#39;1.0.0&#39; } ,
+{ capabilities : { tools : {} } }
+// Register tools (CRUDE mode)
+server . setRequestHandler ( &#39;tools/list&#39; , async () =&gt; ({
+tools : [
+createEndpointTool ( &#39;mcp_aql_create&#39; , &#39;CREATE&#39; ) ,
+createEndpointTool ( &#39;mcp_aql_read&#39; , &#39;READ&#39; ) ,
+createEndpointTool ( &#39;mcp_aql_update&#39; , &#39;UPDATE&#39; ) ,
+createEndpointTool ( &#39;mcp_aql_delete&#39; , &#39;DELETE&#39; ) ,
+createEndpointTool ( &#39;mcp_aql_execute&#39; , &#39;EXECUTE&#39; ) ,
+// Handle tool calls
+server . setRequestHandler ( &#39;tools/call&#39; , async (request) =&gt; {
+const { name , arguments : args } = request . params ;
+return handleMCPAQLRequest (name , args) ;
+// Start server
+const transport = new StdioServerTransport () ;
+await server . connect (transport) ;
+3.4 Step 4: Implement Operation Router
+class OperationRouter {
+route (operation : string , endpoint : string ) : OperationRoute {
+const route = OPERATION_ROUTES[operation] ;
+if ( ! route) {
+throw new Error ( `Unknown operation: ${ operation } ` ) ;
+// Validate endpoint in CRUDE mode
+if ( this . mode === &#39;crude&#39; &amp;&amp; route . endpoint !== endpoint) {
+throw new Error (
+`Operation &#39; ${ operation } &#39; must be called via mcp_aql_ ${ route . endpoint . toLowerCase () } `
+return route ;
+3.5 Step 5: Implement Handlers
+class UserHandler {
+async create (params : CreateUserParams) : Promise &lt; OperationResult &gt; {
+// Validate required fields
+if ( ! params . email ) {
+return { success : false , error : &quot;Missing required parameter &#39;email&#39;&quot; } ;
+// Call backend
+const user = await this . backend . createUser ({
+email : params . email ,
+name : params . name ,
+role : params . role || &#39;user&#39;
+// Return success
+return {
+success : true ,
+data : this . formatUser (user)
+async list (params : ListParams) : Promise &lt; OperationResult &gt; {
+const users = await this . backend . listUsers ({
+role : params . role ,
+page : params . page ,
+pageSize : params . page_size
+data : {
+items : users . map ( this . formatUser ) ,
+pagination : {
+page_size : params . page_size ,
+total_items : users . total ,
+total_pages : Math . ceil (users . total / params . page_size )
+3.6 Step 6: Implement Introspection
+The introspect operation is the only operation required by MCP-AQL. It enables clients to discover your adapter's capabilities at runtime.
+class IntrospectionResolver {
+queryOperations (name ?: string ) : OperationResult {
+if (name) {
+const route = OPERATION_ROUTES[name] ;
+return { success : true , data : { operation : null } } ;
+data : { operation : this . formatOperationDetails (name , route) }
+operations : Object . entries (OPERATION_ROUTES) . map (([name , route]) =&gt; ({
+endpoint : route . endpoint ,
+description : route . description
+queryTypes (name ?: string ) : OperationResult {
+// Return your adapter&#39;s type definitions
+types : [
+{ name : &#39;UserRole&#39; , kind : &#39;enum&#39; , values : [ &#39;admin&#39; , &#39;user&#39; , &#39;guest&#39; ] } ,
+{ name : &#39;User&#39; , kind : &#39;object&#39; , description : &#39;User account&#39; } ,
+{ name : &#39;CRUDEndpoint&#39; , kind : &#39;enum&#39; , values : [ &#39;CREATE&#39; , &#39;READ&#39; , &#39;UPDATE&#39; , &#39;DELETE&#39; , &#39;EXECUTE&#39; ] }
+4. Core Components
+4.1 Required Components
+Component
+Required
+MCP Server
+Tool registration, request handling
+Operation Router
+Map operations to handlers
+Introspection Resolver
+Runtime discovery
+Response Formatter
+Consistent response structure
+4.2 Optional Components
+When Needed
+Schema Dispatcher
+Declarative operation definitions
+Complex adapters
+Gatekeeper
+Security enforcement
+Production use
+Field Selection Engine
+Payload reduction
+Token-sensitive clients
+Batch Processor
+Multi-operation requests
+Bulk operations
+4.3 Component Interactions
+Request → Router → [Gatekeeper] → Dispatcher → Handler → Formatter → Response
+[Field Selection]
+5. Operation Implementation
+5.1 Required vs Domain Operations
+MCP-AQL requires only one operation:
+introspect - Must be implemented by all adapters
+All other operations are defined by your adapter based on your domain. Common patterns include:
+Typical Operations
+User Management
+create_user, list_users, get_user, update_user, delete_user
+Document Storage
+create_document, list_documents, get_document, update_document, delete_document
+Task Tracking
+create_task, list_tasks, assign_task, complete_task, delete_task
+API Gateway
+list_endpoints, call_endpoint, get_schema
+Workflow Engine
+create_job, run_job, get_job_status, cancel_job
+5.2 Operation Template
+interface OperationHandler {
+// Standard signature
+(params : Record &lt; string , unknown &gt; ) : Promise &lt; OperationResult &gt;;
+// Implementation pattern
+async function operationHandler (params : Record &lt; string , unknown &gt; ) : Promise &lt; OperationResult &gt; {
+// 1. Validate required parameters
+const validated = validateParams (params , REQUIRED_PARAMS) ;
+// 2. Call backend
+const result = await backend . doSomething (validated) ;
+// 3. Format response
+data : formatResult (result)
+} catch (error) {
+// 4. Handle errors consistently
+success : false ,
+error : error . message
+5.3 Parameter Validation
+function validateParams (
+params : Record &lt; string , unknown &gt;,
+required : string []
+) : Record &lt; string , unknown &gt; {
+const missing = required . filter (name =&gt; params[name] === undefined ) ;
+if (missing . length &gt; 0 ) {
+throw new Error ( `Missing required parameters: ${ missing . join ( &#39;, &#39; ) } ` ) ;
+return params ;
+5.4 Response Formatting
+function formatSuccess (data : unknown ) : OperationResult {
+return { success : true , data } ;
+function formatError (message : string , code ?: string ) : OperationResult {
+error : message ,
+... (code &amp;&amp; { errorCode : code })
+6. Testing
+6.1 Unit Tests
+Test each operation handler in isolation:
+describe ( &#39;create_user&#39; , () =&gt; {
+it ( &#39;creates user with valid params&#39; , async () =&gt; {
+const result = await handler . create ({
+email : &#39;alice@example.com&#39; ,
+name : &#39;Alice&#39;
+expect (result . success ) . toBe ( true ) ;
+expect (result . data . email ) . toBe ( &#39;alice@example.com&#39; ) ;
+it ( &#39;fails with missing email&#39; , async () =&gt; {
+expect (result . success ) . toBe ( false ) ;
+expect (result . error ) . toContain ( &#39;email&#39; ) ;
+6.2 Integration Tests
+Test full request flow:
+describe ( &#39;MCP-AQL Integration&#39; , () =&gt; {
+it ( &#39;routes create_user to CREATE endpoint&#39; , async () =&gt; {
+const result = await callTool ( &#39;mcp_aql_create&#39; , {
+operation : &#39;create_user&#39; ,
+params : { email : &#39;alice@example.com&#39; , name : &#39;Alice&#39; }
+it ( &#39;rejects create_user on READ endpoint&#39; , async () =&gt; {
+const result = await callTool ( &#39;mcp_aql_read&#39; , {
+params : { email : &#39;alice@example.com&#39; }
+expect (result . error ) . toContain ( &#39;mcp_aql_create&#39; ) ;
+6.3 Introspection Tests
+Verify operation discovery:
+describe ( &#39;Introspection&#39; , () =&gt; {
+it ( &#39;lists all operations&#39; , async () =&gt; {
+operation : &#39;introspect&#39; ,
+params : { query : &#39;operations&#39; }
+expect (result . data . operations ) . toContainEqual (
+expect . objectContaining ({ name : &#39;introspect&#39; })
+it ( &#39;provides operation details&#39; , async () =&gt; {
+params : { query : &#39;operations&#39; , name : &#39;create_user&#39; }
+expect (result . data . operation . parameters ) . toBeDefined () ;
+7. Conformance
+7.1 Conformance Levels
+Level 1 (Basic):
+introspect operation implemented
+At least one endpoint mode (CRUDE or Single)
+Standard request/response formats
+Discriminated union responses
+Level 2 (Full):
+Level 1 requirements
+Both endpoint modes supported
+Field selection supported
+Batch operations supported
+Pass conformance test suite
+7.2 Self-Assessment Checklist
+## Level 1 Checklist
+- [ ] introspect operation implemented (operations query)
+- [ ] introspect operation implemented (types query)
+- [ ] At least one CRUDE endpoint registered
+- [ ] Operation routing works correctly
+- [ ] Discriminated union responses used
+- [ ] snake_case parameter naming
+- [ ] Correct endpoint routing enforced (CRUDE mode)
+## Level 2 Checklist
+- [ ] All Level 1 items
+- [ ] CRUDE mode supported
+- [ ] Single mode supported
+- [ ] Field selection supported
+- [ ] Batch operations supported
+- [ ] Conformance tests pass
+7.3 Claiming Conformance
+To claim MCP-AQL conformance:
+Complete self-assessment for target level
+Run conformance test suite
+Document any deviations or extensions
+Include conformance statement in documentation
+Example Statement:
+This adapter implements MCP-AQL Level 1 conformance.
+Domain: User management
+Operations: create_user, list_users, get_user, update_user, delete_user, introspect
+Extensions: bulk_import (custom batch operation)
+Deviations: None
+References
+Previous page
+Next page
+&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
+Adapter Patterns Reference Adapter Docs Reference Adapter Repo Dollhouse Research

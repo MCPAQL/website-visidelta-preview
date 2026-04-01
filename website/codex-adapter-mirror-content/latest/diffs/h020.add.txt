@@ -1,0 +1,8 @@
+Reference adapter docs
+Development Guide
+Testing Guide
+Implementation Reference
+Turn mixed retrieval and action workflows into explicit READ and EXECUTE operations with clearer contracts.
+Validate selector-driven flows, action boundaries, and error normalization before exposing web-facing operations.
+Plugin System
+Use plugin composition to isolate transport, auth, serialization, and transformation concerns in web integrations.

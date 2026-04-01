@@ -1,0 +1,12 @@
+Reference Adapter Docs
+Open adapter docs
+Repo-Synced Reference Adapter Docs
+Implementation guidance from the reference adapter repo is mirrored on-site too, so adapter architecture and practical build guides live alongside the protocol docs.
+Open the mirrored implementation docs
+The website now hosts the reference adapter architecture docs, development and testing guides, migration walkthrough, and implementation ADRs.
+Browse reference adapter docs
+Use adapter patterns for orientation
+Start with pattern selection to pick the right target-system shape, then drop into the mirrored implementation docs for the runtime details.
+Open adapter patterns
+mcpaql-adapter mirror
+Website-hosted mirror of runtime architecture, implementation guides, and ADRs

@@ -1,0 +1,80 @@
+MCP-AQL Adapter Reference | MCP-AQL Reference Adapter
+Launch Checklist
+Adapter Patterns
+Search MCP-AQL docs
+Reference Adapter Docs
+Generated from MCPAQL/mcpaql-adapter so the website carries the implementation architecture, guides, and ADRs too.
+Overview
+MCP-AQL Reference Adapter
+Architecture
+Schema-Driven Dispatch
+MCP-AQL Architecture Overview
+Plugin System Implementation
+Universal Adapter Runtime Specification
+MCP-AQL Adapter Development Guide
+Migration Guide: MCP Server to MCP-AQL Adapter
+MCP-AQL Adapter Testing Guide
+ADR-001: Plugin Pipeline Order
+ADR-002: Schema-Driven Dispatch over Code Generation
+ADR-003: Stateless Singleton Plugins
+Architecture Decision Records
+examples
+REPO-SYNCED ADAPTER DOC
+Reference implementation for MCP-AQL (Model Context Protocol - Advanced Agent API Adapter Query Language) adapters.
+Repository source
+Source: mcpaql-adapter/README.md
+Open Source Markdown Browse Reference Adapter Docs Adapter Patterns Hub
+This repository contains the implementation architecture documentation and reference adapter code for the MCP-AQL protocol. It provides:
+Implementation guidance for building MCP-AQL adapters
+Architecture documentation for the universal adapter runtime
+Plugin system implementation details
+Development guides and patterns
+For normative protocol specifications (wire format, schema semantics, interface contracts), see the spec repository .
+Documentation
+Document
+Description
+Architecture Overview
+How adapters work internally
+Universal Runtime
+Schema interpreter execution engine
+Plugin System
+Plugin composition and MVP implementations
+Declarative operation dispatch pattern
+Development Guide
+How to build MCP-AQL adapters
+Testing Guide
+Testing patterns for adapters
+Migration Guide
+Migrating from MCP server to MCP-AQL adapter
+Plugin Pipeline Order
+Schema-Driven Dispatch over Code Generation
+Stateless Singleton Plugins
+Minimal Adapter
+Bare-minimum adapter with introspection
+User Management
+Full CRUDE adapter with all endpoints
+Relationship to Spec
+This repository contains Level 4 content (implementation guidance) from the MCP-AQL four-level protocol model:
+Lives in
+1. Wire format
+Request/response JSON, error codes, introspection
+2. Schema semantics
+Operation declarations, params, auth, target
+3. Canonical format
+Markdown + YAML front matter interchange format
+4. Implementation guidance
+Runtime architecture, plugin pipeline, dispatch
+this repo
+Related Repositories
+Repository
+Protocol specification, schemas, conformance tests
+Example adapter configurations
+adapter-generator
+Tool to generate adapters from API specs
+Documentation : CC BY 4.0
+Code/schemas/tests : AGPL-3.0
+See LICENSING for details.
+Reference overview
+Next page
+&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
+Adapter Patterns Reference Adapter Docs Reference Adapter Repo Dollhouse Research

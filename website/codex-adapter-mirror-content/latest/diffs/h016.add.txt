@@ -1,0 +1,8 @@
+Reference adapter docs
+Universal Runtime
+Testing Guide
+Implementation Reference
+Map quotas, request construction, response parsing, and structured error handling to a real runtime model.
+Exercise retry assumptions, route validation, and integration coverage before exposing a remote API broadly.
+Plugin System
+Use the plugin pipeline docs when auth, transport, serialization, or transformation concerns need clean isolation.

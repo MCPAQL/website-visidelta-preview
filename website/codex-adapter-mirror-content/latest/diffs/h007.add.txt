@@ -1,0 +1,263 @@
+MCP-AQL Adapter Reference | Plugin System Implementation
+Launch Checklist
+Adapter Patterns
+Search MCP-AQL docs
+Reference Adapter Docs
+Generated from MCPAQL/mcpaql-adapter so the website carries the implementation architecture, guides, and ADRs too.
+Overview
+MCP-AQL Reference Adapter
+Architecture
+Schema-Driven Dispatch
+MCP-AQL Architecture Overview
+Plugin System Implementation
+Universal Adapter Runtime Specification
+MCP-AQL Adapter Development Guide
+Migration Guide: MCP Server to MCP-AQL Adapter
+MCP-AQL Adapter Testing Guide
+ADR-001: Plugin Pipeline Order
+ADR-002: Schema-Driven Dispatch over Code Generation
+ADR-003: Stateless Singleton Plugins
+Architecture Decision Records
+Examples
+REPO-SYNCED ADAPTER DOC
+This document defines the plugin system implementation for the MCP-AQL adapter runtime, including plugin resolution, composition pipeline, execution order, and the behavior of MVP built-in plugins.
+Support document Draft (MVP) 1.0.0-draft 2026-01-26
+Source: mcpaql-adapter/docs/architecture/plugin-system.md
+Open Source Markdown Browse Reference Adapter Docs Adapter Patterns Hub
+Version: 1.0.0-draft Status: Draft (MVP) Last Updated: 2026-01-26 Moved from: MCPAQL/spec (implementation portions of docs/architecture/plugin-interface.md )
+Note: This document describes the implementation architecture of the plugin system. For normative plugin interface contracts (what each plugin type MUST provide), see the Plugin Interface Contracts in the spec repository.
+Abstract
+Table of Contents
+Plugin Resolution
+MVP Plugin Implementations
+Plugin Composition
+Future Extensions
+1. Plugin Resolution
+Plugins are resolved by name at runtime:
+Check built-in plugins (shipped with runtime)
+Return plugin instance
+MUST fail with PLUGIN_NOT_FOUND error if unknown
+// Pseudocode
+function resolvePlugin (category : string , name : string ) : Plugin {
+const plugin = BUILTIN_PLUGINS[category][name] ;
+if ( ! plugin) {
+throw new PluginNotFoundError (category , name) ;
+return plugin ;
+2. MVP Plugin Implementations
+2.1 HTTP Transport Plugin
+Name: http Description: HTTP/HTTPS transport using standard fetch or HTTP client
+Behavior:
+Constructs HTTP request from TransportRequest
+Sends request using HTTPS (HTTP only for localhost)
+MUST handle connection errors with appropriate error codes
+MUST return raw response without interpretation
+Options:
+Description
+Request timeout (ms)
+Retry attempts on network failure
+retryDelay
+Base retry delay (ms)
+Error Handling:
+Condition
+Error Code
+DNS resolution failure
+TRANSPORT_DNS_ERROR
+Connection refused
+TRANSPORT_CONNECTION_REFUSED
+Connection timeout
+TRANSPORT_TIMEOUT
+TLS/SSL error
+TRANSPORT_TLS_ERROR
+Network error
+TRANSPORT_NETWORK_ERROR
+2.2 REST Protocol Plugin
+Name: rest Description: RESTful API conventions over HTTP
+Request Building:
+Parse maps_to format: METHOD /path/with/{placeholders}
+Extract HTTP method (GET, POST, PUT, PATCH, DELETE)
+Substitute path placeholders with parameter values
+Build query string for GET requests with remaining params
+Build request body for non-GET requests with remaining params
+Set appropriate Content-Type header
+Path Parameter Substitution:
+maps_to: &quot;GET /repos/{owner}/{repo}/issues/{issue_number}&quot;
+params: { owner: &quot;octocat&quot;, repo: &quot;Hello-World&quot;, issue_number: 42 }
+result: &quot;GET /repos/octocat/Hello-World/issues/42&quot;
+Query vs Body Parameters:
+Path Params
+Other Params
+In URL path
+Query string
+Request body
+Response Parsing:
+Status Range
+ok: true , data from body
+ok: false , error from body or status
+2.3 JSON Serialization Plugin
+Name: json Description: JSON encoding/decoding Content-Type: application/json
+Serialize:
+MUST call JSON.stringify(data)
+MUST handle circular references with error
+Deserialize:
+MUST call JSON.parse(raw)
+MUST return null for empty responses
+MUST throw on malformed JSON
+Circular reference
+SERIALIZATION_CIRCULAR_REF
+Invalid JSON in response
+SERIALIZATION_PARSE_ERROR
+2.4 None Auth Plugin
+Name: none Description: No authentication
+Behavior: Returns request unchanged.
+authenticate (request , config , context) {
+return request ;
+2.5 API Key Auth Plugin
+Name: api_key Description: API key in HTTP header
+Configuration:
+type : api_key
+header_name : X-API-Key
+key_env : MY_API_KEY
+Read key from context.getEnv(config.key_env)
+Add header config.header_name: {key}
+Fail if key not found in environment
+Missing key_env in config
+AUTH_CONFIG_INVALID
+Missing header_name in config
+Environment variable not set
+AUTH_CREDENTIAL_MISSING
+2.6 Bearer Auth Plugin
+Name: bearer Description: Bearer token in Authorization header
+type : bearer
+token_env : GITHUB_TOKEN
+Read token from context.getEnv(config.token_env)
+Add header Authorization: Bearer {token}
+Fail if token not found in environment
+Missing token_env in config
+3. Plugin Composition
+3.1 Request Pipeline
+Plugins compose into a request pipeline:
+┌──────────────────────────────────────────────────────────────┐
+│ OPERATION REQUEST │
+│ { operation: &quot;get_repo&quot;, params: { owner, repo } } │
+└──────────────────────────────────────────────────────────────┘
+│ PROTOCOL PLUGIN │
+│ rest.buildRequest() │
+│ Maps operation to HTTP request structure │
+│ Output: { url, method, headers, body? } │
+│ SERIALIZATION PLUGIN │
+│ json.serialize() │
+│ Serializes body if present, sets Content-Type │
+│ Output: { url, method, headers, body: string } │
+│ AUTH PLUGIN │
+│ bearer.authenticate() │
+│ Attaches Authorization header │
+│ Output: { url, method, headers + auth, body } │
+│ TRANSPORT PLUGIN │
+│ http.send() │
+│ Sends HTTP request, receives response │
+│ Output: { status, statusText, headers, body } │
+│ json.deserialize() │
+│ Parses response body │
+│ Output: parsed data object │
+│ rest.parseResponse() │
+│ Interprets status, extracts data or error │
+│ Output: { ok, status, data, error? } │
+│ MCP-AQL RESPONSE │
+│ { success: true, data: {...} } │
+│ OR { success: false, error: &quot;...&quot; } │
+3.2 Pipeline Execution
+async function executePipeline (
+operation : OperationDefinition ,
+params : Record &lt; string , unknown &gt;,
+adapter : AdapterSchema
+) : Promise &lt; OperationResult &gt; {
+const protocol = resolvePlugin ( &#39;protocol&#39; , adapter . target . protocol ) ;
+const serialization = resolvePlugin ( &#39;serialization&#39; , adapter . target . serialization ) ;
+const auth = resolvePlugin ( &#39;auth&#39; , adapter . auth . type ) ;
+const transport = resolvePlugin ( &#39;transport&#39; , adapter . target . transport ) ;
+// Build request
+let request = protocol . buildRequest (operation , params , adapter . target ) ;
+// Serialize body if present
+if (request . body !== undefined ) {
+request . body = serialization . serialize (request . body ) ;
+request . headers [ &#39;Content-Type&#39; ] = serialization . contentType ;
+// Attach authentication
+request = auth . authenticate (request , adapter . auth , authContext) ;
+// Send request
+const response = await transport . send (request , {}) ;
+// Deserialize response
+const body = serialization . deserialize (response . body ) ;
+// Parse into standard format
+const parsed = protocol . parseResponse ({ ... response , body } , operation) ;
+// Convert to MCP-AQL result
+if (parsed . ok ) {
+return { success : true , data : parsed . data } ;
+} else {
+return { success : false , error : parsed . error . message } ;
+4. Future Extensions
+4.1 Additional Transport Plugins
+WebSocket ( websocket ):
+Persistent bidirectional connections
+Message framing and delivery
+Reconnection handling
+Serial ( serial ):
+Serial port communication
+Baud rate and flow control
+Platform-specific drivers
+Native ( native-* ):
+Platform-specific native APIs
+macOS, Windows, Linux variants
+Direct system calls without HTTP
+4.2 Additional Protocol Plugins
+GraphQL ( graphql ):
+Query/mutation construction
+Variable substitution
+Error extraction from extensions
+gRPC ( grpc ):
+Protocol buffer serialization
+HTTP/2 framing
+Streaming support
+JSON-RPC ( jsonrpc ):
+Request ID management
+Batch requests
+Error code mapping
+4.3 Additional Auth Plugins
+OAuth 2.0 ( oauth ):
+Multiple flow types (authorization code, client credentials)
+Token refresh handling
+Scope management
+Mutual TLS ( mtls ):
+Client certificate management
+Certificate chain validation
+Key storage integration
+AWS Signature V4 ( aws-sig4 ):
+Request signing
+Region and service scoping
+Credential resolution
+4.4 Pagination Plugins
+See #37 for cursor-based pagination specification.
+Opaque cursor
+Next cursor in response
+Limit/offset
+Numeric offset pagination
+Page number
+Page-based pagination
+link_header
+RFC 5988
+Link header parsing
+4.5 User-Extensible Plugins
+Future versions may support:
+Plugin directory for user-installed plugins
+Plugin manifest format
+Security sandboxing
+Plugin versioning and updates
+References
+Plugin Interface Contracts (normative interfaces)
+Adapter Element Type Specification
+Universal Adapter Runtime
+MCP-AQL Specification
+GitHub Issue: #62
+Previous page
+Next page
+&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
+Adapter Patterns Reference Adapter Docs Reference Adapter Repo Dollhouse Research

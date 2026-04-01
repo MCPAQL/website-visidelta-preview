@@ -1,0 +1,8 @@
+Reference adapter docs
+Development Guide
+Schema-Driven Dispatch
+Implementation Reference
+Turn feature-level actions into stable operations with the reference implementation workflow.
+Testing Guide
+Validate routing, parameter handling, and introspection so application actions remain predictable.
+Use the dispatch doc when an application surface is too broad for ad hoc routing logic.

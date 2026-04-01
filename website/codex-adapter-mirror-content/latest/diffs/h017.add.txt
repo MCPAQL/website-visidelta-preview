@@ -1,0 +1,16 @@
+Reference Adapter Docs
+Adapter Architecture Overview
+Repo-Synced Implementation Reference
+The implementation architecture is now mirrored onto the website too, so these pattern pages can point into real runtime docs instead of stopping at conceptual guidance.
+Architecture Overview
+Read the internal adapter shape, request flow, and design principles from the reference adapter repo.
+Universal Runtime
+See how schema loading, dispatch, request building, response handling, and error mapping are expected to work.
+Development Guide
+Use the practical build guidance when you move from choosing a pattern to implementing one.
+Testing Guide
+Cover handler tests, routing tests, introspection checks, and conformance workflow from the same website docs experience.
+Migration Guide
+Use the MCP server migration guide when you are consolidating an existing tool surface into MCP-AQL operations.
+Implementation ADRs
+Browse the accepted implementation decisions behind the reference adapter architecture and plugin pipeline.

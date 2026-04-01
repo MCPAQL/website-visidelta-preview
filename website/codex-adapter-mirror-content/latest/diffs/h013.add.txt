@@ -1,0 +1,45 @@
+MCP-AQL Adapter Reference | Reference Adapter Docs
+Launch Checklist
+Adapter Patterns
+Search MCP-AQL docs
+Reference Adapter Docs
+REPO-SYNCED IMPLEMENTATION REFERENCE
+The reference adapter docs now live on the website too
+These pages are generated from MCPAQL/mcpaql-adapter so implementers can read the runtime architecture, practical guides, and ADRs on the website instead of bouncing out to GitHub.
+Open Adapter Patterns Implementation Profiles
+How To Use This Section
+Use Adapter Patterns to choose the correct target-system shape first.
+Use this repo-synced section for runtime architecture, development workflow, testing guidance, migration notes, and implementation ADRs.
+When you need normative protocol rules, jump to the website-hosted Full Spec Reference .
+Overview
+MCP-AQL Reference Adapter
+Reference implementation for MCP-AQL (Model Context Protocol - Advanced Agent API Adapter Query Language) adapters.
+Repository source
+Architecture
+Schema-Driven Dispatch
+This document specifies the schema-driven dispatch pattern that enables declarative operation definitions with automatic parameter resolution, validation, and handler invocation. This is an optional but recommended patte
+Support document
+MCP-AQL Architecture Overview
+This document describes the architecture of MCP-AQL adapters, explaining how they transform existing APIs and services into MCP-AQL compliant endpoints. It covers the core components, request flow, and design principles
+Plugin System Implementation
+This document defines the plugin system implementation for the MCP-AQL adapter runtime, including plugin resolution, composition pipeline, execution order, and the behavior of MVP built-in plugins.
+Draft (MVP)
+Universal Adapter Runtime Specification
+This document defines the Universal Adapter Runtime specification - the execution engine that interprets adapter schema files and translates MCP-AQL CRUDE operations to target API calls. The runtime enables schema-driven
+MCP-AQL Adapter Development Guide
+This guide provides practical instructions for developing MCP-AQL compliant adapters. It covers the implementation steps, required components, and best practices for building adapters that wrap existing services.
+Migration Guide: MCP Server to MCP-AQL Adapter
+This guide walks through the process of migrating an existing Model Context Protocol (MCP) server — one that exposes individual tools — to an MCP-AQL adapter that consolidates those tools into semantic CRUDE endpoints. T
+MCP-AQL Adapter Testing Guide
+This guide defines testing patterns and strategies for MCP-AQL adapter implementations. It covers unit testing, integration testing, endpoint routing validation, introspection verification, and conformance testing.
+ADR-001: Plugin Pipeline Order
+Date: 2026-01-26
+Accepted
+ADR-002: Schema-Driven Dispatch over Code Generation
+ADR-003: Stateless Singleton Plugins
+Architecture Decision Records
+This directory contains Architecture Decision Records (ADRs) for implementation decisions in the MCP-AQL adapter.
+Examples
+Minimal working examples demonstrating MCP-AQL adapter patterns.
+&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
+Adapter Patterns Reference Adapter Docs Reference Adapter Repo Dollhouse Research

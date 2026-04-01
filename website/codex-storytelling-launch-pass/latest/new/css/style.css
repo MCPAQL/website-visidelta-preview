@@ -742,6 +742,10 @@ footer {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
+.code-example-stack {
+  grid-template-columns: 1fr;
+}
+
 .docs-main > .page-nav {
   margin-top: 1.2rem;
 }

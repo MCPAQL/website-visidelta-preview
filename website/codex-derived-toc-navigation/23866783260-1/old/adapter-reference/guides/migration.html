@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="This guide walks through the process of migrating an existing Model Context Protocol (MCP) server — one that exposes individual tools — to an MCP-AQL adapter that consolidates those tools into semantic CRUDE endpoints. T">
+  <title>MCP-AQL Adapter Reference | Migration Guide: MCP Server to MCP-AQL Adapter</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <a class="logo" href="../../index.html"><span class="logo-mark"></span>MCP-AQL</a>
+        <ul class="nav-links">
+          <li><a href="../../index.html">Home</a></li>
+          <li><a href="../../docs/index.html">Docs</a></li>
+          <li><a href="../../launch-checklist.html">Launch Checklist</a></li>
+          <li><a href="../../apis/index.html">Adapter Patterns</a></li>
+        </ul>
+        <form class="site-search" data-search-form data-index-url="../../data/search-index.json" role="search">
+          <label class="sr-only" for="site-search-input">Search MCP-AQL docs</label>
+          <input id="site-search-input" data-search-input type="search" placeholder="Search MCP-AQL docs, spec pages, and adapter patterns...">
+          <span class="search-count" data-search-count></span>
+          <ul class="search-results" data-search-results hidden></ul>
+        </form>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container docs-shell">
+      <aside class="docs-side">
+        <h2>Reference Adapter Docs</h2>
+        <p class="docs-side-note">Generated from <code>MCPAQL/mcpaql-adapter</code> so the website carries the implementation architecture, guides, and ADRs too.</p>
+        <div class="docs-side-group">
+  <h3>Overview</h3>
+  <ul><li><a href="../repo/README.html">MCP-AQL Reference Adapter</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Architecture</h3>
+  <ul><li><a href="../architecture/dispatch.html">Schema-Driven Dispatch</a></li><li><a href="../architecture/overview.html">MCP-AQL Architecture Overview</a></li><li><a href="../architecture/plugin-system.html">Plugin System Implementation</a></li><li><a href="../architecture/runtime.html">Universal Adapter Runtime Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Guides</h3>
+  <ul><li><a href="development.html">MCP-AQL Adapter Development Guide</a></li><li><a class="current" aria-current="page" href="migration.html">Migration Guide: MCP Server to MCP-AQL Adapter</a></li><li><a href="testing.html">MCP-AQL Adapter Testing Guide</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>ADRs</h3>
+  <ul><li><a href="../adr/ADR-001-plugin-pipeline-order.html">ADR-001: Plugin Pipeline Order</a></li><li><a href="../adr/ADR-002-schema-driven-dispatch.html">ADR-002: Schema-Driven Dispatch over Code Generation</a></li><li><a href="../adr/ADR-003-stateless-plugins.html">ADR-003: Stateless Singleton Plugins</a></li><li><a href="../adr/README.html">Architecture Decision Records</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Examples</h3>
+  <ul><li><a href="../examples/README.html">Examples</a></li></ul>
+</div>
+      </aside>
+
+      <article class="docs-main">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+          <ol>
+            <li><a href="../../index.html">Home</a></li>
+            <li><a href="../../apis/index.html">Adapter Patterns</a></li><li><a href="../index.html">Reference Adapter Docs</a></li>
+            <li><span class="current">Migration Guide: MCP Server to MCP-AQL Adapter</span></li>
+          </ol>
+        </nav>
+        <section class="hero docs-hero">
+          <div class="hero-inner">
+            <span class="status-pill">REPO-SYNCED ADAPTER DOC</span>
+            <h1>Migration Guide: MCP Server to MCP-AQL Adapter</h1>
+            <p class="lede">This guide walks through the process of migrating an existing Model Context Protocol (MCP) server — one that exposes individual tools — to an MCP-AQL adapter that consolidates those tools into semantic CRUDE endpoints. T</p>
+            <div class="spec-meta"><span class="state-chip live">Support document</span><span class="state-chip pending">Draft</span><span class="state-chip">1.0.0-draft</span><span class="state-chip">2026-01-26</span></div>
+            <p class="spec-source">Source: <a href="https://github.com/MCPAQL/mcpaql-adapter/blob/main/docs/guides/migration.md">mcpaql-adapter/docs/guides/migration.md</a></p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="https://github.com/MCPAQL/mcpaql-adapter/blob/main/docs/guides/migration.md">Open Source Markdown</a><a class="btn btn-secondary" href="../index.html">Browse Reference Adapter Docs</a><a class="btn btn-secondary" href="../../apis/index.html">Adapter Patterns Hub</a>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <div class="card spec-prose">
+            <p><strong>Version:</strong> 1.0.0-draft <strong>Status:</strong> Draft <strong>Last Updated:</strong> 2026-01-26</p>
+<blockquote>
+<p><strong>Note:</strong> This guide provides practical <strong>migration instructions</strong> for converting existing MCP servers to MCP-AQL adapters. For normative protocol specifications, see the <a href="https://github.com/MCPAQL/spec">spec repository</a>.</p>
+</blockquote>
+<h2 id="abstract">Abstract</h2>
+<p>This guide walks through the process of migrating an existing Model Context Protocol (MCP) server — one that exposes individual tools — to an MCP-AQL adapter that consolidates those tools into semantic CRUDE endpoints. The result is a ~96% reduction in token overhead while preserving full functionality.</p>
+<hr />
+<h2 id="table-of-contents">Table of Contents</h2>
+<ol type="1">
+<li><a href="#1-why-migrate">Why Migrate</a></li>
+<li><a href="#2-before-you-start">Before You Start</a></li>
+<li><a href="#3-migration-steps">Migration Steps</a></li>
+<li><a href="#4-mapping-tools-to-crude-operations">Mapping Tools to CRUDE Operations</a></li>
+<li><a href="#5-converting-tool-handlers">Converting Tool Handlers</a></li>
+<li><a href="#6-adding-introspection">Adding Introspection</a></li>
+<li><a href="#7-validation-checklist">Validation Checklist</a></li>
+</ol>
+<hr />
+<h2 id="1-why-migrate">1. Why Migrate</h2>
+<h3 id="11-the-problem-with-individual-tools">1.1 The Problem with Individual Tools</h3>
+<p>A standard MCP server registers each capability as a separate tool. For a server with 50 operations, the LLM receives 50 tool definitions in its context window:</p>
+<pre><code>50 tools × ~800 tokens/tool = ~40,000 tokens per request</code></pre>
+<p>This creates:</p>
+<ul>
+<li><strong>Context window pressure</strong> — Less room for user content and reasoning</li>
+<li><strong>Selection confusion</strong> — LLMs struggle to choose among many similar tools</li>
+<li><strong>Scaling limits</strong> — Adding operations linearly increases token cost</li>
+</ul>
+<h3 id="12-what-mcp-aql-changes">1.2 What MCP-AQL Changes</h3>
+<p>MCP-AQL consolidates all operations behind 5 CRUDE endpoints:</p>
+<pre><code>5 endpoints × ~200 tokens/endpoint = ~1,000 tokens per request</code></pre>
+<p>Operations are discovered at runtime via introspection rather than statically defined in the tool list.</p>
+<h3 id="13-what-stays-the-same">1.3 What Stays the Same</h3>
+<ul>
+<li>Your backend logic does not change</li>
+<li>Your MCP server infrastructure (transport, connection) stays the same</li>
+<li>Parameter validation logic is reusable</li>
+<li>Response data structures are preserved</li>
+</ul>
+<hr />
+<h2 id="2-before-you-start">2. Before You Start</h2>
+<h3 id="21-inventory-your-tools">2.1 Inventory Your Tools</h3>
+<p>List every tool your MCP server currently registers. For each tool, note:</p>
+<table>
+<thead>
+<tr>
+<th>Tool Name</th>
+<th>What It Does</th>
+<th>Read-Only?</th>
+<th>Destructive?</th>
+<th>Side Effects?</th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+<p>This inventory drives the CRUDE categorization in Step 4.</p>
+<h3 id="22-identify-shared-parameters">2.2 Identify Shared Parameters</h3>
+<p>Look for parameters that appear across multiple tools (e.g., <code>owner</code>, <code>repo</code> in a GitHub integration). These become path parameters or shared context in the adapter.</p>
+<hr />
+<h2 id="3-migration-steps">3. Migration Steps</h2>
+<h3 id="31-overview">3.1 Overview</h3>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>What Changes</th>
+<th>Effort</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. Categorize tools into CRUDE endpoints</td>
+<td>Tool registration</td>
+<td>Low</td>
+</tr>
+<tr>
+<td>2. Create operation router</td>
+<td>New component</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td>3. Convert tool handlers to operation handlers</td>
+<td>Handler signatures</td>
+<td>Low</td>
+</tr>
+<tr>
+<td>4. Add introspection</td>
+<td>New handler</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td>5. Update tool registration</td>
+<td>50 tools → 5 endpoints</td>
+<td>Low</td>
+</tr>
+<tr>
+<td>6. Test and validate</td>
+<td>Test updates</td>
+<td>Medium</td>
+</tr>
+</tbody>
+</table>
+<h3 id="32-step-by-step">3.2 Step-by-Step</h3>
+<p>The following sections walk through each step with code examples.</p>
+<hr />
+<h2 id="4-mapping-tools-to-crude-operations">4. Mapping Tools to CRUDE Operations</h2>
+<h3 id="41-categorization-rules">4.1 Categorization Rules</h3>
+<table>
+<thead>
+<tr>
+<th>CRUDE Endpoint</th>
+<th>Criteria</th>
+<th>Examples</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>CREATE</strong></td>
+<td>Adds new state, non-destructive, additive</td>
+<td><code>create_file</code>, <code>add_tag</code>, <code>import_data</code></td>
+</tr>
+<tr>
+<td><strong>READ</strong></td>
+<td>Read-only, no side effects, safe to retry</td>
+<td><code>get_file</code>, <code>list_items</code>, <code>search</code>, <code>introspect</code></td>
+</tr>
+<tr>
+<td><strong>UPDATE</strong></td>
+<td>Modifies existing state</td>
+<td><code>rename_file</code>, <code>edit_content</code>, <code>change_status</code></td>
+</tr>
+<tr>
+<td><strong>DELETE</strong></td>
+<td>Removes state, destructive</td>
+<td><code>delete_file</code>, <code>remove_tag</code>, <code>purge_cache</code></td>
+</tr>
+<tr>
+<td><strong>EXECUTE</strong></td>
+<td>Non-idempotent, runtime lifecycle, side effects</td>
+<td><code>run_build</code>, <code>send_email</code>, <code>deploy</code>, <code>restart</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="42-common-mappings">4.2 Common Mappings</h3>
+<p><strong>Before (individual MCP tools):</strong></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">// 12 separate tools registered</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>tools<span class="op">:</span> [</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  { name<span class="op">:</span> <span class="st">&quot;create_repo&quot;</span><span class="op">,</span> <span class="op">...</span> }<span class="op">,</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  { name<span class="op">:</span> <span class="st">&quot;fork_repo&quot;</span><span class="op">,</span> <span class="op">...</span> }<span class="op">,</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  { name<span class="op">:</span> <span class="st">&quot;list_repos&quot;</span><span class="op">,</span> <span class="op">...</span> }<span class="op">,</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  { name<span class="op">:</span> <span class="st">&quot;get_repo&quot;</span><span class="op">,</span> <span class="op">...</span> }<span class="op">,</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  { name<span class="op">:</span> <span class="st">&quot;search_repos&quot;</span><span class="op">,</span> <span class="op">...</span> }<span class="op">,</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  { name<span class="op">:</span> <span class="st">&quot;get_readme&quot;</span><span class="op">,</span> <span class="op">...</span> }<span class="op">,</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  { name<span class="op">:</span> <span class="st">&quot;update_repo&quot;</span><span class="op">,</span> <span class="op">...</span> }<span class="op">,</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  { name<span class="op">:</span> <span class="st">&quot;transfer_repo&quot;</span><span class="op">,</span> <span class="op">...</span> }<span class="op">,</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  { name<span class="op">:</span> <span class="st">&quot;delete_repo&quot;</span><span class="op">,</span> <span class="op">...</span> }<span class="op">,</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  { name<span class="op">:</span> <span class="st">&quot;archive_repo&quot;</span><span class="op">,</span> <span class="op">...</span> }<span class="op">,</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  { name<span class="op">:</span> <span class="st">&quot;star_repo&quot;</span><span class="op">,</span> <span class="op">...</span> }<span class="op">,</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  { name<span class="op">:</span> <span class="st">&quot;unstar_repo&quot;</span><span class="op">,</span> <span class="op">...</span> }<span class="op">,</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>]</span></code></pre></div>
+<p><strong>After (CRUDE categorization):</strong></p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> OPERATION_ROUTES <span class="op">=</span> {</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">// CREATE - additive</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  create_repo<span class="op">:</span>  { endpoint<span class="op">:</span> <span class="st">&quot;CREATE&quot;</span> }<span class="op">,</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  fork_repo<span class="op">:</span>    { endpoint<span class="op">:</span> <span class="st">&quot;CREATE&quot;</span> }<span class="op">,</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  star_repo<span class="op">:</span>    { endpoint<span class="op">:</span> <span class="st">&quot;CREATE&quot;</span> }<span class="op">,</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="co">// READ - safe, read-only</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  list_repos<span class="op">:</span>   { endpoint<span class="op">:</span> <span class="st">&quot;READ&quot;</span> }<span class="op">,</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  get_repo<span class="op">:</span>     { endpoint<span class="op">:</span> <span class="st">&quot;READ&quot;</span> }<span class="op">,</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  search_repos<span class="op">:</span> { endpoint<span class="op">:</span> <span class="st">&quot;READ&quot;</span> }<span class="op">,</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  get_readme<span class="op">:</span>   { endpoint<span class="op">:</span> <span class="st">&quot;READ&quot;</span> }<span class="op">,</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  introspect<span class="op">:</span>   { endpoint<span class="op">:</span> <span class="st">&quot;READ&quot;</span> }<span class="op">,</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  <span class="co">// UPDATE - modifying</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  update_repo<span class="op">:</span>   { endpoint<span class="op">:</span> <span class="st">&quot;UPDATE&quot;</span> }<span class="op">,</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  transfer_repo<span class="op">:</span> { endpoint<span class="op">:</span> <span class="st">&quot;UPDATE&quot;</span> }<span class="op">,</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>  archive_repo<span class="op">:</span>  { endpoint<span class="op">:</span> <span class="st">&quot;UPDATE&quot;</span> }<span class="op">,</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>  <span class="co">// DELETE - destructive</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>  delete_repo<span class="op">:</span> { endpoint<span class="op">:</span> <span class="st">&quot;DELETE&quot;</span> }<span class="op">,</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>  unstar_repo<span class="op">:</span> { endpoint<span class="op">:</span> <span class="st">&quot;DELETE&quot;</span> }<span class="op">,</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>}<span class="op">;</span></span></code></pre></div>
+<h3 id="43-ambiguous-cases">4.3 Ambiguous Cases</h3>
+<p>Some operations could fit multiple categories. Use these tiebreakers:</p>
+<table>
+<thead>
+<tr>
+<th>Ambiguity</th>
+<th>Resolution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>"Star" something</td>
+<td>CREATE (adding a relation)</td>
+</tr>
+<tr>
+<td>"Unstar" something</td>
+<td>DELETE (removing a relation)</td>
+</tr>
+<tr>
+<td>"Archive" something</td>
+<td>UPDATE (changing state, not removing)</td>
+</tr>
+<tr>
+<td>"Transfer" ownership</td>
+<td>UPDATE (changing attribute)</td>
+</tr>
+<tr>
+<td>"Fork" something</td>
+<td>CREATE (producing a new resource)</td>
+</tr>
+<tr>
+<td>"Run" or "trigger" something</td>
+<td>EXECUTE (side effects, non-idempotent)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="5-converting-tool-handlers">5. Converting Tool Handlers</h2>
+<h3 id="51-before-individual-tool-handler">5.1 Before: Individual Tool Handler</h3>
+<div class="sourceCode" id="cb5"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Old: Each tool has its own handler</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>server<span class="op">.</span><span class="fu">setRequestHandler</span>(<span class="st">&quot;tools/call&quot;</span><span class="op">,</span> <span class="kw">async</span> (request) <span class="kw">=&gt;</span> {</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">switch</span> (request<span class="op">.</span><span class="at">params</span><span class="op">.</span><span class="at">name</span>) {</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">case</span> <span class="st">&quot;create_repo&quot;</span><span class="op">:</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>      <span class="cf">return</span> <span class="fu">handleCreateRepo</span>(request<span class="op">.</span><span class="at">params</span><span class="op">.</span><span class="at">arguments</span>)<span class="op">;</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">case</span> <span class="st">&quot;list_repos&quot;</span><span class="op">:</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>      <span class="cf">return</span> <span class="fu">handleListRepos</span>(request<span class="op">.</span><span class="at">params</span><span class="op">.</span><span class="at">arguments</span>)<span class="op">;</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="co">// ... 10 more cases</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div>
+<h3 id="52-after-crude-router">5.2 After: CRUDE Router</h3>
+<div class="sourceCode" id="cb6"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">// New: Single router dispatches to handlers</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>server<span class="op">.</span><span class="fu">setRequestHandler</span>(<span class="st">&quot;tools/call&quot;</span><span class="op">,</span> <span class="kw">async</span> (request) <span class="kw">=&gt;</span> {</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> { name<span class="op">:</span> toolName<span class="op">,</span> arguments<span class="op">:</span> args } <span class="op">=</span> request<span class="op">.</span><span class="at">params</span><span class="op">;</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> endpoint <span class="op">=</span> toolName<span class="op">.</span><span class="fu">replace</span>(<span class="st">&quot;mcp_aql_&quot;</span><span class="op">,</span> <span class="st">&quot;&quot;</span>)<span class="op">.</span><span class="fu">toUpperCase</span>()<span class="op">;</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> { operation<span class="op">,</span> params } <span class="op">=</span> args<span class="op">;</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Validate routing</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> route <span class="op">=</span> OPERATION_ROUTES[operation]<span class="op">;</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="op">!</span>route) {</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="fu">formatError</span>(<span class="vs">`Unknown operation: </span><span class="sc">${</span>operation<span class="sc">}</span><span class="vs">`</span>)<span class="op">;</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (route<span class="op">.</span><span class="at">endpoint</span> <span class="op">!==</span> endpoint) {</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="fu">formatError</span>(</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>      <span class="vs">`Operation &#39;</span><span class="sc">${</span>operation<span class="sc">}</span><span class="vs">&#39; must be called via mcp_aql_</span><span class="sc">${</span>route<span class="op">.</span><span class="at">endpoint</span><span class="op">.</span><span class="fu">toLowerCase</span>()<span class="sc">}</span><span class="vs">`</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    )<span class="op">;</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Dispatch to existing handler (unchanged!)</span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> handlers[operation](params)<span class="op">;</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div>
+<h3 id="53-handler-signatures">5.3 Handler Signatures</h3>
+<p>Your existing handler logic stays the same. The only change is how it's invoked:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">// This function is identical before and after migration</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="kw">async</span> <span class="kw">function</span> <span class="fu">handleCreateRepo</span>(params<span class="op">:</span> {</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  name<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  private<span class="op">?:</span> <span class="dt">boolean</span><span class="op">;</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  description<span class="op">?:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>}) {</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> repo <span class="op">=</span> <span class="cf">await</span> github<span class="op">.</span><span class="fu">createRepo</span>(params)<span class="op">;</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> { success<span class="op">:</span> <span class="kw">true</span><span class="op">,</span> data<span class="op">:</span> repo }<span class="op">;</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<hr />
+<h2 id="6-adding-introspection">6. Adding Introspection</h2>
+<h3 id="61-required-operation">6.1 Required Operation</h3>
+<p>Every MCP-AQL adapter MUST implement <code>introspect</code>. This operation enables runtime discovery — LLMs call it to learn what operations are available.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">handleIntrospect</span>(params<span class="op">:</span> { query<span class="op">:</span> <span class="dt">string</span><span class="op">;</span> name<span class="op">?:</span> <span class="dt">string</span> }) {</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (params<span class="op">.</span><span class="at">query</span> <span class="op">===</span> <span class="st">&quot;operations&quot;</span>) {</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (params<span class="op">.</span><span class="at">name</span>) {</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>      <span class="kw">const</span> op <span class="op">=</span> OPERATION_ROUTES[params<span class="op">.</span><span class="at">name</span>]<span class="op">;</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>      <span class="cf">return</span> {</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>        success<span class="op">:</span> <span class="kw">true</span><span class="op">,</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>        data<span class="op">:</span> { operation<span class="op">:</span> op <span class="op">?</span> <span class="fu">formatOperation</span>(params<span class="op">.</span><span class="at">name</span><span class="op">,</span> op) <span class="op">:</span> <span class="dt">null</span> }<span class="op">,</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>      }<span class="op">;</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>      success<span class="op">:</span> <span class="kw">true</span><span class="op">,</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>      data<span class="op">:</span> {</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>        operations<span class="op">:</span> <span class="bu">Object</span><span class="op">.</span><span class="fu">entries</span>(OPERATION_ROUTES)<span class="op">.</span><span class="fu">map</span>(</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>          ([name<span class="op">,</span> route]) <span class="kw">=&gt;</span> <span class="fu">formatOperation</span>(name<span class="op">,</span> route)</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>        )<span class="op">,</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>      }<span class="op">,</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>    }<span class="op">;</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (params<span class="op">.</span><span class="at">query</span> <span class="op">===</span> <span class="st">&quot;types&quot;</span>) {</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> { success<span class="op">:</span> <span class="kw">true</span><span class="op">,</span> data<span class="op">:</span> { types<span class="op">:</span> <span class="fu">getTypeDefinitions</span>() } }<span class="op">;</span></span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> { success<span class="op">:</span> <span class="kw">false</span><span class="op">,</span> error<span class="op">:</span> <span class="vs">`Unknown query: </span><span class="sc">${</span>params<span class="op">.</span><span class="at">query</span><span class="sc">}</span><span class="vs">`</span> }<span class="op">;</span></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="62-building-the-operation-catalog">6.2 Building the Operation Catalog</h3>
+<p>Generate introspection data from your existing tool definitions:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">formatOperation</span>(name<span class="op">:</span> <span class="dt">string</span><span class="op">,</span> route<span class="op">:</span> OperationRoute) {</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> {</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    name<span class="op">,</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    endpoint<span class="op">:</span> route<span class="op">.</span><span class="at">endpoint</span><span class="op">,</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    description<span class="op">:</span> route<span class="op">.</span><span class="at">description</span><span class="op">,</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    parameters<span class="op">:</span> route<span class="op">.</span><span class="at">parameters</span><span class="op">?.</span><span class="fu">map</span>((p) <span class="kw">=&gt;</span> ({</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>      name<span class="op">:</span> p<span class="op">.</span><span class="at">name</span><span class="op">,</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>      type<span class="op">:</span> p<span class="op">.</span><span class="at">type</span><span class="op">,</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>      required<span class="op">:</span> p<span class="op">.</span><span class="at">required</span> <span class="op">??</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>      description<span class="op">:</span> p<span class="op">.</span><span class="at">description</span><span class="op">,</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    }))<span class="op">,</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>  }<span class="op">;</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<hr />
+<h2 id="7-validation-checklist">7. Validation Checklist</h2>
+<p>After migration, verify:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">## Migration Validation</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">### Tool Registration</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="va">[ ]</span> Old individual tools are removed</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="va">[ ]</span> 5 CRUDE endpoints registered (or fewer if not all are needed)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="va">[ ]</span> Tool descriptions are clear and endpoint-specific</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="fu">### Operation Routing</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="va">[ ]</span> Every former tool maps to exactly one CRUDE endpoint</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="va">[ ]</span> Operations are rejected on wrong endpoints</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="va">[ ]</span> Unknown operations return clear error messages</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="fu">### Introspection</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="va">[ ]</span> <span class="in">`introspect`</span> operation works via mcp_aql_read</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="va">[ ]</span> All operations are discoverable</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="va">[ ]</span> Operation details include parameters and descriptions</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a><span class="fu">### Response Format</span></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="va">[ ]</span> All responses use <span class="in">`{ success: true, data }`</span> or <span class="in">`{ success: false, error }`</span></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="va">[ ]</span> No raw exceptions leak to clients</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a><span class="fu">### Backwards Compatibility</span></span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="va">[ ]</span> All functionality from original tools is preserved</span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="va">[ ]</span> Parameter names follow snake_case convention</span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="va">[ ]</span> Response data structures are unchanged</span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a><span class="fu">### Token Reduction</span></span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="va">[ ]</span> Tool count reduced from N to 5 (or fewer)</span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="va">[ ]</span> Estimated token savings calculated</span></code></pre></div>
+<hr />
+<h2 id="references">References</h2>
+<ul>
+<li><a href="development.html">Development Guide</a></li>
+<li><a href="testing.html">Testing Guide</a></li>
+<li><a href="../architecture/overview.html">Architecture Overview</a></li>
+<li><a href="../../spec/crude-pattern.html">CRUDE Pattern</a> (spec repo)</li>
+<li><a href="../../spec/versions/v1.0.0-draft.html">MCP-AQL Specification</a> (spec repo)</li>
+</ul>
+
+          </div>
+        </section>
+        <nav class="page-nav" aria-label="Page navigation">
+  <a class="page-nav-link prev" href="development.html">
+    <span class="page-nav-eyebrow">Previous page</span>
+    <strong class="page-nav-label">MCP-AQL Adapter Development Guide</strong>
+  </a>
+  <a class="page-nav-link next" href="testing.html">
+    <span class="page-nav-eyebrow">Next page</span>
+    <strong class="page-nav-label">MCP-AQL Adapter Testing Guide</strong>
+  </a>
+</nav>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.</p>
+      <div class="footer-links">
+        <a href="../../apis/index.html">Adapter Patterns</a><a href="../index.html">Reference Adapter Docs</a><a href="https://github.com/MCPAQL/mcpaql-adapter">Reference Adapter Repo</a><a href="https://dollhouseresearch.com">Dollhouse Research</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../js/search.js"></script>
+</body>
+</html>

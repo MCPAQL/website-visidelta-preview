@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="This document defines the Universal Adapter Runtime specification - the execution engine that interprets adapter schema files and translates MCP-AQL CRUDE operations to target API calls. The runtime enables schema-driven">
+  <title>MCP-AQL Adapter Reference | Universal Adapter Runtime Specification</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <a class="logo" href="../../index.html"><span class="logo-mark"></span>MCP-AQL</a>
+        <ul class="nav-links">
+          <li><a href="../../index.html">Home</a></li>
+          <li><a href="../../docs/index.html">Docs</a></li>
+          <li><a href="../../launch-checklist.html">Launch Checklist</a></li>
+          <li><a href="../../apis/index.html">Adapter Patterns</a></li>
+        </ul>
+        <form class="site-search" data-search-form data-index-url="../../data/search-index.json" role="search">
+          <label class="sr-only" for="site-search-input">Search MCP-AQL docs</label>
+          <input id="site-search-input" data-search-input type="search" placeholder="Search MCP-AQL docs, spec pages, and adapter patterns...">
+          <span class="search-count" data-search-count></span>
+          <ul class="search-results" data-search-results hidden></ul>
+        </form>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container docs-shell">
+      <aside class="docs-side">
+        <h2>Reference Adapter Docs</h2>
+        <p class="docs-side-note">Generated from <code>MCPAQL/mcpaql-adapter</code> so the website carries the implementation architecture, guides, and ADRs too.</p>
+        <div class="docs-side-group">
+  <h3>Overview</h3>
+  <ul><li><a href="../repo/README.html">MCP-AQL Reference Adapter</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Architecture</h3>
+  <ul><li><a href="dispatch.html">Schema-Driven Dispatch</a></li><li><a href="overview.html">MCP-AQL Architecture Overview</a></li><li><a href="plugin-system.html">Plugin System Implementation</a></li><li><a class="current" aria-current="page" href="runtime.html">Universal Adapter Runtime Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Guides</h3>
+  <ul><li><a href="../guides/development.html">MCP-AQL Adapter Development Guide</a></li><li><a href="../guides/migration.html">Migration Guide: MCP Server to MCP-AQL Adapter</a></li><li><a href="../guides/testing.html">MCP-AQL Adapter Testing Guide</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>ADRs</h3>
+  <ul><li><a href="../adr/ADR-001-plugin-pipeline-order.html">ADR-001: Plugin Pipeline Order</a></li><li><a href="../adr/ADR-002-schema-driven-dispatch.html">ADR-002: Schema-Driven Dispatch over Code Generation</a></li><li><a href="../adr/ADR-003-stateless-plugins.html">ADR-003: Stateless Singleton Plugins</a></li><li><a href="../adr/README.html">Architecture Decision Records</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Examples</h3>
+  <ul><li><a href="../examples/README.html">Examples</a></li></ul>
+</div>
+      </aside>
+
+      <article class="docs-main">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+          <ol>
+            <li><a href="../../index.html">Home</a></li>
+            <li><a href="../../apis/index.html">Adapter Patterns</a></li><li><a href="../index.html">Reference Adapter Docs</a></li>
+            <li><span class="current">Universal Adapter Runtime Specification</span></li>
+          </ol>
+        </nav>
+        <section class="hero docs-hero">
+          <div class="hero-inner">
+            <span class="status-pill">REPO-SYNCED ADAPTER DOC</span>
+            <h1>Universal Adapter Runtime Specification</h1>
+            <p class="lede">This document defines the Universal Adapter Runtime specification - the execution engine that interprets adapter schema files and translates MCP-AQL CRUDE operations to target API calls. The runtime enables schema-driven</p>
+            <div class="spec-meta"><span class="state-chip live">Support document</span><span class="state-chip pending">Draft (MVP)</span><span class="state-chip">1.0.0-draft</span><span class="state-chip">2026-01-26</span></div>
+            <p class="spec-source">Source: <a href="https://github.com/MCPAQL/mcpaql-adapter/blob/main/docs/architecture/runtime.md">mcpaql-adapter/docs/architecture/runtime.md</a></p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="https://github.com/MCPAQL/mcpaql-adapter/blob/main/docs/architecture/runtime.md">Open Source Markdown</a><a class="btn btn-secondary" href="../index.html">Browse Reference Adapter Docs</a><a class="btn btn-secondary" href="../../apis/index.html">Adapter Patterns Hub</a>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <div class="card spec-prose">
+            <p><strong>Version:</strong> 1.0.0-draft <strong>Status:</strong> Draft (MVP) <strong>Last Updated:</strong> 2026-01-26 <strong>Moved from:</strong> <a href="https://github.com/MCPAQL/spec">MCPAQL/spec</a> (formerly <code>docs/architecture/adapter-runtime.md</code>)</p>
+<blockquote>
+<p><strong>Note:</strong> This document describes the <strong>implementation architecture</strong> for the MCP-AQL adapter runtime. For normative protocol specifications, see the <a href="https://github.com/MCPAQL/spec">spec repository</a>.</p>
+</blockquote>
+<h2 id="abstract">Abstract</h2>
+<p>This document defines the Universal Adapter Runtime specification - the execution engine that interprets adapter schema files and translates MCP-AQL CRUDE operations to target API calls. The runtime enables schema-driven adapters without per-adapter code generation.</p>
+<hr />
+<h2 id="table-of-contents">Table of Contents</h2>
+<ol type="1">
+<li><a href="#1-overview">Overview</a></li>
+<li><a href="#2-architecture">Architecture</a></li>
+<li><a href="#3-schema-loading">Schema Loading</a></li>
+<li><a href="#4-schema-validation">Schema Validation</a></li>
+<li><a href="#5-operation-dispatch">Operation Dispatch</a></li>
+<li><a href="#6-request-building">Request Building</a></li>
+<li><a href="#7-response-handling">Response Handling</a></li>
+<li><a href="#8-error-mapping">Error Mapping</a></li>
+<li><a href="#9-introspection">Introspection</a></li>
+<li><a href="#10-future-extensions">Future Extensions</a></li>
+<li><a href="#11-security-considerations">Security Considerations</a></li>
+</ol>
+<hr />
+<h2 id="1-overview">1. Overview</h2>
+<h3 id="11-purpose">1.1 Purpose</h3>
+<p>The Universal Adapter Runtime interprets adapter schema files (<code>.md</code> files with YAML front matter) and executes MCP-AQL operations against target APIs. This eliminates the need for per-adapter code generation.</p>
+<h3 id="12-design-principles">1.2 Design Principles</h3>
+<ol type="1">
+<li><strong>Interpreting, not executing</strong> - Schema is data, not executable code</li>
+<li><strong>Fail-fast validation</strong> - Invalid schemas fail at load time</li>
+<li><strong>Consistent behavior</strong> - Same schema produces same behavior across implementations</li>
+<li><strong>Observable</strong> - Support for logging, metrics, and tracing</li>
+<li><strong>Secure by default</strong> - Validate inputs, sanitize outputs, never embed credentials</li>
+</ol>
+<h3 id="13-mvp-scope">1.3 MVP Scope</h3>
+<p>This specification covers the Minimum Viable Product runtime:</p>
+<p><strong>Included:</strong></p>
+<ul>
+<li>Load adapter schema from disk</li>
+<li>Parse YAML front matter</li>
+<li>Validate required fields</li>
+<li>Dispatch operations to correct handler</li>
+<li>Build HTTP requests from operation mappings</li>
+<li>Attach authentication headers</li>
+<li>Send requests and parse JSON responses</li>
+<li>Map errors to MCP-AQL format</li>
+</ul>
+<p><strong>Deferred to future specifications:</strong></p>
+<ul>
+<li>Hot reload on file change</li>
+<li>Trust level enforcement (#59)</li>
+<li>Rate limit tracking (#60)</li>
+<li>Pagination handling (#37)</li>
+<li>Full introspection generation (#57)</li>
+<li>Response caching</li>
+<li>Advanced validation (types, enums, ranges)</li>
+<li>Multi-adapter management</li>
+</ul>
+<hr />
+<h2 id="2-architecture">2. Architecture</h2>
+<h3 id="21-component-overview">2.1 Component Overview</h3>
+<pre><code>┌─────────────────────────────────────────────────────────────────┐
+│                  Universal Adapter Runtime                       │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  ┌─────────────────┐                                            │
+│  │  Schema Loader  │  Load and parse adapter .md files          │
+│  └────────┬────────┘                                            │
+│           │                                                     │
+│           ▼                                                     │
+│  ┌─────────────────┐                                            │
+│  │ Schema Validator│  Validate against adapter schema spec      │
+│  └────────┬────────┘                                            │
+│           │                                                     │
+│           ▼                                                     │
+│  ┌─────────────────┐                                            │
+│  │ Operation Index │  Index operations for fast lookup          │
+│  └────────┬────────┘                                            │
+│           │                                                     │
+│           ▼                                                     │
+│  ┌─────────────────┐     ┌─────────────────┐                    │
+│  │   Dispatcher    │────▶│ Plugin Pipeline │                    │
+│  └─────────────────┘     │ (Protocol/Auth/ │                    │
+│                          │  Serial/Trans)  │                    │
+│                          └─────────────────┘                    │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘</code></pre>
+<h3 id="22-request-flow">2.2 Request Flow</h3>
+<pre><code>MCP-AQL Request
+       │
+       ▼
+┌──────────────────┐
+│ 1. Find Operation│  Look up operation by name in index
+└────────┬─────────┘
+         │
+         ▼
+┌──────────────────┐
+│ 2. Validate Params│  Check required params, apply defaults
+└────────┬─────────┘
+         │
+         ▼
+┌──────────────────┐
+│ 3. Build Request │  Construct HTTP request from mapping
+└────────┬─────────┘
+         │
+         ▼
+┌──────────────────┐
+│ 4. Apply Auth    │  Attach authentication headers
+└────────┬─────────┘
+         │
+         ▼
+┌──────────────────┐
+│ 5. Send Request  │  Execute HTTP request via transport
+└────────┬─────────┘
+         │
+         ▼
+┌──────────────────┐
+│ 6. Parse Response│  Deserialize JSON, check status
+└────────┬─────────┘
+         │
+         ▼
+┌──────────────────┐
+│ 7. Map Result    │  Convert to MCP-AQL response format
+└────────┬─────────┘
+         │
+         ▼
+MCP-AQL Response</code></pre>
+<hr />
+<h2 id="3-schema-loading">3. Schema Loading</h2>
+<h3 id="31-file-discovery">3.1 File Discovery</h3>
+<p>The runtime loads adapter schemas from the filesystem.</p>
+<p><strong>File Pattern:</strong></p>
+<ul>
+<li>Adapter files MUST match pattern <code>*-adapter.md</code></li>
+<li>Files MUST contain YAML front matter delimited by <code>---</code></li>
+</ul>
+<p><strong>Loading Behavior:</strong></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Pseudocode</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">loadAdapter</span>(filePath<span class="op">:</span> <span class="dt">string</span>)<span class="op">:</span> AdapterSchema {</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> content <span class="op">=</span> <span class="fu">readFile</span>(filePath)<span class="op">;</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> { frontMatter<span class="op">,</span> body } <span class="op">=</span> <span class="fu">parseFrontMatter</span>(content)<span class="op">;</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> schema <span class="op">=</span> <span class="fu">parseYaml</span>(frontMatter)<span class="op">;</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> { <span class="op">...</span>schema<span class="op">,</span> documentation<span class="op">:</span> body }<span class="op">;</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="32-front-matter-parsing">3.2 Front Matter Parsing</h3>
+<p>The runtime extracts YAML front matter from Markdown files:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="an">name:</span><span class="co"> github-api</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="an">type:</span><span class="co"> adapter</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="an">version:</span><span class="co"> &quot;1.0.0&quot;</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># ... rest of schema</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="fu"># Documentation body (optional)</span></span></code></pre></div>
+<p><strong>Parsing Rules:</strong></p>
+<ol type="1">
+<li>Front matter MUST start with <code>---</code> on line 1</li>
+<li>Front matter MUST end with <code>---</code> on its own line</li>
+<li>Content between delimiters is parsed as YAML</li>
+<li>Content after closing <code>---</code> is treated as documentation</li>
+</ol>
+<h3 id="33-operation-indexing">3.3 Operation Indexing</h3>
+<p>After loading, the runtime builds an operation index for fast lookup:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> OperationIndex {</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Maps operation name to definition and CRUDE category</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  [operationName<span class="op">:</span> <span class="dt">string</span>]<span class="op">:</span> {</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    definition<span class="op">:</span> OperationDefinition<span class="op">;</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    endpoint<span class="op">:</span> <span class="st">&#39;create&#39;</span> <span class="op">|</span> <span class="st">&#39;read&#39;</span> <span class="op">|</span> <span class="st">&#39;update&#39;</span> <span class="op">|</span> <span class="st">&#39;delete&#39;</span> <span class="op">|</span> <span class="st">&#39;execute&#39;</span><span class="op">;</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  }<span class="op">;</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><strong>Index Construction:</strong></p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">buildOperationIndex</span>(schema<span class="op">:</span> AdapterSchema)<span class="op">:</span> OperationIndex {</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> index<span class="op">:</span> OperationIndex <span class="op">=</span> {}<span class="op">;</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (<span class="kw">const</span> endpoint <span class="kw">of</span> [<span class="st">&#39;create&#39;</span><span class="op">,</span> <span class="st">&#39;read&#39;</span><span class="op">,</span> <span class="st">&#39;update&#39;</span><span class="op">,</span> <span class="st">&#39;delete&#39;</span><span class="op">,</span> <span class="st">&#39;execute&#39;</span>]) {</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> operations <span class="op">=</span> schema<span class="op">.</span><span class="at">operations</span>[endpoint] <span class="op">||</span> []<span class="op">;</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (<span class="kw">const</span> op <span class="kw">of</span> operations) {</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (index[op<span class="op">.</span><span class="at">name</span>]) {</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">throw</span> <span class="kw">new</span> <span class="bu">Error</span>(<span class="vs">`Duplicate operation name: </span><span class="sc">${</span>op<span class="op">.</span><span class="at">name</span><span class="sc">}</span><span class="vs">`</span>)<span class="op">;</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>      index[op<span class="op">.</span><span class="at">name</span>] <span class="op">=</span> { definition<span class="op">:</span> op<span class="op">,</span> endpoint }<span class="op">;</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> index<span class="op">;</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<hr />
+<h2 id="4-schema-validation">4. Schema Validation</h2>
+<h3 id="41-required-field-validation">4.1 Required Field Validation</h3>
+<p>The runtime MUST validate these required fields at load time:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Validation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td>MUST be non-empty string and valid identifier</td>
+</tr>
+<tr>
+<td><code>type</code></td>
+<td>MUST equal <code>"adapter"</code></td>
+</tr>
+<tr>
+<td><code>version</code></td>
+<td>MUST be valid semver string</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>MUST be non-empty string</td>
+</tr>
+<tr>
+<td><code>target.base_url</code></td>
+<td>MUST be valid URL</td>
+</tr>
+<tr>
+<td><code>target.transport</code></td>
+<td>MUST be known transport plugin name</td>
+</tr>
+<tr>
+<td><code>target.protocol</code></td>
+<td>MUST be known protocol plugin name</td>
+</tr>
+<tr>
+<td><code>target.serialization</code></td>
+<td>MUST be known serialization plugin name</td>
+</tr>
+</tbody>
+</table>
+<h3 id="42-operation-validation">4.2 Operation Validation</h3>
+<p>The runtime MUST validate each operation definition:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Validation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td>MUST be non-empty string, MUST be unique across all endpoints</td>
+</tr>
+<tr>
+<td><code>maps_to</code></td>
+<td>MUST be valid <code>METHOD /path</code> format</td>
+</tr>
+<tr>
+<td><code>params.*</code></td>
+<td>MUST be valid parameter definitions</td>
+</tr>
+</tbody>
+</table>
+<h3 id="43-parameter-validation">4.3 Parameter Validation</h3>
+<p>The runtime MUST validate each parameter definition:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Validation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>type</code></td>
+<td>MUST be one of: <code>string</code>, <code>integer</code>, <code>number</code>, <code>boolean</code>, <code>array</code>, <code>object</code></td>
+</tr>
+<tr>
+<td><code>required</code></td>
+<td>MUST be boolean (default: false)</td>
+</tr>
+<tr>
+<td><code>default</code></td>
+<td>MUST match declared type (if present)</td>
+</tr>
+<tr>
+<td><code>enum</code></td>
+<td>MUST be array of valid values (if present)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="44-validation-errors">4.4 Validation Errors</h3>
+<p>Validation errors MUST be clear and actionable:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> ValidationError {</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  path<span class="op">:</span> <span class="dt">string</span><span class="op">;</span>      <span class="co">// JSON path to invalid field (e.g., &quot;operations.read[0].params.owner&quot;)</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  message<span class="op">:</span> <span class="dt">string</span><span class="op">;</span>   <span class="co">// Human-readable error description</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  expected<span class="op">?:</span> <span class="dt">string</span><span class="op">;</span> <span class="co">// What was expected</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  received<span class="op">?:</span> <span class="dt">string</span><span class="op">;</span> <span class="co">// What was received</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><strong>Example error:</strong></p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;path&quot;</span><span class="fu">:</span> <span class="st">&quot;operations.read[0].name&quot;</span><span class="fu">,</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;Operation name is required&quot;</span><span class="fu">,</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;expected&quot;</span><span class="fu">:</span> <span class="st">&quot;non-empty string&quot;</span><span class="fu">,</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;received&quot;</span><span class="fu">:</span> <span class="st">&quot;undefined&quot;</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<hr />
+<h2 id="5-operation-dispatch">5. Operation Dispatch</h2>
+<h3 id="51-request-structure">5.1 Request Structure</h3>
+<p>MCP-AQL requests arrive in this format:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> OperationRequest {</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  operation<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  params<span class="op">?:</span> <span class="bu">Record</span><span class="op">&lt;</span><span class="dt">string</span><span class="op">,</span> <span class="dt">unknown</span><span class="op">&gt;;</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="52-dispatch-algorithm">5.2 Dispatch Algorithm</h3>
+<div class="sourceCode" id="cb10"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">async</span> <span class="kw">function</span> <span class="fu">dispatch</span>(</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  request<span class="op">:</span> OperationRequest<span class="op">,</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  adapter<span class="op">:</span> LoadedAdapter</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>)<span class="op">:</span> <span class="bu">Promise</span><span class="op">&lt;</span>OperationResult<span class="op">&gt;</span> {</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="co">// 1. Find operation</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> entry <span class="op">=</span> adapter<span class="op">.</span><span class="at">operationIndex</span>[request<span class="op">.</span><span class="at">operation</span>]<span class="op">;</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="op">!</span>entry) {</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>      success<span class="op">:</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>      error<span class="op">:</span> <span class="vs">`Unknown operation: </span><span class="sc">${</span>request<span class="op">.</span><span class="at">operation</span><span class="sc">}</span><span class="vs">`</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    }<span class="op">;</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>  <span class="co">// 2. Validate params</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> validationResult <span class="op">=</span> <span class="fu">validateParams</span>(request<span class="op">.</span><span class="at">params</span> <span class="op">||</span> {}<span class="op">,</span> entry<span class="op">.</span><span class="at">definition</span>)<span class="op">;</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="op">!</span>validationResult<span class="op">.</span><span class="at">valid</span>) {</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>      success<span class="op">:</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>      error<span class="op">:</span> validationResult<span class="op">.</span><span class="at">error</span></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>    }<span class="op">;</span></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>  <span class="co">// 3. Apply defaults</span></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> params <span class="op">=</span> <span class="fu">applyDefaults</span>(request<span class="op">.</span><span class="at">params</span> <span class="op">||</span> {}<span class="op">,</span> entry<span class="op">.</span><span class="at">definition</span>)<span class="op">;</span></span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>  <span class="co">// 4. Execute via plugin pipeline</span></span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>  <span class="cf">try</span> {</span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> response <span class="op">=</span> <span class="cf">await</span> <span class="fu">executePipeline</span>(entry<span class="op">.</span><span class="at">definition</span><span class="op">,</span> params<span class="op">,</span> adapter)<span class="op">;</span></span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> response<span class="op">;</span></span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">catch</span> (error) {</span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="fu">mapError</span>(error<span class="op">,</span> adapter)<span class="op">;</span></span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="53-endpoint-validation-crude-mode">5.3 Endpoint Validation (CRUDE Mode)</h3>
+<p>When operating in CRUDE mode (separate endpoints), the runtime MUST validate that operations are called via the correct endpoint:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">validateEndpoint</span>(operation<span class="op">:</span> <span class="dt">string</span><span class="op">,</span> calledEndpoint<span class="op">:</span> <span class="dt">string</span><span class="op">,</span> index<span class="op">:</span> OperationIndex)<span class="op">:</span> <span class="dt">void</span> {</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> entry <span class="op">=</span> index[operation]<span class="op">;</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="op">!</span>entry) <span class="cf">return</span><span class="op">;</span> <span class="co">// Will fail at dispatch</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (entry<span class="op">.</span><span class="at">endpoint</span><span class="op">.</span><span class="fu">toLowerCase</span>() <span class="op">!==</span> calledEndpoint<span class="op">.</span><span class="fu">toLowerCase</span>()) {</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">throw</span> <span class="kw">new</span> <span class="bu">Error</span>(</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>      <span class="vs">`Operation &#39;</span><span class="sc">${</span>operation<span class="sc">}</span><span class="vs">&#39; must be called via mcp_aql_</span><span class="sc">${</span>entry<span class="op">.</span><span class="at">endpoint</span><span class="sc">}</span><span class="vs">, not mcp_aql_</span><span class="sc">${</span>calledEndpoint<span class="sc">}</span><span class="vs">`</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    )<span class="op">;</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<hr />
+<h2 id="6-request-building">6. Request Building</h2>
+<h3 id="61-parameter-resolution">6.1 Parameter Resolution</h3>
+<p>Parameters are resolved from the request in this order:</p>
+<ol type="1">
+<li><code>params.&lt;name&gt;</code> (explicit params object)</li>
+<li>Top-level <code>&lt;name&gt;</code> (for convenience)</li>
+</ol>
+<h3 id="62-path-parameter-substitution">6.2 Path Parameter Substitution</h3>
+<p>Path parameters (in curly braces) are substituted from resolved params:</p>
+<pre><code>maps_to: &quot;GET /repos/{owner}/{repo}&quot;
+params: { owner: &quot;octocat&quot;, repo: &quot;Hello-World&quot; }
+result: &quot;GET /repos/octocat/Hello-World&quot;</code></pre>
+<p><strong>Algorithm:</strong></p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">substitutePath</span>(template<span class="op">:</span> <span class="dt">string</span><span class="op">,</span> params<span class="op">:</span> <span class="bu">Record</span><span class="op">&lt;</span><span class="dt">string</span><span class="op">,</span> <span class="dt">unknown</span><span class="op">&gt;</span>)<span class="op">:</span> <span class="dt">string</span> {</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> template<span class="op">.</span><span class="fu">replace</span>(<span class="ss">/</span><span class="sc">\{(\w+)\}</span><span class="ss">/g</span><span class="op">,</span> (match<span class="op">,</span> name) <span class="kw">=&gt;</span> {</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> value <span class="op">=</span> params[name]<span class="op">;</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (value <span class="op">===</span> <span class="kw">undefined</span>) {</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>      <span class="cf">throw</span> <span class="kw">new</span> <span class="bu">Error</span>(<span class="vs">`Missing required path parameter: </span><span class="sc">${</span>name<span class="sc">}</span><span class="vs">`</span>)<span class="op">;</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="pp">encodeURIComponent</span>(<span class="bu">String</span>(value))<span class="op">;</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  })<span class="op">;</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h4 id="621-encoding-considerations">6.2.1 Encoding Considerations</h4>
+<p>The runtime MUST apply <code>encodeURIComponent()</code> to all path parameter values. This handles:</p>
+<table>
+<thead>
+<tr>
+<th>Input</th>
+<th>Encoded Output</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>hello world</code></td>
+<td><code>hello%20world</code></td>
+<td>Spaces encoded</td>
+</tr>
+<tr>
+<td><code>user@example.com</code></td>
+<td><code>user%40example.com</code></td>
+<td>Special characters encoded</td>
+</tr>
+<tr>
+<td><code>path/to/file</code></td>
+<td><code>path%2Fto%2Ffile</code></td>
+<td>Slashes encoded (prevents path traversal)</td>
+</tr>
+<tr>
+<td><code>名前</code></td>
+<td><code>%E5%90%8D%E5%89%8D</code></td>
+<td>Unicode encoded as UTF-8</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Already-encoded values:</strong></p>
+<p>The runtime MUST NOT double-encode values. If a value is already percent-encoded, implementations SHOULD detect and preserve it:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">safeEncode</span>(value<span class="op">:</span> <span class="dt">string</span>)<span class="op">:</span> <span class="dt">string</span> {</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Check if value appears to be already encoded</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">try</span> {</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> decoded <span class="op">=</span> <span class="pp">decodeURIComponent</span>(value)<span class="op">;</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">// If decoding succeeds and differs from input, it was encoded</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (decoded <span class="op">!==</span> value) {</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>      <span class="cf">return</span> value<span class="op">;</span> <span class="co">// Already encoded, preserve as-is</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">catch</span> {</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    <span class="co">// decodeURIComponent throws on invalid sequences</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Value is not properly encoded, so encode it</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="pp">encodeURIComponent</span>(value)<span class="op">;</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><strong>Array parameters:</strong></p>
+<p>Array values in path parameters MUST be converted to comma-separated strings before encoding:</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Input: { ids: [1, 2, 3] }</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co">// Template: &quot;/items/{ids}&quot;</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co">// Result: &quot;/items/1%2C2%2C3&quot;</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">stringifyValue</span>(value<span class="op">:</span> <span class="dt">unknown</span>)<span class="op">:</span> <span class="dt">string</span> {</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="bu">Array</span><span class="op">.</span><span class="fu">isArray</span>(value)) {</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> value<span class="op">.</span><span class="fu">map</span>(<span class="bu">String</span>)<span class="op">.</span><span class="fu">join</span>(<span class="st">&#39;,&#39;</span>)<span class="op">;</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="bu">String</span>(value)<span class="op">;</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><strong>Edge cases:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Empty string</td>
+<td>MUST encode as empty (valid path segment)</td>
+</tr>
+<tr>
+<td><code>null</code> value</td>
+<td>MUST throw error (missing parameter)</td>
+</tr>
+<tr>
+<td><code>undefined</code> value</td>
+<td>MUST throw error (missing parameter)</td>
+</tr>
+<tr>
+<td>Object value</td>
+<td>MUST throw error (invalid type for path parameter)</td>
+</tr>
+<tr>
+<td>Very long values</td>
+<td>SHOULD warn if encoded length exceeds 2048 characters</td>
+</tr>
+</tbody>
+</table>
+<h3 id="63-http-method-extraction">6.3 HTTP Method Extraction</h3>
+<p>The HTTP method is extracted from the <code>maps_to</code> prefix:</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">parseMapping</span>(mapsTo<span class="op">:</span> <span class="dt">string</span>)<span class="op">:</span> { method<span class="op">:</span> <span class="dt">string</span><span class="op">;</span> path<span class="op">:</span> <span class="dt">string</span> } {</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> [method<span class="op">,</span> <span class="op">...</span>pathParts] <span class="op">=</span> mapsTo<span class="op">.</span><span class="fu">split</span>(<span class="st">&#39; &#39;</span>)<span class="op">;</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> {</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    method<span class="op">:</span> method<span class="op">.</span><span class="fu">toUpperCase</span>()<span class="op">,</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    path<span class="op">:</span> pathParts<span class="op">.</span><span class="fu">join</span>(<span class="st">&#39; &#39;</span>)</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  }<span class="op">;</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><strong>Supported Methods:</strong> GET, POST, PUT, PATCH, DELETE</p>
+<h3 id="64-query-vs-body-parameters">6.4 Query vs Body Parameters</h3>
+<p>After path substitution, remaining parameters are placed according to HTTP method:</p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Path Params</th>
+<th>Remaining Params</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td>In URL path</td>
+<td>Query string</td>
+</tr>
+<tr>
+<td>DELETE</td>
+<td>In URL path</td>
+<td>Query string</td>
+</tr>
+<tr>
+<td>POST</td>
+<td>In URL path</td>
+<td>JSON request body</td>
+</tr>
+<tr>
+<td>PUT</td>
+<td>In URL path</td>
+<td>JSON request body</td>
+</tr>
+<tr>
+<td>PATCH</td>
+<td>In URL path</td>
+<td>JSON request body</td>
+</tr>
+</tbody>
+</table>
+<h3 id="65-url-construction">6.5 URL Construction</h3>
+<div class="sourceCode" id="cb17"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">buildUrl</span>(adapter<span class="op">:</span> AdapterSchema<span class="op">,</span> path<span class="op">:</span> <span class="dt">string</span><span class="op">,</span> queryParams<span class="op">:</span> <span class="bu">Record</span><span class="op">&lt;</span><span class="dt">string</span><span class="op">,</span> <span class="dt">unknown</span><span class="op">&gt;</span>)<span class="op">:</span> <span class="dt">string</span> {</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> url <span class="op">=</span> <span class="kw">new</span> <span class="fu">URL</span>(path<span class="op">,</span> adapter<span class="op">.</span><span class="at">target</span><span class="op">.</span><span class="at">base_url</span>)<span class="op">;</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (<span class="kw">const</span> [key<span class="op">,</span> value] <span class="kw">of</span> <span class="bu">Object</span><span class="op">.</span><span class="fu">entries</span>(queryParams)) {</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (value <span class="op">!==</span> <span class="kw">undefined</span>) {</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>      url<span class="op">.</span><span class="at">searchParams</span><span class="op">.</span><span class="fu">append</span>(key<span class="op">,</span> <span class="bu">String</span>(value))<span class="op">;</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> url<span class="op">.</span><span class="fu">toString</span>()<span class="op">;</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<hr />
+<h2 id="7-response-handling">7. Response Handling</h2>
+<h3 id="71-success-response">7.1 Success Response</h3>
+<p>For successful API responses (2xx status codes):</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> SuccessResult {</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  success<span class="op">:</span> <span class="kw">true</span><span class="op">;</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  data<span class="op">:</span> <span class="dt">unknown</span><span class="op">;</span> <span class="co">// Deserialized response body</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="72-error-response">7.2 Error Response</h3>
+<p>For failed API responses (4xx, 5xx status codes):</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> ErrorResult {</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  success<span class="op">:</span> <span class="kw">false</span><span class="op">;</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  error<span class="op">:</span> <span class="dt">string</span><span class="op">;</span> <span class="co">// Human-readable error message</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="73-response-parsing">7.3 Response Parsing</h3>
+<blockquote>
+<p><strong>Note:</strong> The <code>TransportResponse</code> interface is defined in the <a href="../../spec/plugin-contracts.html">Plugin Interface Contracts</a>.</p>
+</blockquote>
+<div class="sourceCode" id="cb20"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">parseResponse</span>(httpResponse<span class="op">:</span> TransportResponse)<span class="op">:</span> OperationResult {</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> body<span class="op">:</span> <span class="dt">unknown</span><span class="op">;</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">try</span> {</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    body <span class="op">=</span> <span class="bu">JSON</span><span class="op">.</span><span class="fu">parse</span>(httpResponse<span class="op">.</span><span class="at">body</span>)<span class="op">;</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">catch</span> (parseError) {</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Handle malformed JSON responses (e.g., HTML error pages, truncated responses)</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="fu">handleMalformedResponse</span>(httpResponse<span class="op">,</span> parseError)<span class="op">;</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (httpResponse<span class="op">.</span><span class="at">status</span> <span class="op">&gt;=</span> <span class="dv">200</span> <span class="op">&amp;&amp;</span> httpResponse<span class="op">.</span><span class="at">status</span> <span class="op">&lt;</span> <span class="dv">300</span>) {</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> { success<span class="op">:</span> <span class="kw">true</span><span class="op">,</span> data<span class="op">:</span> body }<span class="op">;</span></span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Extract error message from response</span></span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> message <span class="op">=</span> <span class="fu">extractErrorMessage</span>(body<span class="op">,</span> httpResponse)<span class="op">;</span></span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> { success<span class="op">:</span> <span class="kw">false</span><span class="op">,</span> error<span class="op">:</span> message }<span class="op">;</span></span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">extractErrorMessage</span>(body<span class="op">:</span> <span class="dt">unknown</span><span class="op">,</span> response<span class="op">:</span> TransportResponse)<span class="op">:</span> <span class="dt">string</span> {</span>
+<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Try common error response formats</span></span>
+<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="kw">typeof</span> body <span class="op">===</span> <span class="st">&#39;object&#39;</span> <span class="op">&amp;&amp;</span> body <span class="op">!==</span> <span class="kw">null</span>) {</span>
+<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="st">&#39;message&#39;</span> <span class="kw">in</span> body) <span class="cf">return</span> <span class="bu">String</span>(body<span class="op">.</span><span class="at">message</span>)<span class="op">;</span></span>
+<span id="cb20-24"><a href="#cb20-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="st">&#39;error&#39;</span> <span class="kw">in</span> body) {</span>
+<span id="cb20-25"><a href="#cb20-25" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (<span class="kw">typeof</span> body<span class="op">.</span><span class="at">error</span> <span class="op">===</span> <span class="st">&#39;string&#39;</span>) <span class="cf">return</span> body<span class="op">.</span><span class="at">error</span><span class="op">;</span></span>
+<span id="cb20-26"><a href="#cb20-26" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (<span class="kw">typeof</span> body<span class="op">.</span><span class="at">error</span> <span class="op">===</span> <span class="st">&#39;object&#39;</span> <span class="op">&amp;&amp;</span> <span class="st">&#39;message&#39;</span> <span class="kw">in</span> body<span class="op">.</span><span class="at">error</span>) {</span>
+<span id="cb20-27"><a href="#cb20-27" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="bu">String</span>(body<span class="op">.</span><span class="at">error</span><span class="op">.</span><span class="at">message</span>)<span class="op">;</span></span>
+<span id="cb20-28"><a href="#cb20-28" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb20-29"><a href="#cb20-29" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb20-30"><a href="#cb20-30" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="st">&#39;errors&#39;</span> <span class="kw">in</span> body <span class="op">&amp;&amp;</span> <span class="bu">Array</span><span class="op">.</span><span class="fu">isArray</span>(body<span class="op">.</span><span class="at">errors</span>)) {</span>
+<span id="cb20-31"><a href="#cb20-31" aria-hidden="true" tabindex="-1"></a>      <span class="cf">return</span> body<span class="op">.</span><span class="at">errors</span><span class="op">.</span><span class="fu">map</span>(e <span class="kw">=&gt;</span> e<span class="op">.</span><span class="at">message</span> <span class="op">||</span> <span class="bu">String</span>(e))<span class="op">.</span><span class="fu">join</span>(<span class="st">&#39;; &#39;</span>)<span class="op">;</span></span>
+<span id="cb20-32"><a href="#cb20-32" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb20-33"><a href="#cb20-33" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb20-34"><a href="#cb20-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-35"><a href="#cb20-35" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Fallback to status text</span></span>
+<span id="cb20-36"><a href="#cb20-36" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="vs">`</span><span class="sc">${</span>response<span class="op">.</span><span class="at">status</span><span class="sc">}</span><span class="vs"> </span><span class="sc">${</span>response<span class="op">.</span><span class="at">statusText</span><span class="sc">}</span><span class="vs">`</span><span class="op">;</span></span>
+<span id="cb20-37"><a href="#cb20-37" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb20-38"><a href="#cb20-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-39"><a href="#cb20-39" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">handleMalformedResponse</span>(</span>
+<span id="cb20-40"><a href="#cb20-40" aria-hidden="true" tabindex="-1"></a>  response<span class="op">:</span> TransportResponse<span class="op">,</span></span>
+<span id="cb20-41"><a href="#cb20-41" aria-hidden="true" tabindex="-1"></a>  parseError<span class="op">:</span> <span class="bu">Error</span></span>
+<span id="cb20-42"><a href="#cb20-42" aria-hidden="true" tabindex="-1"></a>)<span class="op">:</span> OperationResult {</span>
+<span id="cb20-43"><a href="#cb20-43" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Check Content-Type to provide better error messages</span></span>
+<span id="cb20-44"><a href="#cb20-44" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> contentType <span class="op">=</span> response<span class="op">.</span><span class="at">headers</span>[<span class="st">&#39;content-type&#39;</span>] <span class="op">||</span> <span class="st">&#39;&#39;</span><span class="op">;</span></span>
+<span id="cb20-45"><a href="#cb20-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-46"><a href="#cb20-46" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (contentType<span class="op">.</span><span class="fu">includes</span>(<span class="st">&#39;text/html&#39;</span>)) {</span>
+<span id="cb20-47"><a href="#cb20-47" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Likely an error page (nginx 502, Apache error, etc.)</span></span>
+<span id="cb20-48"><a href="#cb20-48" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {</span>
+<span id="cb20-49"><a href="#cb20-49" aria-hidden="true" tabindex="-1"></a>      success<span class="op">:</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb20-50"><a href="#cb20-50" aria-hidden="true" tabindex="-1"></a>      error<span class="op">:</span> {</span>
+<span id="cb20-51"><a href="#cb20-51" aria-hidden="true" tabindex="-1"></a>        code<span class="op">:</span> <span class="st">&#39;SERIALIZATION_PARSE_ERROR&#39;</span><span class="op">,</span></span>
+<span id="cb20-52"><a href="#cb20-52" aria-hidden="true" tabindex="-1"></a>        message<span class="op">:</span> <span class="vs">`Server returned HTML instead of JSON (HTTP </span><span class="sc">${</span>response<span class="op">.</span><span class="at">status</span><span class="sc">}</span><span class="vs">)`</span><span class="op">,</span></span>
+<span id="cb20-53"><a href="#cb20-53" aria-hidden="true" tabindex="-1"></a>        details<span class="op">:</span> {</span>
+<span id="cb20-54"><a href="#cb20-54" aria-hidden="true" tabindex="-1"></a>          content_type<span class="op">:</span> contentType<span class="op">,</span></span>
+<span id="cb20-55"><a href="#cb20-55" aria-hidden="true" tabindex="-1"></a>          body_preview<span class="op">:</span> response<span class="op">.</span><span class="at">body</span><span class="op">.</span><span class="fu">substring</span>(<span class="dv">0</span><span class="op">,</span> <span class="dv">200</span>)</span>
+<span id="cb20-56"><a href="#cb20-56" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb20-57"><a href="#cb20-57" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb20-58"><a href="#cb20-58" aria-hidden="true" tabindex="-1"></a>    }<span class="op">;</span></span>
+<span id="cb20-59"><a href="#cb20-59" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb20-60"><a href="#cb20-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-61"><a href="#cb20-61" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Generic JSON parse failure</span></span>
+<span id="cb20-62"><a href="#cb20-62" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> {</span>
+<span id="cb20-63"><a href="#cb20-63" aria-hidden="true" tabindex="-1"></a>    success<span class="op">:</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb20-64"><a href="#cb20-64" aria-hidden="true" tabindex="-1"></a>    error<span class="op">:</span> {</span>
+<span id="cb20-65"><a href="#cb20-65" aria-hidden="true" tabindex="-1"></a>      code<span class="op">:</span> <span class="st">&#39;SERIALIZATION_PARSE_ERROR&#39;</span><span class="op">,</span></span>
+<span id="cb20-66"><a href="#cb20-66" aria-hidden="true" tabindex="-1"></a>      message<span class="op">:</span> <span class="vs">`Failed to parse response as JSON: </span><span class="sc">${</span>parseError<span class="op">.</span><span class="at">message</span><span class="sc">}</span><span class="vs">`</span><span class="op">,</span></span>
+<span id="cb20-67"><a href="#cb20-67" aria-hidden="true" tabindex="-1"></a>      details<span class="op">:</span> {</span>
+<span id="cb20-68"><a href="#cb20-68" aria-hidden="true" tabindex="-1"></a>        content_type<span class="op">:</span> contentType<span class="op">,</span></span>
+<span id="cb20-69"><a href="#cb20-69" aria-hidden="true" tabindex="-1"></a>        body_preview<span class="op">:</span> response<span class="op">.</span><span class="at">body</span><span class="op">.</span><span class="fu">substring</span>(<span class="dv">0</span><span class="op">,</span> <span class="dv">200</span>)</span>
+<span id="cb20-70"><a href="#cb20-70" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb20-71"><a href="#cb20-71" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb20-72"><a href="#cb20-72" aria-hidden="true" tabindex="-1"></a>  }<span class="op">;</span></span>
+<span id="cb20-73"><a href="#cb20-73" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><strong>Malformed response scenarios:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Detection</th>
+<th>Handling</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HTML error page</td>
+<td><code>Content-Type: text/html</code></td>
+<td>Return <code>SERIALIZATION_PARSE_ERROR</code> with body preview</td>
+</tr>
+<tr>
+<td>Truncated JSON</td>
+<td><code>JSON.parse</code> throws</td>
+<td>Return parse error with truncated body preview</td>
+</tr>
+<tr>
+<td>Empty response</td>
+<td>Empty body string</td>
+<td>Return success with <code>null</code> data (if 2xx status)</td>
+</tr>
+<tr>
+<td>Binary data</td>
+<td>Non-text Content-Type</td>
+<td>Return error indicating unexpected content type</td>
+</tr>
+<tr>
+<td>BOM prefix</td>
+<td>UTF-8 BOM (<code>\uFEFF</code>)</td>
+<td>Strip BOM before parsing</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="8-error-mapping">8. Error Mapping</h2>
+<h3 id="81-default-http-error-mapping">8.1 Default HTTP Error Mapping</h3>
+<p>The runtime provides default mapping from HTTP status codes to MCP-AQL error responses:</p>
+<table>
+<thead>
+<tr>
+<th>HTTP Status</th>
+<th>Error Pattern</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>400</td>
+<td>Validation error - invalid input</td>
+</tr>
+<tr>
+<td>401</td>
+<td>Authentication required</td>
+</tr>
+<tr>
+<td>403</td>
+<td>Permission denied</td>
+</tr>
+<tr>
+<td>404</td>
+<td>Resource not found</td>
+</tr>
+<tr>
+<td>409</td>
+<td>Conflict</td>
+</tr>
+<tr>
+<td>422</td>
+<td>Validation error - unprocessable</td>
+</tr>
+<tr>
+<td>429</td>
+<td>Rate limit exceeded</td>
+</tr>
+<tr>
+<td>500</td>
+<td>Internal server error</td>
+</tr>
+<tr>
+<td>502</td>
+<td>Bad gateway</td>
+</tr>
+<tr>
+<td>503</td>
+<td>Service unavailable</td>
+</tr>
+<tr>
+<td>504</td>
+<td>Gateway timeout</td>
+</tr>
+</tbody>
+</table>
+<h3 id="82-error-message-construction">8.2 Error Message Construction</h3>
+<div class="sourceCode" id="cb21"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">mapHttpError</span>(status<span class="op">:</span> <span class="dt">number</span><span class="op">,</span> body<span class="op">:</span> <span class="dt">unknown</span>)<span class="op">:</span> <span class="dt">string</span> {</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> bodyMessage <span class="op">=</span> <span class="fu">extractErrorMessage</span>(body<span class="op">,</span> { status<span class="op">,</span> statusText<span class="op">:</span> <span class="st">&#39;&#39;</span> })<span class="op">;</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">switch</span> (status) {</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">case</span> <span class="dv">400</span><span class="op">:</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>      <span class="cf">return</span> <span class="vs">`Invalid request: </span><span class="sc">${</span>bodyMessage<span class="sc">}</span><span class="vs">`</span><span class="op">;</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">case</span> <span class="dv">401</span><span class="op">:</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>      <span class="cf">return</span> <span class="vs">`Authentication required: </span><span class="sc">${</span>bodyMessage<span class="sc">}</span><span class="vs">`</span><span class="op">;</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">case</span> <span class="dv">403</span><span class="op">:</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>      <span class="cf">return</span> <span class="vs">`Permission denied: </span><span class="sc">${</span>bodyMessage<span class="sc">}</span><span class="vs">`</span><span class="op">;</span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">case</span> <span class="dv">404</span><span class="op">:</span></span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>      <span class="cf">return</span> <span class="vs">`Not found: </span><span class="sc">${</span>bodyMessage<span class="sc">}</span><span class="vs">`</span><span class="op">;</span></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">case</span> <span class="dv">409</span><span class="op">:</span></span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>      <span class="cf">return</span> <span class="vs">`Conflict: </span><span class="sc">${</span>bodyMessage<span class="sc">}</span><span class="vs">`</span><span class="op">;</span></span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">case</span> <span class="dv">422</span><span class="op">:</span></span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>      <span class="cf">return</span> <span class="vs">`Validation failed: </span><span class="sc">${</span>bodyMessage<span class="sc">}</span><span class="vs">`</span><span class="op">;</span></span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">case</span> <span class="dv">429</span><span class="op">:</span></span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>      <span class="cf">return</span> <span class="vs">`Rate limit exceeded: </span><span class="sc">${</span>bodyMessage<span class="sc">}</span><span class="vs">`</span><span class="op">;</span></span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">case</span> <span class="dv">500</span><span class="op">:</span></span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a>      <span class="cf">return</span> <span class="vs">`Server error: </span><span class="sc">${</span>bodyMessage<span class="sc">}</span><span class="vs">`</span><span class="op">;</span></span>
+<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">case</span> <span class="dv">502</span><span class="op">:</span></span>
+<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a>      <span class="cf">return</span> <span class="vs">`Bad gateway: </span><span class="sc">${</span>bodyMessage<span class="sc">}</span><span class="vs">`</span><span class="op">;</span></span>
+<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">case</span> <span class="dv">503</span><span class="op">:</span></span>
+<span id="cb21-24"><a href="#cb21-24" aria-hidden="true" tabindex="-1"></a>      <span class="cf">return</span> <span class="vs">`Service unavailable: </span><span class="sc">${</span>bodyMessage<span class="sc">}</span><span class="vs">`</span><span class="op">;</span></span>
+<span id="cb21-25"><a href="#cb21-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">case</span> <span class="dv">504</span><span class="op">:</span></span>
+<span id="cb21-26"><a href="#cb21-26" aria-hidden="true" tabindex="-1"></a>      <span class="cf">return</span> <span class="vs">`Gateway timeout: </span><span class="sc">${</span>bodyMessage<span class="sc">}</span><span class="vs">`</span><span class="op">;</span></span>
+<span id="cb21-27"><a href="#cb21-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">default</span><span class="op">:</span></span>
+<span id="cb21-28"><a href="#cb21-28" aria-hidden="true" tabindex="-1"></a>      <span class="cf">return</span> <span class="vs">`HTTP </span><span class="sc">${</span>status<span class="sc">}</span><span class="vs">: </span><span class="sc">${</span>bodyMessage<span class="sc">}</span><span class="vs">`</span><span class="op">;</span></span>
+<span id="cb21-29"><a href="#cb21-29" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb21-30"><a href="#cb21-30" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="83-transport-errors">8.3 Transport Errors</h3>
+<p>Non-HTTP errors are mapped as follows:</p>
+<table>
+<thead>
+<tr>
+<th>Error Type</th>
+<th>Message Pattern</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DNS failure</td>
+<td>"Could not resolve host: {host}"</td>
+</tr>
+<tr>
+<td>Connection refused</td>
+<td>"Connection refused: {host}:{port}"</td>
+</tr>
+<tr>
+<td>Timeout</td>
+<td>"Request timed out after {ms}ms"</td>
+</tr>
+<tr>
+<td>TLS error</td>
+<td>"TLS error: {details}"</td>
+</tr>
+<tr>
+<td>Network error</td>
+<td>"Network error: {details}"</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="9-introspection">9. Introspection</h2>
+<h3 id="91-built-in-introspect-operation">9.1 Built-in Introspect Operation</h3>
+<p>The runtime provides a built-in <code>introspect</code> operation that returns schema information:</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">handleIntrospect</span>(params<span class="op">:</span> { query<span class="op">:</span> <span class="dt">string</span><span class="op">;</span> name<span class="op">?:</span> <span class="dt">string</span> }<span class="op">,</span> adapter<span class="op">:</span> LoadedAdapter)<span class="op">:</span> OperationResult {</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (params<span class="op">.</span><span class="at">query</span> <span class="op">===</span> <span class="st">&#39;operations&#39;</span>) {</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="fu">introspectOperations</span>(params<span class="op">.</span><span class="at">name</span><span class="op">,</span> adapter)<span class="op">;</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (params<span class="op">.</span><span class="at">query</span> <span class="op">===</span> <span class="st">&#39;types&#39;</span>) {</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="fu">introspectTypes</span>(params<span class="op">.</span><span class="at">name</span><span class="op">,</span> adapter)<span class="op">;</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> { success<span class="op">:</span> <span class="kw">false</span><span class="op">,</span> error<span class="op">:</span> <span class="vs">`Unknown introspection query: </span><span class="sc">${</span>params<span class="op">.</span><span class="at">query</span><span class="sc">}</span><span class="vs">`</span> }<span class="op">;</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="92-operations-introspection">9.2 Operations Introspection</h3>
+<p><strong>List all operations:</strong></p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;operation&quot;</span><span class="fu">:</span> <span class="st">&quot;introspect&quot;</span><span class="fu">,</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;params&quot;</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">&quot;query&quot;</span><span class="fu">:</span> <span class="st">&quot;operations&quot;</span> <span class="fu">}</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><strong>Response:</strong></p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;data&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;operations&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">{</span> <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;get_repo&quot;</span><span class="fu">,</span> <span class="dt">&quot;endpoint&quot;</span><span class="fu">:</span> <span class="st">&quot;read&quot;</span><span class="fu">,</span> <span class="dt">&quot;description&quot;</span><span class="fu">:</span> <span class="st">&quot;Get repository details&quot;</span> <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">{</span> <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;create_repo&quot;</span><span class="fu">,</span> <span class="dt">&quot;endpoint&quot;</span><span class="fu">:</span> <span class="st">&quot;create&quot;</span><span class="fu">,</span> <span class="dt">&quot;description&quot;</span><span class="fu">:</span> <span class="st">&quot;Create a repository&quot;</span> <span class="fu">}</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>    <span class="ot">]</span></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><strong>Get operation details:</strong></p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;operation&quot;</span><span class="fu">:</span> <span class="st">&quot;introspect&quot;</span><span class="fu">,</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;params&quot;</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">&quot;query&quot;</span><span class="fu">:</span> <span class="st">&quot;operations&quot;</span><span class="fu">,</span> <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;get_repo&quot;</span> <span class="fu">}</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><strong>Response:</strong></p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;data&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;operation&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;get_repo&quot;</span><span class="fu">,</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;endpoint&quot;</span><span class="fu">:</span> <span class="st">&quot;read&quot;</span><span class="fu">,</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;description&quot;</span><span class="fu">:</span> <span class="st">&quot;Get repository details&quot;</span><span class="fu">,</span></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;params&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>        <span class="fu">{</span> <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;owner&quot;</span><span class="fu">,</span> <span class="dt">&quot;type&quot;</span><span class="fu">:</span> <span class="st">&quot;string&quot;</span><span class="fu">,</span> <span class="dt">&quot;required&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span> <span class="dt">&quot;description&quot;</span><span class="fu">:</span> <span class="st">&quot;Repository owner&quot;</span> <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>        <span class="fu">{</span> <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;repo&quot;</span><span class="fu">,</span> <span class="dt">&quot;type&quot;</span><span class="fu">:</span> <span class="st">&quot;string&quot;</span><span class="fu">,</span> <span class="dt">&quot;required&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span> <span class="dt">&quot;description&quot;</span><span class="fu">:</span> <span class="st">&quot;Repository name&quot;</span> <span class="fu">}</span></span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>      <span class="ot">]</span></span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h3 id="93-introspection-completeness">9.3 Introspection Completeness</h3>
+<p>The runtime MUST guarantee that introspection output matches schema content:</p>
+<ul>
+<li>Every operation in the schema appears in introspection</li>
+<li>Every parameter in the schema appears in operation details</li>
+<li>Parameter metadata (type, required, default, enum) is accurate</li>
+</ul>
+<hr />
+<h2 id="10-future-extensions">10. Future Extensions</h2>
+<h3 id="101-hot-reload">10.1 Hot Reload</h3>
+<p>Future versions will support automatic schema reload on file change:</p>
+<ul>
+<li>Watch adapter files for modifications</li>
+<li>Reload and revalidate on change</li>
+<li>Atomic swap of operation index</li>
+<li>No service interruption during reload</li>
+</ul>
+<h3 id="102-trust-level-enforcement-59">10.2 Trust Level Enforcement (#59)</h3>
+<p>Enforce operation restrictions based on adapter trust level:</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">trust</span><span class="kw">:</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">level</span><span class="kw">:</span><span class="at"> generated</span><span class="co">  # generated | community | verified | official</span></span></code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Trust Level</th>
+<th>Allowed Operations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>generated</td>
+<td>READ only</td>
+</tr>
+<tr>
+<td>community</td>
+<td>READ, CREATE</td>
+</tr>
+<tr>
+<td>verified</td>
+<td>READ, CREATE, UPDATE, EXECUTE</td>
+</tr>
+<tr>
+<td>official</td>
+<td>All operations</td>
+</tr>
+</tbody>
+</table>
+<h3 id="103-rate-limit-tracking-60">10.3 Rate Limit Tracking (#60)</h3>
+<p>Track and enforce rate limits:</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rate_limits</span><span class="kw">:</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">quotas</span><span class="kw">:</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">limits</span><span class="kw">:</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">metric</span><span class="kw">:</span><span class="at"> calls_per_hour</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">warn</span><span class="kw">:</span><span class="at"> </span><span class="dv">4000</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">hard_stop</span><span class="kw">:</span><span class="at"> </span><span class="dv">5000</span></span></code></pre></div>
+<ul>
+<li>Track requests per time window</li>
+<li>Log warnings at threshold</li>
+<li>Return error when limit exceeded</li>
+</ul>
+<h3 id="104-pagination-handling-37">10.4 Pagination Handling (#37)</h3>
+<p>Automatic pagination via plugins:</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">operations</span><span class="kw">:</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">read</span><span class="kw">:</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> list_repos</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">pagination</span><span class="kw">:</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">style</span><span class="kw">:</span><span class="at"> link_header</span></span></code></pre></div>
+<h3 id="105-response-caching">10.5 Response Caching</h3>
+<p>Cache responses for idempotent operations:</p>
+<ul>
+<li>GET requests may be cached</li>
+<li>Cache TTL from response headers</li>
+<li>Cache invalidation on mutation operations</li>
+</ul>
+<h3 id="106-multi-adapter-management">10.6 Multi-Adapter Management</h3>
+<p>Load and manage multiple adapters:</p>
+<ul>
+<li>Adapter directory scanning</li>
+<li>Namespace operations by adapter name</li>
+<li>Cross-adapter operation routing</li>
+</ul>
+<hr />
+<h2 id="11-security-considerations">11. Security Considerations</h2>
+<p>This section documents security-relevant behaviors and requirements for runtime implementations.</p>
+<h3 id="111-path-parameter-injection-prevention">11.1 Path Parameter Injection Prevention</h3>
+<p>The <code>encodeURIComponent()</code> call in path parameter substitution (Section 6.2) prevents path traversal attacks:</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Malicious input attempt:</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>params<span class="op">:</span> { filename<span class="op">:</span> <span class="st">&quot;../../../etc/passwd&quot;</span> }</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="co">// After encoding:</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>path<span class="op">:</span> <span class="st">&quot;/files/..%2F..%2F..%2Fetc%2Fpasswd&quot;</span>  <span class="co">// Slashes are encoded, path traversal blocked</span></span></code></pre></div>
+<p>Implementations MUST:</p>
+<ul>
+<li>Always encode path parameters before substitution</li>
+<li>Never allow raw user input in URL paths</li>
+<li>Reject parameters containing null bytes (<code>\0</code>)</li>
+</ul>
+<h3 id="112-credential-handling">11.2 Credential Handling</h3>
+<p>Authentication credentials MUST be handled securely:</p>
+<table>
+<thead>
+<tr>
+<th>Requirement</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Never log credentials</td>
+<td>Auth headers MUST be redacted in logs and error messages</td>
+</tr>
+<tr>
+<td>Memory handling</td>
+<td>Credentials SHOULD be cleared from memory after use</td>
+</tr>
+<tr>
+<td>No credential embedding</td>
+<td>Adapters MUST NOT contain hardcoded credentials</td>
+</tr>
+<tr>
+<td>Secure transport</td>
+<td>Credentials MUST only be sent over HTTPS (except localhost)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Error message sanitization:</strong></p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co">// BAD: Exposes credential in error</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="cf">throw</span> <span class="kw">new</span> <span class="bu">Error</span>(<span class="vs">`Auth failed with token: </span><span class="sc">${</span>token<span class="sc">}</span><span class="vs">`</span>)<span class="op">;</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="co">// GOOD: Redacts credential</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a><span class="cf">throw</span> <span class="kw">new</span> <span class="bu">Error</span>(<span class="vs">`Auth failed with token: </span><span class="sc">${</span>token<span class="op">.</span><span class="fu">substring</span>(<span class="dv">0</span><span class="op">,</span> <span class="dv">4</span>)<span class="sc">}</span><span class="vs">...`</span>)<span class="op">;</span></span></code></pre></div>
+<h3 id="113-error-message-sanitization">11.3 Error Message Sanitization</h3>
+<p>Error messages returned to clients MUST NOT expose:</p>
+<ul>
+<li>Internal file paths or system information</li>
+<li>Database connection strings or queries</li>
+<li>Stack traces (in production)</li>
+<li>Raw credentials or tokens</li>
+<li>Internal IP addresses or hostnames</li>
+</ul>
+<p><strong>Sanitization example:</strong></p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">sanitizeError</span>(error<span class="op">:</span> <span class="bu">Error</span><span class="op">,</span> isDevelopment<span class="op">:</span> <span class="dt">boolean</span>)<span class="op">:</span> <span class="dt">string</span> {</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (isDevelopment) {</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> error<span class="op">.</span><span class="at">message</span><span class="op">;</span> <span class="co">// Full details in development</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Production: generic message with error code only</span></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="vs">`Operation failed: </span><span class="sc">${</span>error<span class="op">.</span><span class="at">code</span> <span class="op">||</span> <span class="st">&#39;INTERNAL_ERROR&#39;</span><span class="sc">}</span><span class="vs">`</span><span class="op">;</span></span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="114-input-validation">11.4 Input Validation</h3>
+<p>All inputs MUST be validated before processing:</p>
+<table>
+<thead>
+<tr>
+<th>Input Type</th>
+<th>Validation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Operation name</td>
+<td>MUST match <code>/^[a-z][a-z0-9_]*$/</code> pattern</td>
+</tr>
+<tr>
+<td>Parameter values</td>
+<td>MUST match declared type and constraints</td>
+</tr>
+<tr>
+<td>URL components</td>
+<td>MUST be properly encoded</td>
+</tr>
+<tr>
+<td>Header values</td>
+<td>MUST NOT contain newlines (HTTP header injection)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="115-response-size-limits">11.5 Response Size Limits</h3>
+<p>Implementations SHOULD enforce response size limits to prevent denial-of-service:</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> MAX_RESPONSE_SIZE <span class="op">=</span> <span class="dv">10</span> <span class="op">*</span> <span class="dv">1024</span> <span class="op">*</span> <span class="dv">1024</span><span class="op">;</span> <span class="co">// 10 MB default</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (response<span class="op">.</span><span class="at">body</span><span class="op">.</span><span class="at">length</span> <span class="op">&gt;</span> MAX_RESPONSE_SIZE) {</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">throw</span> <span class="kw">new</span> <span class="bu">Error</span>(<span class="st">&#39;Response exceeds maximum size limit&#39;</span>)<span class="op">;</span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<hr />
+<h2 id="references">References</h2>
+<ul>
+<li><a href="../../spec/adapter/element-type.html">Adapter Element Type Specification</a></li>
+<li><a href="../../spec/plugin-contracts.html">Plugin Interface Contracts</a></li>
+<li><a href="plugin-system.html">Plugin System Implementation</a></li>
+<li><a href="../../spec/versions/v1.0.0-draft.html">MCP-AQL Specification</a></li>
+<li><a href="https://github.com/MCPAQL/spec/issues/35">Structured Error Codes</a></li>
+<li>GitHub Issue: <a href="https://github.com/MCPAQL/spec/issues/63">#63</a></li>
+</ul>
+
+          </div>
+        </section>
+        <nav class="page-nav" aria-label="Page navigation">
+  <a class="page-nav-link prev" href="plugin-system.html">
+    <span class="page-nav-eyebrow">Previous page</span>
+    <strong class="page-nav-label">Plugin System Implementation</strong>
+  </a>
+  <a class="page-nav-link next" href="../guides/development.html">
+    <span class="page-nav-eyebrow">Next page</span>
+    <strong class="page-nav-label">MCP-AQL Adapter Development Guide</strong>
+  </a>
+</nav>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.</p>
+      <div class="footer-links">
+        <a href="../../apis/index.html">Adapter Patterns</a><a href="../index.html">Reference Adapter Docs</a><a href="https://github.com/MCPAQL/mcpaql-adapter">Reference Adapter Repo</a><a href="https://dollhouseresearch.com">Dollhouse Research</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../js/search.js"></script>
+</body>
+</html>

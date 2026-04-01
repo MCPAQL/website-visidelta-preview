@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="This document defines the Adapter Element Type, a declarative schema format for describing how MCP-AQL CRUDE operations map to target API calls. Adapters are Markdown files with YAML front matter that a universal runtime">
+  <title>MCP-AQL Spec | Adapter Element Type Specification</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <a class="logo" href="../../index.html"><span class="logo-mark"></span>MCP-AQL</a>
+        <ul class="nav-links">
+          <li><a href="../../index.html">Home</a></li>
+          <li><a href="../../docs/index.html">Docs</a></li>
+          <li><a href="../../launch-checklist.html">Launch Checklist</a></li>
+          <li><a href="../../apis/index.html">Adapter Patterns</a></li>
+        </ul>
+        <form class="site-search" data-search-form data-index-url="../../data/search-index.json" role="search">
+          <label class="sr-only" for="site-search-input">Search MCP-AQL docs</label>
+          <input id="site-search-input" data-search-input type="search" placeholder="Search MCP-AQL docs, spec pages, and adapter patterns...">
+          <span class="search-count" data-search-count></span>
+          <ul class="search-results" data-search-results hidden></ul>
+        </form>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container docs-shell">
+      <aside class="docs-side">
+        <h2>Repo-Synced Spec</h2>
+        <p class="docs-side-note">Generated from <code>MCPAQL/spec</code> so the website carries the deeper protocol material too.</p>
+        <div class="docs-side-group">
+  <h3>Core</h3>
+  <ul><li><a href="../conformance-testing.html">MCP-AQL Conformance Testing Specification</a></li><li><a href="../crude-pattern.html">MCP-AQL CRUDE Pattern Specification</a></li><li><a href="../endpoint-modes.html">MCP-AQL Endpoint Modes Specification</a></li><li><a href="../error-codes.html">Structured Error Codes Specification</a></li><li><a href="../introspection.html">MCP-AQL Introspection Specification</a></li><li><a href="../licensing-options.html">MCP-AQL Licensing Options (Working Notes)</a></li><li><a href="../mcp-integration.html">MCP Integration Specification</a></li><li><a href="../operations.html">MCP-AQL Operations Specification</a></li><li><a href="../overview.html">MCP-AQL Protocol Overview</a></li><li><a href="../plugin-contracts.html">Plugin Interface Contracts</a></li><li><a href="../README.html">MCP-AQL Specification Documentation</a></li><li><a href="../repo/README.html">MCP-AQL Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Versions</h3>
+  <ul><li><a href="../versions/v1.0.0-draft.html">MCP-AQL Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Adapter</h3>
+  <ul><li><a href="danger-levels.html">Dangerous Operation Classification Specification</a></li><li><a href="discovery-bundle.html">MCP Server Discovery Bundle</a></li><li><a class="current" aria-current="page" href="element-type.html">Adapter Element Type Specification</a></li><li><a href="generator.html">Adapter Generator Specification</a></li><li><a href="rate-limiting.html">Rate Limiting and Quota Management Specification</a></li><li><a href="trust-levels.html">Trust Levels Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Security</h3>
+  <ul><li><a href="../security/confirmation-tokens.html">Confirmation Token Specification</a></li><li><a href="../security/execution-safety-loop.html">Execution Safety Loop Specification</a></li><li><a href="../security/gatekeeper.html">Security Model: Gatekeeper Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Features</h3>
+  <ul><li><a href="../features/field-selection.html">Field Selection Specification</a></li><li><a href="../features/pagination.html">Cursor-Based Pagination Specification</a></li><li><a href="../features/warnings.html">Warnings Array Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Guides</h3>
+  <ul><li><a href="../guides/protocol-comparison.html">Protocol Comparison Guide</a></li><li><a href="../guides/README.html">Developer Guides</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Process</h3>
+  <ul><li><a href="../process/breaking-changes.html">MCP-AQL Breaking Change Policy</a></li><li><a href="../process/preliminary-public-launch-checklist.html">Preliminary Public Launch Checklist</a></li><li><a href="../process/rfc-process.html">RFC Process for MCP-AQL Specification</a></li><li><a href="../process/versioning.html">Versioning Strategy</a></li><li><a href="../repo/CHANGELOG.html">Changelog</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Architecture</h3>
+  <ul><li><a href="../architecture/README.html">Architecture Documentation</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Research</h3>
+  <ul><li><a href="../research/mcp-vs-mcpaql-vs-a2a.html">Protocol Landscape: MCP vs MCP-AQL vs A2A</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Reference</h3>
+  <ul><li><a href="../reference/README.html">Reference Documentation</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>ADRs</h3>
+  <ul><li><a href="../adr/ADR-001-crude-pattern.html">ADR-001: CRUDE Pattern (Extending CRUD with Execute)</a></li><li><a href="../adr/ADR-002-graphql-style-input.html">ADR-002: GraphQL-Style Input Objects for Updates</a></li><li><a href="../adr/ADR-003-snake-case-parameters.html">ADR-003: snake_case Parameter Convention</a></li><li><a href="../adr/ADR-004-schema-driven-operations.html">ADR-004: Schema-Driven Operation Definitions</a></li><li><a href="../adr/ADR-005-introspection-system.html">ADR-005: GraphQL-Style Introspection System</a></li><li><a href="../adr/ADR-006-discriminated-responses.html">ADR-006: Discriminated Response Format</a></li><li><a href="../adr/index.html">Architecture Decision Records</a></li><li><a href="../adr/README.html">Architecture Decision Records</a></li></ul>
+</div>
+      </aside>
+
+      <article class="docs-main">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+          <ol>
+            <li><a href="../../index.html">Home</a></li>
+            <li><a href="../index.html">Full Spec</a></li>
+            <li><span class="current">Adapter Element Type Specification</span></li>
+          </ol>
+        </nav>
+        <section class="hero docs-hero">
+          <div class="hero-inner">
+            <span class="status-pill">REPO-SYNCED SPEC DOC</span>
+            <h1>Adapter Element Type Specification</h1>
+            <p class="lede">This document defines the Adapter Element Type, a declarative schema format for describing how MCP-AQL CRUDE operations map to target API calls. Adapters are Markdown files with YAML front matter that a universal runtime</p>
+            <div class="spec-meta"><span class="state-chip live">Support document</span><span class="state-chip pending">Draft (MVP)</span><span class="state-chip">1.0.0-draft</span><span class="state-chip">2026-01-26</span></div>
+            <p class="spec-source">Source: <a href="https://github.com/MCPAQL/spec/blob/main/docs/adapter/element-type.md">spec/docs/adapter/element-type.md</a></p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="https://github.com/MCPAQL/spec/blob/main/docs/adapter/element-type.md">Open Source Markdown</a><a class="btn btn-secondary" href="../index.html">Browse Full Spec Reference</a>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <div class="card spec-prose">
+            <p><strong>Version:</strong> 1.0.0-draft <strong>Status:</strong> Draft (MVP) <strong>Last Updated:</strong> 2026-01-26</p>
+<h2 id="abstract">Abstract</h2>
+<p>This document defines the Adapter Element Type, a declarative schema format for describing how MCP-AQL CRUDE operations map to target API calls. Adapters are Markdown files with YAML front matter that a universal runtime interprets at call time.</p>
+<hr />
+<h2 id="table-of-contents">Table of Contents</h2>
+<ol type="1">
+<li><a href="#1-overview">Overview</a></li>
+<li><a href="#2-schema-structure">Schema Structure</a></li>
+<li><a href="#3-canonical-format-rationale">Canonical Format Rationale</a></li>
+<li><a href="#4-required-fields">Required Fields</a></li>
+<li><a href="#5-target-configuration">Target Configuration</a></li>
+<li><a href="#6-authentication">Authentication</a></li>
+<li><a href="#7-operations">Operations</a></li>
+<li><a href="#8-parameter-types">Parameter Types</a></li>
+<li><a href="#9-example-adapter">Example Adapter</a></li>
+<li><a href="#10-future-extensions">Future Extensions</a></li>
+</ol>
+<hr />
+<h2 id="1-overview">1. Overview</h2>
+<h3 id="11-purpose">1.1 Purpose</h3>
+<p>Adapters enable LLMs to interact with any HTTP API using the MCP-AQL CRUDE interface. Rather than generating code for each API, adapters use a declarative schema that the runtime interprets dynamically.</p>
+<h3 id="12-design-principles">1.2 Design Principles</h3>
+<ol type="1">
+<li><strong>Schema IS the adapter</strong> - No separate code, no compilation</li>
+<li><strong>Declarative over imperative</strong> - Runtime interprets, does not execute custom code</li>
+<li><strong>Introspection for free</strong> - Generated directly from schema</li>
+<li><strong>Hot reloadable</strong> - Change schema, behavior changes immediately</li>
+<li><strong>Human-readable</strong> - Markdown body provides documentation</li>
+</ol>
+<h3 id="13-file-format">1.3 File Format</h3>
+<p>Adapters follow the established element pattern:</p>
+<ul>
+<li><strong>Filename:</strong> <code>{name}-adapter.md</code> (e.g., <code>github-api-adapter.md</code>)</li>
+<li><strong>YAML front matter</strong> containing all configuration and operation mappings</li>
+<li><strong>Markdown body</strong> for human-readable documentation</li>
+</ul>
+<h3 id="14-mvp-scope">1.4 MVP Scope</h3>
+<p>This specification covers the Minimum Viable Product (MVP) for adapters:</p>
+<p><strong>Included:</strong></p>
+<ul>
+<li>HTTP transport only</li>
+<li>REST protocol only</li>
+<li>JSON serialization only</li>
+<li>Bearer token, API key, and no-auth authentication</li>
+<li>Basic operation definitions with parameters</li>
+</ul>
+<p><strong>Deferred to future specifications:</strong></p>
+<ul>
+<li>Trust levels (see #59)</li>
+<li>Rate limiting (see #60)</li>
+<li>Danger level classification (see #49)</li>
+<li>Pagination plugins (see #37)</li>
+<li>Field selection support</li>
+<li>Response transformation</li>
+<li>Alternative transports (WebSocket, serial, native)</li>
+<li>Alternative protocols (GraphQL, gRPC)</li>
+<li>Alternative serialization (XML, Protobuf)</li>
+<li>Advanced authentication (OAuth, mTLS)</li>
+</ul>
+<hr />
+<h2 id="2-schema-structure">2. Schema Structure</h2>
+<h3 id="21-complete-structure">2.1 Complete Structure</h3>
+<div class="sourceCode" id="cb1"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Required fields</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">name</span><span class="kw">:</span><span class="at"> string</span><span class="co">                    # Unique identifier</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">type</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;adapter&quot;</span><span class="co">                 # MUST be &quot;adapter&quot;</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">version</span><span class="kw">:</span><span class="at"> string</span><span class="co">                 # Semver version</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">description</span><span class="kw">:</span><span class="at"> string</span><span class="co">             # Human-readable description</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Target configuration</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">target</span><span class="kw">:</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">base_url</span><span class="kw">:</span><span class="at"> string</span><span class="co">              # API base URL</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">transport</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;http&quot;</span><span class="co">             # MVP: only &quot;http&quot;</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">protocol</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;rest&quot;</span><span class="co">              # MVP: only &quot;rest&quot;</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">serialization</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;json&quot;</span><span class="co">         # MVP: only &quot;json&quot;</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Authentication (optional)</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="fu">auth</span><span class="kw">:</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">type</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;bearer&quot;</span><span class="at"> </span><span class="er">|</span><span class="at"> </span><span class="er">&quot;api_key&quot;</span><span class="at"> </span><span class="er">|</span><span class="at"> </span><span class="er">&quot;none&quot;</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">token_env</span><span class="kw">:</span><span class="at"> string</span><span class="co">             # For bearer: env var containing token</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">header_name</span><span class="kw">:</span><span class="at"> string</span><span class="co">           # For api_key: header name</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">key_env</span><span class="kw">:</span><span class="at"> string</span><span class="co">               # For api_key: env var containing key</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Operation mappings</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="fu">operations</span><span class="kw">:</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">create</span><span class="kw">:</span><span class="at"> OperationDefinition[]</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">read</span><span class="kw">:</span><span class="at"> OperationDefinition[]</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">update</span><span class="kw">:</span><span class="at"> OperationDefinition[]</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">delete</span><span class="kw">:</span><span class="at"> OperationDefinition[]</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">execute</span><span class="kw">:</span><span class="at"> OperationDefinition[]</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Optional metadata</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="fu">author</span><span class="kw">:</span><span class="at"> string</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="fu">tags</span><span class="kw">:</span><span class="at"> string[]</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="fu">triggers</span><span class="kw">:</span><span class="at"> string[]</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="fu">created</span><span class="kw">:</span><span class="at"> string</span><span class="co">                 # ISO 8601 timestamp</span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="fu">modified</span><span class="kw">:</span><span class="at"> string</span><span class="co">                # ISO 8601 timestamp</span></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="co"># Markdown documentation body</span></span></code></pre></div>
+<hr />
+<h2 id="3-canonical-format-rationale">3. Canonical Format Rationale</h2>
+<h3 id="31-why-markdown--yaml-front-matter">3.1 Why Markdown + YAML Front Matter</h3>
+<p>The Markdown + YAML front matter format is the SHOULD (recommended) interchange format for adapter schemas. This choice is deliberate:</p>
+<ol type="1">
+<li><p><strong>Human-readable for security auditing</strong> - Adapter schemas define what API calls an LLM can make. Plain text makes it straightforward for security reviewers to inspect exactly which endpoints are exposed, what parameters are accepted, and what authentication is used.</p></li>
+<li><p><strong>LLM-readable for automated review</strong> - Language models can directly read and reason about adapter schemas without specialized parsers, enabling automated security review and schema validation workflows.</p></li>
+<li><p><strong>Grep-friendly for searching operations</strong> - Teams can use standard text search tools to find operations across adapter collections (e.g., <code>grep -r "maps_to.*DELETE" adapters/</code>).</p></li>
+<li><p><strong>Discourages obfuscation</strong> - A text-based format makes it difficult to hide malicious configurations. Binary or compiled adapter formats would make security review harder.</p></li>
+<li><p><strong>Version control friendly</strong> - Diffs are meaningful, merge conflicts are resolvable, and change history is transparent.</p></li>
+</ol>
+<h3 id="32-alternative-representations">3.2 Alternative Representations</h3>
+<p>Adapter schemas MAY be stored in alternative representations (JSON, database records, programmatic builders) for implementation convenience. However:</p>
+<ul>
+<li>Alternative representations SHOULD be translatable to the canonical Markdown + YAML format for review purposes</li>
+<li>Tooling SHOULD support exporting to canonical format</li>
+<li>The canonical format is the normative reference when discrepancies exist between representations</li>
+</ul>
+<hr />
+<h2 id="4-required-fields">4. Required Fields</h2>
+<h3 id="41-name">4.1 name</h3>
+<p><strong>Type:</strong> string <strong>Required:</strong> Yes</p>
+<p>A unique identifier for the adapter. MUST be lowercase with hyphens for word separation.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">name</span><span class="kw">:</span><span class="at"> github-api</span></span></code></pre></div>
+<p><strong>Constraints:</strong></p>
+<ul>
+<li>MUST match pattern <code>^[a-z][a-z0-9-]*[a-z0-9]$</code></li>
+<li>MUST be 2-64 characters</li>
+<li>SHOULD be descriptive of the target API</li>
+</ul>
+<h3 id="42-type">4.2 type</h3>
+<p><strong>Type:</strong> string (literal) <strong>Required:</strong> Yes</p>
+<p>MUST be the literal string <code>"adapter"</code>. This enables tooling to identify element types without path inspection.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">type</span><span class="kw">:</span><span class="at"> adapter</span></span></code></pre></div>
+<h3 id="43-version">4.3 version</h3>
+<p><strong>Type:</strong> string (semver) <strong>Required:</strong> Yes</p>
+<p>Semantic version of the adapter schema.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">version</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;1.0.0&quot;</span></span></code></pre></div>
+<p><strong>Constraints:</strong></p>
+<ul>
+<li>MUST follow <a href="https://semver.org/">Semantic Versioning 2.0.0</a></li>
+<li>SHOULD be quoted to prevent YAML number parsing issues</li>
+</ul>
+<h3 id="44-description">4.4 description</h3>
+<p><strong>Type:</strong> string <strong>Required:</strong> Yes</p>
+<p>Human-readable description of the adapter's purpose.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">description</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Adapter for GitHub REST API v3, enabling repository and issue management&quot;</span></span></code></pre></div>
+<p><strong>Constraints:</strong></p>
+<ul>
+<li>SHOULD be 10-200 characters</li>
+<li>SHOULD describe the target API and main capabilities</li>
+</ul>
+<hr />
+<h2 id="5-target-configuration">5. Target Configuration</h2>
+<h3 id="51-target-block">5.1 target Block</h3>
+<p>The <code>target</code> block defines how to connect to the API.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">target</span><span class="kw">:</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">base_url</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;https://api.github.com&quot;</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">transport</span><span class="kw">:</span><span class="at"> http</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">protocol</span><span class="kw">:</span><span class="at"> rest</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">serialization</span><span class="kw">:</span><span class="at"> json</span></span></code></pre></div>
+<h3 id="52-base_url">5.2 base_url</h3>
+<p><strong>Type:</strong> string (URL) <strong>Required:</strong> Yes</p>
+<p>The base URL for all API requests. Operation <code>maps_to</code> paths are appended to this URL.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">base_url</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;https://api.github.com&quot;</span></span></code></pre></div>
+<p><strong>Constraints:</strong></p>
+<ul>
+<li>MUST be a valid HTTPS URL (HTTP allowed only for localhost/development)</li>
+<li>MUST NOT include trailing slash</li>
+<li>MAY include path prefix (e.g., <code>https://api.example.com/v1</code>)</li>
+</ul>
+<h3 id="53-transport">5.3 transport</h3>
+<p><strong>Type:</strong> string (enum) <strong>Required:</strong> Yes</p>
+<p>The transport layer for API communication.</p>
+<p><strong>MVP Values:</strong></p>
+<ul>
+<li><code>http</code> - HTTP/HTTPS transport</li>
+</ul>
+<p><strong>Future Values (deferred):</strong></p>
+<ul>
+<li><code>websocket</code> - WebSocket transport</li>
+<li><code>serial</code> - Serial port transport</li>
+<li><code>native</code> - Native library bindings</li>
+</ul>
+<div class="sourceCode" id="cb8"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">transport</span><span class="kw">:</span><span class="at"> http</span></span></code></pre></div>
+<h3 id="54-protocol">5.4 protocol</h3>
+<p><strong>Type:</strong> string (enum) <strong>Required:</strong> Yes</p>
+<p>The API protocol used by the target.</p>
+<p><strong>MVP Values:</strong></p>
+<ul>
+<li><code>rest</code> - RESTful API</li>
+</ul>
+<p><strong>Future Values (deferred):</strong></p>
+<ul>
+<li><code>graphql</code> - GraphQL API</li>
+<li><code>grpc</code> - gRPC API</li>
+<li><code>custom</code> - Custom protocol with plugin</li>
+</ul>
+<div class="sourceCode" id="cb9"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">protocol</span><span class="kw">:</span><span class="at"> rest</span></span></code></pre></div>
+<h3 id="55-serialization">5.5 serialization</h3>
+<p><strong>Type:</strong> string (enum) <strong>Required:</strong> Yes</p>
+<p>The serialization format for request/response bodies.</p>
+<p><strong>MVP Values:</strong></p>
+<ul>
+<li><code>json</code> - JSON serialization</li>
+</ul>
+<p><strong>Future Values (deferred):</strong></p>
+<ul>
+<li><code>xml</code> - XML serialization</li>
+<li><code>protobuf</code> - Protocol Buffers</li>
+<li><code>msgpack</code> - MessagePack</li>
+</ul>
+<div class="sourceCode" id="cb10"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">serialization</span><span class="kw">:</span><span class="at"> json</span></span></code></pre></div>
+<hr />
+<h2 id="6-authentication">6. Authentication</h2>
+<h3 id="61-auth-block">6.1 auth Block</h3>
+<p>The <code>auth</code> block configures API authentication. If omitted, the adapter uses no authentication.</p>
+<h3 id="62-type-none">6.2 type: none</h3>
+<p>No authentication required.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">auth</span><span class="kw">:</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">type</span><span class="kw">:</span><span class="at"> none</span></span></code></pre></div>
+<h3 id="63-type-bearer">6.3 type: bearer</h3>
+<p>Bearer token authentication sent in the <code>Authorization</code> header.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">auth</span><span class="kw">:</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">type</span><span class="kw">:</span><span class="at"> bearer</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">token_env</span><span class="kw">:</span><span class="at"> GITHUB_TOKEN</span></span></code></pre></div>
+<p><strong>Fields:</strong></p>
+<ul>
+<li><code>token_env</code> (required): Environment variable name containing the bearer token</li>
+</ul>
+<p><strong>Runtime behavior:</strong></p>
+<pre><code>Authorization: Bearer ${GITHUB_TOKEN}</code></pre>
+<h3 id="64-type-api_key">6.4 type: api_key</h3>
+<p>API key authentication sent in a custom header.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">auth</span><span class="kw">:</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">type</span><span class="kw">:</span><span class="at"> api_key</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">header_name</span><span class="kw">:</span><span class="at"> X-API-Key</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">key_env</span><span class="kw">:</span><span class="at"> OPENAI_API_KEY</span></span></code></pre></div>
+<p><strong>Fields:</strong></p>
+<ul>
+<li><code>header_name</code> (required): HTTP header name for the API key</li>
+<li><code>key_env</code> (required): Environment variable name containing the key</li>
+</ul>
+<p><strong>Runtime behavior:</strong></p>
+<pre><code>X-API-Key: ${OPENAI_API_KEY}</code></pre>
+<h3 id="65-security-considerations">6.5 Security Considerations</h3>
+<ul>
+<li>Adapter schemas MUST NOT contain actual credentials</li>
+<li>Credentials MUST be loaded from environment variables at runtime</li>
+<li>Runtime implementations SHOULD warn if credentials are embedded in schemas</li>
+</ul>
+<hr />
+<h2 id="7-operations">7. Operations</h2>
+<h3 id="71-operations-block">7.1 operations Block</h3>
+<p>The <code>operations</code> block maps MCP-AQL CRUDE operations to target API calls.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">operations</span><span class="kw">:</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">create</span><span class="kw">:</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> create_repo</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">maps_to</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;POST /user/repos&quot;</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">description</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Create a new repository&quot;</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">params</span><span class="kw">:</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">name</span><span class="kw">:</span><span class="at"> </span><span class="kw">{</span><span class="at"> </span><span class="fu">type</span><span class="kw">:</span><span class="at"> string</span><span class="kw">,</span><span class="at"> </span><span class="fu">required</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span><span class="at"> </span><span class="kw">}</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">private</span><span class="kw">:</span><span class="at"> </span><span class="kw">{</span><span class="at"> </span><span class="fu">type</span><span class="kw">:</span><span class="at"> boolean</span><span class="kw">,</span><span class="at"> </span><span class="fu">default</span><span class="kw">:</span><span class="at"> </span><span class="ch">false</span><span class="at"> </span><span class="kw">}</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">read</span><span class="kw">:</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> list_repos</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">maps_to</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;GET /users/{username}/repos&quot;</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">description</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;List repositories for a user&quot;</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">params</span><span class="kw">:</span></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">username</span><span class="kw">:</span><span class="at"> </span><span class="kw">{</span><span class="at"> </span><span class="fu">type</span><span class="kw">:</span><span class="at"> string</span><span class="kw">,</span><span class="at"> </span><span class="fu">required</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span><span class="at"> </span><span class="kw">}</span></span></code></pre></div>
+<h3 id="72-operationdefinition">7.2 OperationDefinition</h3>
+<p>Each operation in a CRUDE category is an OperationDefinition object:</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">name</span><span class="kw">:</span><span class="at"> string</span><span class="co">                    # Operation name (required)</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">maps_to</span><span class="kw">:</span><span class="at"> string</span><span class="co">                 # HTTP method and path (required)</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="fu">description</span><span class="kw">:</span><span class="at"> string</span><span class="co">             # Human-readable description</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="fu">params</span><span class="kw">:</span><span class="at"> ParamDefinition{}</span><span class="co">       # Parameter definitions</span></span></code></pre></div>
+<h3 id="73-name">7.3 name</h3>
+<p><strong>Type:</strong> string <strong>Required:</strong> Yes</p>
+<p>The operation identifier used in MCP-AQL requests.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">name</span><span class="kw">:</span><span class="at"> get_repo</span></span></code></pre></div>
+<p><strong>Constraints:</strong></p>
+<ul>
+<li>MUST be unique across all CRUDE categories</li>
+<li>MUST match pattern <code>^[a-z][a-z0-9_]*$</code></li>
+<li>SHOULD use snake_case</li>
+</ul>
+<h3 id="74-maps_to">7.4 maps_to</h3>
+<p><strong>Type:</strong> string <strong>Required:</strong> Yes</p>
+<p>The HTTP method and path template for the target API.</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">maps_to</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;GET /repos/{owner}/{repo}&quot;</span></span></code></pre></div>
+<p><strong>Format:</strong> <code>METHOD /path/with/{placeholders}</code></p>
+<p><strong>Supported methods:</strong> GET, POST, PUT, PATCH, DELETE</p>
+<p><strong>Path placeholders:</strong></p>
+<ul>
+<li>Wrapped in curly braces: <code>{param_name}</code></li>
+<li>MUST correspond to a parameter definition</li>
+<li>Replaced at runtime with parameter values</li>
+</ul>
+<h3 id="75-description">7.5 description</h3>
+<p><strong>Type:</strong> string <strong>Required:</strong> No (recommended)</p>
+<p>Human-readable description of what the operation does.</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">description</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Get detailed information about a specific repository&quot;</span></span></code></pre></div>
+<h3 id="76-params">7.6 params</h3>
+<p><strong>Type:</strong> object mapping param names to ParamDefinition <strong>Required:</strong> No</p>
+<p>Parameter definitions for the operation.</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">params</span><span class="kw">:</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">owner</span><span class="kw">:</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">type</span><span class="kw">:</span><span class="at"> string</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">required</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">description</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Repository owner username&quot;</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">repo</span><span class="kw">:</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">type</span><span class="kw">:</span><span class="at"> string</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">required</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">description</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Repository name&quot;</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">include_stats</span><span class="kw">:</span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">type</span><span class="kw">:</span><span class="at"> boolean</span></span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">default</span><span class="kw">:</span><span class="at"> </span><span class="ch">false</span></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">description</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Include repository statistics&quot;</span></span></code></pre></div>
+<hr />
+<h2 id="8-parameter-types">8. Parameter Types</h2>
+<h3 id="81-paramdefinition">8.1 ParamDefinition</h3>
+<div class="sourceCode" id="cb22"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">type</span><span class="kw">:</span><span class="at"> string</span><span class="co">                    # Data type (required)</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">required</span><span class="kw">:</span><span class="at"> boolean</span><span class="co">               # Is parameter required (default: false)</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="fu">description</span><span class="kw">:</span><span class="at"> string</span><span class="co">             # Human-readable description</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="fu">default</span><span class="kw">:</span><span class="at"> any</span><span class="co">                    # Default value if not provided</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="fu">enum</span><span class="kw">:</span><span class="at"> any[]</span><span class="co">                     # Allowed values</span></span></code></pre></div>
+<h3 id="82-type-field">8.2 type Field</h3>
+<p><strong>Supported types:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>string</code></td>
+<td>Text value</td>
+<td><code>"hello"</code></td>
+</tr>
+<tr>
+<td><code>integer</code></td>
+<td>Whole number</td>
+<td><code>42</code></td>
+</tr>
+<tr>
+<td><code>number</code></td>
+<td>Decimal number</td>
+<td><code>3.14</code></td>
+</tr>
+<tr>
+<td><code>boolean</code></td>
+<td>True/false</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>array</code></td>
+<td>List of values</td>
+<td><code>[1, 2, 3]</code></td>
+</tr>
+<tr>
+<td><code>object</code></td>
+<td>Key-value map</td>
+<td><code>{"key": "value"}</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="83-required-field">8.3 required Field</h3>
+<p><strong>Type:</strong> boolean <strong>Default:</strong> false</p>
+<p>When true, the runtime MUST reject requests missing this parameter.</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">name</span><span class="kw">:</span><span class="at"> </span><span class="kw">{</span><span class="at"> </span><span class="fu">type</span><span class="kw">:</span><span class="at"> string</span><span class="kw">,</span><span class="at"> </span><span class="fu">required</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span><span class="at"> </span><span class="kw">}</span></span></code></pre></div>
+<h3 id="84-description-field">8.4 description Field</h3>
+<p><strong>Type:</strong> string</p>
+<p>Human-readable description shown in introspection.</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">owner</span><span class="kw">:</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">type</span><span class="kw">:</span><span class="at"> string</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">required</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">description</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;The account owner of the repository&quot;</span></span></code></pre></div>
+<h3 id="85-default-field">8.5 default Field</h3>
+<p><strong>Type:</strong> any (matching the param type)</p>
+<p>Default value used when parameter is not provided.</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">per_page</span><span class="kw">:</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">type</span><span class="kw">:</span><span class="at"> integer</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">default</span><span class="kw">:</span><span class="at"> </span><span class="dv">30</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">description</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Results per page (max 100)&quot;</span></span></code></pre></div>
+<h3 id="86-enum-field">8.6 enum Field</h3>
+<p><strong>Type:</strong> array</p>
+<p>Restricts parameter to specific values.</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">state</span><span class="kw">:</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">type</span><span class="kw">:</span><span class="at"> string</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">enum</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">open</span><span class="kw">,</span><span class="at"> closed</span><span class="kw">,</span><span class="at"> all</span><span class="kw">]</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">default</span><span class="kw">:</span><span class="at"> open</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">description</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Filter by issue state&quot;</span></span></code></pre></div>
+<hr />
+<h2 id="9-example-adapter">9. Example Adapter</h2>
+<p>See the <a href="https://github.com/MCPAQL/examples/blob/develop/adapters/github-api-adapter.md">GitHub API Adapter</a> in the examples repository for a complete example.</p>
+<h3 id="91-minimal-example">9.1 Minimal Example</h3>
+<div class="sourceCode" id="cb27"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">name</span><span class="kw">:</span><span class="at"> minimal-api</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="fu">type</span><span class="kw">:</span><span class="at"> adapter</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="fu">version</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;1.0.0&quot;</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="fu">description</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Minimal example adapter&quot;</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="fu">target</span><span class="kw">:</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">base_url</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;https://api.example.com&quot;</span></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">transport</span><span class="kw">:</span><span class="at"> http</span></span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">protocol</span><span class="kw">:</span><span class="at"> rest</span></span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">serialization</span><span class="kw">:</span><span class="at"> json</span></span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a><span class="fu">operations</span><span class="kw">:</span></span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">read</span><span class="kw">:</span></span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> get_status</span></span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">maps_to</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;GET /status&quot;</span></span>
+<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">description</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Get API status&quot;</span></span>
+<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
+<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Minimal API Adapter</span></span>
+<span id="cb27-21"><a href="#cb27-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-22"><a href="#cb27-22" aria-hidden="true" tabindex="-1"></a><span class="at">This adapter demonstrates the minimum required fields.</span></span></code></pre></div>
+<hr />
+<h2 id="10-future-extensions">10. Future Extensions</h2>
+<p>The following features are deferred from the MVP and will be specified in future issues:</p>
+<h3 id="101-trust-levels-59">10.1 Trust Levels (#59)</h3>
+<div class="sourceCode" id="cb28"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">trust</span><span class="kw">:</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">level</span><span class="kw">:</span><span class="at"> generated | community | verified | official</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">verified_by</span><span class="kw">:</span><span class="at"> string</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">verified_at</span><span class="kw">:</span><span class="at"> string</span></span></code></pre></div>
+<h3 id="102-rate-limiting-60">10.2 Rate Limiting (#60)</h3>
+<div class="sourceCode" id="cb29"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rate_limits</span><span class="kw">:</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">requests_per_minute</span><span class="kw">:</span><span class="at"> </span><span class="dv">60</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">requests_per_hour</span><span class="kw">:</span><span class="at"> </span><span class="dv">1000</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">concurrent_requests</span><span class="kw">:</span><span class="at"> </span><span class="dv">5</span></span></code></pre></div>
+<h3 id="103-danger-levels-49">10.3 Danger Levels (#49)</h3>
+<div class="sourceCode" id="cb30"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">operations</span><span class="kw">:</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">delete</span><span class="kw">:</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> delete_repo</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">maps_to</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;DELETE /repos/{owner}/{repo}&quot;</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">danger_level</span><span class="kw">:</span><span class="at"> destructive</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">requires_confirmation</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span></code></pre></div>
+<h3 id="104-pagination-37">10.4 Pagination (#37)</h3>
+<div class="sourceCode" id="cb31"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">operations</span><span class="kw">:</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">read</span><span class="kw">:</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> list_repos</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">maps_to</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;GET /users/{username}/repos&quot;</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">pagination</span><span class="kw">:</span></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">style</span><span class="kw">:</span><span class="at"> cursor | offset | page | link_header</span></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">param_name</span><span class="kw">:</span><span class="at"> page</span></span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">per_page_param</span><span class="kw">:</span><span class="at"> per_page</span></span></code></pre></div>
+<h3 id="105-field-selection">10.5 Field Selection</h3>
+<div class="sourceCode" id="cb32"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">operations</span><span class="kw">:</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">read</span><span class="kw">:</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> get_repo</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">maps_to</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;GET /repos/{owner}/{repo}&quot;</span></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">supports_fields</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">default_fields</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">id</span><span class="kw">,</span><span class="at"> name</span><span class="kw">,</span><span class="at"> full_name</span><span class="kw">,</span><span class="at"> description</span><span class="kw">]</span></span></code></pre></div>
+<hr />
+<h2 id="references">References</h2>
+<ul>
+<li><a href="../versions/v1.0.0-draft.html">MCP-AQL Specification</a></li>
+<li><a href="../plugin-contracts.html">Plugin Interface Contracts</a></li>
+<li><a href="trust-levels.html">Trust Levels Specification</a></li>
+<li><a href="danger-levels.html">Dangerous Operation Classification</a></li>
+<li><a href="rate-limiting.html">Rate Limiting Specification</a></li>
+<li><a href="../../adapter-reference/guides/development.html">Adapter Development Guide</a> (in mcpaql-adapter repo)</li>
+<li><a href="../../adapter-reference/architecture/runtime.html">Universal Adapter Runtime</a> (in mcpaql-adapter repo)</li>
+<li>GitHub Issue: <a href="https://github.com/MCPAQL/spec/issues/61">#61</a></li>
+</ul>
+
+          </div>
+        </section>
+        <nav class="page-nav" aria-label="Page navigation">
+  <a class="page-nav-link prev" href="discovery-bundle.html">
+    <span class="page-nav-eyebrow">Previous page</span>
+    <strong class="page-nav-label">MCP Server Discovery Bundle</strong>
+  </a>
+  <a class="page-nav-link next" href="generator.html">
+    <span class="page-nav-eyebrow">Next page</span>
+    <strong class="page-nav-label">Adapter Generator Specification</strong>
+  </a>
+</nav>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.</p>
+      <div class="footer-links">
+        <a href="../../docs/index.html">Docs Library</a><a href="../index.html">Repo-Synced Spec</a><a href="https://github.com/MCPAQL">MCPAQL Organization</a><a href="https://dollhouseresearch.com">Dollhouse Research</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../js/search.js"></script>
+</body>
+</html>

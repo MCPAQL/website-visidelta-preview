@@ -1,0 +1,11 @@
+Table of Contents
+Overview
+Schema Structure
+Canonical Format Rationale
+Required Fields
+Target Configuration
+Authentication
+Operations
+Parameter Types
+Example Adapter
+Future Extensions

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="MCP-AQL website and web API integration guidance.">
+  <title>Website Integration | MCP-AQL</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <a class="logo" href="../index.html"><span class="logo-mark"></span>MCP-AQL</a>
+        <ul class="nav-links">
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="../docs/index.html">Docs</a></li>
+          <li><a href="../launch-checklist.html">Launch Checklist</a></li>
+          <li><a href="index.html">Adapter Patterns</a></li>
+        </ul>
+        <form class="site-search" data-search-form data-index-url="../data/search-index.json" role="search">
+          <label class="sr-only" for="site-search-input">Search MCP-AQL docs</label>
+          <input id="site-search-input" data-search-input type="search" placeholder="Search MCP-AQL docs, spec pages, and adapter patterns...">
+          <span class="search-count" data-search-count></span>
+          <ul class="search-results" data-search-results hidden></ul>
+        </form>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container docs-shell">
+      <aside class="docs-side">
+        <h2>Adapter Patterns</h2>
+        <p class="docs-side-note">Use the overview to orient first, then compare the child pages to see how contract shape and safety posture change by target system.</p>
+        <ul>
+          <li><a href="index.html">Overview</a></li>
+          <li><a href="mcp-server.html">MCP Server</a></li>
+          <li><a href="application.html">Application</a></li>
+          <li><a href="cloud-service.html">Cloud Service</a></li>
+          <li><a href="operating-system.html">Operating System</a></li>
+          <li><a class="current" aria-current="page" href="website.html">Website / Web API</a></li>
+        </ul>
+      </aside>
+
+      <article class="docs-main">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+          <ol>
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="index.html">Adapter Patterns</a></li>
+            <li><span class="current">Website / Web API</span></li>
+          </ol>
+        </nav>
+
+        <section class="hero docs-hero api-hero">
+          <div class="hero-inner">
+            <span class="status-pill">DRAFT GUIDANCE - NO PUBLIC ADAPTER YET</span>
+            <h1>Website and Web API Flows</h1>
+            <p class="lede">Web integrations can use MCP-AQL as a stable command layer for retrieval, extraction, and structured actions across HTTP-facing systems.</p>
+            <p class="callout">This is conceptual guidance. A public website/web API adapter reference is not published yet.</p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="../docs/adapter-contracts.html">Adapter Contracts</a>
+              <a class="btn btn-secondary" href="../spec/features/field-selection.html">Field Selection Spec</a>
+            </div>
+          </div>
+        </section>
+
+        <section class="topic-bridge">
+          <h2 class="sr-only">Related reading</h2>
+          <div class="grid cols-2">
+            <article class="card">
+              <h3>Read the formal docs</h3>
+              <p>These references carry the deeper constraints behind read-heavy and action-heavy web integrations.</p>
+              <ul>
+                <li><a href="../docs/adapter-contracts.html">Adapter Contracts</a></li>
+                <li><a href="../spec/features/field-selection.html">Field Selection Specification</a></li>
+                <li><a href="../spec/error-codes.html">Structured Error Codes</a></li>
+                <li><a href="../spec/operations.html">Operations Specification</a></li>
+              </ul>
+            </article>
+            <article class="card">
+              <h3>Explore more patterns</h3>
+              <p>Use the neighboring patterns to compare web APIs with server, app, cloud, and OS command surfaces.</p>
+              <ul>
+                <li><a href="mcp-server.html">MCP Server</a></li>
+                <li><a href="application.html">Application</a></li>
+                <li><a href="cloud-service.html">Cloud Service</a></li>
+                <li><a href="operating-system.html">Operating System</a></li>
+              </ul>
+            </article>
+          </div>
+        </section>
+
+        <section>
+          <h2 class="section-title">When this pattern fits</h2>
+          <div class="grid cols-2">
+            <article class="card">
+              <h3>Best fit</h3>
+              <ul>
+                <li>The source surface mixes retrieval, parsing, and action execution across web pages or HTTP-facing APIs.</li>
+                <li>You want a stable contract above browser automation, scraping, or site-specific workflow code.</li>
+                <li>Field selection and clear read versus execute boundaries are important for cost and safety.</li>
+              </ul>
+            </article>
+            <article class="card">
+              <h3>Watch for</h3>
+              <ul>
+                <li>Read flows and state-changing actions being blurred into one generic operation surface.</li>
+                <li>Fragile selectors or page-specific assumptions leaking into operation semantics.</li>
+                <li>HTTP, page, and workflow failures that need better structured error normalization.</li>
+              </ul>
+            </article>
+          </div>
+        </section>
+
+        <section>
+          <h2 class="section-title">Design Guidance</h2>
+          <div class="grid cols-2">
+            <article class="card">
+              <h3>Read-Oriented Workflows</h3>
+              <ul>
+                <li>Model fetch and parse operations as explicit READ actions.</li>
+                <li>Document expected response shapes through introspection.</li>
+                <li>Use field-selection patterns to reduce payload size.</li>
+              </ul>
+            </article>
+            <article class="card">
+              <h3>Action-Oriented Workflows</h3>
+              <ul>
+                <li>Use EXECUTE operations for actions with side effects.</li>
+                <li>Gate destructive web actions with confirmation requirements.</li>
+                <li>Map HTTP failures to protocol-level structured errors.</li>
+              </ul>
+            </article>
+          </div>
+        </section>
+
+        <section>
+          <h2 class="section-title">Conceptual Example</h2>
+          <div class="card">
+            <pre class="code-box">{
+  "operation": "get_page_summary",
+  "params": {
+    "url": "https://mcpaql.org",
+    "format": "markdown"
+  }
+}</pre>
+          </div>
+        </section>
+
+        <section>
+          <div class="hero-actions">
+            <a class="btn btn-secondary" href="../docs/index.html">Back to docs library</a>
+            <a class="btn btn-secondary" href="../index.html">&larr; Back to portal</a>
+          </div>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.</p>
+      <div class="footer-links">
+        <a href="../docs/index.html">Documentation Library</a>
+        <a href="../index.html">Portal Home</a>
+        <a href="https://github.com/MCPAQL">MCPAQL Organization</a>
+        <a href="https://dollhouseresearch.com">Dollhouse Research</a>
+        <a href="https://github.com/DollhouseMCP/mcp-server">DollhouseMCP Production Profile</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../js/search.js"></script>
+</body>
+</html>

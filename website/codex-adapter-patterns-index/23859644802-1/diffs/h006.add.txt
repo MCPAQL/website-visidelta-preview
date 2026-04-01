@@ -1,0 +1,11 @@
+Use the overview to orient first, then compare the child pages to see how contract shape and safety posture change by target system.
+Overview
+When this pattern fits
+Best fit
+The source surface mixes retrieval, parsing, and action execution across web pages or HTTP-facing APIs.
+You want a stable contract above browser automation, scraping, or site-specific workflow code.
+Field selection and clear read versus execute boundaries are important for cost and safety.
+Watch for
+Read flows and state-changing actions being blurred into one generic operation surface.
+Fragile selectors or page-specific assumptions leaking into operation semantics.
+HTTP, page, and workflow failures that need better structured error normalization.

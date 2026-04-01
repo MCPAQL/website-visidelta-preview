@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Recent MCP-AQL draft changes and launch-relevant release notes pulled from the specification changelog.">
+  <title>MCP-AQL Docs | Release Notes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <a class="logo" href="../index.html"><span class="logo-mark"></span>MCP-AQL</a>
+        <ul class="nav-links">
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="index.html">Docs</a></li>
+          <li><a href="../launch-checklist.html">Launch Checklist</a></li>
+          <li><a href="../apis/mcp-server.html">Adapter Patterns</a></li>
+        </ul>
+        <form class="site-search" data-search-form data-index-url="../data/search-index.json" role="search">
+          <label class="sr-only" for="site-search-input">Search MCP-AQL docs</label>
+          <input id="site-search-input" data-search-input type="search" placeholder="Search MCP-AQL docs, spec pages, and adapter patterns...">
+          <span class="search-count" data-search-count></span>
+          <ul class="search-results" data-search-results hidden></ul>
+        </form>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container docs-shell">
+      <aside class="docs-side">
+        <h2>In This Library</h2>
+        <ul>
+          <li><a href="getting-started.html">Getting Started</a></li>
+          <li><a href="protocol-core.html">Protocol Core</a></li>
+          <li><a href="error-model.html">Error Model</a></li>
+          <li><a href="security-model.html">Security Model</a></li>
+          <li><a href="conformance.html">Conformance</a></li>
+          <li><a href="adapter-contracts.html">Adapter Contracts</a></li>
+          <li><a href="implementation-profiles.html">Implementation Profiles</a></li>
+          <li><a href="roadmap.html">Roadmap</a></li>
+          <li><a class="current" href="release-notes.html">Release Notes</a></li>
+        </ul>
+      </aside>
+
+      <article class="docs-main">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+          <ol>
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="index.html">Docs</a></li>
+            <li><span class="current">Release Notes</span></li>
+          </ol>
+        </nav>
+        <section class="hero docs-hero">
+          <div class="hero-inner">
+            <span class="status-pill">RELEASE NOTES</span>
+            <h1>Recent draft changes that affect public understanding</h1>
+            <p class="lede">
+              These notes summarize the most launch-relevant items from the spec changelog so the public website can reflect what changed
+              without requiring readers to scan the entire repository history.
+            </p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="../spec/repo/CHANGELOG.html">Full Changelog</a>
+              <a class="btn btn-secondary" href="https://github.com/MCPAQL/spec/issues/194">Release plan issue</a>
+            </div>
+          </div>
+        </section>
+
+        <nav class="page-nav" aria-label="Page navigation">
+          <a class="page-nav-link prev" href="roadmap.html">
+            <span class="page-nav-eyebrow">Previous page</span>
+            <strong class="page-nav-label">Roadmap</strong>
+          </a>
+          <a class="page-nav-link next" href="../spec/index.html">
+            <span class="page-nav-eyebrow">Next page</span>
+            <strong class="page-nav-label">Full Spec Reference</strong>
+          </a>
+        </nav>
+
+        <section class="topic-bridge">
+          <h2 class="sr-only">Related reading</h2>
+          <div class="grid cols-2">
+            <article class="card">
+              <h3>Go Deeper In The Full Spec</h3>
+              <p>The on-site changelog and process pages carry the detailed history behind the launch-facing notes on this page.</p>
+              <ul>
+                <li><a href="../spec/repo/CHANGELOG.html">Full Changelog</a></li>
+                <li><a href="../spec/process/versioning.html">Versioning Strategy</a></li>
+                <li><a href="../spec/process/preliminary-public-launch-checklist.html">Launch Checklist Source</a></li>
+                <li><a href="../spec/index.html">Browse the full spec reference</a></li>
+              </ul>
+            </article>
+            <article class="card">
+              <h3>Related Summary Pages</h3>
+              <p>Release context is easiest to read alongside the roadmap and public launch controls.</p>
+              <ul>
+                <li><a href="roadmap.html">Roadmap</a></li>
+                <li><a href="../launch-checklist.html">Launch Checklist</a></li>
+                <li><a href="implementation-profiles.html">Implementation Profiles</a></li>
+                <li><a href="index.html">Back to the docs library</a></li>
+              </ul>
+            </article>
+          </div>
+        </section>
+
+        <section>
+          <h2 class="section-title">Recent highlights</h2>
+          <div class="grid cols-2">
+            <article class="card">
+              <h3>Launch framing clarified</h3>
+              <ul>
+                <li>README and draft status language now explicitly frame MCP-AQL as a preliminary public draft.</li>
+                <li>Normative versus informative document boundaries were tightened across the spec docs.</li>
+                <li>A coordinated preliminary launch checklist was added for spec and reference-profile messaging.</li>
+              </ul>
+            </article>
+            <article class="card">
+              <h3>Safety model expanded</h3>
+              <ul>
+                <li>Execution safety loop, safety-dongle model, autonomy evaluator, and out-of-band verification are now documented.</li>
+                <li>Section 9 compliance mappings were expanded to better align informative safety docs to normative requirements.</li>
+                <li><a href="https://github.com/MCPAQL/spec/issues/216">Issue #216</a> remains the audit record for that alignment work.</li>
+              </ul>
+            </article>
+            <article class="card">
+              <h3>Operational contracts hardened</h3>
+              <ul>
+                <li>Unknown parameter rejection and structured error examples were added to reduce LLM ambiguity.</li>
+                <li>Canonical operation verbs and session lifecycle guidance were made more explicit.</li>
+                <li>Batch confirmation behavior and payload-size constraints were documented.</li>
+              </ul>
+            </article>
+            <article class="card">
+              <h3>Still open for draft launch</h3>
+              <ul>
+                <li><a href="https://github.com/MCPAQL/spec/issues/193">#193 MCP capability audit</a></li>
+                <li><a href="https://github.com/MCPAQL/spec/issues/197">#197 batch size and resource protections</a></li>
+                <li><a href="https://github.com/MCPAQL/spec/issues/199">#199 structured error surface alignment</a></li>
+              </ul>
+            </article>
+          </div>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.</p>
+      <div class="footer-links">
+        <a href="index.html">Docs Library</a>
+        <a href="../index.html">Portal Home</a>
+        <a href="https://github.com/MCPAQL">MCPAQL Organization</a>
+        <a href="https://dollhouseresearch.com">Dollhouse Research</a>
+        <a href="https://github.com/DollhouseMCP/mcp-server">DollhouseMCP Production Profile</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../js/search.js"></script>
+</body>
+</html>

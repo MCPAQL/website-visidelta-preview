@@ -1,0 +1,11 @@
+Use the overview to orient first, then compare the child pages to see how contract shape and safety posture change by target system.
+Overview
+When this pattern fits
+Best fit
+The upstream system already exposes MCP tools or tool-like operations.
+You want runtime discovery to remain central instead of freezing a large static tool surface.
+You need a clear path from interrogated MCP behavior into a spec-aligned adapter contract.
+Watch for
+Operation naming or parameter drift between upstream descriptions and adapter output.
+Tools with unclear side effects that need better CREATE, UPDATE, DELETE, or EXECUTE classification.
+Discovery artifacts that can fall out of sync with the normative draft if generation is loose.

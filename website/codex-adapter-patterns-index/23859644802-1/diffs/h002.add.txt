@@ -1,0 +1,11 @@
+Use the overview to orient first, then compare the child pages to see how contract shape and safety posture change by target system.
+Overview
+When this pattern fits
+Best fit
+The source system is a remote API where quotas, retries, and pagination shape the user experience.
+You need a contract that normalizes provider transport details into stable operations.
+Structured errors and explicit rate-limit posture are central design concerns.
+Watch for
+Provider-specific failures leaking through without clean protocol-level mapping.
+Read-heavy list operations that need pagination and field-selection discipline.
+Batch or fan-out behavior that can amplify cost or exhaust quotas unexpectedly.

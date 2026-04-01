@@ -1,0 +1,2 @@
+The introspection system is required for runtime capability discovery and is central to reducing up-front tool-definition token load.
+Clients query operations, parameters, and element types on demand instead of loading static schema sprawl into context.

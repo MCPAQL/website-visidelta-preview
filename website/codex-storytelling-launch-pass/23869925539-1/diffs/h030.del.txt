@@ -1,0 +1,6 @@
+Implementations classify requester trust and apply policy gates before operation dispatch. The exact trust taxonomy is adapter-defined,
+but the enforcement pattern is protocol-aligned: low-trust contexts default toward read-only or restricted mutations.
+Confirmation Handshake
+For destructive or high-impact operations, adapters can require a confirmation token round-trip so intent is explicit and auditable.
+Stateful execute flows must support lifecycle controls (start, continue, complete, abort) and maintain safe transitions.
+Session-bound controls should prevent stale token reuse or operation drift across disconnected contexts.

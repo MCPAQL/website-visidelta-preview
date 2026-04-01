@@ -1,0 +1,18 @@
+Why semantic endpoints matter
+MCP tool calls are structurally flat
+In plain MCP, all tools share the same call shape. A reader, client, or policy system cannot reliably distinguish
+get_user from drop_database without inspecting descriptions and guessing from naming.
+MCP-AQL makes intent structural
+In MCP-AQL, the endpoint is part of the contract. READ declares side-effect-free behavior,
+DELETE declares destructive intent, and EXECUTE declares a lifecycle or stateful flow.
+The CRUDE model is not just an organizational convenience. It gives clients, LLMs, and policy systems protocol-level safety
+hints without relying on author-written descriptions.
+Why it changes the economics
+MCP clients often learn everything up front by loading tool definitions at connection time. MCP-AQL keeps the endpoint surface tiny
+and moves operation discovery into introspect , so the client only pays for the details it actually needs.
+Typical discovery path
+"params": {
+"query": "operations",
+"name": "create_user"
+The spec models this pattern as about 50 tokens to list operations and about 100 tokens
+to fetch the details for one relevant operation.

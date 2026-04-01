@@ -1,0 +1,14 @@
+MCP-AQL consolidates many discrete MCP tools into a small semantic endpoint surface while preserving runtime discovery.
+The result is less registration overhead, clearer routing, and a more scalable contract for agent-driven systems.
+Why teams look at it
+Use the website-hosted source pages when you want the actual protocol text instead of the onboarding summary.
+Once the framing is clear, the next useful stops are the rules pages and the launch-readiness views.
+or a single routed endpoint. It keeps introspect mandatory, treats the versioned spec as canonical, and positions
+production profiles like DollhouseMCP as practical references rather than the definition of the protocol.
+Lower token overhead
+Instead of loading dozens of tool definitions, clients can register five semantic endpoints or one unified endpoint.
+Runtime discovery
+Clients discover operations, parameters, and types on demand with introspect .
+Better public contracts
+CRUDE classification, structured responses, and spec-linked docs make compatibility claims easier to inspect.
+Use Protocol Core for routing, request shape, and endpoint semantics.

@@ -1,0 +1,57 @@
+MVP error code registry
+Concrete error examples
+Client handling guidance
+How adapter-specific failures map in
+Category
+VALIDATION_MISSING_PARAM
+Validation
+Required parameter not provided
+VALIDATION_INVALID_TYPE
+Parameter value does not match the expected type
+VALIDATION_UNKNOWN_PARAM
+Request contains a parameter outside the declared schema
+NOT_FOUND_OPERATION
+Not Found
+Requested operation does not exist
+NOT_FOUND_RESOURCE
+Target resource does not exist
+PERMISSION_DENIED
+Permission
+Caller lacks the required authorization
+CONFIRMATION_REQUIRED
+Operation is denied pending explicit confirmation
+INTERNAL_ERROR
+Internal
+Unexpected server or adapter failure
+Validation error
+"message": "Missing required parameter 'owner'",
+"details": {
+"param_name": "owner"
+Not-found error
+"code": "NOT_FOUND_RESOURCE",
+"message": "Repository 'acme/widgets' not found",
+"resource_type": "repository",
+"resource_id": "acme/widgets"
+Permission error
+"code": "PERMISSION_DENIED",
+"message": "Operation 'delete_user' is not allowed for this caller",
+"operation": "delete_user"
+Internal error
+"code": "INTERNAL_ERROR",
+"message": "Unexpected adapter failure",
+"request_id": "req_7f1d"
+Branch on error.code
+Use the code for programmatic behavior: retry policy, UI state, escalation path, and whether a client should fix the request
+or stop execution entirely.
+VALIDATION_* : repair the request
+NOT_FOUND_* : stop or ask the user to choose another target
+PERMISSION_* : request credentials or confirmation
+INTERNAL_* : surface a server-side fault and preserve request context
+Display error.message to humans
+The message is for logs, dashboards, and human-visible explanations. It can be localized or rewritten without breaking the
+client's recovery logic because the recovery key is the code.
+Adapters do not expose raw target-system failures as their public contract. They translate them into the MCP-AQL registry and
+preserve target-specific context in error.details when it helps recovery.
+Target API 404s should map to NOT_FOUND_RESOURCE
+Target permission failures should map to PERMISSION_DENIED or CONFIRMATION_REQUIRED
+Unexpected downstream failures should map to INTERNAL_ERROR with request context preserved in details

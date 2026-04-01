@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>VisiDelta</title>
+    <style>
+      body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; margin: 1.25rem; color: #111827; }
+      h1 { margin: 0 0 0.5rem; }
+      p { margin: 0 0 1rem; color: #374151; }
+      table { border-collapse: collapse; width: 100%; max-width: 70rem; }
+      th, td { border-bottom: 1px solid #e5e7eb; padding: 0.55rem; text-align: left; font-size: 0.95rem; }
+      th { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em; color: #6b7280; }
+      a { color: #1d4ed8; text-decoration: none; margin-right: 0.65rem; }
+      a:hover { text-decoration: underline; }
+      code { background: #f3f4f6; padding: 0.08rem 0.28rem; border-radius: 0.25rem; }
+    </style>
+  </head>
+  <body>
+    <h1>VisiDelta</h1>
+    <p>Compare <code>old</code> (base) vs <code>new</code> (current branch) as rendered pages.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Source file</th>
+          <th>Route</th>
+          <th>Links</th>
+        </tr>
+      </thead>
+      <tbody id="rows"></tbody>
+    </table>
+    <script>
+      fetch("./routes.json")
+        .then((r) => r.json())
+        .then((items) => {
+          const tbody = document.getElementById("rows");
+          for (const item of items) {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+              <td><code>${item.file}</code></td>
+              <td><code>${item.route}</code></td>
+              <td>
+                <a href="./viewer.html?path=${encodeURIComponent(item.route)}" target="_blank" rel="noopener">Compare</a>
+                <a href="./old${item.route}" target="_blank" rel="noopener">Old</a>
+                <a href="./new${item.route}" target="_blank" rel="noopener">New</a>
+              </td>
+            `;
+            tbody.appendChild(tr);
+          }
+        });
+    </script>
+  </body>
+</html>

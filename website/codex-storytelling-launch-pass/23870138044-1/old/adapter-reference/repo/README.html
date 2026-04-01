@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Reference implementation for MCP-AQL (Model Context Protocol - Advanced Agent API Adapter Query Language) adapters.">
+  <title>MCP-AQL Adapter Reference | MCP-AQL Reference Adapter</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <a class="logo" href="../../index.html"><span class="logo-mark"></span>MCP-AQL</a>
+        <ul class="nav-links">
+          <li><a href="../../index.html">Home</a></li>
+          <li><a href="../../docs/index.html">Docs</a></li>
+          <li><a href="../../launch-checklist.html">Launch Checklist</a></li>
+          <li><a href="../../apis/index.html">Adapter Patterns</a></li>
+        </ul>
+        <form class="site-search" data-search-form data-index-url="../../data/search-index.json" role="search">
+          <label class="sr-only" for="site-search-input">Search MCP-AQL docs</label>
+          <input id="site-search-input" data-search-input type="search" placeholder="Search MCP-AQL docs, spec pages, and adapter patterns...">
+          <span class="search-count" data-search-count></span>
+          <ul class="search-results" data-search-results hidden></ul>
+        </form>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container docs-shell">
+      <aside class="docs-side">
+        <h2>Reference Adapter Docs</h2>
+        <p class="docs-side-note">Generated from <code>MCPAQL/mcpaql-adapter</code> so the website carries the implementation architecture, guides, and ADRs too.</p>
+        <div class="docs-side-group">
+  <h3>Overview</h3>
+  <ul><li><a class="current" aria-current="page" href="README.html">MCP-AQL Reference Adapter</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Architecture</h3>
+  <ul><li><a href="../architecture/dispatch.html">Schema-Driven Dispatch</a></li><li><a href="../architecture/overview.html">MCP-AQL Architecture Overview</a></li><li><a href="../architecture/plugin-system.html">Plugin System Implementation</a></li><li><a href="../architecture/runtime.html">Universal Adapter Runtime Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Guides</h3>
+  <ul><li><a href="../guides/development.html">MCP-AQL Adapter Development Guide</a></li><li><a href="../guides/migration.html">Migration Guide: MCP Server to MCP-AQL Adapter</a></li><li><a href="../guides/testing.html">MCP-AQL Adapter Testing Guide</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>ADRs</h3>
+  <ul><li><a href="../adr/ADR-001-plugin-pipeline-order.html">ADR-001: Plugin Pipeline Order</a></li><li><a href="../adr/ADR-002-schema-driven-dispatch.html">ADR-002: Schema-Driven Dispatch over Code Generation</a></li><li><a href="../adr/ADR-003-stateless-plugins.html">ADR-003: Stateless Singleton Plugins</a></li><li><a href="../adr/README.html">Architecture Decision Records</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Examples</h3>
+  <ul><li><a href="../examples/README.html">Examples</a></li></ul>
+</div>
+      </aside>
+
+      <article class="docs-main">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+          <ol>
+            <li><a href="../../index.html">Home</a></li>
+            <li><a href="../../apis/index.html">Adapter Patterns</a></li><li><a href="../index.html">Reference Adapter Docs</a></li>
+            <li><span class="current">MCP-AQL Reference Adapter</span></li>
+          </ol>
+        </nav>
+        <section class="hero docs-hero">
+          <div class="hero-inner">
+            <span class="status-pill">REPO-SYNCED ADAPTER DOC</span>
+            <h1>MCP-AQL Reference Adapter</h1>
+            <p class="lede">Reference implementation for MCP-AQL (Model Context Protocol - Advanced Agent API Adapter Query Language) adapters.</p>
+            <div class="spec-meta"><span class="state-chip live">Repository source</span></div>
+            <p class="spec-source">Source: <a href="https://github.com/MCPAQL/mcpaql-adapter/blob/main/README.md">mcpaql-adapter/README.md</a></p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="https://github.com/MCPAQL/mcpaql-adapter/blob/main/README.md">Open Source Markdown</a><a class="btn btn-secondary" href="../index.html">Browse Reference Adapter Docs</a><a class="btn btn-secondary" href="../../apis/index.html">Adapter Patterns Hub</a>
+            </div>
+          </div>
+        </section>
+
+        <section class="page-toc-shell" data-page-toc>
+          <div class="card page-toc-card">
+            <div class="page-toc-head">
+              <p class="page-toc-kicker">On this page</p>
+              <h2>Jump to a section</h2>
+              <p class="page-toc-intro">Use the outline to move through longer pages without losing your place.</p>
+            </div>
+            <ol class="page-toc-list" data-page-toc-list>
+              <li class="page-toc-item level-2"><a href="#purpose" data-toc-target="purpose">Purpose</a></li><li class="page-toc-item level-2"><a href="#documentation" data-toc-target="documentation">Documentation</a></li><li class="page-toc-item level-3"><a href="#architecture" data-toc-target="architecture">Architecture</a></li><li class="page-toc-item level-3"><a href="#guides" data-toc-target="guides">Guides</a></li><li class="page-toc-item level-3"><a href="#architecture-decision-records" data-toc-target="architecture-decision-records">Architecture Decision Records</a></li><li class="page-toc-item level-3"><a href="#examples" data-toc-target="examples">Examples</a></li><li class="page-toc-item level-2"><a href="#relationship-to-spec" data-toc-target="relationship-to-spec">Relationship to Spec</a></li><li class="page-toc-item level-2"><a href="#related-repositories" data-toc-target="related-repositories">Related Repositories</a></li><li class="page-toc-item level-2"><a href="#license" data-toc-target="license">License</a></li>
+            </ol>
+          </div>
+        </section>
+
+
+        <section>
+          <div class="card spec-prose">
+            <p>Reference implementation for MCP-AQL (Model Context Protocol - Advanced Agent API Adapter Query Language) adapters.</p>
+<h2 id="purpose">Purpose</h2>
+<p>This repository contains the <strong>implementation architecture documentation</strong> and reference adapter code for the MCP-AQL protocol. It provides:</p>
+<ul>
+<li>Implementation guidance for building MCP-AQL adapters</li>
+<li>Architecture documentation for the universal adapter runtime</li>
+<li>Plugin system implementation details</li>
+<li>Development guides and patterns</li>
+</ul>
+<p>For <strong>normative protocol specifications</strong> (wire format, schema semantics, interface contracts), see the <a href="https://github.com/MCPAQL/spec">spec repository</a>.</p>
+<h2 id="documentation">Documentation</h2>
+<h3 id="architecture">Architecture</h3>
+<table>
+<thead>
+<tr>
+<th>Document</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../architecture/overview.html">Architecture Overview</a></td>
+<td>How adapters work internally</td>
+</tr>
+<tr>
+<td><a href="../architecture/runtime.html">Universal Runtime</a></td>
+<td>Schema interpreter execution engine</td>
+</tr>
+<tr>
+<td><a href="../architecture/plugin-system.html">Plugin System</a></td>
+<td>Plugin composition and MVP implementations</td>
+</tr>
+<tr>
+<td><a href="../architecture/dispatch.html">Schema-Driven Dispatch</a></td>
+<td>Declarative operation dispatch pattern</td>
+</tr>
+</tbody>
+</table>
+<h3 id="guides">Guides</h3>
+<table>
+<thead>
+<tr>
+<th>Document</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../guides/development.html">Development Guide</a></td>
+<td>How to build MCP-AQL adapters</td>
+</tr>
+<tr>
+<td><a href="../guides/testing.html">Testing Guide</a></td>
+<td>Testing patterns for adapters</td>
+</tr>
+<tr>
+<td><a href="../guides/migration.html">Migration Guide</a></td>
+<td>Migrating from MCP server to MCP-AQL adapter</td>
+</tr>
+</tbody>
+</table>
+<h3 id="architecture-decision-records">Architecture Decision Records</h3>
+<table>
+<thead>
+<tr>
+<th>ADR</th>
+<th>Title</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../adr/ADR-001-plugin-pipeline-order.html">ADR-001</a></td>
+<td>Plugin Pipeline Order</td>
+</tr>
+<tr>
+<td><a href="../adr/ADR-002-schema-driven-dispatch.html">ADR-002</a></td>
+<td>Schema-Driven Dispatch over Code Generation</td>
+</tr>
+<tr>
+<td><a href="../adr/ADR-003-stateless-plugins.html">ADR-003</a></td>
+<td>Stateless Singleton Plugins</td>
+</tr>
+</tbody>
+</table>
+<h3 id="examples">Examples</h3>
+<table>
+<thead>
+<tr>
+<th>Example</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://github.com/MCPAQL/mcpaql-adapter/blob/main/examples/minimal-adapter.ts">Minimal Adapter</a></td>
+<td>Bare-minimum adapter with introspection</td>
+</tr>
+<tr>
+<td><a href="https://github.com/MCPAQL/mcpaql-adapter/blob/main/examples/user-management-adapter.ts">User Management</a></td>
+<td>Full CRUDE adapter with all endpoints</td>
+</tr>
+</tbody>
+</table>
+<h2 id="relationship-to-spec">Relationship to Spec</h2>
+<p>This repository contains <strong>Level 4 content</strong> (implementation guidance) from the MCP-AQL four-level protocol model:</p>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>What</th>
+<th>Lives in</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. Wire format</td>
+<td>Request/response JSON, error codes, introspection</td>
+<td><a href="https://github.com/MCPAQL/spec">spec</a></td>
+</tr>
+<tr>
+<td>2. Schema semantics</td>
+<td>Operation declarations, params, auth, target</td>
+<td><a href="https://github.com/MCPAQL/spec">spec</a></td>
+</tr>
+<tr>
+<td>3. Canonical format</td>
+<td>Markdown + YAML front matter interchange format</td>
+<td><a href="https://github.com/MCPAQL/spec">spec</a></td>
+</tr>
+<tr>
+<td>4. Implementation guidance</td>
+<td>Runtime architecture, plugin pipeline, dispatch</td>
+<td><strong>this repo</strong></td>
+</tr>
+</tbody>
+</table>
+<h2 id="related-repositories">Related Repositories</h2>
+<table>
+<thead>
+<tr>
+<th>Repository</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://github.com/MCPAQL/spec">spec</a></td>
+<td>Protocol specification, schemas, conformance tests</td>
+</tr>
+<tr>
+<td><a href="https://github.com/MCPAQL/examples">examples</a></td>
+<td>Example adapter configurations</td>
+</tr>
+<tr>
+<td><a href="https://github.com/MCPAQL/adapter-generator">adapter-generator</a></td>
+<td>Tool to generate adapters from API specs</td>
+</tr>
+</tbody>
+</table>
+<h2 id="license">License</h2>
+<ul>
+<li><strong>Documentation</strong>: CC BY 4.0</li>
+<li><strong>Code/schemas/tests</strong>: AGPL-3.0</li>
+</ul>
+<p>See <a href="https://github.com/MCPAQL/mcpaql-adapter/blob/main/LICENSING.md">LICENSING</a> for details.</p>
+
+          </div>
+        </section>
+        <nav class="page-nav" aria-label="Page navigation">
+  <a class="page-nav-link prev" href="../index.html">
+    <span class="page-nav-eyebrow">Reference overview</span>
+    <strong class="page-nav-label">Reference Adapter Docs</strong>
+  </a>
+  <a class="page-nav-link next" href="../architecture/dispatch.html">
+    <span class="page-nav-eyebrow">Next page</span>
+    <strong class="page-nav-label">Schema-Driven Dispatch</strong>
+  </a>
+</nav>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.</p>
+      <div class="footer-links">
+        <a href="../../apis/index.html">Adapter Patterns</a><a href="../index.html">Reference Adapter Docs</a><a href="https://github.com/MCPAQL/mcpaql-adapter">Reference Adapter Repo</a><a href="https://dollhouseresearch.com">Dollhouse Research</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../js/search.js"></script>
+</body>
+</html>

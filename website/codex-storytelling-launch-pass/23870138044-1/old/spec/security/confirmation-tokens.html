@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="This document specifies the confirmation token mechanism used by MCP-AQL adapters to gate dangerous operations and quota continuations. Confirmation tokens provide a secure, time-limited method for clients to acknowledge">
+  <title>MCP-AQL Spec | Confirmation Token Specification</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <a class="logo" href="../../index.html"><span class="logo-mark"></span>MCP-AQL</a>
+        <ul class="nav-links">
+          <li><a href="../../index.html">Home</a></li>
+          <li><a href="../../docs/index.html">Docs</a></li>
+          <li><a href="../../launch-checklist.html">Launch Checklist</a></li>
+          <li><a href="../../apis/index.html">Adapter Patterns</a></li>
+        </ul>
+        <form class="site-search" data-search-form data-index-url="../../data/search-index.json" role="search">
+          <label class="sr-only" for="site-search-input">Search MCP-AQL docs</label>
+          <input id="site-search-input" data-search-input type="search" placeholder="Search MCP-AQL docs, spec pages, and adapter patterns...">
+          <span class="search-count" data-search-count></span>
+          <ul class="search-results" data-search-results hidden></ul>
+        </form>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container docs-shell">
+      <aside class="docs-side">
+        <h2>Repo-Synced Spec</h2>
+        <p class="docs-side-note">Generated from <code>MCPAQL/spec</code> so the website carries the deeper protocol material too.</p>
+        <div class="docs-side-group">
+  <h3>Core</h3>
+  <ul><li><a href="../conformance-testing.html">MCP-AQL Conformance Testing Specification</a></li><li><a href="../crude-pattern.html">MCP-AQL CRUDE Pattern Specification</a></li><li><a href="../endpoint-modes.html">MCP-AQL Endpoint Modes Specification</a></li><li><a href="../error-codes.html">Structured Error Codes Specification</a></li><li><a href="../introspection.html">MCP-AQL Introspection Specification</a></li><li><a href="../licensing-options.html">MCP-AQL Licensing Options (Working Notes)</a></li><li><a href="../mcp-integration.html">MCP Integration Specification</a></li><li><a href="../operations.html">MCP-AQL Operations Specification</a></li><li><a href="../overview.html">MCP-AQL Protocol Overview</a></li><li><a href="../plugin-contracts.html">Plugin Interface Contracts</a></li><li><a href="../README.html">MCP-AQL Specification Documentation</a></li><li><a href="../repo/README.html">MCP-AQL Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Versions</h3>
+  <ul><li><a href="../versions/v1.0.0-draft.html">MCP-AQL Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Adapter</h3>
+  <ul><li><a href="../adapter/danger-levels.html">Dangerous Operation Classification Specification</a></li><li><a href="../adapter/discovery-bundle.html">MCP Server Discovery Bundle</a></li><li><a href="../adapter/element-type.html">Adapter Element Type Specification</a></li><li><a href="../adapter/generator.html">Adapter Generator Specification</a></li><li><a href="../adapter/rate-limiting.html">Rate Limiting and Quota Management Specification</a></li><li><a href="../adapter/trust-levels.html">Trust Levels Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Security</h3>
+  <ul><li><a class="current" aria-current="page" href="confirmation-tokens.html">Confirmation Token Specification</a></li><li><a href="execution-safety-loop.html">Execution Safety Loop Specification</a></li><li><a href="gatekeeper.html">Security Model: Gatekeeper Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Features</h3>
+  <ul><li><a href="../features/field-selection.html">Field Selection Specification</a></li><li><a href="../features/pagination.html">Cursor-Based Pagination Specification</a></li><li><a href="../features/warnings.html">Warnings Array Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Guides</h3>
+  <ul><li><a href="../guides/protocol-comparison.html">Protocol Comparison Guide</a></li><li><a href="../guides/README.html">Developer Guides</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Process</h3>
+  <ul><li><a href="../process/breaking-changes.html">MCP-AQL Breaking Change Policy</a></li><li><a href="../process/preliminary-public-launch-checklist.html">Preliminary Public Launch Checklist</a></li><li><a href="../process/rfc-process.html">RFC Process for MCP-AQL Specification</a></li><li><a href="../process/versioning.html">Versioning Strategy</a></li><li><a href="../repo/CHANGELOG.html">Changelog</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Architecture</h3>
+  <ul><li><a href="../architecture/README.html">Architecture Documentation</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Research</h3>
+  <ul><li><a href="../research/mcp-vs-mcpaql-vs-a2a.html">Protocol Landscape: MCP vs MCP-AQL vs A2A</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Reference</h3>
+  <ul><li><a href="../reference/README.html">Reference Documentation</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>ADRs</h3>
+  <ul><li><a href="../adr/ADR-001-crude-pattern.html">ADR-001: CRUDE Pattern (Extending CRUD with Execute)</a></li><li><a href="../adr/ADR-002-graphql-style-input.html">ADR-002: GraphQL-Style Input Objects for Updates</a></li><li><a href="../adr/ADR-003-snake-case-parameters.html">ADR-003: snake_case Parameter Convention</a></li><li><a href="../adr/ADR-004-schema-driven-operations.html">ADR-004: Schema-Driven Operation Definitions</a></li><li><a href="../adr/ADR-005-introspection-system.html">ADR-005: GraphQL-Style Introspection System</a></li><li><a href="../adr/ADR-006-discriminated-responses.html">ADR-006: Discriminated Response Format</a></li><li><a href="../adr/index.html">Architecture Decision Records</a></li><li><a href="../adr/README.html">Architecture Decision Records</a></li></ul>
+</div>
+      </aside>
+
+      <article class="docs-main">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+          <ol>
+            <li><a href="../../index.html">Home</a></li>
+            <li><a href="../index.html">Full Spec</a></li>
+            <li><span class="current">Confirmation Token Specification</span></li>
+          </ol>
+        </nav>
+        <section class="hero docs-hero">
+          <div class="hero-inner">
+            <span class="status-pill">REPO-SYNCED SPEC DOC</span>
+            <h1>Confirmation Token Specification</h1>
+            <p class="lede">This document specifies the confirmation token mechanism used by MCP-AQL adapters to gate dangerous operations and quota continuations. Confirmation tokens provide a secure, time-limited method for clients to acknowledge</p>
+            <div class="spec-meta"><span class="state-chip live">Support document</span><span class="state-chip pending">Draft</span><span class="state-chip">1.0.0-draft</span><span class="state-chip">2026-01-28</span></div>
+            <p class="spec-source">Source: <a href="https://github.com/MCPAQL/spec/blob/main/docs/security/confirmation-tokens.md">spec/docs/security/confirmation-tokens.md</a></p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="https://github.com/MCPAQL/spec/blob/main/docs/security/confirmation-tokens.md">Open Source Markdown</a><a class="btn btn-secondary" href="../index.html">Browse Full Spec Reference</a>
+            </div>
+          </div>
+        </section>
+
+        <section class="page-toc-shell" data-page-toc>
+          <div class="card page-toc-card">
+            <div class="page-toc-head">
+              <p class="page-toc-kicker">On this page</p>
+              <h2>Jump to a section</h2>
+              <p class="page-toc-intro">Use the outline to move through longer pages without losing your place.</p>
+            </div>
+            <ol class="page-toc-list" data-page-toc-list>
+              <li class="page-toc-item level-2"><a href="#abstract" data-toc-target="abstract">Abstract</a></li><li class="page-toc-item level-2"><a href="#1-overview" data-toc-target="1-overview">1. Overview</a></li><li class="page-toc-item level-2"><a href="#2-token-format" data-toc-target="2-token-format">2. Token Format</a></li><li class="page-toc-item level-2"><a href="#3-token-generation" data-toc-target="3-token-generation">3. Token Generation</a></li><li class="page-toc-item level-2"><a href="#4-token-validation" data-toc-target="4-token-validation">4. Token Validation</a></li><li class="page-toc-item level-2"><a href="#5-token-lifecycle" data-toc-target="5-token-lifecycle">5. Token Lifecycle</a></li><li class="page-toc-item level-2"><a href="#6-security-considerations" data-toc-target="6-security-considerations">6. Security Considerations</a></li><li class="page-toc-item level-2"><a href="#7-implementation-requirements" data-toc-target="7-implementation-requirements">7. Implementation Requirements</a></li><li class="page-toc-item level-2"><a href="#references" data-toc-target="references">References</a></li>
+            </ol>
+          </div>
+        </section>
+
+
+        <section>
+          <div class="card spec-prose">
+            <p><strong>Version:</strong> 1.0.0-draft <strong>Status:</strong> Draft <strong>Last Updated:</strong> 2026-01-28</p>
+<h2 id="abstract">Abstract</h2>
+<p>This document specifies the confirmation token mechanism used by MCP-AQL adapters to gate dangerous operations and quota continuations. Confirmation tokens provide a secure, time-limited method for clients to acknowledge and proceed with operations that require explicit consent.</p>
+<hr />
+<h2 id="1-overview">1. Overview</h2>
+<h3 id="11-purpose">1.1 Purpose</h3>
+<p>Confirmation tokens serve as cryptographic proof that a client has acknowledged a warning and explicitly consents to proceed with a gated operation. They are used in two primary contexts:</p>
+<ul>
+<li><strong>Dangerous operation confirmation</strong> - Operations requiring explicit consent due to their danger level (see <a href="../adapter/danger-levels.html">Dangerous Operation Classification</a>)</li>
+<li><strong>Quota continuation</strong> - Proceeding past soft quota limits (see <a href="../adapter/rate-limiting.html">Rate Limiting Specification</a>)</li>
+</ul>
+<h3 id="12-design-principles">1.2 Design Principles</h3>
+<ol type="1">
+<li><strong>Single-use by default</strong> - Tokens SHOULD be consumed upon successful use</li>
+<li><strong>Time-bounded</strong> - Tokens MUST have an expiration time</li>
+<li><strong>Scope-bound</strong> - Tokens are tied to a specific operation and parameters</li>
+<li><strong>Tamper-resistant</strong> - Tokens cannot be forged or modified by clients</li>
+<li><strong>Auditable</strong> - Token issuance and redemption are logged</li>
+</ol>
+<h3 id="13-token-flow">1.3 Token Flow</h3>
+<pre><code>Client Request
+      │
+      ▼
+┌─────────────────┐
+│ Gatekeeper      │
+│ (confirmation   │
+│  required)      │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐     Token + Expiry
+│ Issue Token     │─────────────────────► Client
+└─────────────────┘
+
+Client Retry (with token)
+      │
+      ▼
+┌─────────────────┐
+│ Validate Token  │
+│ (scope, expiry, │
+│  single-use)    │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│ Execute         │
+│ Operation       │
+└─────────────────┘</code></pre>
+<hr />
+<h2 id="2-token-format">2. Token Format</h2>
+<h3 id="21-token-structure">2.1 Token Structure</h3>
+<p>Tokens are opaque strings with a prefix indicating their purpose:</p>
+<table>
+<thead>
+<tr>
+<th>Prefix</th>
+<th>Purpose</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>conf_</code></td>
+<td>Dangerous operation confirmation</td>
+<td><code>conf_a1b2c3d4e5f6g7h8</code></td>
+</tr>
+<tr>
+<td><code>quota_continue_</code></td>
+<td>Quota pause continuation</td>
+<td><code>quota_continue_def456</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="22-token-syntax">2.2 Token Syntax</h3>
+<pre><code>token = prefix &quot;_&quot; identifier
+prefix = &quot;conf&quot; | &quot;quota_continue&quot;
+identifier = 1*64(ALPHA / DIGIT / &quot;_&quot; / &quot;-&quot;)</code></pre>
+<p><strong>Constraints:</strong></p>
+<ul>
+<li>Total token length: 8-80 characters</li>
+<li>Identifier: URL-safe characters only (alphanumeric, underscore, hyphen)</li>
+<li>Case-sensitive</li>
+</ul>
+<h3 id="23-token-payload-internal">2.3 Token Payload (Internal)</h3>
+<p>While tokens are opaque to clients, implementations SHOULD encode or reference:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> TokenPayload {</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** Token identifier - the full token string including prefix (e.g., &#39;conf_abc123xyz789&#39;) */</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  id<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** Purpose of the token */</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  type<span class="op">:</span> <span class="st">&#39;confirmation&#39;</span> <span class="op">|</span> <span class="st">&#39;quota_continue&#39;</span><span class="op">;</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** Operation this token gates */</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  operation<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** Hash of bound parameters (prevents parameter tampering) */</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  params_hash<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** Adapter that issued the token */</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  adapter_name<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** Issuance timestamp (ISO 8601) */</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  issued_at<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** Expiration timestamp (ISO 8601) */</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>  expires_at<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** Whether token has been used */</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>  consumed<span class="op">:</span> <span class="dt">boolean</span><span class="op">;</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** Additional context for audit */</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>  context<span class="op">?:</span> {</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>    danger_level<span class="op">?:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>    quota_metric<span class="op">?:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>    reasons<span class="op">?:</span> <span class="dt">string</span>[]<span class="op">;</span></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>  }<span class="op">;</span></span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<hr />
+<h2 id="3-token-generation">3. Token Generation</h2>
+<h3 id="31-entropy-requirements">3.1 Entropy Requirements</h3>
+<p>Token identifiers MUST be generated with sufficient entropy to prevent guessing:</p>
+<table>
+<thead>
+<tr>
+<th>Requirement</th>
+<th>Specification</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Minimum entropy</td>
+<td>128 bits</td>
+</tr>
+<tr>
+<td>Recommended</td>
+<td>256 bits</td>
+</tr>
+<tr>
+<td>Source</td>
+<td>Cryptographically secure random number generator (CSPRNG)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Acceptable generation methods:</strong></p>
+<ul>
+<li><code>crypto.randomBytes(16).toString('hex')</code> (Node.js)</li>
+<li><code>secrets.token_hex(16)</code> (Python)</li>
+<li><code>uuid.uuid4().hex</code> (UUID v4, 122 bits entropy)</li>
+</ul>
+<p><strong>Unacceptable methods:</strong></p>
+<ul>
+<li>Sequential counters</li>
+<li>Timestamps alone</li>
+<li><code>Math.random()</code> or similar non-cryptographic PRNGs</li>
+</ul>
+<h3 id="32-scope-binding">3.2 Scope Binding</h3>
+<p>Tokens MUST be bound to the specific operation and parameters they gate.</p>
+<p><strong>Hash algorithm:</strong> Implementations SHOULD use SHA-256 or stronger for parameter binding. The hash MUST be computed over a canonicalized representation of the critical parameters.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Token issuance binds to operation + critical parameters</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">// Hash algorithm: SHA-256 or stronger</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> paramsHash <span class="op">=</span> <span class="fu">sha256</span>({</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;delete_repo&quot;</span><span class="op">,</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">owner</span><span class="op">:</span> <span class="st">&quot;acme&quot;</span><span class="op">,</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">repo</span><span class="op">:</span> <span class="st">&quot;widgets&quot;</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> token <span class="op">=</span> {</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="dt">id</span><span class="op">:</span> <span class="fu">generateTokenId</span>()<span class="op">,</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;delete_repo&quot;</span><span class="op">,</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  <span class="dt">params_hash</span><span class="op">:</span> paramsHash<span class="op">,</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  <span class="co">// ...</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>}<span class="op">;</span></span></code></pre></div>
+<p><strong>Critical parameters</strong> are those that affect the operation's impact:</p>
+<ul>
+<li>Resource identifiers (IDs, names, paths)</li>
+<li>Scope modifiers (<code>force</code>, <code>permanent</code>, <code>recursive</code>)</li>
+<li>NOT metadata like timestamps or request IDs</li>
+</ul>
+<h3 id="33-token-response-format">3.3 Token Response Format</h3>
+<p>When issuing a confirmation token:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;error&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;code&quot;</span><span class="fu">:</span> <span class="st">&quot;CONFIRMATION_REQUIRED&quot;</span><span class="fu">,</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;This operation requires confirmation&quot;</span><span class="fu">,</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;details&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;operation&quot;</span><span class="fu">:</span> <span class="st">&quot;delete_repo&quot;</span><span class="fu">,</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;danger_level&quot;</span><span class="fu">:</span> <span class="st">&quot;destructive&quot;</span><span class="fu">,</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;reasons&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;Permanently removes repository and all contents&quot;</span><span class="ot">,</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;Cannot be recovered after grace period&quot;</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>      <span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;confirmation_message&quot;</span><span class="fu">:</span> <span class="st">&quot;Delete repository &#39;acme/widgets&#39;? This cannot be undone.&quot;</span><span class="fu">,</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;confirmation_token&quot;</span><span class="fu">:</span> <span class="st">&quot;conf_a1b2c3d4e5f6g7h8&quot;</span><span class="fu">,</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;expires_at&quot;</span><span class="fu">:</span> <span class="st">&quot;2026-01-28T12:05:00Z&quot;</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<hr />
+<h2 id="4-token-validation">4. Token Validation</h2>
+<h3 id="41-validation-checks">4.1 Validation Checks</h3>
+<p>Token validation MUST perform all of the following checks:</p>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Error Code</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Token exists</td>
+<td><code>TOKEN_INVALID</code></td>
+<td>Token ID not found in store</td>
+</tr>
+<tr>
+<td>Not expired</td>
+<td><code>TOKEN_EXPIRED</code></td>
+<td>Current time &gt; expires_at</td>
+</tr>
+<tr>
+<td>Not consumed</td>
+<td><code>TOKEN_ALREADY_USED</code></td>
+<td>Token already redeemed</td>
+</tr>
+<tr>
+<td>Operation matches</td>
+<td><code>TOKEN_SCOPE_MISMATCH</code></td>
+<td>Token issued for different operation</td>
+</tr>
+<tr>
+<td>Parameters match</td>
+<td><code>TOKEN_SCOPE_MISMATCH</code></td>
+<td>Critical parameters changed</td>
+</tr>
+<tr>
+<td>Adapter matches</td>
+<td><code>TOKEN_SCOPE_MISMATCH</code></td>
+<td>Token issued by different adapter</td>
+</tr>
+</tbody>
+</table>
+<h3 id="42-validation-response-failure">4.2 Validation Response (Failure)</h3>
+<div class="sourceCode" id="cb6"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;error&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;code&quot;</span><span class="fu">:</span> <span class="st">&quot;TOKEN_EXPIRED&quot;</span><span class="fu">,</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;Confirmation token has expired&quot;</span><span class="fu">,</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;details&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;token&quot;</span><span class="fu">:</span> <span class="st">&quot;conf_a1b2c3d4e5f6g7h8&quot;</span><span class="fu">,</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;expired_at&quot;</span><span class="fu">:</span> <span class="st">&quot;2026-01-28T12:05:00Z&quot;</span><span class="fu">,</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;current_time&quot;</span><span class="fu">:</span> <span class="st">&quot;2026-01-28T12:07:30Z&quot;</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h3 id="43-parameter-hash-verification">4.3 Parameter Hash Verification</h3>
+<p>When validating, recompute the parameter hash and compare:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">validateToken</span>(token<span class="op">,</span> operation<span class="op">,</span> params) {</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> stored <span class="op">=</span> tokenStore<span class="op">.</span><span class="fu">get</span>(token)<span class="op">;</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="op">!</span>stored) <span class="cf">return</span> { <span class="dt">valid</span><span class="op">:</span> <span class="kw">false</span><span class="op">,</span> <span class="dt">code</span><span class="op">:</span> <span class="st">&#39;TOKEN_INVALID&#39;</span> }<span class="op">;</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Check operation match</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (stored<span class="op">.</span><span class="at">operation</span> <span class="op">!==</span> operation) {</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> { <span class="dt">valid</span><span class="op">:</span> <span class="kw">false</span><span class="op">,</span> <span class="dt">code</span><span class="op">:</span> <span class="st">&#39;TOKEN_SCOPE_MISMATCH&#39;</span> }<span class="op">;</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Recompute and compare parameter hash</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> currentHash <span class="op">=</span> <span class="fu">hashCriticalParams</span>(operation<span class="op">,</span> params)<span class="op">;</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (stored<span class="op">.</span><span class="at">params_hash</span> <span class="op">!==</span> currentHash) {</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> { <span class="dt">valid</span><span class="op">:</span> <span class="kw">false</span><span class="op">,</span> <span class="dt">code</span><span class="op">:</span> <span class="st">&#39;TOKEN_SCOPE_MISMATCH&#39;</span> }<span class="op">;</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Check expiry (with optional clock skew tolerance, see Section 5.1)</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> expiryResult <span class="op">=</span> <span class="fu">checkTokenExpiry</span>(stored<span class="op">,</span> config)<span class="op">;</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="op">!</span>expiryResult<span class="op">.</span><span class="at">valid</span>) {</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> expiryResult<span class="op">;</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Check consumption</span></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (stored<span class="op">.</span><span class="at">consumed</span>) {</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> { <span class="dt">valid</span><span class="op">:</span> <span class="kw">false</span><span class="op">,</span> <span class="dt">code</span><span class="op">:</span> <span class="st">&#39;TOKEN_ALREADY_USED&#39;</span> }<span class="op">;</span></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> { <span class="dt">valid</span><span class="op">:</span> <span class="kw">true</span> }<span class="op">;</span></span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<hr />
+<h2 id="5-token-lifecycle">5. Token Lifecycle</h2>
+<h3 id="51-expiration">5.1 Expiration</h3>
+<p>Token expiration MUST be enforced:</p>
+<table>
+<thead>
+<tr>
+<th>Context</th>
+<th>Default TTL</th>
+<th>Maximum TTL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Dangerous operation (destructive/dangerous - levels 2-3)</td>
+<td>5 minutes</td>
+<td>15 minutes</td>
+</tr>
+<tr>
+<td>Dangerous operation (forbidden - level 4)</td>
+<td>2 minutes</td>
+<td>5 minutes</td>
+</tr>
+<tr>
+<td>Quota continuation</td>
+<td>5 minutes</td>
+<td>10 minutes</td>
+</tr>
+</tbody>
+</table>
+<p>Danger level values reference the danger level enum from <a href="../adapter/danger-levels.html">Dangerous Operation Classification</a>: safe (0), reversible (1), destructive (2), dangerous (3), forbidden (4).</p>
+<p><strong>Expiration is a MUST requirement:</strong></p>
+<ul>
+<li>Tokens without expiration MUST be rejected</li>
+<li>Expired tokens MUST NOT be accepted under any circumstances</li>
+<li>Clock skew tolerance: implementations MAY allow up to 30 seconds grace (see below)</li>
+</ul>
+<p><strong>Clock skew tolerance configurability:</strong></p>
+<p>Implementations SHOULD allow operators to configure the clock skew tolerance value:</p>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Default</th>
+<th>Range</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>clock_skew_tolerance_seconds</code></td>
+<td>30</td>
+<td>0-300</td>
+<td>0 disables tolerance (strictest mode)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Configuration guidance:</strong></p>
+<ul>
+<li>The default of 30 seconds accommodates typical NTP-synchronized systems</li>
+<li>Environments with known clock synchronization issues (e.g., air-gapped systems, certain IoT deployments) MAY need higher values</li>
+<li>Security-sensitive deployments MAY reduce this to 0-5 seconds</li>
+<li>Values above 60 seconds SHOULD trigger a warning in logs, as they significantly increase the window for replay attacks (see <a href="#61-replay-attack-prevention">Section 6.1</a>)</li>
+</ul>
+<p><strong>Deployment environment recommendations:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Environment</th>
+<th>Recommended Value</th>
+<th>Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Typical (NTP-synced)</td>
+<td>30s (default)</td>
+<td>Accommodates normal clock drift</td>
+</tr>
+<tr>
+<td>Air-gapped systems</td>
+<td>60-120s</td>
+<td>May have significant clock sync drift</td>
+</tr>
+<tr>
+<td>IoT / embedded</td>
+<td>60-120s</td>
+<td>Often lack reliable NTP access</td>
+</tr>
+<tr>
+<td>High-security</td>
+<td>0-5s</td>
+<td>Minimize replay attack window</td>
+</tr>
+<tr>
+<td>Zero-trust</td>
+<td>0s</td>
+<td>Strict timing, requires synchronized clocks</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example configuration:</strong></p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> tokenConfig <span class="op">=</span> {</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Default: 30 seconds</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">clock_skew_tolerance_seconds</span><span class="op">:</span> <span class="dv">30</span><span class="op">,</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Strict mode for high-security environments</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="co">// clock_skew_tolerance_seconds: 5,</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Relaxed mode for environments with clock sync issues</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="co">// clock_skew_tolerance_seconds: 120,</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>}<span class="op">;</span></span></code></pre></div>
+<p><strong>Applying tolerance in validation:</strong></p>
+<p>The tolerance is added to the expiry time, accepting tokens that expired within the tolerance window:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">checkTokenExpiry</span>(stored<span class="op">,</span> config) {</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> now <span class="op">=</span> <span class="kw">new</span> <span class="bu">Date</span>()<span class="op">;</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> expiresAt <span class="op">=</span> <span class="kw">new</span> <span class="bu">Date</span>(stored<span class="op">.</span><span class="at">expires_at</span>)<span class="op">;</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Add tolerance to expiry time (not subtract from current time)</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="co">// This accepts tokens expired within the tolerance window</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> toleranceMs <span class="op">=</span> (config<span class="op">.</span><span class="at">clock_skew_tolerance_seconds</span> <span class="op">||</span> <span class="dv">30</span>) <span class="op">*</span> <span class="dv">1000</span><span class="op">;</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> expiryWithTolerance <span class="op">=</span> <span class="kw">new</span> <span class="bu">Date</span>(expiresAt<span class="op">.</span><span class="fu">getTime</span>() <span class="op">+</span> toleranceMs)<span class="op">;</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (now <span class="op">&gt;</span> expiryWithTolerance) {</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> { <span class="dt">valid</span><span class="op">:</span> <span class="kw">false</span><span class="op">,</span> <span class="dt">code</span><span class="op">:</span> <span class="st">&#39;TOKEN_EXPIRED&#39;</span> }<span class="op">;</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> { <span class="dt">valid</span><span class="op">:</span> <span class="kw">true</span> }<span class="op">;</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="52-single-use-enforcement">5.2 Single-Use Enforcement</h3>
+<p>Tokens SHOULD be single-use by default:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">redeemToken</span>(tokenId) {</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> token <span class="op">=</span> tokenStore<span class="op">.</span><span class="fu">get</span>(tokenId)<span class="op">;</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="op">!</span>token <span class="op">||</span> token<span class="op">.</span><span class="at">consumed</span>) {</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> { <span class="dt">valid</span><span class="op">:</span> <span class="kw">false</span> }<span class="op">;</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Mark as consumed BEFORE executing operation</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  token<span class="op">.</span><span class="at">consumed</span> <span class="op">=</span> <span class="kw">true</span><span class="op">;</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  token<span class="op">.</span><span class="at">consumed_at</span> <span class="op">=</span> <span class="kw">new</span> <span class="bu">Date</span>()<span class="op">.</span><span class="fu">toISOString</span>()<span class="op">;</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  tokenStore<span class="op">.</span><span class="fu">update</span>(token)<span class="op">;</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> { <span class="dt">valid</span><span class="op">:</span> <span class="kw">true</span> }<span class="op">;</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><strong>Multi-use tokens</strong> MAY be supported for specific scenarios:</p>
+<ul>
+<li>Session-scoped confirmations (see Section 5.4)</li>
+<li>Batch operations with the same parameters</li>
+</ul>
+<h3 id="53-revocation">5.3 Revocation</h3>
+<p>Tokens MAY be revoked before expiration:</p>
+<p><strong>Automatic revocation triggers:</strong></p>
+<ul>
+<li>Session termination (MCP connection ends; see <a href="../versions/v1.0.0-draft.html#23-session-lifecycle">Section 2.3</a> of the core specification)</li>
+<li>User logout</li>
+<li>Adapter configuration change</li>
+<li>Security event detection</li>
+</ul>
+<p><strong>Manual revocation:</strong></p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;introspect&quot;</span><span class="op">,</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">params</span><span class="op">:</span> {</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">query</span><span class="op">:</span> <span class="st">&quot;revoke_token&quot;</span><span class="op">,</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">token</span><span class="op">:</span> <span class="st">&quot;conf_a1b2c3d4e5f6g7h8&quot;</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="54-session-scoped-tokens">5.4 Session-Scoped Tokens</h3>
+<p>Implementations MAY support session-scoped confirmations for improved UX:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> SessionScopedToken <span class="kw">extends</span> TokenPayload {</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** Session this token is valid for */</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  session_id<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** Number of times token can be used (default: 1) */</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  max_uses<span class="op">?:</span> <span class="dt">number</span><span class="op">;</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** Current use count */</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  use_count<span class="op">:</span> <span class="dt">number</span><span class="op">;</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>Session tokens:</p>
+<ul>
+<li>Are invalidated when the MCP connection terminates (see <a href="../versions/v1.0.0-draft.html#23-session-lifecycle">Section 2.3</a> of the core specification)</li>
+<li>MAY be reused within the session for identical operations</li>
+<li>MUST still respect expiration time</li>
+</ul>
+<h3 id="55-storage-requirements">5.5 Storage Requirements</h3>
+<table>
+<thead>
+<tr>
+<th>Requirement</th>
+<th>Specification</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Persistence</td>
+<td>At minimum, in-memory with TTL eviction</td>
+</tr>
+<tr>
+<td>Cleanup</td>
+<td>Expired tokens SHOULD be purged within 1 hour</td>
+</tr>
+<tr>
+<td>Capacity</td>
+<td>SHOULD support at least 1000 active tokens per adapter</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="6-security-considerations">6. Security Considerations</h2>
+<h3 id="61-replay-attack-prevention">6.1 Replay Attack Prevention</h3>
+<p>Tokens MUST NOT be replayable:</p>
+<ol type="1">
+<li><strong>Single-use enforcement</strong> - Default behavior prevents replay</li>
+<li><strong>Scope binding</strong> - Token only valid for original operation + parameters</li>
+<li><strong>Time limits</strong> - Short TTL reduces replay window</li>
+<li><strong>Session binding</strong> - Optional additional protection</li>
+</ol>
+<h3 id="62-token-tampering">6.2 Token Tampering</h3>
+<p>Tokens MUST be tamper-resistant:</p>
+<p><strong>Server-side storage (RECOMMENDED):</strong></p>
+<ul>
+<li>Token ID is a random lookup key</li>
+<li>All payload data stored server-side</li>
+<li>Client cannot modify scope or expiration</li>
+</ul>
+<p><strong>Signed tokens (ALTERNATIVE):</strong></p>
+<ul>
+<li>If tokens encode payload, use HMAC-SHA256 or similar</li>
+<li>Signature covers all payload fields</li>
+<li>Signature key MUST NOT be exposed to clients</li>
+</ul>
+<h3 id="63-information-disclosure">6.3 Information Disclosure</h3>
+<p>Token responses SHOULD limit information disclosure:</p>
+<p><strong>DO:</strong></p>
+<ul>
+<li>Provide confirmation message explaining the action</li>
+<li>Include expiration time</li>
+<li>List reasons for confirmation requirement</li>
+</ul>
+<p><strong>DO NOT:</strong></p>
+<ul>
+<li>Include internal system details in token</li>
+<li>Expose parameter values in error messages for failed validation</li>
+<li>Return different errors for "token not found" vs "token invalid"</li>
+</ul>
+<h3 id="64-audit-requirements">6.4 Audit Requirements</h3>
+<p>All token operations MUST be logged:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> TokenAuditEntry {</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  timestamp<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  event<span class="op">:</span> <span class="st">&#39;TOKEN_ISSUED&#39;</span> <span class="op">|</span> <span class="st">&#39;TOKEN_VALIDATED&#39;</span> <span class="op">|</span> <span class="st">&#39;TOKEN_REJECTED&#39;</span> <span class="op">|</span> <span class="st">&#39;TOKEN_REVOKED&#39;</span><span class="op">;</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  token_id<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  operation<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  adapter_name<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  outcome<span class="op">:</span> <span class="st">&#39;success&#39;</span> <span class="op">|</span> <span class="st">&#39;failure&#39;</span><span class="op">;</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  failure_reason<span class="op">?:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>  client_context<span class="op">?:</span> {</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>    session_id<span class="op">?:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>    user_id<span class="op">?:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>  }<span class="op">;</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="65-rate-limiting-token-requests">6.5 Rate Limiting Token Requests</h3>
+<p>Implementations SHOULD rate limit token-related operations to prevent abuse:</p>
+<ul>
+<li>Token issuance: Limit repeated CONFIRMATION_REQUIRED responses</li>
+<li>Token validation: Limit failed validation attempts</li>
+<li>Token revocation: Limit revocation requests</li>
+</ul>
+<hr />
+<h2 id="7-implementation-requirements">7. Implementation Requirements</h2>
+<h3 id="71-must-requirements">7.1 MUST Requirements</h3>
+<p>Implementations using confirmation tokens MUST:</p>
+<ol type="1">
+<li>Generate tokens with at least 128 bits of entropy from a cryptographically secure random source</li>
+<li>Enforce expiration times on all tokens</li>
+<li>Bind tokens to specific operations and critical parameters</li>
+<li>Reject tokens that fail any validation check</li>
+<li>Log token issuance and redemption events</li>
+<li>Return appropriate error codes for token failures</li>
+</ol>
+<h3 id="72-should-requirements">7.2 SHOULD Requirements</h3>
+<p>Implementations using confirmation tokens SHOULD:</p>
+<ol type="1">
+<li>Use single-use tokens by default</li>
+<li>Store token state server-side (not in the token itself)</li>
+<li>Purge expired tokens within 1 hour</li>
+<li>Support token revocation</li>
+<li>Rate limit token-related operations</li>
+</ol>
+<h3 id="73-may-requirements">7.3 MAY Requirements</h3>
+<p>Implementations using confirmation tokens MAY:</p>
+<ol type="1">
+<li>Support session-scoped tokens for improved UX</li>
+<li>Support multi-use tokens for batch scenarios</li>
+<li>Implement signed tokens for stateless validation</li>
+<li>Provide introspection queries for token status</li>
+</ol>
+<hr />
+<h2 id="references">References</h2>
+<ul>
+<li><a href="../adapter/danger-levels.html">Dangerous Operation Classification</a> - Confirmation flows for danger levels</li>
+<li><a href="../adapter/rate-limiting.html">Rate Limiting Specification</a> - Quota continuation tokens</li>
+<li><a href="gatekeeper.html">Security Model: Gatekeeper</a> - Overall security architecture</li>
+<li><a href="../error-codes.html">Error Codes Specification</a> - Error code registry</li>
+</ul>
+
+          </div>
+        </section>
+        <nav class="page-nav" aria-label="Page navigation">
+  <a class="page-nav-link prev" href="../adapter/trust-levels.html">
+    <span class="page-nav-eyebrow">Previous page</span>
+    <strong class="page-nav-label">Trust Levels Specification</strong>
+  </a>
+  <a class="page-nav-link next" href="execution-safety-loop.html">
+    <span class="page-nav-eyebrow">Next page</span>
+    <strong class="page-nav-label">Execution Safety Loop Specification</strong>
+  </a>
+</nav>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.</p>
+      <div class="footer-links">
+        <a href="../../docs/index.html">Docs Library</a><a href="../index.html">Repo-Synced Spec</a><a href="https://github.com/MCPAQL">MCPAQL Organization</a><a href="https://dollhouseresearch.com">Dollhouse Research</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../js/search.js"></script>
+</body>
+</html>

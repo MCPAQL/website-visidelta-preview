@@ -36,11 +36,10 @@
       <section class="hero">
         <div class="hero-inner">
           <span class="status-pill">PRELIMINARY PUBLIC DRAFT</span>
-          <h1>MCP transport tells clients how to call tools, not what those tools mean</h1>
+          <h1>MCP-AQL tells AI clients what operations mean, not just how to call them</h1>
           <p class="lede">
-            MCP defines registration and invocation shape, but it does not make semantic intent structural. A client cannot reliably
-            tell a safe read from a destructive delete without parsing tool descriptions. MCP-AQL adds semantic routing on top of
-            MCP transport, making operation intent explicit at the endpoint level while cutting tool-definition token overhead by about 85-96%.
+            MCP-AQL adds semantic routing on top of MCP transport, so operation intent is explicit at the protocol layer instead of buried in tool descriptions.
+            Clients can distinguish safe reads from destructive deletes by endpoint alone, while cutting tool-definition token overhead by about 85-96%.
           </p>
           <div class="hero-actions">
             <a class="btn btn-primary" href="docs/getting-started.html">Start With The Quick Path</a>

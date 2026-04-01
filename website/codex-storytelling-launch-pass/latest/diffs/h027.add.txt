@@ -1,4 +1,6 @@
 Why semantic endpoints matter
+These pages contain the full protocol requirements, supporting detail, and normative references behind this summary.
+Read the companion summaries for onboarding context, error handling, and safety behavior.
 MCP tool calls are structurally flat
 In plain MCP, all tools share the same call shape. A reader, client, or policy system cannot reliably distinguish
 get_user from drop_database without inspecting descriptions and guessing from naming.

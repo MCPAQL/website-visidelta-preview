@@ -1,3 +1,4 @@
+This page explains how the draft protocol handles approval paths, danger tiers, and safe execution behavior.
 Confirmation token flow
 What it means in practice
 Implementations classify requester trust and apply policy gates before operation dispatch. The exact trust taxonomy is

@@ -1,3 +1,4 @@
+This page maps the current security model used in draft protocol and practical profiles.
 Implementations classify requester trust and apply policy gates before operation dispatch. The exact trust taxonomy is adapter-defined,
 but the enforcement pattern is protocol-aligned: low-trust contexts default toward read-only or restricted mutations.
 Confirmation Handshake

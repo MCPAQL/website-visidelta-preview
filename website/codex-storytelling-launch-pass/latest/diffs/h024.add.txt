@@ -5,6 +5,8 @@ Token efficiency story
 Why introspection matters
 End-to-end walkthrough
 How this differs from familiar systems
+Read the canonical protocol text here on the site when you want the full normative detail behind this overview.
+Continue into the core rules, structured response model, and security controls that shape real implementations.
 or a single routed endpoint. It keeps introspect mandatory, makes operation intent structural at the endpoint layer,
 treats the versioned spec as canonical, and positions production profiles like DollhouseMCP as practical references rather than the
 definition of the protocol.

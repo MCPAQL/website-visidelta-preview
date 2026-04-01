@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="MCP-AQL application integration guidance.">
+  <title>Application Integration | MCP-AQL</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <a class="logo" href="../index.html"><span class="logo-mark"></span>MCP-AQL</a>
+        <ul class="nav-links">
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="../docs/index.html">Docs</a></li>
+          <li><a href="../launch-checklist.html">Launch Checklist</a></li>
+          <li><a href="index.html">Adapter Patterns</a></li>
+        </ul>
+        <form class="site-search" data-search-form data-index-url="../data/search-index.json" role="search">
+          <label class="sr-only" for="site-search-input">Search MCP-AQL docs</label>
+          <input id="site-search-input" data-search-input type="search" placeholder="Search MCP-AQL docs, spec pages, and adapter patterns...">
+          <span class="search-count" data-search-count></span>
+          <ul class="search-results" data-search-results hidden></ul>
+        </form>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container docs-shell">
+      <aside class="docs-side">
+        <h2>Adapter Patterns</h2>
+        <p class="docs-side-note">Use the overview to orient first, then compare the child pages to see how contract shape and safety posture change by target system.</p>
+        <ul>
+          <li><a href="index.html">Overview</a></li>
+          <li><a href="mcp-server.html">MCP Server</a></li>
+          <li><a class="current" aria-current="page" href="application.html">Application</a></li>
+          <li><a href="cloud-service.html">Cloud Service</a></li>
+          <li><a href="operating-system.html">Operating System</a></li>
+          <li><a href="website.html">Website / Web API</a></li>
+        </ul>
+      </aside>
+
+      <article class="docs-main">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+          <ol>
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="index.html">Adapter Patterns</a></li>
+            <li><span class="current">Application</span></li>
+          </ol>
+        </nav>
+
+        <section class="hero docs-hero api-hero">
+          <div class="hero-inner">
+            <span class="status-pill">DRAFT GUIDANCE - NO PUBLIC ADAPTER YET</span>
+            <h1>Application API Patterns</h1>
+            <p class="lede">Desktop and mobile app adapters benefit from operation consolidation when feature surfaces are broad and evolve rapidly.</p>
+            <p class="callout">This is conceptual guidance. A public application adapter reference is not published yet.</p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="../docs/adapter-contracts.html">Adapter Contracts</a>
+              <a class="btn btn-secondary" href="../adapter-reference/index.html">Reference Adapter Docs</a>
+              <a class="btn btn-secondary" href="../docs/implementation-profiles.html">Implementation Profiles</a>
+            </div>
+          </div>
+        </section>
+
+        <section class="page-toc-shell" data-page-toc>
+          <div class="card page-toc-card">
+            <div class="page-toc-head">
+              <p class="page-toc-kicker">On this page</p>
+              <h2>Jump to a section</h2>
+              <p class="page-toc-intro">Use the outline to move through longer pages without losing your place.</p>
+            </div>
+            <ol class="page-toc-list" data-page-toc-list>
+              <li class="page-toc-item level-2"><a href="#when-this-pattern-fits" data-toc-target="when-this-pattern-fits">When this pattern fits</a></li><li class="page-toc-item level-2"><a href="#design-guidance" data-toc-target="design-guidance">Design Guidance</a></li><li class="page-toc-item level-2"><a href="#conceptual-example" data-toc-target="conceptual-example">Conceptual Example</a></li><li class="page-toc-item level-2"><a href="#implementation-reference" data-toc-target="implementation-reference">Implementation Reference</a></li>
+            </ol>
+          </div>
+        </section>
+
+        <section class="topic-bridge">
+          <h2 class="sr-only">Related reading</h2>
+          <div class="grid cols-2">
+            <article class="card">
+              <h3>Read the formal docs</h3>
+              <p>These docs fill in the public contract details that sit behind this pattern page.</p>
+              <ul>
+                <li><a href="../docs/adapter-contracts.html">Adapter Contracts</a></li>
+                <li><a href="../docs/implementation-profiles.html">Implementation Profiles</a></li>
+                <li><a href="../adapter-reference/guides/development.html">Development Guide</a></li>
+                <li><a href="../adapter-reference/architecture/dispatch.html">Schema-Driven Dispatch</a></li>
+                <li><a href="../spec/adapter/element-type.html">Element Type Specification</a></li>
+                <li><a href="../spec/adapter/generator.html">Generator Specification</a></li>
+              </ul>
+            </article>
+            <article class="card">
+              <h3>Explore more patterns</h3>
+              <p>Compare how the same core rules behave in server, OS, cloud, and web-facing adapter shapes.</p>
+              <ul>
+                <li><a href="mcp-server.html">MCP Server</a></li>
+                <li><a href="cloud-service.html">Cloud Service</a></li>
+                <li><a href="operating-system.html">Operating System</a></li>
+                <li><a href="website.html">Website / Web API</a></li>
+              </ul>
+            </article>
+          </div>
+        </section>
+
+        <section>
+          <h2 class="section-title" id="when-this-pattern-fits">When this pattern fits</h2>
+          <div class="grid cols-2">
+            <article class="card">
+              <h3>Best fit</h3>
+              <ul>
+                <li>The source system is a product or application surface with many user-facing actions.</li>
+                <li>You need stable operation names over a feature area that evolves quickly.</li>
+                <li>Validation, discoverability, and side-effect labeling matter more than mirroring transport details directly.</li>
+              </ul>
+            </article>
+            <article class="card">
+              <h3>Watch for</h3>
+              <ul>
+                <li>Action names that reflect UI wording instead of durable operation semantics.</li>
+                <li>Large opaque payloads that hide parameter meaning from introspection and clients.</li>
+                <li>Retry and idempotency assumptions that are real in practice but unstated in the contract.</li>
+              </ul>
+            </article>
+          </div>
+        </section>
+
+        <section>
+          <h2 class="section-title" id="design-guidance">Design Guidance</h2>
+          <div class="grid cols-2">
+            <article class="card">
+              <h3>Modeling</h3>
+              <ul>
+                <li>Expose user-facing actions as named operations.</li>
+                <li>Prefer explicit parameter schemas over opaque payload blobs.</li>
+                <li>Use introspection for dynamic capability discovery.</li>
+              </ul>
+            </article>
+            <article class="card">
+              <h3>Runtime Behavior</h3>
+              <ul>
+                <li>Document operation side effects clearly.</li>
+                <li>Normalize validation and error handling across endpoints.</li>
+                <li>Add idempotency semantics where retries are expected.</li>
+              </ul>
+            </article>
+          </div>
+        </section>
+
+        <section>
+          <h2 class="section-title" id="conceptual-example">Conceptual Example</h2>
+          <div class="card">
+            <pre class="code-box">{
+  "operation": "create_ticket",
+  "params": {
+    "title": "Spec website gap",
+    "priority": "high"
+  }
+}</pre>
+          </div>
+        </section>
+
+        <section>
+          <h2 class="section-title" id="implementation-reference">Implementation Reference</h2>
+          <div class="grid cols-3">
+            <article class="card">
+              <h3><a class="card-title-link" href="../adapter-reference/guides/development.html">Development Guide</a></h3>
+              <p>Turn feature-level actions into stable operations with the reference implementation workflow.</p>
+            </article>
+            <article class="card">
+              <h3><a class="card-title-link" href="../adapter-reference/guides/testing.html">Testing Guide</a></h3>
+              <p>Validate routing, parameter handling, and introspection so application actions remain predictable.</p>
+            </article>
+            <article class="card">
+              <h3><a class="card-title-link" href="../adapter-reference/architecture/dispatch.html">Schema-Driven Dispatch</a></h3>
+              <p>Use the dispatch doc when an application surface is too broad for ad hoc routing logic.</p>
+            </article>
+          </div>
+        </section>
+
+        <section>
+          <div class="hero-actions">
+            <a class="btn btn-secondary" href="../adapter-reference/index.html">Reference adapter docs</a>
+            <a class="btn btn-secondary" href="../docs/index.html">Back to docs library</a>
+            <a class="btn btn-secondary" href="../index.html">&larr; Back to portal</a>
+          </div>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.</p>
+      <div class="footer-links">
+        <a href="../docs/index.html">Documentation Library</a>
+        <a href="../index.html">Portal Home</a>
+        <a href="https://github.com/MCPAQL">MCPAQL Organization</a>
+        <a href="https://dollhouseresearch.com">Dollhouse Research</a>
+        <a href="https://github.com/DollhouseMCP/mcp-server">DollhouseMCP Production Profile</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../js/search.js"></script>
+</body>
+</html>

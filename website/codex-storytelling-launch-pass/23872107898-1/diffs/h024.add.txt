@@ -1,0 +1,84 @@
+MCP-AQL keeps MCP transport but adds something MCP itself does not provide: built-in semantic classification. Clients can tell
+whether they are looking at a read, mutation, deletion, or execution flow from the endpoint itself instead of guessing from prose.
+The semantics gap MCP-AQL closes
+Token efficiency story
+Why introspection matters
+End-to-end walkthrough
+How this differs from familiar systems
+Read the canonical protocol text here on the site when you want the full normative detail behind this overview.
+Continue into the core rules, structured response model, and security controls that shape real implementations.
+or a single routed endpoint. It keeps introspect mandatory, makes operation intent structural at the endpoint layer,
+treats the versioned spec as canonical, and positions production profiles like DollhouseMCP as practical references rather than the
+definition of the protocol.
+What plain MCP leaves open
+MCP standardizes how tools register and how calls are made, but it does not encode what an operation means. A harmless query and
+a destructive deletion share the same structural shape, so the only signal about intent is free-text description.
+"name": "get_user",
+"description": "Return a user record"
+"name": "drop_database",
+"description": "Delete the production database"
+What MCP-AQL adds
+MCP-AQL makes intent structural. Routing an operation through READ declares it side-effect-free. Routing through
+DELETE declares it destructive. That makes safety classification available to clients, LLMs, and policy systems
+without parsing descriptions or guessing from naming conventions.
+READ means safe query semantics
+DELETE means destructive intent is explicit
+EXECUTE means lifecycle or side-effectful runtime flow
+Tool definitions
+Approximate token cost
+Reduction
+Discrete tools (50+)
+Every tool definition loaded up front
+~30,000 tokens
+Baseline
+CRUDE mode (5 endpoints)
+Semantic endpoints plus runtime discovery
+~4,500 tokens
+Single mode (1 endpoint)
+One routed endpoint plus runtime discovery
+~1,100 tokens
+The introspection spec models the on-demand path even more sharply: around 29,600 upfront tokens for discrete tools
+versus around 2,600 total for MCP-AQL plus introspection across ten operations.
+Discovery becomes demand-driven
+Instead of loading every tool schema at connection time, clients can ask only for the operations and parameter details they need right now.
+Introspection is first-class
+introspect is mandatory, so runtime discovery is part of protocol behavior rather than an optional convenience layer.
+Token savings stay explainable
+The reduction is not magic. It comes from moving capability discovery from up-front schema bulk into small runtime lookups.
+1. Discover operations
+"success": true,
+"data": {
+"operations": [
+{ "name": "get_user", "endpoint": "read" },
+{ "name": "create_user", "endpoint": "create" },
+{ "name": "delete_user", "endpoint": "delete" }
+2. Read safely
+"operation": "get_user",
+"params": { "user_id": "user_123" }
+"id": "user_123",
+3. Create state
+"created": true
+4. Handle malformed input
+"params": {}
+"success": false,
+"error": {
+"code": "VALIDATION_MISSING_PARAM",
+"message": "Missing required parameter 'user_id'",
+"details": {
+"param_name": "user_id"
+5. Ask for confirmation before delete
+"operation": "delete_user",
+"code": "CONFIRMATION_REQUIRED",
+"message": "This operation requires confirmation",
+"danger_level": "destructive",
+"confirmation_token": "conf_abc123xyz"
+6. Retry with the confirmation token
+"user_id": "user_123",
+"_confirmation": "conf_abc123xyz"
+"deleted": true
+The same logical flow works in CRUDE mode or single-endpoint mode. What changes is the transport surface, not the operation contract,
+introspection model, or structured response envelope.
+MCP-AQL is layered on MCP transport. The difference is semantic endpoints, runtime discovery, and built-in safety classification.
+Both consolidate discovery behind a query layer, but GraphQL requires an SDL and type system while MCP-AQL reuses MCP transport.
+REST uses HTTP verbs for semantics. MCP-AQL applies a similar principle to the MCP tool layer, where HTTP verbs do not exist.
+Use Protocol Core for routing, request shape, endpoint semantics, and the MCP-versus-MCP-AQL contrast.

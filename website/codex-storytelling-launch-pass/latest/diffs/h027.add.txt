@@ -10,8 +10,10 @@ DELETE declares destructive intent, and EXECUTE declares a lifecycle or stateful
 The CRUDE model is not just an organizational convenience. It gives clients, LLMs, and policy systems protocol-level safety
 hints without relying on author-written descriptions.
 Why it changes the economics
-MCP clients often learn everything up front by loading tool definitions at connection time. MCP-AQL keeps the endpoint surface tiny
-and moves operation discovery into introspect , so the client only pays for the details it actually needs.
+MCP-AQL keeps the public endpoint surface small and makes runtime discovery part of the protocol through
+introspect . That means the protocol does not require a large up-front tool-definition payload in order to begin
+operating. Some MCP clients may already choose to load tools progressively, but that is client-specific behavior; MCP-AQL
+makes on-demand discovery available in a client-agnostic way as long as the client speaks MCP.
 Typical discovery path
 "params": {
 "query": "operations",

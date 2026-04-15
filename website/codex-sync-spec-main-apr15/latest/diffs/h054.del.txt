@@ -1,0 +1,7 @@
+Support document Draft 1.0.0-draft 2026-01-14
+2.2 Preset Parameter
+Version: 1.0.0-draft Status: Draft Last Updated: 2026-01-14
+The fields parameter accepts an array of field names:
+The preset parameter selects a predefined field set:
+When both are specified, fields extends the preset:
+Support the preset parameter

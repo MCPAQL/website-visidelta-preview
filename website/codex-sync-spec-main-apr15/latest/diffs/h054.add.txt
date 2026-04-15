@@ -1,0 +1,11 @@
+MCP-AQL Collection Querying
+Support document Draft 1.0.0-draft 2026-04-15
+2.2 Preset Compatibility Alias
+Version: 1.0.0-draft Status: Draft Last Updated: 2026-04-15
+The fields parameter is the preferred field-selection control. It accepts either a preset name or an array of field names:
+fields : &quot;minimal&quot;
+Adapters MAY also accept a preset parameter as a compatibility alias. New request shapes SHOULD prefer fields: "minimal" rather than introducing a separate control:
+When both are specified, the explicit field list extends the preset:
+Treat preset names ( minimal , standard , full ) supplied through fields as first-class field-selection values
+Accept preset as a compatibility alias only when needed for older clients
+Collection Querying Note: Field selection is one part of the broader collection-query contract. See Collection Querying for guidance on composing fields with query , filter , sort , and pagination.

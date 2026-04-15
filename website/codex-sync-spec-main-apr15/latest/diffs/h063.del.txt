@@ -1,0 +1,28 @@
+Support document Draft 1.0.0-draft 2026-01-16
+Version: 1.0.0-draft Status: Draft Last Updated: 2026-01-16
+Pagination (offset-based):
+page : 1 , // Page number (1-indexed)
+page_size : 25 // Items per page
+cursor : &quot;abc123&quot; , // Opaque cursor from previous response
+limit : 25 // Maximum items to return
+fields : [ &quot;id&quot; , &quot;name&quot; , &quot;email&quot; ] // Only return these fields
+List/search operations
+Maximum results to return
+Number of results to skip
+Page number (1-indexed)
+page_size
+Items per page
+Sort field name
+Sort order: "asc" or "desc"
+description : &quot;Field selection: preset (&#39;minimal&#39;, &#39;standard&#39;, &#39;full&#39;) or array of field names&quot;
+pagination :
+description : &quot;Field to sort by&quot;
+- name : &quot;order&quot;
+enum : [ &quot;asc&quot; , &quot;desc&quot; ]
+description : &quot;Sort order&quot;
+default : &quot;asc&quot;
+4.4.3 Cross-Cutting Parameter Consistency (SHOULD)
+4.4.4 Introspection Integration
+- $ref : &quot;#/shared_parameters/pagination&quot;
+- name : &quot;category&quot;
+description : &quot;Filter by category&quot;

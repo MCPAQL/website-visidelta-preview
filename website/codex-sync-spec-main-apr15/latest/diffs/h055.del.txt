@@ -1,0 +1,9 @@
+This document defines cursor-based pagination semantics for MCP-AQL operations that return collections. Cursor pagination enables efficient iteration through large datasets while minimizing token usage in LLM context win
+Support document Draft 1.0.0-draft 2026-01-28
+Version: 1.0.0-draft Status: Draft Last Updated: 2026-01-28
+This document defines cursor-based pagination semantics for MCP-AQL operations that return collections. Cursor pagination enables efficient iteration through large datasets while minimizing token usage in LLM context windows.
+All paginated responses MUST include a pageInfo object:
+Paginated operations SHOULD return a connection-style response:
+Return pageInfo with hasNextPage and hasPreviousPage
+sort_by : &quot;created_at&quot; ,
+sort_order : &quot;desc&quot;

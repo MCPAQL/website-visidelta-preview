@@ -1,0 +1,5 @@
+MCP-AQL Collection Querying
+Collection Querying
+Preferred query contract for list/search/query operations
+Pagination
+Cursor-based pagination semantics and response shape

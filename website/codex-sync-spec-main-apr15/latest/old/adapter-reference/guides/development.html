@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="This guide provides practical instructions for developing MCP-AQL compliant adapters. It covers the implementation steps, required components, and best practices for building adapters that wrap existing services.">
+  <title>MCP-AQL Adapter Reference | MCP-AQL Adapter Development Guide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <a class="logo" href="../../index.html"><span class="logo-mark"></span>MCP-AQL</a>
+        <ul class="nav-links">
+          <li><a href="../../index.html">Home</a></li>
+          <li><a href="../../docs/index.html">Docs</a></li>
+          <li><a href="../../launch-checklist.html">Launch Checklist</a></li>
+          <li><a href="../../apis/index.html">Adapter Patterns</a></li>
+        </ul>
+        <form class="site-search" data-search-form data-index-url="../../data/search-index.json" role="search">
+          <label class="sr-only" for="site-search-input">Search MCP-AQL docs</label>
+          <input id="site-search-input" data-search-input type="search" placeholder="Search MCP-AQL docs, spec pages, and adapter patterns...">
+          <span class="search-count" data-search-count></span>
+          <ul class="search-results" data-search-results hidden></ul>
+        </form>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container docs-shell">
+      <aside class="docs-side">
+        <h2>Reference Adapter Docs</h2>
+        <p class="docs-side-note">Generated from <code>MCPAQL/mcpaql-adapter</code> so the website carries the implementation architecture, guides, and ADRs too.</p>
+        <div class="docs-side-group">
+  <h3>Overview</h3>
+  <ul><li><a href="../repo/README.html">MCP-AQL Reference Adapter</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Architecture</h3>
+  <ul><li><a href="../architecture/dispatch.html">Schema-Driven Dispatch</a></li><li><a href="../architecture/overview.html">MCP-AQL Architecture Overview</a></li><li><a href="../architecture/plugin-system.html">Plugin System Implementation</a></li><li><a href="../architecture/runtime.html">Universal Adapter Runtime Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Guides</h3>
+  <ul><li><a class="current" aria-current="page" href="development.html">MCP-AQL Adapter Development Guide</a></li><li><a href="migration.html">Migration Guide: MCP Server to MCP-AQL Adapter</a></li><li><a href="testing.html">MCP-AQL Adapter Testing Guide</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>ADRs</h3>
+  <ul><li><a href="../adr/ADR-001-plugin-pipeline-order.html">ADR-001: Plugin Pipeline Order</a></li><li><a href="../adr/ADR-002-schema-driven-dispatch.html">ADR-002: Schema-Driven Dispatch over Code Generation</a></li><li><a href="../adr/ADR-003-stateless-plugins.html">ADR-003: Stateless Singleton Plugins</a></li><li><a href="../adr/README.html">Architecture Decision Records</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Examples</h3>
+  <ul><li><a href="../examples/README.html">Examples</a></li></ul>
+</div>
+      </aside>
+
+      <article class="docs-main">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+          <ol>
+            <li><a href="../../index.html">Home</a></li>
+            <li><a href="../../apis/index.html">Adapter Patterns</a></li><li><a href="../index.html">Reference Adapter Docs</a></li>
+            <li><span class="current">MCP-AQL Adapter Development Guide</span></li>
+          </ol>
+        </nav>
+        <section class="hero docs-hero">
+          <div class="hero-inner">
+            <span class="status-pill">REPO-SYNCED ADAPTER DOC</span>
+            <h1>MCP-AQL Adapter Development Guide</h1>
+            <p class="lede">This guide provides practical instructions for developing MCP-AQL compliant adapters. It covers the implementation steps, required components, and best practices for building adapters that wrap existing services.</p>
+            <div class="spec-meta"><span class="state-chip live">Support document</span><span class="state-chip pending">Draft</span><span class="state-chip">1.0.0-draft</span><span class="state-chip">2026-01-26</span></div>
+            <p class="spec-source">Source: <a href="https://github.com/MCPAQL/mcpaql-adapter/blob/main/docs/guides/development.md">mcpaql-adapter/docs/guides/development.md</a></p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="https://github.com/MCPAQL/mcpaql-adapter/blob/main/docs/guides/development.md">Open Source Markdown</a><a class="btn btn-secondary" href="../index.html">Browse Reference Adapter Docs</a><a class="btn btn-secondary" href="../../apis/index.html">Adapter Patterns Hub</a>
+            </div>
+          </div>
+        </section>
+
+        <section class="page-toc-shell" data-page-toc>
+          <div class="card page-toc-card">
+            <div class="page-toc-head">
+              <p class="page-toc-kicker">On this page</p>
+              <h2>Jump to a section</h2>
+              <p class="page-toc-intro">Use the outline to move through longer pages without losing your place.</p>
+            </div>
+            <ol class="page-toc-list" data-page-toc-list>
+              <li class="page-toc-item level-2"><a href="#abstract" data-toc-target="abstract">Abstract</a></li><li class="page-toc-item level-2"><a href="#1-overview" data-toc-target="1-overview">1. Overview</a></li><li class="page-toc-item level-2"><a href="#2-prerequisites" data-toc-target="2-prerequisites">2. Prerequisites</a></li><li class="page-toc-item level-2"><a href="#3-implementation-steps" data-toc-target="3-implementation-steps">3. Implementation Steps</a></li><li class="page-toc-item level-2"><a href="#4-core-components" data-toc-target="4-core-components">4. Core Components</a></li><li class="page-toc-item level-2"><a href="#5-operation-implementation" data-toc-target="5-operation-implementation">5. Operation Implementation</a></li><li class="page-toc-item level-2"><a href="#6-testing" data-toc-target="6-testing">6. Testing</a></li><li class="page-toc-item level-2"><a href="#7-conformance" data-toc-target="7-conformance">7. Conformance</a></li><li class="page-toc-item level-2"><a href="#references" data-toc-target="references">References</a></li>
+            </ol>
+          </div>
+        </section>
+
+
+        <section>
+          <div class="card spec-prose">
+            <p><strong>Version:</strong> 1.0.0-draft <strong>Status:</strong> Draft <strong>Last Updated:</strong> 2026-01-26 <strong>Moved from:</strong> <a href="https://github.com/MCPAQL/spec">MCPAQL/spec</a> (formerly <code>docs/adapter/development-guide.md</code>)</p>
+<blockquote>
+<p><strong>Note:</strong> This guide provides practical <strong>implementation instructions</strong> for building MCP-AQL adapters. For normative protocol specifications, see the <a href="https://github.com/MCPAQL/spec">spec repository</a>.</p>
+</blockquote>
+<h2 id="abstract">Abstract</h2>
+<p>This guide provides practical instructions for developing MCP-AQL compliant adapters. It covers the implementation steps, required components, and best practices for building adapters that wrap existing services.</p>
+<hr />
+<h2 id="1-overview">1. Overview</h2>
+<h3 id="11-what-is-an-adapter">1.1 What is an Adapter?</h3>
+<p>An MCP-AQL adapter translates the MCP-AQL protocol into calls to your domain-specific backend, enabling any service to be accessed through the unified CRUDE interface.</p>
+<h3 id="12-adapter-responsibilities">1.2 Adapter Responsibilities</h3>
+<p>Your adapter must:</p>
+<ol type="1">
+<li>Register MCP tools (CRUDE endpoints or single endpoint)</li>
+<li>Route operations to appropriate handlers</li>
+<li>Provide introspection for operation discovery</li>
+<li>Format responses consistently</li>
+</ol>
+<p>Your adapter may optionally: 5. Enforce security policies (see <a href="../../spec/security/gatekeeper.html">Gatekeeper</a>) 6. Support field selection for payload reduction 7. Support batch operations</p>
+<h3 id="13-development-approaches">1.3 Development Approaches</h3>
+<table>
+<thead>
+<tr>
+<th>Approach</th>
+<th>Description</th>
+<th>Best For</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Manual</strong></td>
+<td>Implement all components from scratch</td>
+<td>Maximum control, custom requirements</td>
+</tr>
+<tr>
+<td><strong>Generated</strong></td>
+<td>Use adapter generator with your schema</td>
+<td>Standard backends, rapid development</td>
+</tr>
+<tr>
+<td><strong>Extended</strong></td>
+<td>Extend existing adapter implementation</td>
+<td>Similar domain to existing adapter</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="2-prerequisites">2. Prerequisites</h2>
+<h3 id="21-required-knowledge">2.1 Required Knowledge</h3>
+<ul>
+<li>MCP (Model Context Protocol) basics</li>
+<li>TypeScript/JavaScript (reference implementations)</li>
+<li>Your domain backend's API</li>
+</ul>
+<h3 id="22-required-reading">2.2 Required Reading</h3>
+<p>Before starting, review:</p>
+<ul>
+<li><a href="../../spec/versions/v1.0.0-draft.html">MCP-AQL Specification</a></li>
+<li><a href="../../spec/crude-pattern.html">CRUDE Pattern</a></li>
+<li><a href="../../spec/operations.html">Operations Guide</a></li>
+<li><a href="../architecture/overview.html">Architecture Overview</a></li>
+</ul>
+<h3 id="23-development-environment">2.3 Development Environment</h3>
+<table>
+<thead>
+<tr>
+<th>Dependency</th>
+<th>Minimum Version</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Node.js</td>
+<td>18.0.0</td>
+<td>LTS recommended (20.x or 22.x)</td>
+</tr>
+<tr>
+<td>TypeScript</td>
+<td>5.0.0</td>
+<td>Required for type-safe adapter development</td>
+</tr>
+<tr>
+<td><code>@modelcontextprotocol/sdk</code></td>
+<td>1.0.0</td>
+<td>MCP server and transport primitives</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Quick setup</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> init <span class="at">-y</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> install @modelcontextprotocol/sdk</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> install <span class="at">-D</span> typescript tsx @types/node</span></code></pre></div>
+<blockquote>
+<p><strong>Note:</strong> Exact version constraints will be documented in <code>package.json</code> once the reference implementation source code is added to this repository.</p>
+</blockquote>
+<hr />
+<h2 id="3-implementation-steps">3. Implementation Steps</h2>
+<h3 id="31-step-1-define-your-domain-resources">3.1 Step 1: Define Your Domain Resources</h3>
+<p>Identify what entities your adapter will manage:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Example: Document management adapter</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> <span class="bu">DocumentType</span> <span class="op">=</span> <span class="st">&#39;document&#39;</span> <span class="op">|</span> <span class="st">&#39;folder&#39;</span> <span class="op">|</span> <span class="st">&#39;tag&#39;</span> <span class="op">|</span> <span class="st">&#39;template&#39;</span><span class="op">;</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">// Example: User management adapter</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> UserRole <span class="op">=</span> <span class="st">&#39;admin&#39;</span> <span class="op">|</span> <span class="st">&#39;user&#39;</span> <span class="op">|</span> <span class="st">&#39;guest&#39;</span><span class="op">;</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">// Example: Task management adapter</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> TaskStatus <span class="op">=</span> <span class="st">&#39;pending&#39;</span> <span class="op">|</span> <span class="st">&#39;in_progress&#39;</span> <span class="op">|</span> <span class="st">&#39;completed&#39;</span><span class="op">;</span></span></code></pre></div>
+<h3 id="32-step-2-map-operations-to-crude-endpoints">3.2 Step 2: Map Operations to CRUDE Endpoints</h3>
+<p>Determine which operations your adapter supports and their endpoint mapping:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Example: User management adapter</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> OPERATION_ROUTES <span class="op">=</span> {</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="co">// CREATE - Additive operations</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  create_user<span class="op">:</span> { endpoint<span class="op">:</span> <span class="st">&#39;CREATE&#39;</span><span class="op">,</span> handler<span class="op">:</span> <span class="st">&#39;Users.create&#39;</span> }<span class="op">,</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  add_user_role<span class="op">:</span> { endpoint<span class="op">:</span> <span class="st">&#39;CREATE&#39;</span><span class="op">,</span> handler<span class="op">:</span> <span class="st">&#39;Users.addRole&#39;</span> }<span class="op">,</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="co">// READ - Query operations</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  list_users<span class="op">:</span> { endpoint<span class="op">:</span> <span class="st">&#39;READ&#39;</span><span class="op">,</span> handler<span class="op">:</span> <span class="st">&#39;Users.list&#39;</span> }<span class="op">,</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  get_user<span class="op">:</span> { endpoint<span class="op">:</span> <span class="st">&#39;READ&#39;</span><span class="op">,</span> handler<span class="op">:</span> <span class="st">&#39;Users.get&#39;</span> }<span class="op">,</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  search_users<span class="op">:</span> { endpoint<span class="op">:</span> <span class="st">&#39;READ&#39;</span><span class="op">,</span> handler<span class="op">:</span> <span class="st">&#39;Users.search&#39;</span> }<span class="op">,</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  introspect<span class="op">:</span> { endpoint<span class="op">:</span> <span class="st">&#39;READ&#39;</span><span class="op">,</span> handler<span class="op">:</span> <span class="st">&#39;Introspection.query&#39;</span> }<span class="op">,</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  <span class="co">// UPDATE - Modification operations</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  update_user<span class="op">:</span> { endpoint<span class="op">:</span> <span class="st">&#39;UPDATE&#39;</span><span class="op">,</span> handler<span class="op">:</span> <span class="st">&#39;Users.update&#39;</span> }<span class="op">,</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  change_password<span class="op">:</span> { endpoint<span class="op">:</span> <span class="st">&#39;UPDATE&#39;</span><span class="op">,</span> handler<span class="op">:</span> <span class="st">&#39;Users.changePassword&#39;</span> }<span class="op">,</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>  <span class="co">// DELETE - Removal operations</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  delete_user<span class="op">:</span> { endpoint<span class="op">:</span> <span class="st">&#39;DELETE&#39;</span><span class="op">,</span> handler<span class="op">:</span> <span class="st">&#39;Users.delete&#39;</span> }<span class="op">,</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>  remove_user_role<span class="op">:</span> { endpoint<span class="op">:</span> <span class="st">&#39;DELETE&#39;</span><span class="op">,</span> handler<span class="op">:</span> <span class="st">&#39;Users.removeRole&#39;</span> }<span class="op">,</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>  <span class="co">// EXECUTE - Lifecycle operations (if applicable)</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>  send_verification_email<span class="op">:</span> { endpoint<span class="op">:</span> <span class="st">&#39;EXECUTE&#39;</span><span class="op">,</span> handler<span class="op">:</span> <span class="st">&#39;Users.sendVerification&#39;</span> }<span class="op">,</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>  reset_password<span class="op">:</span> { endpoint<span class="op">:</span> <span class="st">&#39;EXECUTE&#39;</span><span class="op">,</span> handler<span class="op">:</span> <span class="st">&#39;Users.resetPassword&#39;</span> }<span class="op">,</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>}<span class="op">;</span></span></code></pre></div>
+<h3 id="33-step-3-implement-the-mcp-server">3.3 Step 3: Implement the MCP Server</h3>
+<div class="sourceCode" id="cb4"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> { <span class="bu">Server</span> } <span class="im">from</span> <span class="st">&#39;@modelcontextprotocol/sdk/server/index.js&#39;</span><span class="op">;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> { StdioServerTransport } <span class="im">from</span> <span class="st">&#39;@modelcontextprotocol/sdk/server/stdio.js&#39;</span><span class="op">;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> server <span class="op">=</span> <span class="kw">new</span> <span class="bu">Server</span>(</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  { name<span class="op">:</span> <span class="st">&#39;my-mcpaql-adapter&#39;</span><span class="op">,</span> version<span class="op">:</span> <span class="st">&#39;1.0.0&#39;</span> }<span class="op">,</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  { capabilities<span class="op">:</span> { tools<span class="op">:</span> {} } }</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>)<span class="op">;</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co">// Register tools (CRUDE mode)</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>server<span class="op">.</span><span class="fu">setRequestHandler</span>(<span class="st">&#39;tools/list&#39;</span><span class="op">,</span> <span class="kw">async</span> () <span class="kw">=&gt;</span> ({</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  tools<span class="op">:</span> [</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">createEndpointTool</span>(<span class="st">&#39;mcp_aql_create&#39;</span><span class="op">,</span> <span class="st">&#39;CREATE&#39;</span>)<span class="op">,</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">createEndpointTool</span>(<span class="st">&#39;mcp_aql_read&#39;</span><span class="op">,</span> <span class="st">&#39;READ&#39;</span>)<span class="op">,</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">createEndpointTool</span>(<span class="st">&#39;mcp_aql_update&#39;</span><span class="op">,</span> <span class="st">&#39;UPDATE&#39;</span>)<span class="op">,</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">createEndpointTool</span>(<span class="st">&#39;mcp_aql_delete&#39;</span><span class="op">,</span> <span class="st">&#39;DELETE&#39;</span>)<span class="op">,</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">createEndpointTool</span>(<span class="st">&#39;mcp_aql_execute&#39;</span><span class="op">,</span> <span class="st">&#39;EXECUTE&#39;</span>)<span class="op">,</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>  ]</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>}))<span class="op">;</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="co">// Handle tool calls</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>server<span class="op">.</span><span class="fu">setRequestHandler</span>(<span class="st">&#39;tools/call&#39;</span><span class="op">,</span> <span class="kw">async</span> (request) <span class="kw">=&gt;</span> {</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> { name<span class="op">,</span> arguments<span class="op">:</span> args } <span class="op">=</span> request<span class="op">.</span><span class="at">params</span><span class="op">;</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="fu">handleMCPAQLRequest</span>(name<span class="op">,</span> args)<span class="op">;</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a><span class="co">// Start server</span></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> transport <span class="op">=</span> <span class="kw">new</span> <span class="fu">StdioServerTransport</span>()<span class="op">;</span></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a><span class="cf">await</span> server<span class="op">.</span><span class="fu">connect</span>(transport)<span class="op">;</span></span></code></pre></div>
+<h3 id="34-step-4-implement-operation-router">3.4 Step 4: Implement Operation Router</h3>
+<div class="sourceCode" id="cb5"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> OperationRouter {</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">route</span>(operation<span class="op">:</span> <span class="dt">string</span><span class="op">,</span> endpoint<span class="op">:</span> <span class="dt">string</span>)<span class="op">:</span> OperationRoute {</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> route <span class="op">=</span> OPERATION_ROUTES[operation]<span class="op">;</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="op">!</span>route) {</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>      <span class="cf">throw</span> <span class="kw">new</span> <span class="bu">Error</span>(<span class="vs">`Unknown operation: </span><span class="sc">${</span>operation<span class="sc">}</span><span class="vs">`</span>)<span class="op">;</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Validate endpoint in CRUDE mode</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="kw">this</span><span class="op">.</span><span class="at">mode</span> <span class="op">===</span> <span class="st">&#39;crude&#39;</span> <span class="op">&amp;&amp;</span> route<span class="op">.</span><span class="at">endpoint</span> <span class="op">!==</span> endpoint) {</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>      <span class="cf">throw</span> <span class="kw">new</span> <span class="bu">Error</span>(</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>        <span class="vs">`Operation &#39;</span><span class="sc">${</span>operation<span class="sc">}</span><span class="vs">&#39; must be called via mcp_aql_</span><span class="sc">${</span>route<span class="op">.</span><span class="at">endpoint</span><span class="op">.</span><span class="fu">toLowerCase</span>()<span class="sc">}</span><span class="vs">`</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>      )<span class="op">;</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> route<span class="op">;</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="35-step-5-implement-handlers">3.5 Step 5: Implement Handlers</h3>
+<div class="sourceCode" id="cb6"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> UserHandler {</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">async</span> <span class="fu">create</span>(params<span class="op">:</span> CreateUserParams)<span class="op">:</span> <span class="bu">Promise</span><span class="op">&lt;</span>OperationResult<span class="op">&gt;</span> {</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Validate required fields</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="op">!</span>params<span class="op">.</span><span class="at">email</span>) {</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>      <span class="cf">return</span> { success<span class="op">:</span> <span class="kw">false</span><span class="op">,</span> error<span class="op">:</span> <span class="st">&quot;Missing required parameter &#39;email&#39;&quot;</span> }<span class="op">;</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Call backend</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> user <span class="op">=</span> <span class="cf">await</span> <span class="kw">this</span><span class="op">.</span><span class="at">backend</span><span class="op">.</span><span class="fu">createUser</span>({</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>      email<span class="op">:</span> params<span class="op">.</span><span class="at">email</span><span class="op">,</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>      name<span class="op">:</span> params<span class="op">.</span><span class="at">name</span><span class="op">,</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>      role<span class="op">:</span> params<span class="op">.</span><span class="at">role</span> <span class="op">||</span> <span class="st">&#39;user&#39;</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    })<span class="op">;</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Return success</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>      success<span class="op">:</span> <span class="kw">true</span><span class="op">,</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>      data<span class="op">:</span> <span class="kw">this</span><span class="op">.</span><span class="fu">formatUser</span>(user)</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    }<span class="op">;</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>  <span class="kw">async</span> <span class="fu">list</span>(params<span class="op">:</span> ListParams)<span class="op">:</span> <span class="bu">Promise</span><span class="op">&lt;</span>OperationResult<span class="op">&gt;</span> {</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> users <span class="op">=</span> <span class="cf">await</span> <span class="kw">this</span><span class="op">.</span><span class="at">backend</span><span class="op">.</span><span class="fu">listUsers</span>({</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>      role<span class="op">:</span> params<span class="op">.</span><span class="at">role</span><span class="op">,</span></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>      page<span class="op">:</span> params<span class="op">.</span><span class="at">page</span><span class="op">,</span></span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>      pageSize<span class="op">:</span> params<span class="op">.</span><span class="at">page_size</span></span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>    })<span class="op">;</span></span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {</span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>      success<span class="op">:</span> <span class="kw">true</span><span class="op">,</span></span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>      data<span class="op">:</span> {</span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>        items<span class="op">:</span> users<span class="op">.</span><span class="fu">map</span>(<span class="kw">this</span><span class="op">.</span><span class="at">formatUser</span>)<span class="op">,</span></span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>        pagination<span class="op">:</span> {</span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>          page<span class="op">:</span> params<span class="op">.</span><span class="at">page</span><span class="op">,</span></span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>          page_size<span class="op">:</span> params<span class="op">.</span><span class="at">page_size</span><span class="op">,</span></span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a>          total_items<span class="op">:</span> users<span class="op">.</span><span class="at">total</span><span class="op">,</span></span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a>          total_pages<span class="op">:</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">ceil</span>(users<span class="op">.</span><span class="at">total</span> <span class="op">/</span> params<span class="op">.</span><span class="at">page_size</span>)</span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a>    }<span class="op">;</span></span>
+<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="36-step-6-implement-introspection">3.6 Step 6: Implement Introspection</h3>
+<p>The <code>introspect</code> operation is the only operation required by MCP-AQL. It enables clients to discover your adapter's capabilities at runtime.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> IntrospectionResolver {</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">queryOperations</span>(name<span class="op">?:</span> <span class="dt">string</span>)<span class="op">:</span> OperationResult {</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (name) {</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>      <span class="kw">const</span> route <span class="op">=</span> OPERATION_ROUTES[name]<span class="op">;</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (<span class="op">!</span>route) {</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> { success<span class="op">:</span> <span class="kw">true</span><span class="op">,</span> data<span class="op">:</span> { operation<span class="op">:</span> <span class="dt">null</span> } }<span class="op">;</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>      <span class="cf">return</span> {</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>        success<span class="op">:</span> <span class="kw">true</span><span class="op">,</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>        data<span class="op">:</span> { operation<span class="op">:</span> <span class="kw">this</span><span class="op">.</span><span class="fu">formatOperationDetails</span>(name<span class="op">,</span> route) }</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>      }<span class="op">;</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>      success<span class="op">:</span> <span class="kw">true</span><span class="op">,</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>      data<span class="op">:</span> {</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>        operations<span class="op">:</span> <span class="bu">Object</span><span class="op">.</span><span class="fu">entries</span>(OPERATION_ROUTES)<span class="op">.</span><span class="fu">map</span>(([name<span class="op">,</span> route]) <span class="kw">=&gt;</span> ({</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>          name<span class="op">,</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>          endpoint<span class="op">:</span> route<span class="op">.</span><span class="at">endpoint</span><span class="op">,</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>          description<span class="op">:</span> route<span class="op">.</span><span class="at">description</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>        }))</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>    }<span class="op">;</span></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">queryTypes</span>(name<span class="op">?:</span> <span class="dt">string</span>)<span class="op">:</span> OperationResult {</span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Return your adapter&#39;s type definitions</span></span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {</span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>      success<span class="op">:</span> <span class="kw">true</span><span class="op">,</span></span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>      data<span class="op">:</span> {</span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>        types<span class="op">:</span> [</span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>          { name<span class="op">:</span> <span class="st">&#39;UserRole&#39;</span><span class="op">,</span> kind<span class="op">:</span> <span class="st">&#39;enum&#39;</span><span class="op">,</span> values<span class="op">:</span> [<span class="st">&#39;admin&#39;</span><span class="op">,</span> <span class="st">&#39;user&#39;</span><span class="op">,</span> <span class="st">&#39;guest&#39;</span>] }<span class="op">,</span></span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>          { name<span class="op">:</span> <span class="st">&#39;User&#39;</span><span class="op">,</span> kind<span class="op">:</span> <span class="st">&#39;object&#39;</span><span class="op">,</span> description<span class="op">:</span> <span class="st">&#39;User account&#39;</span> }<span class="op">,</span></span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>          { name<span class="op">:</span> <span class="st">&#39;CRUDEndpoint&#39;</span><span class="op">,</span> kind<span class="op">:</span> <span class="st">&#39;enum&#39;</span><span class="op">,</span> values<span class="op">:</span> [<span class="st">&#39;CREATE&#39;</span><span class="op">,</span> <span class="st">&#39;READ&#39;</span><span class="op">,</span> <span class="st">&#39;UPDATE&#39;</span><span class="op">,</span> <span class="st">&#39;DELETE&#39;</span><span class="op">,</span> <span class="st">&#39;EXECUTE&#39;</span>] }</span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>        ]</span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>    }<span class="op">;</span></span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<hr />
+<h2 id="4-core-components">4. Core Components</h2>
+<h3 id="41-required-components">4.1 Required Components</h3>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Purpose</th>
+<th>Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MCP Server</td>
+<td>Tool registration, request handling</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Operation Router</td>
+<td>Map operations to handlers</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Introspection Resolver</td>
+<td>Runtime discovery</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Response Formatter</td>
+<td>Consistent response structure</td>
+<td>Yes</td>
+</tr>
+</tbody>
+</table>
+<h3 id="42-optional-components">4.2 Optional Components</h3>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Purpose</th>
+<th>When Needed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Schema Dispatcher</td>
+<td>Declarative operation definitions</td>
+<td>Complex adapters</td>
+</tr>
+<tr>
+<td>Gatekeeper</td>
+<td>Security enforcement</td>
+<td>Production use</td>
+</tr>
+<tr>
+<td>Field Selection Engine</td>
+<td>Payload reduction</td>
+<td>Token-sensitive clients</td>
+</tr>
+<tr>
+<td>Batch Processor</td>
+<td>Multi-operation requests</td>
+<td>Bulk operations</td>
+</tr>
+</tbody>
+</table>
+<h3 id="43-component-interactions">4.3 Component Interactions</h3>
+<pre><code>Request → Router → [Gatekeeper] → Dispatcher → Handler → Formatter → Response
+                                      ↓
+                              [Field Selection]</code></pre>
+<hr />
+<h2 id="5-operation-implementation">5. Operation Implementation</h2>
+<h3 id="51-required-vs-domain-operations">5.1 Required vs Domain Operations</h3>
+<p>MCP-AQL requires only one operation:</p>
+<ul>
+<li><strong><code>introspect</code></strong> - Must be implemented by all adapters</li>
+</ul>
+<p>All other operations are defined by your adapter based on your domain. Common patterns include:</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Typical Operations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>User Management</strong></td>
+<td>create_user, list_users, get_user, update_user, delete_user</td>
+</tr>
+<tr>
+<td><strong>Document Storage</strong></td>
+<td>create_document, list_documents, get_document, update_document, delete_document</td>
+</tr>
+<tr>
+<td><strong>Task Tracking</strong></td>
+<td>create_task, list_tasks, assign_task, complete_task, delete_task</td>
+</tr>
+<tr>
+<td><strong>API Gateway</strong></td>
+<td>list_endpoints, call_endpoint, get_schema</td>
+</tr>
+<tr>
+<td><strong>Workflow Engine</strong></td>
+<td>create_job, run_job, get_job_status, cancel_job</td>
+</tr>
+</tbody>
+</table>
+<h3 id="52-operation-template">5.2 Operation Template</h3>
+<div class="sourceCode" id="cb9"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> OperationHandler {</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Standard signature</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  (params<span class="op">:</span> <span class="bu">Record</span><span class="op">&lt;</span><span class="dt">string</span><span class="op">,</span> <span class="dt">unknown</span><span class="op">&gt;</span>)<span class="op">:</span> <span class="bu">Promise</span><span class="op">&lt;</span>OperationResult<span class="op">&gt;;</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co">// Implementation pattern</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="kw">async</span> <span class="kw">function</span> <span class="fu">operationHandler</span>(params<span class="op">:</span> <span class="bu">Record</span><span class="op">&lt;</span><span class="dt">string</span><span class="op">,</span> <span class="dt">unknown</span><span class="op">&gt;</span>)<span class="op">:</span> <span class="bu">Promise</span><span class="op">&lt;</span>OperationResult<span class="op">&gt;</span> {</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">try</span> {</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    <span class="co">// 1. Validate required parameters</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> validated <span class="op">=</span> <span class="fu">validateParams</span>(params<span class="op">,</span> REQUIRED_PARAMS)<span class="op">;</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    <span class="co">// 2. Call backend</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> result <span class="op">=</span> <span class="cf">await</span> backend<span class="op">.</span><span class="fu">doSomething</span>(validated)<span class="op">;</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>    <span class="co">// 3. Format response</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>      success<span class="op">:</span> <span class="kw">true</span><span class="op">,</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>      data<span class="op">:</span> <span class="fu">formatResult</span>(result)</span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>    }<span class="op">;</span></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">catch</span> (error) {</span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>    <span class="co">// 4. Handle errors consistently</span></span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {</span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>      success<span class="op">:</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>      error<span class="op">:</span> error<span class="op">.</span><span class="at">message</span></span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>    }<span class="op">;</span></span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="53-parameter-validation">5.3 Parameter Validation</h3>
+<div class="sourceCode" id="cb10"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">validateParams</span>(</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  params<span class="op">:</span> <span class="bu">Record</span><span class="op">&lt;</span><span class="dt">string</span><span class="op">,</span> <span class="dt">unknown</span><span class="op">&gt;,</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  required<span class="op">:</span> <span class="dt">string</span>[]</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>)<span class="op">:</span> <span class="bu">Record</span><span class="op">&lt;</span><span class="dt">string</span><span class="op">,</span> <span class="dt">unknown</span><span class="op">&gt;</span> {</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> missing <span class="op">=</span> required<span class="op">.</span><span class="fu">filter</span>(name <span class="kw">=&gt;</span> params[name] <span class="op">===</span> <span class="kw">undefined</span>)<span class="op">;</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (missing<span class="op">.</span><span class="at">length</span> <span class="op">&gt;</span> <span class="dv">0</span>) {</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">throw</span> <span class="kw">new</span> <span class="bu">Error</span>(<span class="vs">`Missing required parameters: </span><span class="sc">${</span>missing<span class="op">.</span><span class="fu">join</span>(<span class="st">&#39;, &#39;</span>)<span class="sc">}</span><span class="vs">`</span>)<span class="op">;</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> params<span class="op">;</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="54-response-formatting">5.4 Response Formatting</h3>
+<div class="sourceCode" id="cb11"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">formatSuccess</span>(data<span class="op">:</span> <span class="dt">unknown</span>)<span class="op">:</span> OperationResult {</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> { success<span class="op">:</span> <span class="kw">true</span><span class="op">,</span> data }<span class="op">;</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">formatError</span>(message<span class="op">:</span> <span class="dt">string</span><span class="op">,</span> code<span class="op">?:</span> <span class="dt">string</span>)<span class="op">:</span> OperationResult {</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> {</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    success<span class="op">:</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    error<span class="op">:</span> message<span class="op">,</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">...</span>(code <span class="op">&amp;&amp;</span> { errorCode<span class="op">:</span> code })</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>  }<span class="op">;</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<hr />
+<h2 id="6-testing">6. Testing</h2>
+<h3 id="61-unit-tests">6.1 Unit Tests</h3>
+<p>Test each operation handler in isolation:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">describe</span>(<span class="st">&#39;create_user&#39;</span><span class="op">,</span> () <span class="kw">=&gt;</span> {</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">it</span>(<span class="st">&#39;creates user with valid params&#39;</span><span class="op">,</span> <span class="kw">async</span> () <span class="kw">=&gt;</span> {</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> result <span class="op">=</span> <span class="cf">await</span> handler<span class="op">.</span><span class="fu">create</span>({</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>      email<span class="op">:</span> <span class="st">&#39;alice@example.com&#39;</span><span class="op">,</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>      name<span class="op">:</span> <span class="st">&#39;Alice&#39;</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    })<span class="op">;</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect</span>(result<span class="op">.</span><span class="at">success</span>)<span class="op">.</span><span class="fu">toBe</span>(<span class="kw">true</span>)<span class="op">;</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect</span>(result<span class="op">.</span><span class="at">data</span><span class="op">.</span><span class="at">email</span>)<span class="op">.</span><span class="fu">toBe</span>(<span class="st">&#39;alice@example.com&#39;</span>)<span class="op">;</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  })<span class="op">;</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">it</span>(<span class="st">&#39;fails with missing email&#39;</span><span class="op">,</span> <span class="kw">async</span> () <span class="kw">=&gt;</span> {</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> result <span class="op">=</span> <span class="cf">await</span> handler<span class="op">.</span><span class="fu">create</span>({</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>      name<span class="op">:</span> <span class="st">&#39;Alice&#39;</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>    })<span class="op">;</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect</span>(result<span class="op">.</span><span class="at">success</span>)<span class="op">.</span><span class="fu">toBe</span>(<span class="kw">false</span>)<span class="op">;</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect</span>(result<span class="op">.</span><span class="at">error</span>)<span class="op">.</span><span class="fu">toContain</span>(<span class="st">&#39;email&#39;</span>)<span class="op">;</span></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>  })<span class="op">;</span></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div>
+<h3 id="62-integration-tests">6.2 Integration Tests</h3>
+<p>Test full request flow:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">describe</span>(<span class="st">&#39;MCP-AQL Integration&#39;</span><span class="op">,</span> () <span class="kw">=&gt;</span> {</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">it</span>(<span class="st">&#39;routes create_user to CREATE endpoint&#39;</span><span class="op">,</span> <span class="kw">async</span> () <span class="kw">=&gt;</span> {</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> result <span class="op">=</span> <span class="cf">await</span> <span class="fu">callTool</span>(<span class="st">&#39;mcp_aql_create&#39;</span><span class="op">,</span> {</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>      operation<span class="op">:</span> <span class="st">&#39;create_user&#39;</span><span class="op">,</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>      params<span class="op">:</span> { email<span class="op">:</span> <span class="st">&#39;alice@example.com&#39;</span><span class="op">,</span> name<span class="op">:</span> <span class="st">&#39;Alice&#39;</span> }</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    })<span class="op">;</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect</span>(result<span class="op">.</span><span class="at">success</span>)<span class="op">.</span><span class="fu">toBe</span>(<span class="kw">true</span>)<span class="op">;</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>  })<span class="op">;</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">it</span>(<span class="st">&#39;rejects create_user on READ endpoint&#39;</span><span class="op">,</span> <span class="kw">async</span> () <span class="kw">=&gt;</span> {</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> result <span class="op">=</span> <span class="cf">await</span> <span class="fu">callTool</span>(<span class="st">&#39;mcp_aql_read&#39;</span><span class="op">,</span> {</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>      operation<span class="op">:</span> <span class="st">&#39;create_user&#39;</span><span class="op">,</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>      params<span class="op">:</span> { email<span class="op">:</span> <span class="st">&#39;alice@example.com&#39;</span> }</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>    })<span class="op">;</span></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect</span>(result<span class="op">.</span><span class="at">success</span>)<span class="op">.</span><span class="fu">toBe</span>(<span class="kw">false</span>)<span class="op">;</span></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect</span>(result<span class="op">.</span><span class="at">error</span>)<span class="op">.</span><span class="fu">toContain</span>(<span class="st">&#39;mcp_aql_create&#39;</span>)<span class="op">;</span></span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>  })<span class="op">;</span></span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div>
+<h3 id="63-introspection-tests">6.3 Introspection Tests</h3>
+<p>Verify operation discovery:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">describe</span>(<span class="st">&#39;Introspection&#39;</span><span class="op">,</span> () <span class="kw">=&gt;</span> {</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">it</span>(<span class="st">&#39;lists all operations&#39;</span><span class="op">,</span> <span class="kw">async</span> () <span class="kw">=&gt;</span> {</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> result <span class="op">=</span> <span class="cf">await</span> <span class="fu">callTool</span>(<span class="st">&#39;mcp_aql_read&#39;</span><span class="op">,</span> {</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>      operation<span class="op">:</span> <span class="st">&#39;introspect&#39;</span><span class="op">,</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>      params<span class="op">:</span> { query<span class="op">:</span> <span class="st">&#39;operations&#39;</span> }</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    })<span class="op">;</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect</span>(result<span class="op">.</span><span class="at">success</span>)<span class="op">.</span><span class="fu">toBe</span>(<span class="kw">true</span>)<span class="op">;</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect</span>(result<span class="op">.</span><span class="at">data</span><span class="op">.</span><span class="at">operations</span>)<span class="op">.</span><span class="fu">toContainEqual</span>(</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>      expect<span class="op">.</span><span class="fu">objectContaining</span>({ name<span class="op">:</span> <span class="st">&#39;introspect&#39;</span> })</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>    )<span class="op">;</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>  })<span class="op">;</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">it</span>(<span class="st">&#39;provides operation details&#39;</span><span class="op">,</span> <span class="kw">async</span> () <span class="kw">=&gt;</span> {</span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> result <span class="op">=</span> <span class="cf">await</span> <span class="fu">callTool</span>(<span class="st">&#39;mcp_aql_read&#39;</span><span class="op">,</span> {</span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>      operation<span class="op">:</span> <span class="st">&#39;introspect&#39;</span><span class="op">,</span></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>      params<span class="op">:</span> { query<span class="op">:</span> <span class="st">&#39;operations&#39;</span><span class="op">,</span> name<span class="op">:</span> <span class="st">&#39;create_user&#39;</span> }</span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>    })<span class="op">;</span></span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect</span>(result<span class="op">.</span><span class="at">success</span>)<span class="op">.</span><span class="fu">toBe</span>(<span class="kw">true</span>)<span class="op">;</span></span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect</span>(result<span class="op">.</span><span class="at">data</span><span class="op">.</span><span class="at">operation</span><span class="op">.</span><span class="at">parameters</span>)<span class="op">.</span><span class="fu">toBeDefined</span>()<span class="op">;</span></span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>  })<span class="op">;</span></span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div>
+<hr />
+<h2 id="7-conformance">7. Conformance</h2>
+<h3 id="71-conformance-levels">7.1 Conformance Levels</h3>
+<p><strong>Level 1 (Basic):</strong></p>
+<ul>
+<li><code>introspect</code> operation implemented</li>
+<li>At least one endpoint mode (CRUDE or Single)</li>
+<li>Standard request/response formats</li>
+<li>Discriminated union responses</li>
+</ul>
+<p><strong>Level 2 (Full):</strong></p>
+<ul>
+<li>Level 1 requirements</li>
+<li>Both endpoint modes supported</li>
+<li>Field selection supported</li>
+<li>Batch operations supported</li>
+<li>Pass conformance test suite</li>
+</ul>
+<h3 id="72-self-assessment-checklist">7.2 Self-Assessment Checklist</h3>
+<div class="sourceCode" id="cb15"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">## Level 1 Checklist</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="va">[ ]</span> introspect operation implemented (operations query)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="va">[ ]</span> introspect operation implemented (types query)</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="va">[ ]</span> At least one CRUDE endpoint registered</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="va">[ ]</span> Operation routing works correctly</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="va">[ ]</span> Discriminated union responses used</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="va">[ ]</span> snake_case parameter naming</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="va">[ ]</span> Correct endpoint routing enforced (CRUDE mode)</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a><span class="fu">## Level 2 Checklist</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="va">[ ]</span> All Level 1 items</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="va">[ ]</span> CRUDE mode supported</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="va">[ ]</span> Single mode supported</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="va">[ ]</span> Field selection supported</span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="va">[ ]</span> Batch operations supported</span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="va">[ ]</span> Conformance tests pass</span></code></pre></div>
+<h3 id="73-claiming-conformance">7.3 Claiming Conformance</h3>
+<p>To claim MCP-AQL conformance:</p>
+<ol type="1">
+<li>Complete self-assessment for target level</li>
+<li>Run conformance test suite</li>
+<li>Document any deviations or extensions</li>
+<li>Include conformance statement in documentation</li>
+</ol>
+<p><strong>Example Statement:</strong></p>
+<pre><code>This adapter implements MCP-AQL Level 1 conformance.
+Domain: User management
+Operations: create_user, list_users, get_user, update_user, delete_user, introspect
+Extensions: bulk_import (custom batch operation)
+Deviations: None</code></pre>
+<hr />
+<h2 id="references">References</h2>
+<ul>
+<li><a href="../../spec/versions/v1.0.0-draft.html">MCP-AQL Specification</a></li>
+<li><a href="../architecture/overview.html">Architecture Overview</a></li>
+<li><a href="../architecture/dispatch.html">Schema-Driven Dispatch</a></li>
+<li><a href="../../spec/operations.html">Operations Guide</a></li>
+</ul>
+
+          </div>
+        </section>
+        <nav class="page-nav" aria-label="Page navigation">
+  <a class="page-nav-link prev" href="../architecture/runtime.html">
+    <span class="page-nav-eyebrow">Previous page</span>
+    <strong class="page-nav-label">Universal Adapter Runtime Specification</strong>
+  </a>
+  <a class="page-nav-link next" href="migration.html">
+    <span class="page-nav-eyebrow">Next page</span>
+    <strong class="page-nav-label">Migration Guide: MCP Server to MCP-AQL Adapter</strong>
+  </a>
+</nav>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.</p>
+      <div class="footer-links">
+        <a href="../../apis/index.html">Adapter Patterns</a><a href="../index.html">Reference Adapter Docs</a><a href="https://github.com/MCPAQL/mcpaql-adapter">Reference Adapter Repo</a><a href="https://dollhouseresearch.com">Dollhouse Research</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../js/search.js"></script>
+</body>
+</html>

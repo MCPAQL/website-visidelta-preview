@@ -1,0 +1,4 @@
+MCP-AQL Collection Querying
+Collection Querying
+Preferred query contract for list/search/query operations
+Commercial licenses are available for MCP-AQL software artifacts as an alternative to AGPL obligations. The specification text remains openly licensed under CC BY 4.0. See COMMERCIAL-LICENSE.md or contact licensing@mcpaql.org .

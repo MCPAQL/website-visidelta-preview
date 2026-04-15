@@ -1,0 +1,4 @@
+Support document Draft 1.0.0-draft 2026-03-06
+Version: 1.0.0-draft Status: Draft Last Updated: 2026-03-06
+fields and preset parameters on READ operations
+Consistent limit , offset , sort , order support

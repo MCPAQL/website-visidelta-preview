@@ -1,0 +1,4 @@
+MCP-AQL Collection Querying
+Support document Draft 1.0.0-draft 2026-04-15
+Version: 1.0.0-draft Status: Draft Last Updated: 2026-04-15
+Collection Querying Note: Collection-returning READ operations often combine field selection, filtering, sorting, and pagination. See the informative Collection Querying guide for the preferred cross-cutting request shape moving forward.

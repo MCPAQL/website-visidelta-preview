@@ -1,0 +1,92 @@
+MCP-AQL Collection Querying
+Support document Draft 1.0.0-draft 2026-04-15
+Version: 1.0.0-draft Status: Draft Last Updated: 2026-04-15
+Text Search:
+query : &quot;api reviewer&quot;
+first : 25 ,
+after : &quot;cursor_abc123&quot;
+Pagination (offset-based compatibility style):
+limit : 25 ,
+offset : 50
+fields : &quot;minimal&quot; // Or [&quot;id&quot;, &quot;name&quot;, &quot;email&quot;]
+For the preferred collection-query contract that combines text search, filters, sorting, pagination, and field selection, see Collection Querying .
+string | object
+search_* and query_* collection operations
+Free-text search input or documented structured query object
+List/search/query operations
+Structured filtering criteria
+Sort object with field and order
+first , after , last , before
+number / string
+Cursor-paginated collection operations
+Cursor-based pagination parameters
+limit , offset , page , page_size
+Collection operations with adapter-specific pagination
+Offset or page-based compatibility parameters when documented
+description : &quot;Field selection: preset (&#39;minimal&#39;, &#39;standard&#39;, &#39;full&#39;) or array of field paths&quot;
+filter :
+name : &quot;filter&quot;
+type : &quot;object&quot;
+description : &quot;Structured filtering criteria&quot;
+name : &quot;sort&quot;
+description : &quot;Sort object with &#39;field&#39; and &#39;order&#39;&quot;
+cursor_pagination :
+- name : &quot;first&quot;
+description : &quot;Maximum results to return from the start&quot;
+- name : &quot;after&quot;
+description : &quot;Opaque cursor to continue after&quot;
+- name : &quot;last&quot;
+description : &quot;Maximum results to return from the end&quot;
+- name : &quot;before&quot;
+description : &quot;Opaque cursor to continue before&quot;
+offset_pagination :
+page_pagination :
+- name : &quot;page&quot;
+description : &quot;Page number (1-indexed)&quot;
+default : 1
+- name : &quot;page_size&quot;
+description : &quot;Items per page&quot;
+These shared_parameters keys are illustrative rather than normative. Adapters that already expose $ref paths such as #/shared_parameters/pagination or legacy sort / order groups SHOULD preserve those existing references, or provide documented aliases, instead of renaming them silently.
+4.4.3 Pagination Response Structure
+Operations returning paginated collections SHOULD include explicit pagination metadata in the response so clients can continue the query without reverse-engineering adapter-specific fields.
+Preferred cursor-based response:
+&quot;items&quot; : [
+{ &quot;name&quot; : &quot;alice&quot; , &quot;status&quot; : &quot;active&quot; } ,
+{ &quot;name&quot; : &quot;bob&quot; , &quot;status&quot; : &quot;active&quot; }
+&quot;pageInfo&quot; : {
+&quot;hasNextPage&quot; : true ,
+&quot;hasPreviousPage&quot; : false ,
+&quot;startCursor&quot; : &quot;cursor_001&quot; ,
+&quot;endCursor&quot; : &quot;cursor_002&quot; ,
+&quot;totalCount&quot; : 142
+Cursor-paginated MCP-AQL-native operations SHOULD use the pageInfo connection-style metadata described in Pagination .
+Page-based compatibility response:
+&quot;pagination&quot; : {
+&quot;page&quot; : 2 ,
+&quot;page_size&quot; : 25 ,
+&quot;total_items&quot; : 142 ,
+&quot;total_pages&quot; : 6 ,
+&quot;has_more&quot; : true
+Offset-based compatibility response:
+&quot;limit&quot; : 25 ,
+&quot;offset&quot; : 50 ,
+&quot;returned&quot; : 25 ,
+Recommended metadata by pagination style:
+Location
+Recommended Fields
+data.pageInfo
+hasNextPage , hasPreviousPage , startCursor , endCursor , optional totalCount
+Page-based
+data.pagination
+page , page_size , optional total_items , optional total_pages , optional has_more
+Offset-based
+limit , offset , optional returned , optional total_items , optional has_more
+If computing totals is expensive, adapters MAY omit total_items , total_pages , or totalCount and rely on has_more , hasNextPage , or hasPreviousPage instead.
+Compatibility metadata examples use snake_case field names to align with MCP-AQL's public naming convention for adapter-facing request and response fields.
+4.4.4 Cross-Cutting Parameter Consistency (SHOULD)
+4.4.5 Introspection Integration
+- $ref : &quot;#/shared_parameters/filter&quot;
+- $ref : &quot;#/shared_parameters/cursor_pagination&quot;
+Example - Inline expansion returned to clients:
+- name : &quot;fields&quot;
+- name : &quot;filter&quot;

@@ -1,0 +1,5 @@
+MCP-AQL Collection Querying
+Support document Draft 1.0.0-draft 2026-04-15
+Version: 1.0.0-draft Status: Draft Last Updated: 2026-04-15
+fields parameter on READ operations, with preset-name support documented where implemented
+Consistent documentation for collection-query controls such as query , filter , pagination, field selection, and sorting

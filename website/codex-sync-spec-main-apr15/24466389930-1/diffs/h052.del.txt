@@ -1,0 +1,2 @@
+Support document Draft (MVP) 1.0.0-draft 2026-01-28
+Version: 1.0.0-draft Status: Draft (MVP) Last Updated: 2026-01-28

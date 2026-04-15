@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="MCP-AQL adapter contracts: plugin types, element schemas, generator outputs, and implementation expectations.">
+  <title>MCP-AQL Docs | Adapter Contracts</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <a class="logo" href="../index.html"><span class="logo-mark"></span>MCP-AQL</a>
+        <ul class="nav-links">
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="index.html">Docs</a></li>
+          <li><a href="../launch-checklist.html">Launch Checklist</a></li>
+          <li><a href="../apis/index.html">Adapter Patterns</a></li>
+        </ul>
+        <form class="site-search" data-search-form data-index-url="../data/search-index.json" role="search">
+          <label class="sr-only" for="site-search-input">Search MCP-AQL docs</label>
+          <input id="site-search-input" data-search-input type="search" placeholder="Search MCP-AQL docs, spec pages, and adapter patterns...">
+          <span class="search-count" data-search-count></span>
+          <ul class="search-results" data-search-results hidden></ul>
+        </form>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container docs-shell">
+      <aside class="docs-side">
+        <h2>In This Library</h2>
+        <ul>
+          <li><a href="getting-started.html">Getting Started</a></li>
+          <li><a href="protocol-core.html">Protocol Core</a></li>
+          <li><a href="error-model.html">Error Model</a></li>
+          <li><a href="security-model.html">Security Model</a></li>
+          <li><a href="conformance.html">Conformance</a></li>
+          <li><a class="current" href="adapter-contracts.html">Adapter Contracts</a></li>
+          <li><a href="implementation-profiles.html">Implementation Profiles</a></li>
+          <li><a href="roadmap.html">Roadmap</a></li>
+          <li><a href="release-notes.html">Release Notes</a></li>
+        </ul>
+      </aside>
+
+      <article class="docs-main">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+          <ol>
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="index.html">Docs</a></li>
+            <li><span class="current">Adapter Contracts</span></li>
+          </ol>
+        </nav>
+        <section class="hero docs-hero">
+          <div class="hero-inner">
+            <span class="status-pill">ADAPTER CONTRACTS</span>
+            <h1>What an MCP-AQL adapter needs to describe and implement</h1>
+            <p class="lede">
+              The spec does not stop at request envelopes. It also defines the declarative shape of adapters,
+              the responsibilities of plugin layers, and the output constraints for generators and reference implementations.
+            </p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="../spec/plugin-contracts.html">Plugin Contracts</a>
+              <a class="btn btn-secondary" href="../spec/adapter/element-type.html">Element Type Spec</a>
+            </div>
+          </div>
+        </section>
+
+        <nav class="page-nav" aria-label="Page navigation">
+          <a class="page-nav-link prev" href="conformance.html">
+            <span class="page-nav-eyebrow">Previous page</span>
+            <strong class="page-nav-label">Conformance</strong>
+          </a>
+          <a class="page-nav-link next" href="implementation-profiles.html">
+            <span class="page-nav-eyebrow">Next page</span>
+            <strong class="page-nav-label">Implementation Profiles</strong>
+          </a>
+        </nav>
+
+        <section class="topic-bridge">
+          <h2 class="sr-only">Related reading</h2>
+          <div class="grid cols-2">
+            <article class="card">
+              <h3>Go Deeper In The Full Spec</h3>
+              <p>The website-hosted source docs carry the real contract details for schema shape, plugins, and generation behavior.</p>
+              <ul>
+                <li><a href="../spec/plugin-contracts.html">Plugin Interface Contracts</a></li>
+                <li><a href="../spec/adapter/element-type.html">Element Type Specification</a></li>
+                <li><a href="../spec/adapter/generator.html">Generator Specification</a></li>
+                <li><a href="../spec/index.html">Browse the full spec reference</a></li>
+              </ul>
+            </article>
+            <article class="card">
+              <h3>Related Summary Pages</h3>
+              <p>These summaries help connect adapter contracts to conformance and real implementation posture.</p>
+              <ul>
+                <li><a href="implementation-profiles.html">Implementation Profiles</a></li>
+                <li><a href="conformance.html">Conformance</a></li>
+                <li><a href="protocol-core.html">Protocol Core</a></li>
+                <li><a href="index.html">Back to the docs library</a></li>
+              </ul>
+            </article>
+          </div>
+        </section>
+
+        <section>
+          <h2 class="section-title" id="contract-layers">Contract layers</h2>
+          <div class="card table-card">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Layer</th>
+                  <th>Primary source</th>
+                  <th>What it governs</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Adapter element schema</td>
+                  <td><a href="../spec/adapter/element-type.html">Element Type Specification</a></td>
+                  <td>How operations, parameters, auth, and pagination are declared</td>
+                </tr>
+                <tr>
+                  <td>Plugin interfaces</td>
+                  <td><a href="../spec/plugin-contracts.html">Plugin Interface Contracts</a></td>
+                  <td>What runtime plugins must provide to implement the declared adapter surface</td>
+                </tr>
+                <tr>
+                  <td>Generator outputs</td>
+                  <td><a href="../spec/adapter/generator.html">Generator specification</a></td>
+                  <td>How generated adapters preserve provenance, policy, and output constraints</td>
+                </tr>
+                <tr>
+                  <td>Reference runtime</td>
+                  <td><a href="https://github.com/MCPAQL/mcpaql-adapter">mcpaql-adapter repo</a></td>
+                  <td>Architecture, runtime pipeline, and dispatch behavior in practice</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section>
+          <h2 class="section-title" id="public-takeaways">Public takeaways</h2>
+          <div class="grid cols-2">
+            <article class="card">
+              <h3>Why this matters</h3>
+              <ul>
+                <li>Adapters need a declared contract, not just ad hoc handler code.</li>
+                <li>Tooling and generators only work if schemas and runtime plugins line up.</li>
+                <li>The website can point public readers to the right source-of-truth document for each layer.</li>
+              </ul>
+            </article>
+            <article class="card">
+              <h3>What is still open</h3>
+              <ul>
+                <li><a href="https://github.com/MCPAQL/spec/issues/211">#211 deferred plugin types</a></li>
+                <li><a href="https://github.com/MCPAQL/spec/issues/196">#196 adapter output requirements</a></li>
+                <li><a href="https://github.com/MCPAQL/spec/issues/204">#204 conformance validation framework</a></li>
+              </ul>
+            </article>
+          </div>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.</p>
+      <div class="footer-links">
+        <a href="index.html">Docs Library</a>
+        <a href="../index.html">Portal Home</a>
+        <a href="https://github.com/MCPAQL">MCPAQL Organization</a>
+        <a href="https://dollhouseresearch.com">Dollhouse Research</a>
+        <a href="https://github.com/DollhouseMCP/mcp-server">DollhouseMCP Production Profile</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../js/search.js"></script>
+</body>
+</html>

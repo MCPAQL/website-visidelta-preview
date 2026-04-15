@@ -1,0 +1,2 @@
+2.5 Pagination
+This document defines the preferred request contract for collection-returning READ operations in MCP-AQL. It aligns list_* , search_* , and query_* operations around a consistent shape for free-text search, structured filtering, sorting, field selection, and pagination.

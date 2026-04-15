@@ -1,0 +1,38 @@
+MCP-AQL Aggregations
+MCP-AQL Computed Fields
+MCP-AQL Relationship Queries
+Cross-Domain Implementation Guide
+MCP-AQL (Model Context Protocol - Advanced Agent API Adapter Query Language) is a protocol specification that consolidates multiple MCP tools into a small number of semantic endpoints, providing significant token reducti
+6. Endpoint Families
+MCP-AQL (Model Context Protocol - Advanced Agent API Adapter Query Language) is a protocol specification that consolidates multiple MCP tools into a small number of semantic endpoints, providing significant token reduction while enabling runtime operation discovery through introspection. The standard CRUDE profile is one recommended semantic-endpoint pattern, but adapters MAY also define alternate semantic endpoint families that better match the target domain.
+MCP-AQL consolidates operations into a small number of semantic endpoints, reducing token overhead by approximately 85-96% while maintaining full functionality.
+Standard semantic operation categories
+Endpoint family patterns, including the standard CRUDE profile
+MCP-AQL is a protocol layer , not an application. Adapters implement MCP-AQL to expose their domain-specific operations through semantic endpoints or a single unified endpoint. Each adapter:
+Classifies operations into standard semantic categories
+Maps operations to exposed endpoint families
+Semantic Category : One of the standard operation-effect categories: CREATE, READ, UPDATE, DELETE, EXECUTE
+Endpoint Family : A named exposed endpoint or tool grouping that contains one or more operations
+│ │ Exposed Endpoint Families │ │
+│ │ Semantic endpoint profile or unified endpoint │ │
+Semantic Endpoint Mode
+The standard CRUDE profile:
+An alternative semantic profile:
+mcp_aql_discover - Discovery and inspection operations
+mcp_aql_query - Retrieval and filtering operations
+mcp_aql_manage - Mutating and administrative operations
+mcp_aql_operate - Runtime and lifecycle operations
+Other valid semantic endpoint families might be shaped around semantically explicit profiles such as database access ( inspect , query , mutate , administer ) or hardware integrations ( discover , observe , control , maintain ).
+6.1 Standard Semantic Categories
+Each operation MUST be assigned exactly one standard semantic category based on its characteristics. In semantic endpoint mode, each operation MUST also be routed to exactly one exposed endpoint family. Implementations MUST reject operations sent to incorrect endpoints in semantic endpoint mode.
+Adapters classify their operations into standard semantic categories based on characteristics:
+Semantic Category
+&quot;semantic_category&quot; : &quot;EXECUTE&quot; ,
+&quot;endpoint&quot; : &quot;operate&quot; ,
+SemanticCategory (enum)
+MUST support at least one endpoint mode ( semantic or single )
+MUST classify operations correctly into standard semantic categories
+MUST document each operation's exposed endpoint family and semantic category via introspection
+MUST reject operations sent to wrong endpoints in semantic endpoint mode
+MUST support both semantic and single endpoint modes
+Semantic Endpoint Mode (CRUDE profile)

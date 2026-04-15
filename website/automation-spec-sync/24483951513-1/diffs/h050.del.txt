@@ -1,0 +1,10 @@
+This document specifies the CRUDE (Create, Read, Update, Delete, Execute) endpoint pattern, which extends traditional CRUD semantics with an Execute endpoint for runtime lifecycle operations.
+The CRUDE pattern provides semantic grouping of operations by their effect on system state. This grouping enables:
+Documents its operation-to-endpoint mapping via introspection
+4.1 CRUDE Mode
+Exposes five separate MCP tools, one per endpoint:
+Conforming implementations MUST:
+Implement all five CRUDE endpoints OR the single unified endpoint
+Return errors for operations sent to incorrect endpoints (CRUDE mode)
+Implement the introspect operation (READ endpoint)
+Conforming implementations SHOULD:

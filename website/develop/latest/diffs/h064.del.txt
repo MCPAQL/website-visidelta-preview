@@ -1,0 +1,20 @@
+All introspection is performed through the introspect operation on the READ endpoint. This is the only operation that MCP-AQL REQUIRES all adapters to implement.
+endpoint : string ; // CRUDE endpoint (e.g., &quot;CREATE&quot;)
+endpoint : string ; // CRUDE endpoint
+mcpTool : string ; // MCP tool name (e.g., &quot;mcp_aql_create&quot;)
+&quot;mode&quot; : &quot;crude&quot; ,
+Endpoint mode ("crude", "single", "all")
+&quot;mcpTool&quot; : &quot;mcp_aql_create&quot; ,
+&quot;name&quot; : &quot;CRUDEndpoint&quot; ,
+&quot;description&quot; : &quot;CRUDE endpoint categories for operation classification&quot;
+CRUDEndpoint
+Endpoints: CREATE, READ, UPDATE, DELETE, EXECUTE
++getOperationsByEndpoint() Record
+Operations by Endpoint:
+// Returns operations grouped by CRUDE endpoint
+getOperationsByEndpoint () : Record &lt; CRUDEndpoint , OperationInfo[] &gt;
+// CREATE: create_entity, import_entity
+// Types: EntityType, CRUDEndpoint, OperationInput, OperationResult
+Implement the introspect operation on the READ endpoint
+Return operations grouped by endpoint in list responses
+Include the protocol types ( CRUDEndpoint , OperationResult , etc.)

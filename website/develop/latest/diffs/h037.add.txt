@@ -1,0 +1,9 @@
+MCP-AQL Aggregations
+MCP-AQL Computed Fields
+MCP-AQL Relationship Queries
+Cross-Domain Implementation Guide
+# Export fixture evidence alongside the adapter using the generator&#39;s own tooling
+node ./generated-adapter/scripts/export-conformance-evidence.mjs &gt; ./generated-adapter/conformance/reference.json
+# Run conformance tests on generated evidence
+node scripts/run-conformance-tests.mjs test ./generated-adapter/conformance/reference.json --level 1
+export-conformance-evidence.mjs is illustrative here: generators SHOULD provide an equivalent export step, but the exact script name and packaging are implementation-defined.

@@ -1,0 +1,1 @@
+{ name : &quot;fields&quot; , type : &quot;object&quot; , description : &quot;Available fields by type&quot; }

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="MCP-AQL operating system integration guidance.">
+  <title>Operating System Integration | MCP-AQL</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <a class="logo" href="../index.html"><span class="logo-mark"></span>MCP-AQL</a>
+        <ul class="nav-links">
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="../docs/index.html">Docs</a></li>
+          <li><a href="../launch-checklist.html">Launch Checklist</a></li>
+          <li><a href="index.html">Adapter Patterns</a></li>
+        </ul>
+        <form class="site-search" data-search-form data-index-url="../data/search-index.json" role="search">
+          <label class="sr-only" for="site-search-input">Search MCP-AQL docs</label>
+          <input id="site-search-input" data-search-input type="search" placeholder="Search MCP-AQL docs, spec pages, and adapter patterns...">
+          <span class="search-count" data-search-count></span>
+          <ul class="search-results" data-search-results hidden></ul>
+        </form>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container docs-shell">
+      <aside class="docs-side">
+        <h2>Adapter Patterns</h2>
+        <p class="docs-side-note">Use the overview to orient first, then compare the child pages to see how contract shape and safety posture change by target system.</p>
+        <ul>
+          <li><a href="index.html">Overview</a></li>
+          <li><a href="mcp-server.html">MCP Server</a></li>
+          <li><a href="application.html">Application</a></li>
+          <li><a href="cloud-service.html">Cloud Service</a></li>
+          <li><a class="current" aria-current="page" href="operating-system.html">Operating System</a></li>
+          <li><a href="website.html">Website / Web API</a></li>
+        </ul>
+      </aside>
+
+      <article class="docs-main">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+          <ol>
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="index.html">Adapter Patterns</a></li>
+            <li><span class="current">Operating System</span></li>
+          </ol>
+        </nav>
+
+        <section class="hero docs-hero api-hero">
+          <div class="hero-inner">
+            <span class="status-pill">DRAFT GUIDANCE - NO PUBLIC ADAPTER YET</span>
+            <h1>Operating System Operations</h1>
+            <p class="lede">OS-adjacent adapters should treat safety boundaries as first-class protocol concerns, especially for write and execute flows.</p>
+            <p class="callout">This page describes a design pattern. A public operating-system adapter is not published yet.</p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="../docs/security-model.html">Security Model</a>
+              <a class="btn btn-secondary" href="../adapter-reference/index.html">Reference Adapter Docs</a>
+              <a class="btn btn-secondary" href="../spec/security/gatekeeper.html">Gatekeeper Spec</a>
+            </div>
+          </div>
+        </section>
+
+        <section class="page-toc-shell" data-page-toc>
+          <div class="card page-toc-card">
+            <div class="page-toc-head">
+              <p class="page-toc-kicker">On this page</p>
+              <h2>Jump to a section</h2>
+              <p class="page-toc-intro">Use the outline to move through longer pages without losing your place.</p>
+            </div>
+            <ol class="page-toc-list" data-page-toc-list>
+              <li class="page-toc-item level-2"><a href="#when-this-pattern-fits" data-toc-target="when-this-pattern-fits">When this pattern fits</a></li><li class="page-toc-item level-2"><a href="#design-guidance" data-toc-target="design-guidance">Design Guidance</a></li><li class="page-toc-item level-2"><a href="#conceptual-example" data-toc-target="conceptual-example">Conceptual Example</a></li><li class="page-toc-item level-2"><a href="#implementation-reference" data-toc-target="implementation-reference">Implementation Reference</a></li>
+            </ol>
+          </div>
+        </section>
+
+        <section class="topic-bridge">
+          <h2 class="sr-only">Related reading</h2>
+          <div class="grid cols-2">
+            <article class="card">
+              <h3>Read the formal docs</h3>
+              <p>These sources carry the policy and execution-safety detail behind this pattern.</p>
+              <ul>
+                <li><a href="../docs/security-model.html">Security Model</a></li>
+                <li><a href="../adapter-reference/architecture/runtime.html">Universal Runtime</a></li>
+                <li><a href="../adapter-reference/guides/testing.html">Testing Guide</a></li>
+                <li><a href="../spec/security/gatekeeper.html">Gatekeeper</a></li>
+                <li><a href="../spec/security/confirmation-tokens.html">Confirmation Tokens</a></li>
+                <li><a href="../spec/security/execution-safety-loop.html">Execution Safety Loop</a></li>
+              </ul>
+            </article>
+            <article class="card">
+              <h3>Explore more patterns</h3>
+              <p>Compare the safety posture here with the surrounding cloud, server, app, and web patterns.</p>
+              <ul>
+                <li><a href="mcp-server.html">MCP Server</a></li>
+                <li><a href="application.html">Application</a></li>
+                <li><a href="cloud-service.html">Cloud Service</a></li>
+                <li><a href="website.html">Website / Web API</a></li>
+              </ul>
+            </article>
+          </div>
+        </section>
+
+        <section>
+          <h2 class="section-title" id="when-this-pattern-fits">When this pattern fits</h2>
+          <div class="grid cols-2">
+            <article class="card">
+              <h3>Best fit</h3>
+              <ul>
+                <li>The adapter exposes local files, processes, or other system-level capabilities.</li>
+                <li>You need explicit distinctions between read-only queries, state-changing actions, and true execution flows.</li>
+                <li>Permissions, confirmations, and auditability are part of the product requirement, not optional add-ons.</li>
+              </ul>
+            </article>
+            <article class="card">
+              <h3>Watch for</h3>
+              <ul>
+                <li>Destructive or execute-capable operations that are too easy to trigger accidentally.</li>
+                <li>Insufficient scoping on file-system or process queries that can cause runaway work.</li>
+                <li>Security models that rely on labels instead of machine-readable policy signals.</li>
+              </ul>
+            </article>
+          </div>
+        </section>
+
+        <section>
+          <h2 class="section-title" id="design-guidance">Design Guidance</h2>
+          <div class="grid cols-2">
+            <article class="card">
+              <h3>Operation Grouping</h3>
+              <ul>
+                <li>Separate read-only file queries from mutating file actions.</li>
+                <li>Use explicit execute operations for process starts/stops.</li>
+                <li>Document required permissions in introspection metadata.</li>
+              </ul>
+            </article>
+            <article class="card">
+              <h3>Safety Model</h3>
+              <ul>
+                <li>Add batch/resource limits for potentially expensive scans.</li>
+                <li>Require confirmations for destructive operations.</li>
+                <li>Expose machine-readable error codes for policy engines.</li>
+              </ul>
+            </article>
+          </div>
+        </section>
+
+        <section>
+          <h2 class="section-title" id="conceptual-example">Conceptual Example</h2>
+          <div class="card">
+            <pre class="code-box">{
+  "operation": "list_files",
+  "params": {
+    "path": "/workspace",
+    "limit": 100
+  }
+}</pre>
+            <p class="callout">Keep high-risk operations (delete, execute) policy-gated and auditable by default.</p>
+          </div>
+        </section>
+
+        <section>
+          <h2 class="section-title" id="implementation-reference">Implementation Reference</h2>
+          <div class="grid cols-3">
+            <article class="card">
+              <h3><a class="card-title-link" href="../adapter-reference/architecture/runtime.html">Universal Runtime</a></h3>
+              <p>See where validation, request building, auth, and response mapping belong before you expose local operations.</p>
+            </article>
+            <article class="card">
+              <h3><a class="card-title-link" href="../adapter-reference/architecture/plugin-system.html">Plugin System</a></h3>
+              <p>Use plugins to keep policy, transport, and transformation concerns isolated around sensitive system operations.</p>
+            </article>
+            <article class="card">
+              <h3><a class="card-title-link" href="../adapter-reference/guides/testing.html">Testing Guide</a></h3>
+              <p>Cover destructive-path validation and routing constraints before enabling write or execute behavior.</p>
+            </article>
+          </div>
+        </section>
+
+        <section>
+          <div class="hero-actions">
+            <a class="btn btn-secondary" href="../adapter-reference/index.html">Reference adapter docs</a>
+            <a class="btn btn-secondary" href="../docs/index.html">Back to docs library</a>
+            <a class="btn btn-secondary" href="../index.html">&larr; Back to portal</a>
+          </div>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.</p>
+      <div class="footer-links">
+        <a href="../docs/index.html">Documentation Library</a>
+        <a href="../index.html">Portal Home</a>
+        <a href="https://github.com/MCPAQL">MCPAQL Organization</a>
+        <a href="https://dollhouseresearch.com">Dollhouse Research</a>
+        <a href="https://github.com/DollhouseMCP/mcp-server">DollhouseMCP Production Profile</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../js/search.js"></script>
+</body>
+</html>

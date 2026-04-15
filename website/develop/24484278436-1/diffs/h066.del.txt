@@ -1,0 +1,13 @@
+MCP-AQL adapters are MCP servers that expose operations through the CRUDE endpoint pattern. All MCP transport and lifecycle requirements apply. This specification defines additional requirements specific to MCP-AQL tool registration and error handling.
+2.1.1 CRUDE Mode Tool Descriptions
+In CRUDE mode, each endpoint registers as a separate MCP tool. Tool descriptions MUST follow this template:
+Operations are automatically routed based on their semantic category (Create, Read, Update, Delete, Execute).
+CRUDE Mode: | Tool Name | Purpose | |-----------|---------| | mcp_aql_create | CREATE operations | | mcp_aql_read | READ operations | | mcp_aql_update | UPDATE operations | | mcp_aql_delete | DELETE operations | | mcp_aql_execute | EXECUTE operations |
+CRUDE Mode Annotations:
+3.4 CRUDE Mode Schema Composition
+In CRUDE mode, each endpoint MAY have a schema that enumerates only operations valid for that endpoint:
+&quot;description&quot; : &quot;READ operation to execute&quot; ,
+When multiple MCP-AQL adapters are deployed in a single MCP session, tool names may collide. Two adapters both registering mcp_aql_read creates ambiguity.
+const match = tool . name . match ( / ^( . + _ ) mcp_aql_ ( create | read | update | delete | execute )$ / ) ;
+const prefix = match ? match[ 1 ] : &quot;&quot; ;
+Use the standard tool names ( mcp_aql_create , etc.)

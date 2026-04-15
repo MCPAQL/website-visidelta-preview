@@ -1,0 +1,1234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="This document defines the structured error code system for MCP-AQL protocol responses. Structured error codes enable machine-readable error handling, consistent error categorization, and reliable error mapping across ada">
+  <title>MCP-AQL Spec | Structured Error Codes Specification</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <a class="logo" href="../index.html"><span class="logo-mark"></span>MCP-AQL</a>
+        <ul class="nav-links">
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="../docs/index.html">Docs</a></li>
+          <li><a href="../launch-checklist.html">Launch Checklist</a></li>
+          <li><a href="../apis/index.html">Adapter Patterns</a></li>
+        </ul>
+        <form class="site-search" data-search-form data-index-url="../data/search-index.json" role="search">
+          <label class="sr-only" for="site-search-input">Search MCP-AQL docs</label>
+          <input id="site-search-input" data-search-input type="search" placeholder="Search MCP-AQL docs, spec pages, and adapter patterns...">
+          <span class="search-count" data-search-count></span>
+          <ul class="search-results" data-search-results hidden></ul>
+        </form>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container docs-shell">
+      <aside class="docs-side">
+        <h2>Repo-Synced Spec</h2>
+        <p class="docs-side-note">Generated from <code>MCPAQL/spec</code> so the website carries the deeper protocol material too.</p>
+        <div class="docs-side-group">
+  <h3>Core</h3>
+  <ul><li><a href="conformance-testing.html">MCP-AQL Conformance Testing Specification</a></li><li><a href="crude-pattern.html">MCP-AQL CRUDE Pattern Specification</a></li><li><a href="endpoint-modes.html">MCP-AQL Endpoint Modes Specification</a></li><li><a class="current" aria-current="page" href="error-codes.html">Structured Error Codes Specification</a></li><li><a href="introspection.html">MCP-AQL Introspection Specification</a></li><li><a href="licensing-options.html">MCP-AQL Licensing Options (Working Notes)</a></li><li><a href="mcp-integration.html">MCP Integration Specification</a></li><li><a href="operations.html">MCP-AQL Operations Specification</a></li><li><a href="overview.html">MCP-AQL Protocol Overview</a></li><li><a href="plugin-contracts.html">Plugin Interface Contracts</a></li><li><a href="README.html">MCP-AQL Specification Documentation</a></li><li><a href="repo/README.html">MCP-AQL Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Versions</h3>
+  <ul><li><a href="versions/v1.0.0-draft.html">MCP-AQL Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Adapter</h3>
+  <ul><li><a href="adapter/danger-levels.html">Dangerous Operation Classification Specification</a></li><li><a href="adapter/discovery-bundle.html">MCP Server Discovery Bundle</a></li><li><a href="adapter/element-type.html">Adapter Element Type Specification</a></li><li><a href="adapter/generator.html">Adapter Generator Specification</a></li><li><a href="adapter/rate-limiting.html">Rate Limiting and Quota Management Specification</a></li><li><a href="adapter/trust-levels.html">Trust Levels Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Security</h3>
+  <ul><li><a href="security/confirmation-tokens.html">Confirmation Token Specification</a></li><li><a href="security/execution-safety-loop.html">Execution Safety Loop Specification</a></li><li><a href="security/gatekeeper.html">Security Model: Gatekeeper Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Features</h3>
+  <ul><li><a href="features/aggregations.html">MCP-AQL Aggregations</a></li><li><a href="features/collection-querying.html">MCP-AQL Collection Querying</a></li><li><a href="features/computed-fields.html">MCP-AQL Computed Fields</a></li><li><a href="features/field-selection.html">Field Selection Specification</a></li><li><a href="features/pagination.html">Cursor-Based Pagination Specification</a></li><li><a href="features/relationship-queries.html">MCP-AQL Relationship Queries</a></li><li><a href="features/warnings.html">Warnings Array Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Guides</h3>
+  <ul><li><a href="guides/cross-domain-implementation.html">Cross-Domain Implementation Guide</a></li><li><a href="guides/protocol-comparison.html">Protocol Comparison Guide</a></li><li><a href="guides/README.html">Developer Guides</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Process</h3>
+  <ul><li><a href="process/breaking-changes.html">MCP-AQL Breaking Change Policy</a></li><li><a href="process/preliminary-public-launch-checklist.html">Preliminary Public Launch Checklist</a></li><li><a href="process/rfc-process.html">RFC Process for MCP-AQL Specification</a></li><li><a href="process/versioning.html">Versioning Strategy</a></li><li><a href="repo/CHANGELOG.html">Changelog</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Architecture</h3>
+  <ul><li><a href="architecture/README.html">Architecture Documentation</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Research</h3>
+  <ul><li><a href="research/mcp-vs-mcpaql-vs-a2a.html">Protocol Landscape: MCP vs MCP-AQL vs A2A</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Reference</h3>
+  <ul><li><a href="reference/README.html">Reference Documentation</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>ADRs</h3>
+  <ul><li><a href="adr/ADR-001-crude-pattern.html">ADR-001: CRUDE Pattern (Extending CRUD with Execute)</a></li><li><a href="adr/ADR-002-graphql-style-input.html">ADR-002: GraphQL-Style Input Objects for Updates</a></li><li><a href="adr/ADR-003-snake-case-parameters.html">ADR-003: snake_case Parameter Convention</a></li><li><a href="adr/ADR-004-schema-driven-operations.html">ADR-004: Schema-Driven Operation Definitions</a></li><li><a href="adr/ADR-005-introspection-system.html">ADR-005: GraphQL-Style Introspection System</a></li><li><a href="adr/ADR-006-discriminated-responses.html">ADR-006: Discriminated Response Format</a></li><li><a href="adr/index.html">Architecture Decision Records</a></li><li><a href="adr/README.html">Architecture Decision Records</a></li></ul>
+</div>
+      </aside>
+
+      <article class="docs-main">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+          <ol>
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="index.html">Full Spec</a></li>
+            <li><span class="current">Structured Error Codes Specification</span></li>
+          </ol>
+        </nav>
+        <section class="hero docs-hero">
+          <div class="hero-inner">
+            <span class="status-pill">REPO-SYNCED SPEC DOC</span>
+            <h1>Structured Error Codes Specification</h1>
+            <p class="lede">This document defines the structured error code system for MCP-AQL protocol responses. Structured error codes enable machine-readable error handling, consistent error categorization, and reliable error mapping across ada</p>
+            <div class="spec-meta"><span class="state-chip live">Support document</span><span class="state-chip pending">Draft (MVP)</span><span class="state-chip">1.0.0-draft</span><span class="state-chip">2026-04-15</span></div>
+            <p class="spec-source">Source: <a href="https://github.com/MCPAQL/spec/blob/main/docs/error-codes.md">spec/docs/error-codes.md</a></p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="https://github.com/MCPAQL/spec/blob/main/docs/error-codes.md">Open Source Markdown</a><a class="btn btn-secondary" href="index.html">Browse Full Spec Reference</a>
+            </div>
+          </div>
+        </section>
+
+        <section class="page-toc-shell" data-page-toc>
+          <div class="card page-toc-card">
+            <div class="page-toc-head">
+              <p class="page-toc-kicker">On this page</p>
+              <h2>Jump to a section</h2>
+              <p class="page-toc-intro">Use the outline to move through longer pages without losing your place.</p>
+            </div>
+            <ol class="page-toc-list" data-page-toc-list>
+              <li class="page-toc-item level-2"><a href="#abstract" data-toc-target="abstract">Abstract</a></li><li class="page-toc-item level-2"><a href="#1-overview" data-toc-target="1-overview">1. Overview</a></li><li class="page-toc-item level-2"><a href="#2-error-response-structure" data-toc-target="2-error-response-structure">2. Error Response Structure</a></li><li class="page-toc-item level-2"><a href="#3-error-code-format" data-toc-target="3-error-code-format">3. Error Code Format</a></li><li class="page-toc-item level-2"><a href="#4-mvp-error-codes" data-toc-target="4-mvp-error-codes">4. MVP Error Codes</a></li><li class="page-toc-item level-2"><a href="#5-phase-1-robustness-error-codes" data-toc-target="5-phase-1-robustness-error-codes">5. Phase 1: Robustness Error Codes</a></li><li class="page-toc-item level-2"><a href="#6-http-status-mapping" data-toc-target="6-http-status-mapping">6. HTTP Status Mapping</a></li><li class="page-toc-item level-2"><a href="#7-implementation-requirements" data-toc-target="7-implementation-requirements">7. Implementation Requirements</a></li><li class="page-toc-item level-2"><a href="#8-future-extensions" data-toc-target="8-future-extensions">8. Future Extensions</a></li><li class="page-toc-item level-2"><a href="#references" data-toc-target="references">References</a></li>
+            </ol>
+          </div>
+        </section>
+
+
+        <section>
+          <div class="card spec-prose">
+            <p><strong>Version:</strong> 1.0.0-draft <strong>Status:</strong> Draft (MVP) <strong>Last Updated:</strong> 2026-04-15</p>
+<h2 id="abstract">Abstract</h2>
+<p>This document defines the structured error code system for MCP-AQL protocol responses. Structured error codes enable machine-readable error handling, consistent error categorization, and reliable error mapping across adapter implementations.</p>
+<hr />
+<h2 id="1-overview">1. Overview</h2>
+<h3 id="11-purpose">1.1 Purpose</h3>
+<p>Structured error codes address several challenges with string-based error messages:</p>
+<ul>
+<li><strong>Machine-readable</strong> - Programs can take action based on error type</li>
+<li><strong>Consistent categorization</strong> - Monitoring systems can categorize and alert</li>
+<li><strong>Adapter mapping</strong> - Errors map reliably to target protocol codes</li>
+<li><strong>Localization</strong> - Clients can provide localized error messages</li>
+</ul>
+<h3 id="12-design-principles">1.2 Design Principles</h3>
+<ol type="1">
+<li><strong>Category-based</strong> - Codes follow <code>CATEGORY_SPECIFIC</code> naming pattern</li>
+<li><strong>Self-documenting</strong> - Code names describe the error condition</li>
+<li><strong>Deterministic</strong> - Each error code maps to a specific recovery strategy</li>
+<li><strong>Extensible</strong> - New codes can be added without breaking existing clients</li>
+</ol>
+<h3 id="13-mvp-scope">1.3 MVP Scope</h3>
+<p>This specification covers the Minimum Viable Product error codes:</p>
+<p><strong>Included:</strong></p>
+<ul>
+<li>8 essential error codes (MVP)</li>
+<li>7 Phase 1 robustness error codes</li>
+<li>Basic error response structure</li>
+<li>HTTP status code mapping</li>
+<li>Generator error code category reference</li>
+</ul>
+<p><strong>Deferred to future specifications:</strong></p>
+<ul>
+<li>Full error code taxonomy</li>
+<li>Conflict error codes</li>
+<li>Detailed error context schemas</li>
+<li>Per-adapter error overrides</li>
+<li>Error code extension mechanism</li>
+</ul>
+<h3 id="14-error-format">1.4 Error Format</h3>
+<p>This specification defines the canonical error response format for MCP-AQL:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;error&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;code&quot;</span><span class="fu">:</span> <span class="st">&quot;VALIDATION_MISSING_PARAM&quot;</span><span class="fu">,</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;Missing required parameter &#39;owner&#39;&quot;</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p>Implementations MUST use structured error objects with <code>code</code> and <code>message</code> fields. The optional <code>details</code> field MAY provide additional context.</p>
+<hr />
+<h2 id="2-error-response-structure">2. Error Response Structure</h2>
+<h3 id="21-structured-error-format">2.1 Structured Error Format</h3>
+<div class="sourceCode" id="cb2"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> ErrorResponse {</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  success<span class="op">:</span> <span class="kw">false</span><span class="op">;</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  error<span class="op">:</span> ErrorDetail<span class="op">;</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> ErrorDetail {</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="co">/**</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co">   * Machine-readable error code</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co">   * Format: CATEGORY_SPECIFIC_ERROR</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co">   */</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  code<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="co">/**</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co">   * Human-readable error message</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co">   */</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  message<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  <span class="co">/**</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="co">   * Optional contextual details</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="co">   */</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>  details<span class="op">?:</span> <span class="bu">Record</span><span class="op">&lt;</span><span class="dt">string</span><span class="op">,</span> <span class="dt">unknown</span><span class="op">&gt;;</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="22-example-responses">2.2 Example Responses</h3>
+<p><strong>Minimal error:</strong></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;error&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;code&quot;</span><span class="fu">:</span> <span class="st">&quot;VALIDATION_MISSING_PARAM&quot;</span><span class="fu">,</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;Missing required parameter &#39;owner&#39;&quot;</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><strong>Error with details:</strong></p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;error&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;code&quot;</span><span class="fu">:</span> <span class="st">&quot;NOT_FOUND_RESOURCE&quot;</span><span class="fu">,</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;Repository &#39;octocat/nonexistent&#39; not found&quot;</span><span class="fu">,</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;details&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;resource_type&quot;</span><span class="fu">:</span> <span class="st">&quot;repository&quot;</span><span class="fu">,</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;resource_id&quot;</span><span class="fu">:</span> <span class="st">&quot;octocat/nonexistent&quot;</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<hr />
+<h2 id="3-error-code-format">3. Error Code Format</h2>
+<h3 id="31-naming-convention">3.1 Naming Convention</h3>
+<p>Error codes follow the pattern:</p>
+<pre><code>CATEGORY_SPECIFIC_CONDITION</code></pre>
+<p><strong>Rules:</strong></p>
+<ul>
+<li>All uppercase with underscores</li>
+<li>Category prefix identifies error class</li>
+<li>Specific suffix describes the condition</li>
+<li>2-4 word components typical</li>
+</ul>
+<p><strong>Examples:</strong></p>
+<ul>
+<li><code>VALIDATION_MISSING_PARAM</code></li>
+<li><code>NOT_FOUND_OPERATION</code></li>
+<li><code>PERMISSION_DENIED</code></li>
+<li><code>INTERNAL_ERROR</code></li>
+</ul>
+<h3 id="32-category-prefixes">3.2 Category Prefixes</h3>
+<table>
+<thead>
+<tr class="header">
+<th>Category</th>
+<th>Description</th>
+<th>HTTP Range</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>VALIDATION_</code></td>
+<td>Input validation errors</td>
+<td>400, 422</td>
+</tr>
+<tr class="even">
+<td><code>NOT_FOUND_</code></td>
+<td>Resource not found</td>
+<td>404</td>
+</tr>
+<tr class="odd">
+<td><code>PERMISSION_</code></td>
+<td>Authentication/authorization</td>
+<td>401, 403</td>
+</tr>
+<tr class="even">
+<td><code>CONFLICT_</code></td>
+<td>Resource conflicts</td>
+<td>409</td>
+</tr>
+<tr class="odd">
+<td><code>RATE_LIMIT_</code></td>
+<td>Rate limiting</td>
+<td>429</td>
+</tr>
+<tr class="even">
+<td><code>TOKEN_</code></td>
+<td>Confirmation token errors</td>
+<td>400, 403</td>
+</tr>
+<tr class="odd">
+<td><code>SCHEMA_</code></td>
+<td>Schema validation errors (generators)</td>
+<td>N/A</td>
+</tr>
+<tr class="even">
+<td><code>INTERNAL_</code></td>
+<td>Server errors</td>
+<td>500+</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Note on <code>SCHEMA_</code> category:</strong> Unlike other error categories which occur at runtime, <code>SCHEMA_</code> errors are produced by adapter generators during schema validation. These errors do not map to HTTP status codes because they occur during code generation, not API requests. See <a href="adapter/generator.html">Adapter Generator Specification</a> Section 2.2 for the complete list of schema validation error codes.</p>
+</blockquote>
+<hr />
+<h2 id="4-mvp-error-codes">4. MVP Error Codes</h2>
+<h3 id="41-error-code-registry">4.1 Error Code Registry</h3>
+<p>The MVP includes 8 essential error codes:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Code</th>
+<th>Category</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>VALIDATION_MISSING_PARAM</code></td>
+<td>Validation</td>
+<td>Required parameter not provided</td>
+</tr>
+<tr class="even">
+<td><code>VALIDATION_INVALID_TYPE</code></td>
+<td>Validation</td>
+<td>Parameter has wrong type</td>
+</tr>
+<tr class="odd">
+<td><code>VALIDATION_UNKNOWN_PARAM</code></td>
+<td>Validation</td>
+<td>Request contains parameter not defined in operation schema</td>
+</tr>
+<tr class="even">
+<td><code>VALIDATION_INVALID_ENCODING</code></td>
+<td>Validation</td>
+<td>Request contains invalid character encoding</td>
+</tr>
+<tr class="odd">
+<td><code>VALIDATION_PAYLOAD_TOO_LARGE</code></td>
+<td>Validation</td>
+<td>Request or response exceeds size limits</td>
+</tr>
+<tr class="even">
+<td><code>NOT_FOUND_OPERATION</code></td>
+<td>Not Found</td>
+<td>Requested operation does not exist</td>
+</tr>
+<tr class="odd">
+<td><code>NOT_FOUND_RESOURCE</code></td>
+<td>Not Found</td>
+<td>Target resource not found (HTTP 404)</td>
+</tr>
+<tr class="even">
+<td><code>PERMISSION_DENIED</code></td>
+<td>Permission</td>
+<td>Access denied (HTTP 401/403)</td>
+</tr>
+<tr class="odd">
+<td><code>INTERNAL_ERROR</code></td>
+<td>Internal</td>
+<td>Server error or unexpected failure</td>
+</tr>
+</tbody>
+</table>
+<h3 id="42-message-template-conventions">4.2 Message Template Conventions</h3>
+<p>All error codes define a <strong>message format</strong> template that implementations SHOULD follow for consistency. Templates use the following conventions:</p>
+<ul>
+<li>Variable placeholders use <code>{variable_name}</code> syntax matching keys in the <code>details</code> object</li>
+<li>Dynamic values MUST be wrapped in single quotes within the message (e.g., <code>'{param_name}'</code>)</li>
+<li>The message prefix MUST match the error category (e.g., <code>VALIDATION_</code> codes start with the validation context, <code>NOT_FOUND_</code> codes reference what was not found)</li>
+<li>Implementations MAY substitute the target API's error message when it provides more specific context, but SHOULD prefer the template format for consistency</li>
+</ul>
+<h3 id="43-validation_missing_param">4.3 VALIDATION_MISSING_PARAM</h3>
+<p><strong>When used:</strong> A required parameter was not provided in the request.</p>
+<p><strong>Message format:</strong> <code>Missing required parameter '{param_name}'</code></p>
+<p><strong>Details:</strong></p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** Name of the missing parameter */</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  param_name<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** Operation that requires this parameter */</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  operation<span class="op">?:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><strong>Example:</strong></p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;error&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;code&quot;</span><span class="fu">:</span> <span class="st">&quot;VALIDATION_MISSING_PARAM&quot;</span><span class="fu">,</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;Missing required parameter &#39;owner&#39;&quot;</span><span class="fu">,</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;details&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;param_name&quot;</span><span class="fu">:</span> <span class="st">&quot;owner&quot;</span><span class="fu">,</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;operation&quot;</span><span class="fu">:</span> <span class="st">&quot;get_repo&quot;</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><strong>Reference:</strong> This specification (MVP error code)</p>
+<h3 id="44-validation_invalid_type">4.4 VALIDATION_INVALID_TYPE</h3>
+<p><strong>When used:</strong> A parameter was provided with an incorrect type.</p>
+<p><strong>Message format:</strong> <code>Parameter '{param_name}' expected '{expected_type}', got '{actual_type}'</code></p>
+<p><strong>Details:</strong></p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** Name of the invalid parameter */</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  param_name<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** Expected type (string, integer, etc.) */</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  expected_type<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** Type that was received */</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  actual_type<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** The invalid value (if safe to include) */</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  value<span class="op">?:</span> <span class="dt">unknown</span><span class="op">;</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><strong>Example:</strong></p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;error&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;code&quot;</span><span class="fu">:</span> <span class="st">&quot;VALIDATION_INVALID_TYPE&quot;</span><span class="fu">,</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;Parameter &#39;per_page&#39; expected &#39;integer&#39;, got &#39;string&#39;&quot;</span><span class="fu">,</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;details&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;param_name&quot;</span><span class="fu">:</span> <span class="st">&quot;per_page&quot;</span><span class="fu">,</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;expected_type&quot;</span><span class="fu">:</span> <span class="st">&quot;integer&quot;</span><span class="fu">,</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;actual_type&quot;</span><span class="fu">:</span> <span class="st">&quot;string&quot;</span><span class="fu">,</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;value&quot;</span><span class="fu">:</span> <span class="st">&quot;fifty&quot;</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><strong>Reference:</strong> This specification (MVP error code)</p>
+<h3 id="45-validation_unknown_param">4.5 VALIDATION_UNKNOWN_PARAM</h3>
+<p><strong>When used:</strong> A request contains one or more parameters not defined in the operation schema at the <code>params</code> level.</p>
+<blockquote>
+<p><strong>Note:</strong> This code applies to unknown parameters in the <code>params</code> object. For unknown fields within the nested <code>input</code> object (used in UPDATE operations per Section 4.5 of the normative spec), use <code>VALIDATION_UNKNOWN_FIELD</code> instead. The distinction enables precise error handling: <code>VALIDATION_UNKNOWN_PARAM</code> indicates a top-level parameter error, while <code>VALIDATION_UNKNOWN_FIELD</code> indicates an error within the update payload.</p>
+</blockquote>
+<p><strong>Message format:</strong> <code>Unknown parameter(s) for operation '{operation}': {param_list}</code></p>
+<p>When multiple unknown parameters are detected, adapters SHOULD either:</p>
+<ul>
+<li>List all unknown parameters in a comma-separated format: <code>Unknown parameter(s) for operation 'create_user': force_create, admin_override</code></li>
+<li>Report the first unknown parameter with a count: <code>Unknown parameter 'force_create' for operation 'create_user' (and 1 other)</code></li>
+</ul>
+<p><strong>Details:</strong></p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** The operation being called */</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  operation<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** List of unknown parameter names */</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  unknown_params<span class="op">:</span> <span class="dt">string</span>[]<span class="op">;</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** List of valid parameter names for this operation */</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  valid_params<span class="op">:</span> <span class="dt">string</span>[]<span class="op">;</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><strong>Example (multiple unknown parameters):</strong></p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;error&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;code&quot;</span><span class="fu">:</span> <span class="st">&quot;VALIDATION_UNKNOWN_PARAM&quot;</span><span class="fu">,</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;Unknown parameter(s) for operation &#39;create_user&#39;: force_create, admin_override&quot;</span><span class="fu">,</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;details&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;operation&quot;</span><span class="fu">:</span> <span class="st">&quot;create_user&quot;</span><span class="fu">,</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;unknown_params&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;force_create&quot;</span><span class="ot">,</span> <span class="st">&quot;admin_override&quot;</span><span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;valid_params&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;user_name&quot;</span><span class="ot">,</span> <span class="st">&quot;password&quot;</span><span class="ot">,</span> <span class="st">&quot;email&quot;</span><span class="ot">]</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><strong>Example (single unknown parameter):</strong></p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;error&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;code&quot;</span><span class="fu">:</span> <span class="st">&quot;VALIDATION_UNKNOWN_PARAM&quot;</span><span class="fu">,</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;Unknown parameter(s) for operation &#39;create_user&#39;: force_create&quot;</span><span class="fu">,</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;details&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;operation&quot;</span><span class="fu">:</span> <span class="st">&quot;create_user&quot;</span><span class="fu">,</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;unknown_params&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;force_create&quot;</span><span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;valid_params&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;user_name&quot;</span><span class="ot">,</span> <span class="st">&quot;password&quot;</span><span class="ot">,</span> <span class="st">&quot;email&quot;</span><span class="ot">]</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<blockquote>
+<p><strong>Note:</strong> The <code>parameter(s)</code> format and array structure work for both singular and plural cases. Implementers do not need special-case logic based on the count.</p>
+</blockquote>
+<p><strong>HTTP Status Mapping:</strong> This error SHOULD map to HTTP 400 (Bad Request) or 422 (Unprocessable Entity).</p>
+<p><strong>Reference:</strong> <a href="versions/v1.0.0-draft.html#46-unknown-parameter-handling">MCP-AQL Specification Section 4.6</a></p>
+<h3 id="46-validation_invalid_encoding">4.6 VALIDATION_INVALID_ENCODING</h3>
+<p><strong>When used:</strong> A request contains invalid character encoding (non-UTF-8 sequences).</p>
+<p><strong>Message format:</strong> <code>Invalid character encoding in request</code></p>
+<p><strong>Details:</strong></p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** Location where invalid encoding was detected */</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  location<span class="op">?:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** Byte offset of the invalid sequence (if available) */</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  byte_offset<span class="op">?:</span> <span class="dt">number</span><span class="op">;</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><strong>Example:</strong></p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;error&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;code&quot;</span><span class="fu">:</span> <span class="st">&quot;VALIDATION_INVALID_ENCODING&quot;</span><span class="fu">,</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;Invalid character encoding in request&quot;</span><span class="fu">,</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;details&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;location&quot;</span><span class="fu">:</span> <span class="st">&quot;params.description&quot;</span><span class="fu">,</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;byte_offset&quot;</span><span class="fu">:</span> <span class="dv">42</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><strong>Reference:</strong> <a href="versions/v1.0.0-draft.html#471-character-encoding">MCP-AQL Specification Section 4.7.1</a></p>
+<h3 id="47-validation_payload_too_large">4.7 VALIDATION_PAYLOAD_TOO_LARGE</h3>
+<p><strong>When used:</strong> A request or response exceeds configured size limits.</p>
+<p><strong>Message format:</strong> <code>Payload exceeds {limit_type} limit of {limit_value}</code></p>
+<p><strong>Details:</strong></p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** Type of limit exceeded */</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  limit_type<span class="op">:</span> <span class="st">&#39;request_size&#39;</span> <span class="op">|</span> <span class="st">&#39;response_size&#39;</span> <span class="op">|</span> <span class="st">&#39;string_length&#39;</span> <span class="op">|</span> <span class="st">&#39;array_elements&#39;</span> <span class="op">|</span> <span class="st">&#39;nesting_depth&#39;</span><span class="op">;</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** The configured limit */</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  limit_value<span class="op">:</span> <span class="dt">number</span><span class="op">;</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** The actual size/count */</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  actual_value<span class="op">:</span> <span class="dt">number</span><span class="op">;</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** Unit of measurement */</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  unit<span class="op">:</span> <span class="st">&#39;bytes&#39;</span> <span class="op">|</span> <span class="st">&#39;elements&#39;</span> <span class="op">|</span> <span class="st">&#39;levels&#39;</span><span class="op">;</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><strong>Example:</strong></p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;error&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;code&quot;</span><span class="fu">:</span> <span class="st">&quot;VALIDATION_PAYLOAD_TOO_LARGE&quot;</span><span class="fu">,</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;Payload exceeds request_size limit of 1048576&quot;</span><span class="fu">,</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;details&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;limit_type&quot;</span><span class="fu">:</span> <span class="st">&quot;request_size&quot;</span><span class="fu">,</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;limit_value&quot;</span><span class="fu">:</span> <span class="dv">1048576</span><span class="fu">,</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;actual_value&quot;</span><span class="fu">:</span> <span class="dv">2500000</span><span class="fu">,</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;unit&quot;</span><span class="fu">:</span> <span class="st">&quot;bytes&quot;</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><strong>Reference:</strong> <a href="versions/v1.0.0-draft.html#475-payload-size-limits">MCP-AQL Specification Section 4.7.5</a></p>
+<h3 id="48-not_found_operation">4.8 NOT_FOUND_OPERATION</h3>
+<p><strong>When used:</strong> The requested operation does not exist in the adapter schema.</p>
+<blockquote>
+<p><strong>Design note:</strong> This code uses the <code>NOT_FOUND_</code> category rather than <code>VALIDATION_</code> because the error signals a fundamentally different recovery strategy. A <code>VALIDATION_</code> error tells the client to fix its input and retry the same operation. A <code>NOT_FOUND_OPERATION</code> error tells the client that the operation itself does not exist and it should discover valid operations via introspection. This distinction is especially important for LLM clients, which use the error category to determine whether to adjust parameters or switch to a different operation entirely.</p>
+</blockquote>
+<p><strong>Message format:</strong> <code>Unknown operation: '{operation_name}'</code></p>
+<p><strong>Details:</strong></p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** The operation name that was requested */</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  operation<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** Valid operation names the client can use instead */</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  available<span class="op">?:</span> <span class="dt">string</span>[]<span class="op">;</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><strong>Example:</strong></p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;error&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;code&quot;</span><span class="fu">:</span> <span class="st">&quot;NOT_FOUND_OPERATION&quot;</span><span class="fu">,</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;Unknown operation: &#39;get_users&#39;&quot;</span><span class="fu">,</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;details&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;operation&quot;</span><span class="fu">:</span> <span class="st">&quot;get_users&quot;</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><strong>Reference:</strong> This specification (MVP error code)</p>
+<h3 id="49-not_found_resource">4.9 NOT_FOUND_RESOURCE</h3>
+<p><strong>When used:</strong> The target API returned HTTP 404 - the requested resource does not exist.</p>
+<p><strong>Message format:</strong> <code>Resource '{resource_type}' not found: '{resource_id}'</code></p>
+<p><strong>Details:</strong></p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** Type of resource (e.g., &quot;repository&quot;, &quot;user&quot;, &quot;issue&quot;) */</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  resource_type<span class="op">?:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** Identifier that was not found */</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  resource_id<span class="op">?:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** HTTP status code from the target API */</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>  http_status<span class="op">?:</span> <span class="dt">number</span><span class="op">;</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><strong>Example:</strong></p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;error&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;code&quot;</span><span class="fu">:</span> <span class="st">&quot;NOT_FOUND_RESOURCE&quot;</span><span class="fu">,</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;Repository &#39;octocat/nonexistent&#39; not found&quot;</span><span class="fu">,</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;details&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;resource_type&quot;</span><span class="fu">:</span> <span class="st">&quot;repository&quot;</span><span class="fu">,</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;resource_id&quot;</span><span class="fu">:</span> <span class="st">&quot;octocat/nonexistent&quot;</span><span class="fu">,</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;http_status&quot;</span><span class="fu">:</span> <span class="dv">404</span></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><strong>Reference:</strong> This specification (MVP error code); <a href="https://www.rfc-editor.org/rfc/rfc9110#section-15.5.5">RFC 9110 Section 15.5.5</a> (HTTP 404)</p>
+<h3 id="410-permission_denied">4.10 PERMISSION_DENIED</h3>
+<p><strong>When used:</strong> The target API returned HTTP 401 (unauthorized) or 403 (forbidden).</p>
+<p><strong>Message format:</strong> <code>Permission denied: '{reason}'</code></p>
+<p><strong>Details:</strong></p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** Human-readable explanation of why permission was denied */</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  reason<span class="op">?:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** HTTP status code from the target API (401 or 403) */</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  http_status<span class="op">?:</span> <span class="dt">number</span><span class="op">;</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** OAuth scope required for this operation, if known */</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  required_scope<span class="op">?:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><strong>Example:</strong></p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;error&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;code&quot;</span><span class="fu">:</span> <span class="st">&quot;PERMISSION_DENIED&quot;</span><span class="fu">,</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;Permission denied: requires &#39;repo&#39; scope&quot;</span><span class="fu">,</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;details&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;http_status&quot;</span><span class="fu">:</span> <span class="dv">403</span><span class="fu">,</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;required_scope&quot;</span><span class="fu">:</span> <span class="st">&quot;repo&quot;</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><strong>Reference:</strong> This specification (MVP error code); <a href="https://www.rfc-editor.org/rfc/rfc9110#section-15.5.2">RFC 9110 Section 15.5.2</a> (HTTP 401), <a href="https://www.rfc-editor.org/rfc/rfc9110#section-15.5.4">Section 15.5.4</a> (HTTP 403)</p>
+<h3 id="411-internal_error">4.11 INTERNAL_ERROR</h3>
+<p><strong>When used:</strong> Server error from target API (HTTP 500+) or unexpected error in the runtime.</p>
+<p><strong>Message format:</strong> <code>Internal error: '{description}'</code></p>
+<p><strong>Details:</strong></p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** HTTP status code from the target API */</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  http_status<span class="op">?:</span> <span class="dt">number</span><span class="op">;</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** Error message returned by the target API */</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  upstream_error<span class="op">?:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><strong>Example:</strong></p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;error&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;code&quot;</span><span class="fu">:</span> <span class="st">&quot;INTERNAL_ERROR&quot;</span><span class="fu">,</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;Internal error: GitHub API unavailable&quot;</span><span class="fu">,</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;details&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;http_status&quot;</span><span class="fu">:</span> <span class="dv">503</span><span class="fu">,</span></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;upstream_error&quot;</span><span class="fu">:</span> <span class="st">&quot;Service temporarily unavailable&quot;</span></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><strong>Reference:</strong> This specification (MVP error code); <a href="https://www.rfc-editor.org/rfc/rfc9110#section-15.6">RFC 9110 Section 15.6</a> (HTTP 5xx)</p>
+<hr />
+<h2 id="5-phase-1-robustness-error-codes">5. Phase 1: Robustness Error Codes</h2>
+<p>Phase 1 of MCP-AQL adds robustness features including trust levels, dangerous operation classification, rate limiting, and confirmation tokens. These features introduce 11 additional error codes.</p>
+<h3 id="51-phase-1-error-code-registry">5.1 Phase 1 Error Code Registry</h3>
+<table>
+<thead>
+<tr class="header">
+<th>Code</th>
+<th>Category</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>PERMISSION_TRUST_LEVEL_INSUFFICIENT</code></td>
+<td>Permission</td>
+<td>Adapter trust level too low for operation</td>
+</tr>
+<tr class="even">
+<td><code>PERMISSION_DANGER_LEVEL_DENIED</code></td>
+<td>Permission</td>
+<td>Operation danger level exceeds trust allowance</td>
+</tr>
+<tr class="odd">
+<td><code>CONFIRMATION_REQUIRED</code></td>
+<td>Permission</td>
+<td>Dangerous operation requires user confirmation</td>
+</tr>
+<tr class="even">
+<td><code>RATE_LIMIT_EXCEEDED</code></td>
+<td>Rate Limit</td>
+<td>Target API rate limit reached</td>
+</tr>
+<tr class="odd">
+<td><code>RATE_LIMIT_QUOTA_PAUSE</code></td>
+<td>Rate Limit</td>
+<td>User quota pause threshold reached</td>
+</tr>
+<tr class="even">
+<td><code>RATE_LIMIT_QUOTA_EXHAUSTED</code></td>
+<td>Rate Limit</td>
+<td>User quota hard stop reached</td>
+</tr>
+<tr class="odd">
+<td><code>RATE_LIMIT_QUOTA_WARNING</code></td>
+<td>Rate Limit</td>
+<td>Approaching quota limit (warning)</td>
+</tr>
+<tr class="even">
+<td><code>TOKEN_INVALID</code></td>
+<td>Token</td>
+<td>Confirmation token not found or malformed</td>
+</tr>
+<tr class="odd">
+<td><code>TOKEN_EXPIRED</code></td>
+<td>Token</td>
+<td>Confirmation token has expired</td>
+</tr>
+<tr class="even">
+<td><code>TOKEN_ALREADY_USED</code></td>
+<td>Token</td>
+<td>Confirmation token has already been redeemed</td>
+</tr>
+<tr class="odd">
+<td><code>TOKEN_SCOPE_MISMATCH</code></td>
+<td>Token</td>
+<td>Token issued for different operation or parameters</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Note on <code>CONFIRMATION_REQUIRED</code> categorization:</strong> This code is categorized under "Permission" rather than having its own category because it functions as part of the permission gating flow. The operation is denied pending user confirmation—conceptually similar to other permission denials, but with a recovery path (providing a confirmation token). Clients can treat it as a permission error that includes instructions for resolution.</p>
+</blockquote>
+<h3 id="52-permission_trust_level_insufficient">5.2 PERMISSION_TRUST_LEVEL_INSUFFICIENT</h3>
+<p><strong>When used:</strong> An operation is denied because the adapter's trust level is below the minimum required for the operation's danger level.</p>
+<p><strong>Message format:</strong> <code>Operation '{operation}' requires trust level '{required_trust}', adapter has '{actual_trust}'</code></p>
+<p><strong>Details:</strong></p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** The operation that was attempted */</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  operation<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** Trust level required for this operation */</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  required_trust<span class="op">:</span> <span class="st">&#39;untested&#39;</span> <span class="op">|</span> <span class="st">&#39;generated&#39;</span> <span class="op">|</span> <span class="st">&#39;validated&#39;</span> <span class="op">|</span> <span class="st">&#39;community_reviewed&#39;</span> <span class="op">|</span> <span class="st">&#39;certified&#39;</span><span class="op">;</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** Adapter&#39;s current trust level */</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>  actual_trust<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** The danger level of the operation */</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>  danger_level<span class="op">?:</span> <span class="dt">number</span><span class="op">;</span></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><strong>Example:</strong></p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;error&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;code&quot;</span><span class="fu">:</span> <span class="st">&quot;PERMISSION_TRUST_LEVEL_INSUFFICIENT&quot;</span><span class="fu">,</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;Operation &#39;delete_user&#39; requires trust level &#39;community_reviewed&#39;, adapter has &#39;validated&#39;&quot;</span><span class="fu">,</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;details&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;operation&quot;</span><span class="fu">:</span> <span class="st">&quot;delete_user&quot;</span><span class="fu">,</span></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;required_trust&quot;</span><span class="fu">:</span> <span class="st">&quot;community_reviewed&quot;</span><span class="fu">,</span></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;actual_trust&quot;</span><span class="fu">:</span> <span class="st">&quot;validated&quot;</span><span class="fu">,</span></span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;danger_level&quot;</span><span class="fu">:</span> <span class="dv">2</span></span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><strong>Reference:</strong> <a href="adapter/trust-levels.html">Trust Levels Specification</a></p>
+<h3 id="53-permission_danger_level_denied">5.3 PERMISSION_DANGER_LEVEL_DENIED</h3>
+<p><strong>When used:</strong> An operation is denied because its danger level is too high for the adapter's trust level.</p>
+<p><strong>Message format:</strong> <code>Operation '{operation}' (danger: {danger_level}) denied for adapter trust level '{adapter_trust}'</code></p>
+<p><strong>Details:</strong></p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** The operation that was attempted */</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  operation<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** The danger level of the operation */</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>  danger_level<span class="op">:</span> <span class="st">&#39;safe&#39;</span> <span class="op">|</span> <span class="st">&#39;reversible&#39;</span> <span class="op">|</span> <span class="st">&#39;destructive&#39;</span> <span class="op">|</span> <span class="st">&#39;dangerous&#39;</span> <span class="op">|</span> <span class="st">&#39;forbidden&#39;</span><span class="op">;</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** Adapter&#39;s current trust level */</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>  adapter_trust<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** Minimum trust level required */</span></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>  minimum_trust_required<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** Reasons why this operation is dangerous */</span></span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>  reasons<span class="op">?:</span> <span class="dt">string</span>[]<span class="op">;</span></span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><strong>Example:</strong></p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;error&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;code&quot;</span><span class="fu">:</span> <span class="st">&quot;PERMISSION_DANGER_LEVEL_DENIED&quot;</span><span class="fu">,</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;Operation &#39;bulk_delete&#39; (danger: dangerous) denied for adapter trust level &#39;validated&#39;&quot;</span><span class="fu">,</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;details&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;operation&quot;</span><span class="fu">:</span> <span class="st">&quot;bulk_delete&quot;</span><span class="fu">,</span></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;danger_level&quot;</span><span class="fu">:</span> <span class="st">&quot;dangerous&quot;</span><span class="fu">,</span></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;adapter_trust&quot;</span><span class="fu">:</span> <span class="st">&quot;validated&quot;</span><span class="fu">,</span></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;minimum_trust_required&quot;</span><span class="fu">:</span> <span class="st">&quot;community_reviewed&quot;</span><span class="fu">,</span></span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;reasons&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;Affects multiple resources&quot;</span><span class="ot">,</span></span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;Cannot be undone&quot;</span></span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>      <span class="ot">]</span></span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><strong>Reference:</strong> <a href="adapter/danger-levels.html">Dangerous Operation Classification</a></p>
+<h3 id="54-confirmation_required">5.4 CONFIRMATION_REQUIRED</h3>
+<p><strong>When used:</strong> A dangerous operation requires explicit user confirmation before execution.</p>
+<blockquote>
+<p><strong>Design note:</strong> This code is categorized under "Permission" in the registry table because it functions as a conditional permission denial—the operation is blocked until the user provides explicit confirmation. Unlike a hard permission denial (<code>PERMISSION_DENIED</code>), this error includes a <code>confirmation_token</code> that enables the client to retry the operation once user consent is obtained. This pattern aligns with the gatekeeper security model where dangerous operations require explicit user approval.</p>
+</blockquote>
+<p><strong>Message format:</strong> <code>This operation requires confirmation</code></p>
+<p><strong>Details:</strong></p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** The operation that requires confirmation */</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  operation<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** The danger level of the operation */</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>  danger_level<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** Human-readable reasons for the confirmation requirement */</span></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>  reasons<span class="op">?:</span> <span class="dt">string</span>[]<span class="op">;</span></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** Custom confirmation message to display */</span></span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>  confirmation_message<span class="op">?:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** Token to include in retry request */</span></span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>  confirmation_token<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** When the confirmation token expires */</span></span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>  expires_at<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><strong>Example:</strong></p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;error&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;code&quot;</span><span class="fu">:</span> <span class="st">&quot;CONFIRMATION_REQUIRED&quot;</span><span class="fu">,</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;This operation requires confirmation&quot;</span><span class="fu">,</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;details&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;operation&quot;</span><span class="fu">:</span> <span class="st">&quot;delete_repo&quot;</span><span class="fu">,</span></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;danger_level&quot;</span><span class="fu">:</span> <span class="st">&quot;destructive&quot;</span><span class="fu">,</span></span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;reasons&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;Permanently removes repository and all contents&quot;</span><span class="ot">,</span></span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;Cannot be recovered after grace period&quot;</span></span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>      <span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;confirmation_message&quot;</span><span class="fu">:</span> <span class="st">&quot;Delete repository &#39;acme/widgets&#39;? This cannot be undone.&quot;</span><span class="fu">,</span></span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;confirmation_token&quot;</span><span class="fu">:</span> <span class="st">&quot;conf_abc123xyz&quot;</span><span class="fu">,</span></span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;expires_at&quot;</span><span class="fu">:</span> <span class="st">&quot;2026-01-28T12:05:00Z&quot;</span></span>
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><strong>Reference:</strong> <a href="adapter/danger-levels.html">Dangerous Operation Classification</a></p>
+<h3 id="55-rate_limit_exceeded">5.5 RATE_LIMIT_EXCEEDED</h3>
+<p><strong>When used:</strong> The target API rate limit has been reached and requests are blocked until reset.</p>
+<p><strong>Message format:</strong> <code>API rate limit exceeded</code></p>
+<p><strong>Details:</strong></p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** The rate limit that was exceeded */</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  limit<span class="op">:</span> <span class="dt">number</span><span class="op">;</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** Remaining requests (usually 0) */</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>  remaining<span class="op">:</span> <span class="dt">number</span><span class="op">;</span></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** Time window of the limit */</span></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>  window<span class="op">:</span> <span class="st">&#39;second&#39;</span> <span class="op">|</span> <span class="st">&#39;minute&#39;</span> <span class="op">|</span> <span class="st">&#39;hour&#39;</span> <span class="op">|</span> <span class="st">&#39;day&#39;</span><span class="op">;</span></span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** When the rate limit resets */</span></span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>  resets_at<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** Seconds until retry is allowed */</span></span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>  retry_after_seconds<span class="op">:</span> <span class="dt">number</span><span class="op">;</span></span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><strong>Example:</strong></p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;error&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;code&quot;</span><span class="fu">:</span> <span class="st">&quot;RATE_LIMIT_EXCEEDED&quot;</span><span class="fu">,</span></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;API rate limit exceeded&quot;</span><span class="fu">,</span></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;details&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;limit&quot;</span><span class="fu">:</span> <span class="dv">5000</span><span class="fu">,</span></span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;remaining&quot;</span><span class="fu">:</span> <span class="dv">0</span><span class="fu">,</span></span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;window&quot;</span><span class="fu">:</span> <span class="st">&quot;hour&quot;</span><span class="fu">,</span></span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;resets_at&quot;</span><span class="fu">:</span> <span class="st">&quot;2026-01-28T13:00:00Z&quot;</span><span class="fu">,</span></span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;retry_after_seconds&quot;</span><span class="fu">:</span> <span class="dv">1847</span></span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><strong>Reference:</strong> <a href="adapter/rate-limiting.html">Rate Limiting Specification</a></p>
+<h3 id="56-rate_limit_quota_pause">5.6 RATE_LIMIT_QUOTA_PAUSE</h3>
+<p><strong>When used:</strong> A user-configured quota pause threshold has been reached. The user can confirm to continue.</p>
+<p><strong>Message format:</strong> <code>Quota pause threshold reached</code></p>
+<p><strong>Details:</strong></p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** The metric that triggered the pause */</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  metric<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** Current usage */</span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>  current<span class="op">:</span> <span class="dt">number</span><span class="op">;</span></span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** The pause threshold */</span></span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>  pause_threshold<span class="op">:</span> <span class="dt">number</span><span class="op">;</span></span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** The hard stop threshold (if configured) */</span></span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>  hard_stop_threshold<span class="op">?:</span> <span class="dt">number</span><span class="op">;</span></span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** Token to continue past the pause */</span></span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>  confirmation_token<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** When the confirmation token expires */</span></span>
+<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a>  expires_at<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><strong>Example:</strong></p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;error&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;code&quot;</span><span class="fu">:</span> <span class="st">&quot;RATE_LIMIT_QUOTA_PAUSE&quot;</span><span class="fu">,</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;Quota pause threshold reached&quot;</span><span class="fu">,</span></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;details&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;metric&quot;</span><span class="fu">:</span> <span class="st">&quot;requests_per_hour&quot;</span><span class="fu">,</span></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;current&quot;</span><span class="fu">:</span> <span class="dv">4850</span><span class="fu">,</span></span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;pause_threshold&quot;</span><span class="fu">:</span> <span class="dv">4800</span><span class="fu">,</span></span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;hard_stop_threshold&quot;</span><span class="fu">:</span> <span class="dv">5000</span><span class="fu">,</span></span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;confirmation_token&quot;</span><span class="fu">:</span> <span class="st">&quot;quota_continue_abc123&quot;</span><span class="fu">,</span></span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;expires_at&quot;</span><span class="fu">:</span> <span class="st">&quot;2026-01-28T12:05:00Z&quot;</span></span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><strong>Reference:</strong> <a href="adapter/rate-limiting.html">Rate Limiting Specification</a></p>
+<h3 id="57-rate_limit_quota_exhausted">5.7 RATE_LIMIT_QUOTA_EXHAUSTED</h3>
+<p><strong>When used:</strong> A user-configured quota hard stop threshold has been reached. All requests are blocked until reset.</p>
+<p><strong>Message format:</strong> <code>Quota exhausted</code></p>
+<p><strong>Details:</strong></p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** The metric that triggered the hard stop */</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  metric<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** Current usage */</span></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>  current<span class="op">:</span> <span class="dt">number</span><span class="op">;</span></span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** The hard stop threshold */</span></span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>  hard_stop_threshold<span class="op">:</span> <span class="dt">number</span><span class="op">;</span></span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** When the quota resets */</span></span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>  resets_at<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><strong>Example:</strong></p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;error&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;code&quot;</span><span class="fu">:</span> <span class="st">&quot;RATE_LIMIT_QUOTA_EXHAUSTED&quot;</span><span class="fu">,</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;Quota exhausted&quot;</span><span class="fu">,</span></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;details&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;metric&quot;</span><span class="fu">:</span> <span class="st">&quot;requests_per_hour&quot;</span><span class="fu">,</span></span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;current&quot;</span><span class="fu">:</span> <span class="dv">5000</span><span class="fu">,</span></span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;hard_stop_threshold&quot;</span><span class="fu">:</span> <span class="dv">5000</span><span class="fu">,</span></span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;resets_at&quot;</span><span class="fu">:</span> <span class="st">&quot;2026-01-28T13:00:00Z&quot;</span></span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><strong>Reference:</strong> <a href="adapter/rate-limiting.html">Rate Limiting Specification</a></p>
+<h3 id="58-rate_limit_quota_warning">5.8 RATE_LIMIT_QUOTA_WARNING</h3>
+<p><strong>When used:</strong> Included in the <code>warnings</code> array of successful responses when approaching a quota limit.</p>
+<blockquote>
+<p><strong>⚠️ IMPORTANT: This is a WARNING code, not an error code.</strong></p>
+<p>Unlike all other codes in this section, <code>RATE_LIMIT_QUOTA_WARNING</code> appears in the <code>warnings</code> array of <strong>successful</strong> responses (<code>success: true</code>), not in the <code>error</code> object. The operation completes normally; this code signals an informational warning about approaching limits.</p>
+<p>See <a href="features/warnings.html">Warnings Specification</a> for details on warning handling.</p>
+</blockquote>
+<p><strong>Message format:</strong> <code>Approaching quota limit</code></p>
+<p><strong>Details:</strong></p>
+<div class="sourceCode" id="cb37"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** The metric approaching the limit */</span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  metric<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** Current usage */</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>  current<span class="op">:</span> <span class="dt">number</span><span class="op">;</span></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** The warning threshold */</span></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>  warn_threshold<span class="op">:</span> <span class="dt">number</span><span class="op">;</span></span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** The pause threshold (next level) */</span></span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>  pause_threshold<span class="op">?:</span> <span class="dt">number</span><span class="op">;</span></span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><strong>Example (in successful response):</strong></p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;data&quot;</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">&quot;...&quot;</span><span class="fu">:</span> <span class="st">&quot;...&quot;</span> <span class="fu">},</span></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;warnings&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;code&quot;</span><span class="fu">:</span> <span class="st">&quot;RATE_LIMIT_QUOTA_WARNING&quot;</span><span class="fu">,</span></span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;Approaching quota limit&quot;</span><span class="fu">,</span></span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;details&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;metric&quot;</span><span class="fu">:</span> <span class="st">&quot;requests_per_hour&quot;</span><span class="fu">,</span></span>
+<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;current&quot;</span><span class="fu">:</span> <span class="dv">4100</span><span class="fu">,</span></span>
+<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;warn_threshold&quot;</span><span class="fu">:</span> <span class="dv">4000</span><span class="fu">,</span></span>
+<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;pause_threshold&quot;</span><span class="fu">:</span> <span class="dv">4800</span></span>
+<span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a>      <span class="fu">}</span></span>
+<span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb38-15"><a href="#cb38-15" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span></span>
+<span id="cb38-16"><a href="#cb38-16" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><strong>Reference:</strong> <a href="adapter/rate-limiting.html">Rate Limiting Specification</a></p>
+<h3 id="59-token_invalid">5.9 TOKEN_INVALID</h3>
+<p><strong>When used:</strong> A confirmation token was provided but could not be found in the token store or is malformed.</p>
+<p><strong>Message format:</strong> <code>Invalid confirmation token</code></p>
+<p><strong>Details:</strong></p>
+<div class="sourceCode" id="cb39"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** The token that was provided */</span></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  token<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><strong>Example:</strong></p>
+<div class="sourceCode" id="cb40"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;error&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;code&quot;</span><span class="fu">:</span> <span class="st">&quot;TOKEN_INVALID&quot;</span><span class="fu">,</span></span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;Invalid confirmation token&quot;</span><span class="fu">,</span></span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;details&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;token&quot;</span><span class="fu">:</span> <span class="st">&quot;conf_nonexistent123&quot;</span></span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><strong>Reference:</strong> <a href="security/confirmation-tokens.html">Confirmation Token Specification</a></p>
+<h3 id="510-token_expired">5.10 TOKEN_EXPIRED</h3>
+<p><strong>When used:</strong> A confirmation token was provided but has passed its expiration time.</p>
+<p><strong>Message format:</strong> <code>Confirmation token has expired</code></p>
+<p><strong>Details:</strong></p>
+<div class="sourceCode" id="cb41"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** The token that expired */</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  token<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** When the token expired */</span></span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>  expired_at<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** Current server time */</span></span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>  current_time<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><strong>Example:</strong></p>
+<div class="sourceCode" id="cb42"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;error&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;code&quot;</span><span class="fu">:</span> <span class="st">&quot;TOKEN_EXPIRED&quot;</span><span class="fu">,</span></span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;Confirmation token has expired&quot;</span><span class="fu">,</span></span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;details&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;token&quot;</span><span class="fu">:</span> <span class="st">&quot;conf_abc123xyz&quot;</span><span class="fu">,</span></span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;expired_at&quot;</span><span class="fu">:</span> <span class="st">&quot;2026-01-28T12:05:00Z&quot;</span><span class="fu">,</span></span>
+<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;current_time&quot;</span><span class="fu">:</span> <span class="st">&quot;2026-01-28T12:07:30Z&quot;</span></span>
+<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb42-12"><a href="#cb42-12" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><strong>Reference:</strong> <a href="security/confirmation-tokens.html">Confirmation Token Specification</a></p>
+<h3 id="511-token_already_used">5.11 TOKEN_ALREADY_USED</h3>
+<p><strong>When used:</strong> A confirmation token was provided but has already been redeemed for a previous operation.</p>
+<p><strong>Message format:</strong> <code>Confirmation token has already been used</code></p>
+<p><strong>Details:</strong></p>
+<div class="sourceCode" id="cb43"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** The token that was already used */</span></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  token<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** When the token was consumed */</span></span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>  consumed_at<span class="op">?:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><strong>Example:</strong></p>
+<div class="sourceCode" id="cb44"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;error&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;code&quot;</span><span class="fu">:</span> <span class="st">&quot;TOKEN_ALREADY_USED&quot;</span><span class="fu">,</span></span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;Confirmation token has already been used&quot;</span><span class="fu">,</span></span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;details&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;token&quot;</span><span class="fu">:</span> <span class="st">&quot;conf_abc123xyz&quot;</span><span class="fu">,</span></span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;consumed_at&quot;</span><span class="fu">:</span> <span class="st">&quot;2026-01-28T12:04:15Z&quot;</span></span>
+<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb44-10"><a href="#cb44-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb44-11"><a href="#cb44-11" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><strong>Reference:</strong> <a href="security/confirmation-tokens.html">Confirmation Token Specification</a></p>
+<h3 id="512-token_scope_mismatch">5.12 TOKEN_SCOPE_MISMATCH</h3>
+<p><strong>When used:</strong> A confirmation token was provided but was issued for a different operation or with different parameters.</p>
+<p><strong>Message format:</strong> <code>Confirmation token scope mismatch</code></p>
+<p><strong>Details:</strong></p>
+<div class="sourceCode" id="cb45"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** The token that was provided */</span></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>  token<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** Operation the token was issued for */</span></span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>  token_operation<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>  <span class="co">/** Operation the client is attempting */</span></span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>  requested_operation<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><strong>Example:</strong></p>
+<div class="sourceCode" id="cb46"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;error&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;code&quot;</span><span class="fu">:</span> <span class="st">&quot;TOKEN_SCOPE_MISMATCH&quot;</span><span class="fu">,</span></span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;Confirmation token scope mismatch&quot;</span><span class="fu">,</span></span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;details&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;token&quot;</span><span class="fu">:</span> <span class="st">&quot;conf_abc123xyz&quot;</span><span class="fu">,</span></span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;token_operation&quot;</span><span class="fu">:</span> <span class="st">&quot;delete_repo&quot;</span><span class="fu">,</span></span>
+<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;requested_operation&quot;</span><span class="fu">:</span> <span class="st">&quot;force_push&quot;</span></span>
+<span id="cb46-10"><a href="#cb46-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb46-11"><a href="#cb46-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb46-12"><a href="#cb46-12" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><strong>Reference:</strong> <a href="security/confirmation-tokens.html">Confirmation Token Specification</a></p>
+<hr />
+<h2 id="6-http-status-mapping">6. HTTP Status Mapping</h2>
+<h3 id="61-default-mapping">6.1 Default Mapping</h3>
+<p>The runtime maps HTTP status codes to MCP-AQL error codes:</p>
+<table>
+<thead>
+<tr class="header">
+<th>HTTP Status</th>
+<th>Error Code</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>400</td>
+<td><code>VALIDATION_INVALID_TYPE</code></td>
+<td>Bad request (default for validation errors)</td>
+</tr>
+<tr class="even">
+<td>400</td>
+<td><code>VALIDATION_MISSING_PARAM</code></td>
+<td>Bad request (missing required parameter)</td>
+</tr>
+<tr class="odd">
+<td>400</td>
+<td><code>VALIDATION_UNKNOWN_PARAM</code></td>
+<td>Bad request (unknown parameter)</td>
+</tr>
+<tr class="even">
+<td>401</td>
+<td><code>PERMISSION_DENIED</code></td>
+<td>Authentication required</td>
+</tr>
+<tr class="odd">
+<td>403</td>
+<td><code>PERMISSION_DENIED</code></td>
+<td>Forbidden</td>
+</tr>
+<tr class="even">
+<td>404</td>
+<td><code>NOT_FOUND_RESOURCE</code></td>
+<td>Not found</td>
+</tr>
+<tr class="odd">
+<td>422</td>
+<td><code>VALIDATION_INVALID_TYPE</code></td>
+<td>Unprocessable entity</td>
+</tr>
+<tr class="even">
+<td>500</td>
+<td><code>INTERNAL_ERROR</code></td>
+<td>Internal server error</td>
+</tr>
+<tr class="odd">
+<td>502</td>
+<td><code>INTERNAL_ERROR</code></td>
+<td>Bad gateway</td>
+</tr>
+<tr class="even">
+<td>503</td>
+<td><code>INTERNAL_ERROR</code></td>
+<td>Service unavailable</td>
+</tr>
+<tr class="odd">
+<td>504</td>
+<td><code>INTERNAL_ERROR</code></td>
+<td>Gateway timeout</td>
+</tr>
+</tbody>
+</table>
+<h3 id="62-mapping-algorithm">6.2 Mapping Algorithm</h3>
+<div class="sourceCode" id="cb47"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">mapHttpStatusToErrorCode</span>(status<span class="op">:</span> <span class="dt">number</span>)<span class="op">:</span> <span class="dt">string</span> {</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (status <span class="op">===</span> <span class="dv">400</span> <span class="op">||</span> status <span class="op">===</span> <span class="dv">422</span>) {</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="st">&#39;VALIDATION_INVALID_TYPE&#39;</span><span class="op">;</span></span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (status <span class="op">===</span> <span class="dv">401</span> <span class="op">||</span> status <span class="op">===</span> <span class="dv">403</span>) {</span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="st">&#39;PERMISSION_DENIED&#39;</span><span class="op">;</span></span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (status <span class="op">===</span> <span class="dv">404</span>) {</span>
+<span id="cb47-9"><a href="#cb47-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="st">&#39;NOT_FOUND_RESOURCE&#39;</span><span class="op">;</span></span>
+<span id="cb47-10"><a href="#cb47-10" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb47-11"><a href="#cb47-11" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (status <span class="op">&gt;=</span> <span class="dv">500</span>) {</span>
+<span id="cb47-12"><a href="#cb47-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="st">&#39;INTERNAL_ERROR&#39;</span><span class="op">;</span></span>
+<span id="cb47-13"><a href="#cb47-13" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb47-14"><a href="#cb47-14" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Default for other 4xx errors</span></span>
+<span id="cb47-15"><a href="#cb47-15" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="st">&#39;VALIDATION_INVALID_TYPE&#39;</span><span class="op">;</span></span>
+<span id="cb47-16"><a href="#cb47-16" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<blockquote>
+<p><strong>Note:</strong> HTTP status codes alone cannot distinguish between <code>VALIDATION_MISSING_PARAM</code> and <code>VALIDATION_INVALID_TYPE</code> (both typically return 400 or 422). Adapters SHOULD examine the target API's response body to determine the specific validation error and set the appropriate code. The mapping algorithm above provides a default when response body inspection is not feasible.</p>
+</blockquote>
+<hr />
+<h2 id="7-implementation-requirements">7. Implementation Requirements</h2>
+<h3 id="71-error-generation">7.1 Error Generation</h3>
+<p>Implementations MUST:</p>
+<ol type="1">
+<li>Return structured errors for all failure cases</li>
+<li>Include <code>code</code> and <code>message</code> fields</li>
+<li>Use codes from the MVP registry</li>
+<li>Provide human-readable messages</li>
+</ol>
+<p>Implementations SHOULD:</p>
+<ol type="1">
+<li>Include <code>details</code> with contextual information</li>
+<li>Preserve upstream error messages</li>
+<li>Log full error context for debugging</li>
+</ol>
+<h3 id="72-error-handling">7.2 Error Handling</h3>
+<p>Client implementations SHOULD:</p>
+<ol type="1">
+<li>Check <code>success</code> field first</li>
+<li>Parse the <code>error</code> object to extract <code>code</code> and <code>message</code></li>
+<li>Use <code>code</code> field for programmatic error handling and recovery decisions</li>
+<li>Display <code>message</code> field to users</li>
+</ol>
+<h3 id="73-message-localization">7.3 Message Localization</h3>
+<p>The <code>code</code> field enables localization:</p>
+<div class="sourceCode" id="cb48"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> ERROR_MESSAGES <span class="op">=</span> {</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>  en<span class="op">:</span> {</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>    VALIDATION_MISSING_PARAM<span class="op">:</span> <span class="st">&quot;Missing required parameter: &#39;{param_name}&#39;&quot;</span><span class="op">,</span></span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>    NOT_FOUND_RESOURCE<span class="op">:</span> <span class="st">&#39;Resource not found&#39;</span><span class="op">,</span></span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>  }<span class="op">,</span></span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>  es<span class="op">:</span> {</span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>    VALIDATION_MISSING_PARAM<span class="op">:</span> <span class="st">&quot;Falta el parámetro requerido: &#39;{param_name}&#39;&quot;</span><span class="op">,</span></span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a>    NOT_FOUND_RESOURCE<span class="op">:</span> <span class="st">&#39;Recurso no encontrado&#39;</span><span class="op">,</span></span>
+<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a>}<span class="op">;</span></span>
+<span id="cb48-11"><a href="#cb48-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-12"><a href="#cb48-12" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">localizeError</span>(error<span class="op">:</span> ErrorDetail<span class="op">,</span> locale<span class="op">:</span> <span class="dt">string</span>)<span class="op">:</span> <span class="dt">string</span> {</span>
+<span id="cb48-13"><a href="#cb48-13" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> template <span class="op">=</span> ERROR_MESSAGES[locale]<span class="op">?.</span>[error<span class="op">.</span><span class="at">code</span>]<span class="op">;</span></span>
+<span id="cb48-14"><a href="#cb48-14" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (template <span class="op">&amp;&amp;</span> error<span class="op">.</span><span class="at">details</span>) {</span>
+<span id="cb48-15"><a href="#cb48-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="fu">interpolate</span>(template<span class="op">,</span> error<span class="op">.</span><span class="at">details</span>)<span class="op">;</span></span>
+<span id="cb48-16"><a href="#cb48-16" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb48-17"><a href="#cb48-17" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> error<span class="op">.</span><span class="at">message</span><span class="op">;</span></span>
+<span id="cb48-18"><a href="#cb48-18" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<hr />
+<h2 id="8-future-extensions">8. Future Extensions</h2>
+<h3 id="81-additional-error-codes">8.1 Additional Error Codes</h3>
+<p>Future specifications may add:</p>
+<p><strong>Conflict Handling:</strong></p>
+<ul>
+<li><code>CONFLICT_ALREADY_EXISTS</code> - Resource already exists</li>
+<li><code>CONFLICT_VERSION_MISMATCH</code> - Optimistic locking failure (see <a href="versions/v1.0.0-draft.html#93-request-concurrency">Request Concurrency</a>)</li>
+</ul>
+<p><strong>Enhanced Validation:</strong></p>
+<ul>
+<li><code>VALIDATION_INVALID_ENUM</code> - Value not in allowed enum</li>
+<li><code>VALIDATION_OUT_OF_RANGE</code> - Value outside allowed range</li>
+<li><code>VALIDATION_PATTERN_MISMATCH</code> - String doesn't match pattern</li>
+</ul>
+<h3 id="82-error-code-extension-mechanism">8.2 Error Code Extension Mechanism</h3>
+<p>Future versions will define how adapters can register custom error codes:</p>
+<div class="sourceCode" id="cb49"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co"># In adapter schema</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="fu">error_codes</span><span class="kw">:</span></span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">GITHUB_ABUSE_DETECTED</span><span class="kw">:</span></span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">category</span><span class="kw">:</span><span class="at"> RATE_LIMIT</span></span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">message_template</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Abuse detection triggered: {reason}&quot;</span></span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">maps_from_http</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="dv">403</span><span class="kw">]</span></span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">condition</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;response.body.message contains &#39;abuse&#39;&quot;</span></span></code></pre></div>
+<h3 id="83-per-adapter-error-overrides">8.3 Per-Adapter Error Overrides</h3>
+<p>Future versions will allow adapters to customize HTTP error mapping:</p>
+<div class="sourceCode" id="cb50"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co"># In adapter schema</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="fu">error_mapping</span><span class="kw">:</span></span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">404</span><span class="kw">:</span></span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">code</span><span class="kw">:</span><span class="at"> NOT_FOUND_REPOSITORY</span></span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">message_template</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Repository &#39;{owner}/{repo}&#39; not found&quot;</span></span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">403</span><span class="kw">:</span></span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">condition</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;response.body.message contains &#39;rate limit&#39;&quot;</span></span>
+<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">code</span><span class="kw">:</span><span class="at"> RATE_LIMIT_EXCEEDED</span></span></code></pre></div>
+<h3 id="84-error-aggregation">8.4 Error Aggregation</h3>
+<p>For batch operations, errors may be aggregated:</p>
+<div class="sourceCode" id="cb51"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;error&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;code&quot;</span><span class="fu">:</span> <span class="st">&quot;BATCH_PARTIAL_FAILURE&quot;</span><span class="fu">,</span></span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;3 of 5 operations failed&quot;</span><span class="fu">,</span></span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;details&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;total&quot;</span><span class="fu">:</span> <span class="dv">5</span><span class="fu">,</span></span>
+<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;succeeded&quot;</span><span class="fu">:</span> <span class="dv">2</span><span class="fu">,</span></span>
+<span id="cb51-9"><a href="#cb51-9" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;failed&quot;</span><span class="fu">:</span> <span class="dv">3</span><span class="fu">,</span></span>
+<span id="cb51-10"><a href="#cb51-10" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;errors&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb51-11"><a href="#cb51-11" aria-hidden="true" tabindex="-1"></a>        <span class="fu">{</span> <span class="dt">&quot;index&quot;</span><span class="fu">:</span> <span class="dv">1</span><span class="fu">,</span> <span class="dt">&quot;code&quot;</span><span class="fu">:</span> <span class="st">&quot;NOT_FOUND_RESOURCE&quot;</span><span class="fu">,</span> <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;...&quot;</span> <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb51-12"><a href="#cb51-12" aria-hidden="true" tabindex="-1"></a>        <span class="fu">{</span> <span class="dt">&quot;index&quot;</span><span class="fu">:</span> <span class="dv">3</span><span class="fu">,</span> <span class="dt">&quot;code&quot;</span><span class="fu">:</span> <span class="st">&quot;PERMISSION_DENIED&quot;</span><span class="fu">,</span> <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;...&quot;</span> <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb51-13"><a href="#cb51-13" aria-hidden="true" tabindex="-1"></a>        <span class="fu">{</span> <span class="dt">&quot;index&quot;</span><span class="fu">:</span> <span class="dv">4</span><span class="fu">,</span> <span class="dt">&quot;code&quot;</span><span class="fu">:</span> <span class="st">&quot;VALIDATION_MISSING_PARAM&quot;</span><span class="fu">,</span> <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;...&quot;</span> <span class="fu">}</span></span>
+<span id="cb51-14"><a href="#cb51-14" aria-hidden="true" tabindex="-1"></a>      <span class="ot">]</span></span>
+<span id="cb51-15"><a href="#cb51-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb51-16"><a href="#cb51-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb51-17"><a href="#cb51-17" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<hr />
+<h2 id="references">References</h2>
+<ul>
+<li><a href="versions/v1.0.0-draft.html">MCP-AQL Specification</a></li>
+<li><a href="adapter/danger-levels.html">Dangerous Operation Classification</a></li>
+<li><a href="adapter/trust-levels.html">Trust Levels Specification</a></li>
+<li><a href="adapter/rate-limiting.html">Rate Limiting Specification</a></li>
+<li><a href="https://github.com/MCPAQL/mcpaql-adapter/blob/develop/docs/architecture/runtime.md">Universal Adapter Runtime</a> (in mcpaql-adapter repo)</li>
+<li><a href="https://github.com/DollhouseMCP/mcp-server-v2-refactor/issues/298">DollhouseMCP Implementation</a></li>
+<li>GitHub Issue: <a href="https://github.com/MCPAQL/spec/issues/35">#35</a></li>
+</ul>
+
+          </div>
+        </section>
+        <nav class="page-nav" aria-label="Page navigation">
+  <a class="page-nav-link prev" href="endpoint-modes.html">
+    <span class="page-nav-eyebrow">Previous page</span>
+    <strong class="page-nav-label">MCP-AQL Endpoint Modes Specification</strong>
+  </a>
+  <a class="page-nav-link next" href="introspection.html">
+    <span class="page-nav-eyebrow">Next page</span>
+    <strong class="page-nav-label">MCP-AQL Introspection Specification</strong>
+  </a>
+</nav>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.</p>
+      <div class="footer-links">
+        <a href="../docs/index.html">Docs Library</a><a href="index.html">Repo-Synced Spec</a><a href="https://github.com/MCPAQL">MCPAQL Organization</a><a href="https://dollhouseresearch.com">Dollhouse Research</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../js/search.js"></script>
+</body>
+</html>

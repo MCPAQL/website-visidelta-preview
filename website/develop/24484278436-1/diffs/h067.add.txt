@@ -1,0 +1,42 @@
+MCP-AQL Aggregations
+MCP-AQL Computed Fields
+MCP-AQL Relationship Queries
+Cross-Domain Implementation Guide
+6. Semantic Endpoint Assignment
+Aggregations:
+aggregate : {
+total : { count : true } ,
+by_status : { group_by : &quot;status&quot; , count : true }
+For the preferred collection-query contract that combines text search, filters, sorting, pagination, and field selection, see Collection Querying . For summary-oriented server-side aggregation, see Aggregations . For adapter-declared derived values, see Computed Fields . For graph traversal and relationship exploration, see Relationship Queries .
+aggregate
+Collection READ operations with aggregation support
+Named server-side summary expressions such as count , group_by , sum , avg , min , and max
+semantic_category
+Standard semantic category: CREATE, READ, UPDATE, DELETE, or EXECUTE
+REQUIRED in semantic endpoint mode
+Exposed endpoint family that receives the operation
+The standard CRUDE profile is the default semantic-endpoint profile for these semantics, but semantic endpoint mode MAY expose alternate semantic-endpoint profiles when the endpoint names still communicate intent clearly to clients.
+Standard and Alternate Semantic-Endpoint Profiles
+Endpoint Set
+Typical Intent Split
+Standard CRUDE profile
+create / read / update / delete / execute
+Direct alignment to the five standardized semantic categories
+Extended CRUDE-style profile
+create / read / update / delete / execute / authorize
+Standard CRUDE plus a dedicated semantic endpoint for permissioning and approval workflows
+Alternative semantic profile
+discover / query / manage / operate
+Discovery and inspection, retrieval and filtering, mutating and administrative changes, runtime and lifecycle actions
+These alternate profiles remain in-spec because the endpoints are still semantically legible to an LLM or client. What matters is not that every adapter uses CRUDE, but that the chosen endpoint set communicates where an operation belongs.
+When using semantic endpoint mode (separate endpoint families), batch operations SHOULD be constrained to a single endpoint family:
+All operations assigned to the same endpoint family together in one batch
+For the CRUDE profile, all CREATE operations together in one batch to the CREATE endpoint, all READ operations together in one batch to the READ endpoint, and so on
+Every MCP-AQL adapter MUST implement the introspect operation as a READ-category operation on a documented endpoint family. This operation enables runtime discovery of available operations and types.
+&quot;semantic_category&quot; : &quot;CREATE&quot; ,
+&quot;endpoint&quot; : &quot;manage&quot; ,
+&quot;semantic_category&quot; : &quot;READ&quot; ,
+&quot;endpoint&quot; : &quot;query&quot; ,
+&quot;semantic_category&quot; : &quot;UPDATE&quot; ,
+&quot;semantic_category&quot; : &quot;DELETE&quot; ,
+&quot;mcpTool&quot; : &quot;mcp_aql_manage&quot; ,

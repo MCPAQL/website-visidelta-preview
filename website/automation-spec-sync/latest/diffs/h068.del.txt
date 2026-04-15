@@ -1,0 +1,13 @@
+MCP-AQL (Model Context Protocol - Agent Query Language) is a protocol that consolidates discrete MCP tools into 5 CRUDE endpoints (Create, Read, Update, Delete, Execute), providing significant token reduction while maint
+CRUDE Mode
+MCP-AQL (Model Context Protocol - Agent Query Language) is a protocol that consolidates discrete MCP tools into 5 CRUDE endpoints (Create, Read, Update, Delete, Execute), providing significant token reduction while maintaining full functionality.
+Consolidates Operations - Many discrete tools into 5 semantic endpoints
+Supports Flexibility - Implementations MAY offer CRUDE mode (5 endpoints) or Single mode (1 endpoint)
+Note: This diagram shows a runtime lifecycle flow, not endpoint classification. Operations like get_execution_state that query execution state belong to the READ endpoint, not EXECUTE. See CRUDE Pattern Classification for details.
+Exposes 5 separate endpoints, each with semantic meaning:
+CRUDE Mode (5 endpoints)
+~4,500 tokens
+Implementations MUST support the introspect operation on the READ endpoint.
+endpoint - The CRUDE endpoint classification
+Implements at least one endpoint mode (CRUDE or Single)
+Provides the introspect operation on the READ endpoint

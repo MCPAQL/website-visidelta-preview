@@ -1,0 +1,21 @@
+MCP-AQL (Model Context Protocol - Advanced Agent API Adapter Query Language) is a protocol specification that consolidates multiple MCP tools into semantic CRUDE endpoints, providing significant token reduction while ena
+6. CRUDE Endpoints
+MCP-AQL (Model Context Protocol - Advanced Agent API Adapter Query Language) is a protocol specification that consolidates multiple MCP tools into semantic CRUDE endpoints, providing significant token reduction while enabling runtime operation discovery through introspection.
+MCP-AQL consolidates operations into five semantic endpoints, reducing token overhead by approximately 85-96% while maintaining full functionality.
+The CRUDE endpoint pattern
+MCP-AQL is a protocol layer , not an application. Adapters implement MCP-AQL to expose their domain-specific operations through the unified CRUDE interface. Each adapter:
+Classifies operations into CRUDE endpoints
+Endpoint : One of the five CRUDE categories to which operations are routed
+│ │ CRUDE Endpoints │ │
+│ │ CREATE │ READ │ UPDATE │ DELETE │ EXECUTE │ │
+CRUDE Mode (5 endpoints)
+6.1 Endpoint Summary
+Each operation MUST be routed to exactly one endpoint based on its characteristics. Implementations MUST reject operations sent to incorrect endpoints in CRUDE mode.
+Adapters classify their operations into CRUDE endpoints based on characteristics:
+&quot;endpoint&quot; : &quot;EXECUTE&quot; ,
+EndpointCategory (enum)
+MUST support at least one endpoint mode (CRUDE or Single)
+MUST classify operations correctly into CRUDE endpoints
+MUST reject operations sent to wrong endpoints (CRUDE mode)
+MUST support both CRUDE and Single endpoint modes
+CRUDE Mode

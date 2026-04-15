@@ -1,0 +1,145 @@
+MCP-AQL Spec | MCP-AQL Relationship Queries
+Launch Checklist
+Adapter Patterns
+Search MCP-AQL docs
+Repo-Synced Spec
+Generated from MCPAQL/spec so the website carries the deeper protocol material too.
+MCP-AQL Conformance Testing Specification
+MCP-AQL CRUDE Pattern Specification
+MCP-AQL Endpoint Modes Specification
+Structured Error Codes Specification
+MCP-AQL Introspection Specification
+MCP-AQL Licensing Options (Working Notes)
+MCP Integration Specification
+MCP-AQL Operations Specification
+MCP-AQL Protocol Overview
+Plugin Interface Contracts
+MCP-AQL Specification Documentation
+MCP-AQL Specification
+Versions
+Dangerous Operation Classification Specification
+MCP Server Discovery Bundle
+Adapter Element Type Specification
+Adapter Generator Specification
+Rate Limiting and Quota Management Specification
+Trust Levels Specification
+Security
+Confirmation Token Specification
+Execution Safety Loop Specification
+Security Model: Gatekeeper Specification
+Features
+MCP-AQL Aggregations
+MCP-AQL Collection Querying
+MCP-AQL Computed Fields
+Field Selection Specification
+Cursor-Based Pagination Specification
+MCP-AQL Relationship Queries
+Warnings Array Specification
+Cross-Domain Implementation Guide
+Protocol Comparison Guide
+Developer Guides
+MCP-AQL Breaking Change Policy
+Preliminary Public Launch Checklist
+RFC Process for MCP-AQL Specification
+Versioning Strategy
+Changelog
+Architecture
+Architecture Documentation
+Research
+Protocol Landscape: MCP vs MCP-AQL vs A2A
+Reference
+Reference Documentation
+ADR-001: CRUDE Pattern (Extending CRUD with Execute)
+ADR-002: GraphQL-Style Input Objects for Updates
+ADR-003: snake_case Parameter Convention
+ADR-004: Schema-Driven Operation Definitions
+ADR-005: GraphQL-Style Introspection System
+ADR-006: Discriminated Response Format
+Architecture Decision Records
+Full Spec
+REPO-SYNCED SPEC DOC
+Document Status: This document is informative. For normative requirements, see MCP-AQL Specification v1.0.0.
+Support document Draft 1.0.0-draft 2026-04-15
+Source: spec/docs/features/relationship-queries.md
+Open Source Markdown Browse Full Spec Reference
+On this page
+Jump to a section
+Use the outline to move through longer pages without losing your place.
+Abstract
+1. Preferred Operation Shape
+2. Core Parameters
+3. Response Shape
+4. Standard Relationship Vocabulary
+5. Depth and Cycle Handling
+6. Introspection Guidance
+7. Relationship to Other Docs
+Version: 1.0.0-draft Status: Draft Last Updated: 2026-04-15
+Document Status: This document is informative . For normative requirements, see MCP-AQL Specification v1.0.0 .
+This document defines the preferred MCP-AQL shape for relationship traversal and graph-oriented READ operations. Relationship queries give clients a standard way to move through adapter-defined connections without manually fetching each node one hop at a time.
+The preferred operation name is query_relationships :
+operation : &quot;query_relationships&quot; ,
+params : {
+root : {
+element_type : &quot;agent&quot; ,
+element_name : &quot;code_reviewer&quot;
+direction : &quot;outgoing&quot; ,
+relationship : &quot;uses&quot; ,
+depth : 2 ,
+include : [ &quot;root&quot; , &quot;relationships&quot; , &quot;graph.nodes&quot; , &quot;graph.edges&quot; ]
+Parameter
+Required
+Starting resource for the traversal
+direction
+incoming , outgoing , or both
+relationship
+Relationship type to match
+Maximum traversal depth
+Optional response-section selector for root , relationships , graph.nodes , and graph.edges ; all sections returned if omitted
+first / after
+Optional pagination controls when traversals are large
+Adapters MAY add domain-specific root identifiers or filter controls, but SHOULD keep the traversal vocabulary stable.
+When pagination is supported for large traversals, the request shape remains the same:
+first : 25 ,
+after : &quot;cursor_rel_001&quot;
+&quot;success&quot; : true ,
+&quot;data&quot; : {
+&quot;root&quot; : {
+&quot;element_type&quot; : &quot;agent&quot; ,
+&quot;element_name&quot; : &quot;code_reviewer&quot;
+&quot;relationships&quot; : [
+&quot;type&quot; : &quot;uses&quot; ,
+&quot;direction&quot; : &quot;outgoing&quot; ,
+&quot;target&quot; : {
+&quot;element_type&quot; : &quot;skill&quot; ,
+&quot;element_name&quot; : &quot;typescript_analysis&quot;
+&quot;depth&quot; : 1
+&quot;graph&quot; : {
+&quot;nodes&quot; : [
+&quot;id&quot; : &quot;agent:code_reviewer&quot; ,
+&quot;id&quot; : &quot;skill:typescript_analysis&quot; ,
+&quot;edges&quot; : [
+&quot;source&quot; : &quot;agent:code_reviewer&quot; ,
+&quot;target&quot; : &quot;skill:typescript_analysis&quot; ,
+&quot;type&quot; : &quot;uses&quot;
+If include is omitted, adapters SHOULD return root , relationships , and graph together. If include is present, adapters SHOULD limit the response to the requested sections.
+relationships is the preferred flat traversal list for simple consumers that want to iterate edges in order. graph.nodes and graph.edges are the preferred graph-native shape for visualization, graph algorithms, and other clients that need explicit node/edge separation. The relationships list and graph.edges MAY describe the same connections in different shapes.
+The preferred portable relationship types are:
+references
+triggers
+composes
+Adapters MAY define additional relationship types. When they do, they SHOULD document them in introspection and keep custom semantics explicit.
+Adapters SHOULD document a maximum supported traversal depth.
+Adapters SHOULD avoid infinite traversal by deduplicating visited nodes.
+When cycles are present, adapters SHOULD still emit the edge but MUST prevent unbounded expansion.
+Adapters SHOULD advertise relationship-query support through operation detail metadata:
+&quot;relationship_capabilities&quot; : {
+&quot;supported&quot; : true ,
+&quot;directions&quot; : [ &quot;incoming&quot; , &quot;outgoing&quot; , &quot;both&quot; ] ,
+&quot;relationship_types&quot; : [ &quot;uses&quot; , &quot;extends&quot; , &quot;references&quot; , &quot;triggers&quot; , &quot;composes&quot; ] ,
+&quot;max_depth&quot; : 3
+Collection Querying defines how record-level fields and pagination compose with collection-style responses.
+Operations documents the common request and response conventions used by query_relationships .
+Previous page
+Next page
+&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
+Docs Library Repo-Synced Spec MCPAQL Organization Dollhouse Research

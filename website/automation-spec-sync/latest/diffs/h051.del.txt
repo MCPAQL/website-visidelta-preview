@@ -1,0 +1,102 @@
+4. CRUDE Mode
+MCP-AQL supports two operational modes for exposing endpoints to clients: CRUDE mode (5 semantic endpoints) and Single mode (1 unified endpoint). This document specifies configuration, routing behavior, security implications, and trade-offs for each mode.
+CRUDE Mode
+Five separate MCP tools, one per semantic endpoint
+Endpoint
+An MCP tool registered with the client
+A named action within an endpoint
+CRUDE mode (5 endpoints)
+Single mode (1 endpoint)
+Endpoints
+5 semantic endpoints
+1 unified endpoint
+~4,300 tokens
+Client chooses endpoint
+Client Complexity
+Client MUST select correct endpoint
+Simple single entry point
+Error Messages
+Semantic endpoint mismatch errors
+Generic routing errors
+2.2 Visual Comparison
+CRUDE Mode Single Mode
+============ ===========
+Client Client
++---&gt; mcp_aql_create +---&gt; mcp_aql
++---&gt; mcp_aql_read v
+| [Internal Router]
++---&gt; mcp_aql_update |
+| +-----+-----+-----+-----+
++---&gt; mcp_aql_delete | | | | |
+| C R U D E
++---&gt; mcp_aql_execute
+Endpoint consolidation provides significant token reduction compared to discrete tools:
+Note: Actual token costs vary based on operation count and description length.
+MCP_AQL_ENDPOINT_MODE=crude|single|all
+Values: | Value | Behavior | |-------|----------| | crude | Register 5 semantic endpoints | | single | Register 1 unified endpoint | | all | Register all 6 endpoints |
+If no configuration is provided, implementations SHOULD default to CRUDE mode, which provides the best balance of token efficiency and permission granularity.
+4.1 Endpoint Registration
+In CRUDE mode, five MCP tools are registered:
+Additive, non-destructive
+Safe, read-only
+Modifying
+Destructive
+Runtime lifecycle
+In CRUDE mode, clients MUST select the correct endpoint for each operation. If a client sends an operation to the wrong endpoint, the adapter MUST reject the request.
+4.3 Route Enforcement
+Adapters MUST validate that operations are sent to their assigned endpoint.
+Look up the correct endpoint for that operation
+Compare with the endpoint that received the request
+If mismatch, return an error specifying the correct endpoint
+4.4 Endpoint Descriptions
+Each endpoint SHOULD include a description listing:
+The semantic category
+Additive, non-destructive operations.
+Supported operations: create_item, add_entry, register_callback
+These operations add new data without removing or overwriting existing content.
+{ operation: &quot;create_item&quot;, params: { name: &quot;example&quot; } }
+Use introspection to discover all available operations:
+All operations through unified entry point
+The adapter routes operations internally based on their classification:
++---&gt; Determines correct CRUDE category
+The adapter determines the correct handler based on operation classification
+The same semantic rules apply as CRUDE mode
+5.4 Unknown Operations
+If an operation is not recognized:
+error : &quot;Unknown operation: &#39;invalid_op&#39;. Use introspect to discover available operations.&quot;
+5.5 Endpoint Description
+Overview of available operation categories
+Operations are automatically routed based on their semantic category (Create, Read, Update, Delete, Execute).
+6.1 CRUDE Mode Security
+Advantages:
+Endpoint-level permission blocking (e.g., disable mcp_aql_delete entirely)
+Semantic errors help clients self-correct
+Platform-level permission hints via MCP annotations
+Clear audit separation by operation category
+Client is responsible for endpoint selection
+Dangerous operations isolated to DELETE/EXECUTE endpoints
+Server-side routing prevents endpoint bypass
+Simpler client implementation reduces error risk
+Cannot block operations by endpoint
+All routing decisions made server-side
+Audit logging requires operation-level granularity
+Better (semantic errors)
+Worse (generic errors)
+Larger (5 endpoints)
+Smaller (1 endpoint)
+Endpoint + Operation
+Client-dependent
+Server-enforced
+Both modes MUST:
+Support confirmation for destructive operations (if implemented)
+Adapters SHOULD include MCP tool annotations to hint at operation safety:
+CRUDE Mode Annotations:
+&quot;name&quot; : &quot;mcp_aql_delete&quot; ,
+Single Mode Annotations:
+Both modes use the same input schema:
+Adapters MAY extend this schema with additional common properties (e.g., resource_type , fields ).
+Support at least one endpoint mode (CRUDE or Single)
+Enforce operation routing validation in CRUDE mode
+Support both CRUDE and Single endpoint modes
+Document available operations via introspection
+Support "all" mode exposing all 6 endpoints simultaneously

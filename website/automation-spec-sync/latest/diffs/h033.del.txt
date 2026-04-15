@@ -1,0 +1,6 @@
+Endpoint semantics and routing
+CRUDE vs Single mode configuration
+Test requirements and evaluation methodology
+Computed fields (#42)
+Relationship queries (#44)
+CRUDE Pattern - Understand the endpoint semantics

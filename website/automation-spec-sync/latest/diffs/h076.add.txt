@@ -1,0 +1,27 @@
+MCP-AQL Aggregations
+MCP-AQL Computed Fields
+MCP-AQL Relationship Queries
+Cross-Domain Implementation Guide
+Endpoint Families
+MCP-AQL is a protocol specification that consolidates multiple MCP (Model Context Protocol) tools into semantic endpoint families, providing approximately 96% token reduction while maintaining full functionality. It enables structured communication between AI models and context-providing services through a unified query language.
+This draft is not yet a final certification baseline. The repository now includes a fixture-driven conformance runner and semantic evaluation baseline, but broader ecosystem hardening is still in progress.
+MCP-AQL supports semantic endpoint mode or a single unified endpoint. The standard semantic-endpoint profile extends traditional CRUD with an Execute endpoint, creating the CRUDE pattern:
+Adapters MAY also define alternate semantic endpoint families when the target API is better represented by semantically explicit sets such as discover / query / manage / operate , database-oriented profiles like inspect / query / mutate / administer , or hardware-oriented profiles like discover / observe / control / maintain . Operations still retain standardized semantic categories for CREATE, READ, UPDATE, DELETE, and EXECUTE.
+Examples of alternate semantic-endpoint profiles:
+Extended CRUDE-style profile:
+create / read / update / delete / execute / authorize
+Alternative semantic profile:
+discover / query / manage / operate
+Semantic Endpoint Mode (CRUDE profile)
+Standard semantic-endpoint profile
+Endpoint Modes
+CRUDE, semantic-endpoint, and single endpoint configuration
+Aggregations
+Preferred summary/query shape for server-side aggregations
+Computed Fields
+Preferred _computed. convention for adapter-declared derived values
+Relationship Queries
+Preferred traversal contract for graph-style READ operations
+Step-by-step guide for adapting MCP-AQL to databases, filesystems, API gateways, IoT, and other domains
+Use semantic endpoint mode or single endpoint mode
+Status Note: This repository includes schema/example validation plus a fixture-driven conformance runner in scripts/run-conformance-tests.mjs . The future packaged runner described in docs/conformance-testing.md can still grow beyond this baseline into direct live-adapter execution.

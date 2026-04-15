@@ -1,0 +1,22 @@
+MCP-AQL Aggregations
+MCP-AQL Computed Fields
+MCP-AQL Relationship Queries
+Cross-Domain Implementation Guide
+2.5 Aggregations
+2.6 Pagination
+This document defines the preferred request contract for collection-returning READ operations in MCP-AQL. It aligns list_* , search_* , and query_* operations around a consistent shape for free-text search, structured filtering, sorting, field selection, aggregation, and pagination.
+Computed fields SHOULD use the _computed. prefix when they are projected through fields , for example _computed.age_days .
+aggregate is the preferred summary-computation control for collection operations.
+The preferred shape is a map of named aggregation expressions:
+aggregate : {
+total : { count : true } ,
+by_status : { group_by : &quot;status&quot; , count : true }
+When aggregate is present, adapters SHOULD return summary data by default unless include_items: true is explicitly requested.
+aggregate
+MAY support
+SHOULD support for summary-style searches
+SHOULD document support when meaningful
+Whether the operation supports aggregation and which functions are available
+Which computed fields are available, if any
+Aggregations defines the preferred aggregate request and response shape
+Computed Fields defines the _computed. projection and metadata pattern

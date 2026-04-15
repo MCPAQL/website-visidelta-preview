@@ -1,0 +1,15 @@
+MCP-AQL Aggregations
+MCP-AQL Computed Fields
+MCP-AQL Relationship Queries
+Cross-Domain Implementation Guide
+This document specifies the CRUDE (Create, Read, Update, Delete, Execute) endpoint pattern, which extends traditional CRUD semantics with an Execute endpoint for runtime lifecycle operations. CRUDE is the standard semantic-endpoint profile in MCP-AQL, not the only allowed endpoint-family design.
+The CRUDE pattern provides a standard semantic grouping of operations by their effect on system state. This grouping enables:
+Documents its operation-to-endpoint mapping via introspection when exposing the CRUDE profile
+Adapters MAY instead expose alternate semantic endpoint families when that better matches the target API. See Endpoint Modes and the normative specification for the generalized semantic-endpoint model.
+4.1 CRUDE Profile Within Semantic Endpoint Mode
+Within semantic endpoint mode, the standard CRUDE profile exposes five separate MCP tools, one per endpoint:
+Implementations exposing the CRUDE profile MUST:
+Implement all five CRUDE endpoints, or offer a single unified endpoint that preserves the same CRUDE semantic classification internally
+Return errors for operations sent to incorrect endpoints in CRUDE mode
+Implement the introspect operation as a READ-category operation
+Implementations exposing the CRUDE profile SHOULD:

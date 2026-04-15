@@ -1,0 +1,1842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="MCP-AQL (Model Context Protocol - Advanced Agent API Adapter Query Language) is a protocol specification that consolidates multiple MCP tools into semantic CRUDE endpoints, providing significant token reduction while ena">
+  <title>MCP-AQL Spec | MCP-AQL Specification</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <a class="logo" href="../../index.html"><span class="logo-mark"></span>MCP-AQL</a>
+        <ul class="nav-links">
+          <li><a href="../../index.html">Home</a></li>
+          <li><a href="../../docs/index.html">Docs</a></li>
+          <li><a href="../../launch-checklist.html">Launch Checklist</a></li>
+          <li><a href="../../apis/index.html">Adapter Patterns</a></li>
+        </ul>
+        <form class="site-search" data-search-form data-index-url="../../data/search-index.json" role="search">
+          <label class="sr-only" for="site-search-input">Search MCP-AQL docs</label>
+          <input id="site-search-input" data-search-input type="search" placeholder="Search MCP-AQL docs, spec pages, and adapter patterns...">
+          <span class="search-count" data-search-count></span>
+          <ul class="search-results" data-search-results hidden></ul>
+        </form>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container docs-shell">
+      <aside class="docs-side">
+        <h2>Repo-Synced Spec</h2>
+        <p class="docs-side-note">Generated from <code>MCPAQL/spec</code> so the website carries the deeper protocol material too.</p>
+        <div class="docs-side-group">
+  <h3>Core</h3>
+  <ul><li><a href="../conformance-testing.html">MCP-AQL Conformance Testing Specification</a></li><li><a href="../crude-pattern.html">MCP-AQL CRUDE Pattern Specification</a></li><li><a href="../endpoint-modes.html">MCP-AQL Endpoint Modes Specification</a></li><li><a href="../error-codes.html">Structured Error Codes Specification</a></li><li><a href="../introspection.html">MCP-AQL Introspection Specification</a></li><li><a href="../licensing-options.html">MCP-AQL Licensing Options (Working Notes)</a></li><li><a href="../mcp-integration.html">MCP Integration Specification</a></li><li><a href="../operations.html">MCP-AQL Operations Specification</a></li><li><a href="../overview.html">MCP-AQL Protocol Overview</a></li><li><a href="../plugin-contracts.html">Plugin Interface Contracts</a></li><li><a href="../README.html">MCP-AQL Specification Documentation</a></li><li><a href="../repo/README.html">MCP-AQL Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Versions</h3>
+  <ul><li><a class="current" aria-current="page" href="v1.0.0-draft.html">MCP-AQL Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Adapter</h3>
+  <ul><li><a href="../adapter/danger-levels.html">Dangerous Operation Classification Specification</a></li><li><a href="../adapter/discovery-bundle.html">MCP Server Discovery Bundle</a></li><li><a href="../adapter/element-type.html">Adapter Element Type Specification</a></li><li><a href="../adapter/generator.html">Adapter Generator Specification</a></li><li><a href="../adapter/rate-limiting.html">Rate Limiting and Quota Management Specification</a></li><li><a href="../adapter/trust-levels.html">Trust Levels Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Security</h3>
+  <ul><li><a href="../security/confirmation-tokens.html">Confirmation Token Specification</a></li><li><a href="../security/execution-safety-loop.html">Execution Safety Loop Specification</a></li><li><a href="../security/gatekeeper.html">Security Model: Gatekeeper Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Features</h3>
+  <ul><li><a href="../features/collection-querying.html">MCP-AQL Collection Querying</a></li><li><a href="../features/field-selection.html">Field Selection Specification</a></li><li><a href="../features/pagination.html">Cursor-Based Pagination Specification</a></li><li><a href="../features/warnings.html">Warnings Array Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Guides</h3>
+  <ul><li><a href="../guides/protocol-comparison.html">Protocol Comparison Guide</a></li><li><a href="../guides/README.html">Developer Guides</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Process</h3>
+  <ul><li><a href="../process/breaking-changes.html">MCP-AQL Breaking Change Policy</a></li><li><a href="../process/preliminary-public-launch-checklist.html">Preliminary Public Launch Checklist</a></li><li><a href="../process/rfc-process.html">RFC Process for MCP-AQL Specification</a></li><li><a href="../process/versioning.html">Versioning Strategy</a></li><li><a href="../repo/CHANGELOG.html">Changelog</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Architecture</h3>
+  <ul><li><a href="../architecture/README.html">Architecture Documentation</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Research</h3>
+  <ul><li><a href="../research/mcp-vs-mcpaql-vs-a2a.html">Protocol Landscape: MCP vs MCP-AQL vs A2A</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Reference</h3>
+  <ul><li><a href="../reference/README.html">Reference Documentation</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>ADRs</h3>
+  <ul><li><a href="../adr/ADR-001-crude-pattern.html">ADR-001: CRUDE Pattern (Extending CRUD with Execute)</a></li><li><a href="../adr/ADR-002-graphql-style-input.html">ADR-002: GraphQL-Style Input Objects for Updates</a></li><li><a href="../adr/ADR-003-snake-case-parameters.html">ADR-003: snake_case Parameter Convention</a></li><li><a href="../adr/ADR-004-schema-driven-operations.html">ADR-004: Schema-Driven Operation Definitions</a></li><li><a href="../adr/ADR-005-introspection-system.html">ADR-005: GraphQL-Style Introspection System</a></li><li><a href="../adr/ADR-006-discriminated-responses.html">ADR-006: Discriminated Response Format</a></li><li><a href="../adr/index.html">Architecture Decision Records</a></li><li><a href="../adr/README.html">Architecture Decision Records</a></li></ul>
+</div>
+      </aside>
+
+      <article class="docs-main">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+          <ol>
+            <li><a href="../../index.html">Home</a></li>
+            <li><a href="../index.html">Full Spec</a></li>
+            <li><span class="current">MCP-AQL Specification</span></li>
+          </ol>
+        </nav>
+        <section class="hero docs-hero">
+          <div class="hero-inner">
+            <span class="status-pill">REPO-SYNCED SPEC DOC</span>
+            <h1>MCP-AQL Specification</h1>
+            <p class="lede">MCP-AQL (Model Context Protocol - Advanced Agent API Adapter Query Language) is a protocol specification that consolidates multiple MCP tools into semantic CRUDE endpoints, providing significant token reduction while ena</p>
+            <div class="spec-meta"><span class="state-chip live">Support document</span><span class="state-chip pending">Draft</span><span class="state-chip">1.0.0-draft</span><span class="state-chip">2026-04-15</span></div>
+            <p class="spec-source">Source: <a href="https://github.com/MCPAQL/spec/blob/main/docs/versions/v1.0.0-draft.md">spec/docs/versions/v1.0.0-draft.md</a></p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="https://github.com/MCPAQL/spec/blob/main/docs/versions/v1.0.0-draft.md">Open Source Markdown</a><a class="btn btn-secondary" href="../index.html">Browse Full Spec Reference</a>
+            </div>
+          </div>
+        </section>
+
+        <section class="page-toc-shell" data-page-toc>
+          <div class="card page-toc-card">
+            <div class="page-toc-head">
+              <p class="page-toc-kicker">On this page</p>
+              <h2>Jump to a section</h2>
+              <p class="page-toc-intro">Use the outline to move through longer pages without losing your place.</p>
+            </div>
+            <ol class="page-toc-list" data-page-toc-list>
+              <li class="page-toc-item level-2"><a href="#abstract" data-toc-target="abstract">Abstract</a></li><li class="page-toc-item level-2"><a href="#status-of-this-document" data-toc-target="status-of-this-document">Status of This Document</a></li><li class="page-toc-item level-2"><a href="#1-introduction" data-toc-target="1-introduction">1. Introduction</a></li><li class="page-toc-item level-2"><a href="#2-terminology" data-toc-target="2-terminology">2. Terminology</a></li><li class="page-toc-item level-2"><a href="#3-protocol-overview" data-toc-target="3-protocol-overview">3. Protocol Overview</a></li><li class="page-toc-item level-2"><a href="#4-request-format" data-toc-target="4-request-format">4. Request Format</a></li><li class="page-toc-item level-2"><a href="#5-response-format" data-toc-target="5-response-format">5. Response Format</a></li><li class="page-toc-item level-2"><a href="#6-crude-endpoints" data-toc-target="6-crude-endpoints">6. CRUDE Endpoints</a></li><li class="page-toc-item level-2"><a href="#7-introspection" data-toc-target="7-introspection">7. Introspection</a></li><li class="page-toc-item level-2"><a href="#8-operation-classification" data-toc-target="8-operation-classification">8. Operation Classification</a></li><li class="page-toc-item level-2"><a href="#9-type-system" data-toc-target="9-type-system">9. Type System</a></li><li class="page-toc-item level-2"><a href="#10-conformance" data-toc-target="10-conformance">10. Conformance</a></li><li class="page-toc-item level-2"><a href="#appendix-a-token-efficiency" data-toc-target="appendix-a-token-efficiency">Appendix A: Token Efficiency</a></li><li class="page-toc-item level-2"><a href="#appendix-b-references" data-toc-target="appendix-b-references">Appendix B: References</a></li><li class="page-toc-item level-2"><a href="#appendix-c-change-log" data-toc-target="appendix-c-change-log">Appendix C: Change Log</a></li><li class="page-toc-item level-2"><a href="#appendix-d-json-schemas" data-toc-target="appendix-d-json-schemas">Appendix D: JSON Schemas</a></li>
+            </ol>
+          </div>
+        </section>
+
+
+        <section>
+          <div class="card spec-prose">
+            <p><strong>Version:</strong> 1.0.0-draft <strong>Status:</strong> Draft <strong>Last Updated:</strong> 2026-04-15</p>
+<h2 id="abstract">Abstract</h2>
+<p>MCP-AQL (Model Context Protocol - Advanced Agent API Adapter Query Language) is a protocol specification that consolidates multiple MCP tools into semantic CRUDE endpoints, providing significant token reduction while enabling runtime operation discovery through introspection.</p>
+<h2 id="status-of-this-document">Status of This Document</h2>
+<p>This is the <strong>normative</strong> MCP-AQL specification. All conformance requirements (MUST, SHOULD, MAY) in this document are authoritative.</p>
+<p>Other documents in the <code>docs/</code> directory are <strong>informative</strong> and provide additional context, examples, and implementation guidance. In case of conflict between this specification and informative documents, this specification takes precedence.</p>
+<p>This is a draft specification subject to change. Feedback is welcome via the <a href="https://github.com/MCPAQL/spec">specification repository</a>.</p>
+<p>This draft is intended for preliminary public launch and ecosystem experimentation. It is not yet a final certification baseline.</p>
+<hr />
+<h2 id="1-introduction">1. Introduction</h2>
+<h3 id="11-purpose">1.1 Purpose</h3>
+<p>MCP-AQL addresses the token efficiency challenge in LLM-MCP interactions. Traditional MCP implementations expose discrete tools, each requiring schema definition in the model's context. With many tools, this can consume significant tokens before any work begins.</p>
+<p>MCP-AQL consolidates operations into five semantic endpoints, reducing token overhead by approximately 85-96% while maintaining full functionality.</p>
+<h3 id="12-goals">1.2 Goals</h3>
+<ol type="1">
+<li><strong>Token Efficiency</strong> - Minimize context consumed by tool definitions</li>
+<li><strong>Semantic Clarity</strong> - Group operations by their effect on system state</li>
+<li><strong>Runtime Discovery</strong> - Enable operation discovery via introspection</li>
+<li><strong>Flexibility</strong> - Support multiple endpoint modes for different use cases</li>
+<li><strong>Genericity</strong> - Work with any domain, any backend, any operation set</li>
+</ol>
+<h3 id="13-scope">1.3 Scope</h3>
+<p>This specification defines:</p>
+<ul>
+<li>The CRUDE endpoint pattern</li>
+<li>Request and response formats</li>
+<li>The introspection system for operation discovery</li>
+<li>Operation classification guidelines</li>
+<li>Conformance requirements</li>
+</ul>
+<p>This specification does NOT define:</p>
+<ul>
+<li>Specific operations (adapters define their own)</li>
+<li>Domain-specific concepts (adapters define their own)</li>
+<li>Implementation architecture details</li>
+<li>Transport-layer concerns (handled by MCP)</li>
+</ul>
+<h3 id="14-relationship-to-adapters">1.4 Relationship to Adapters</h3>
+<p>MCP-AQL is a <strong>protocol layer</strong>, not an application. Adapters implement MCP-AQL to expose their domain-specific operations through the unified CRUDE interface. Each adapter:</p>
+<ul>
+<li>Defines its own operations</li>
+<li>Defines its own parameters</li>
+<li>Classifies operations into CRUDE endpoints</li>
+<li>Exposes operations via introspection</li>
+</ul>
+<hr />
+<h2 id="2-terminology">2. Terminology</h2>
+<h3 id="21-key-terms">2.1 Key Terms</h3>
+<p><strong>CRUDE Pattern</strong> : The five-endpoint pattern: Create, Read, Update, Delete, Execute</p>
+<p><strong>Operation</strong> : A specific action that an adapter provides (e.g., <code>create_user</code>, <code>run_report</code>, <code>search_documents</code>)</p>
+<p><strong>Endpoint</strong> : One of the five CRUDE categories to which operations are routed</p>
+<p><strong>Adapter</strong> : An MCP server that implements MCP-AQL to expose domain-specific operations</p>
+<p><strong>Introspection</strong> : The ability to query available operations and types at runtime</p>
+<p><strong>Resource</strong> : Any entity managed by an adapter (documents, users, configurations, workflows, etc.)</p>
+<h3 id="22-requirement-levels">2.2 Requirement Levels</h3>
+<p>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <a href="https://www.ietf.org/rfc/rfc2119.txt">RFC 2119</a>.</p>
+<h3 id="23-session-lifecycle">2.3 Session Lifecycle</h3>
+<h4 id="231-definition">2.3.1 Definition</h4>
+<p>An MCP-AQL <strong>session</strong> is the lifetime of a single MCP connection, beginning when the MCP <code>initialize</code> handshake completes successfully and ending when the connection terminates.</p>
+<h4 id="232-session-boundaries">2.3.2 Session Boundaries</h4>
+<table>
+<thead>
+<tr>
+<th>Event</th>
+<th>Session Impact</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MCP <code>initialize</code> completes</td>
+<td>Session begins</td>
+</tr>
+<tr>
+<td>MCP <code>shutdown</code> received</td>
+<td>Session ends gracefully</td>
+</tr>
+<tr>
+<td>Transport disconnect</td>
+<td>Session ends abruptly</td>
+</tr>
+<tr>
+<td>Transport reconnect</td>
+<td>New session begins</td>
+</tr>
+</tbody>
+</table>
+<p>A session is strictly 1:1 with an MCP connection. If a transport disconnects and reconnects, the new connection is a new session — even if the same client reconnects immediately.</p>
+<h4 id="233-session-scoped-state">2.3.3 Session-Scoped State</h4>
+<p>The following are session-scoped and MUST NOT survive session termination:</p>
+<ul>
+<li>Confirmation tokens (default behavior per <a href="../security/confirmation-tokens.html#54-session-scoped-tokens">Section 5.4</a> of the Confirmation Token Specification; adapters MAY explicitly persist tokens across sessions)</li>
+<li>Cached introspection results</li>
+<li>In-progress EXECUTE operation context (pending state machine transitions)</li>
+<li>Warning deduplication state</li>
+</ul>
+<p>Adapters MUST invalidate all session-scoped state when a session ends, whether gracefully or abruptly. In-progress EXECUTE operations SHOULD transition to <code>failed</code> or <code>cancelled</code> as defined by the execution lifecycle (<a href="#84-execution-lifecycle">Section 8.4</a>).</p>
+<h4 id="234-cross-session-persistence">2.3.4 Cross-Session Persistence</h4>
+<p>The following MAY persist across sessions:</p>
+<ul>
+<li>Adapter configuration and operation schemas</li>
+<li>Stored resources and data managed by the adapter</li>
+<li>Audit logs and telemetry</li>
+<li>Completed execution results (terminal states)</li>
+</ul>
+<h4 id="235-session-identification">2.3.5 Session Identification</h4>
+<p>Adapters MAY track sessions using:</p>
+<ul>
+<li>MCP connection identifier (if provided by the transport)</li>
+<li>Internally generated session ID</li>
+<li>Client-provided metadata (via <code>_meta</code>) as a labeling hint</li>
+</ul>
+<p>Client-provided <code>_meta</code> values MUST be treated as labels for logging purposes only. Adapters MUST NOT use client-provided values as authoritative session identity for security decisions (e.g., token validation, access control).</p>
+<p>Session identifiers SHOULD be included in audit logs and error responses for debugging.</p>
+<blockquote>
+<p><strong>Implementation Note:</strong> MCP does not define a standard session identifier field. Adapters that need session tracking SHOULD generate their own identifier when the <code>initialize</code> handshake completes and include it in the <code>_protocol</code> metadata returned by introspection.</p>
+</blockquote>
+<hr />
+<h2 id="3-protocol-overview">3. Protocol Overview</h2>
+<h3 id="31-architecture">3.1 Architecture</h3>
+<pre><code>┌─────────────────────────────────────────────────────────────┐
+│                        MCP Client                           │
+│                     (LLM / Agent)                           │
+└─────────────────────────┬───────────────────────────────────┘
+                          │
+                          ▼
+┌─────────────────────────────────────────────────────────────┐
+│                     MCP-AQL Layer                           │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │              CRUDE Endpoints                         │   │
+│  │   CREATE │ READ │ UPDATE │ DELETE │ EXECUTE          │   │
+│  └──────────────────────────────────────────────────────┘   │
+│                          │                                  │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │              Operation Router                        │   │
+│  │   Routes operations to correct handlers              │   │
+│  └──────────────────────────────────────────────────────┘   │
+│                          │                                  │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │              Introspection System                    │   │
+│  │   Provides runtime operation discovery               │   │
+│  └──────────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────┘
+                          │
+                          ▼
+┌─────────────────────────────────────────────────────────────┐
+│                    Domain Backend                           │
+│         (Database, API, Service, File System, etc.)         │
+└─────────────────────────────────────────────────────────────┘</code></pre>
+<h3 id="32-request-flow">3.2 Request Flow</h3>
+<ol type="1">
+<li>Client sends request to MCP-AQL endpoint</li>
+<li>Router extracts <code>operation</code> field</li>
+<li>Router validates operation belongs to receiving endpoint</li>
+<li>Parameters are extracted and validated</li>
+<li>Handler executes operation</li>
+<li>Response returned to client</li>
+</ol>
+<h3 id="33-endpoint-modes">3.3 Endpoint Modes</h3>
+<p>MCP-AQL supports two operational modes:</p>
+<p><strong>CRUDE Mode (5 endpoints)</strong></p>
+<pre><code>mcp_aql_create   - CREATE operations
+mcp_aql_read     - READ operations
+mcp_aql_update   - UPDATE operations
+mcp_aql_delete   - DELETE operations
+mcp_aql_execute  - EXECUTE operations</code></pre>
+<p><strong>Single Mode (1 endpoint)</strong></p>
+<pre><code>mcp_aql - All operations through unified entry point</code></pre>
+<p>Implementations MUST support at least one mode. Implementations SHOULD support both.</p>
+<hr />
+<h2 id="4-request-format">4. Request Format</h2>
+<h3 id="41-standard-request-structure">4.1 Standard Request Structure</h3>
+<div class="sourceCode" id="cb4"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> OperationInput {</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  operation<span class="op">:</span> <span class="dt">string</span><span class="op">;</span>              <span class="co">// REQUIRED: Operation to perform</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  params<span class="op">?:</span> <span class="bu">Record</span><span class="op">&lt;</span><span class="dt">string</span><span class="op">,</span> <span class="dt">any</span><span class="op">&gt;;</span>   <span class="co">// OPTIONAL: Operation parameters</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="42-parameter-resolution">4.2 Parameter Resolution</h3>
+<p>Parameters MAY appear at multiple levels. Resolution follows this precedence:</p>
+<ol type="1">
+<li><code>params.&lt;parameter_name&gt;</code></li>
+<li>Top-level <code>&lt;parameter_name&gt;</code></li>
+</ol>
+<h3 id="43-parameter-naming">4.3 Parameter Naming</h3>
+<p>All public-facing parameters MUST use snake_case naming (matching the pattern <code>^[a-z][a-z0-9_]*$</code>) for consistency across adapters.</p>
+<blockquote>
+<p><strong>Terminology Note:</strong> The request field <code>params</code> (an object of key-value pairs) contains runtime parameter values. The introspection field <code>parameters</code> (an array of <code>ParameterInfo</code> entries) describes the accepted parameter definitions. The keys of <code>params</code> correspond to the <code>name</code> field of each entry in <code>parameters</code>.</p>
+</blockquote>
+<h3 id="44-request-examples">4.4 Request Examples</h3>
+<p><strong>Minimal Request:</strong></p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;operation&quot;</span><span class="fu">:</span> <span class="st">&quot;list_users&quot;</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><strong>Request with Parameters:</strong></p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;operation&quot;</span><span class="fu">:</span> <span class="st">&quot;create_document&quot;</span><span class="fu">,</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;params&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;title&quot;</span><span class="fu">:</span> <span class="st">&quot;Quarterly Report&quot;</span><span class="fu">,</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;content&quot;</span><span class="fu">:</span> <span class="st">&quot;...&quot;</span><span class="fu">,</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;folder_id&quot;</span><span class="fu">:</span> <span class="st">&quot;folder_123&quot;</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><strong>Alternative Parameter Placement:</strong></p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;operation&quot;</span><span class="fu">:</span> <span class="st">&quot;get_user&quot;</span><span class="fu">,</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;user_id&quot;</span><span class="fu">:</span> <span class="st">&quot;user_456&quot;</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<blockquote>
+<p><strong>Collection Querying Note:</strong> Collection-returning READ operations often combine field selection, filtering, sorting, and pagination. See the informative <a href="../features/collection-querying.html">Collection Querying</a> guide for the preferred cross-cutting request shape moving forward.</p>
+</blockquote>
+<h3 id="45-update-input-pattern">4.5 UPDATE Input Pattern</h3>
+<p>UPDATE operations MUST use a nested <code>input</code> object within <code>params</code> to contain all updateable fields. Identifier parameters (used to locate the resource) MUST remain at the <code>params</code> level.</p>
+<p><strong>Structure:</strong></p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;operation&quot;</span><span class="fu">:</span> <span class="st">&quot;update_resource&quot;</span><span class="fu">,</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;params&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;resource_id&quot;</span><span class="fu">:</span> <span class="st">&quot;res_123&quot;</span><span class="fu">,</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;input&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;title&quot;</span><span class="fu">:</span> <span class="st">&quot;New Title&quot;</span><span class="fu">,</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;metadata&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;priority&quot;</span><span class="fu">:</span> <span class="st">&quot;high&quot;</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>      <span class="fu">}</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h4 id="451-merge-semantics">4.5.1 Merge Semantics</h4>
+<p>When processing the <code>input</code> object, adapters MUST apply deep-merge semantics:</p>
+<ol type="1">
+<li><strong>Top-level fields</strong> in <code>input</code> replace existing values entirely</li>
+<li><strong>Nested objects</strong> merge recursively (keys present in <code>input</code> are updated; keys absent from <code>input</code> are preserved)</li>
+<li><strong>Arrays</strong> replace entirely (no element-level merging)</li>
+<li><strong>Explicit <code>null</code></strong> removes the field from the resource</li>
+</ol>
+<p><strong>Example — Deep Merge Behavior:</strong></p>
+<p>Given existing resource state:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;title&quot;</span><span class="fu">:</span> <span class="st">&quot;Old Title&quot;</span><span class="fu">,</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;metadata&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;priority&quot;</span><span class="fu">:</span> <span class="st">&quot;low&quot;</span><span class="fu">,</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;tags&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;draft&quot;</span><span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;author&quot;</span><span class="fu">:</span> <span class="st">&quot;alice&quot;</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p>And update request:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;operation&quot;</span><span class="fu">:</span> <span class="st">&quot;update_resource&quot;</span><span class="fu">,</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;params&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;resource_id&quot;</span><span class="fu">:</span> <span class="st">&quot;res_123&quot;</span><span class="fu">,</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;input&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;title&quot;</span><span class="fu">:</span> <span class="st">&quot;New Title&quot;</span><span class="fu">,</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;metadata&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;priority&quot;</span><span class="fu">:</span> <span class="st">&quot;high&quot;</span><span class="fu">,</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;tags&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;published&quot;</span><span class="ot">,</span> <span class="st">&quot;reviewed&quot;</span><span class="ot">]</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>      <span class="fu">}</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p>The resulting state MUST be:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;title&quot;</span><span class="fu">:</span> <span class="st">&quot;New Title&quot;</span><span class="fu">,</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;metadata&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;priority&quot;</span><span class="fu">:</span> <span class="st">&quot;high&quot;</span><span class="fu">,</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;tags&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;published&quot;</span><span class="ot">,</span> <span class="st">&quot;reviewed&quot;</span><span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;author&quot;</span><span class="fu">:</span> <span class="st">&quot;alice&quot;</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<ul>
+<li><code>title</code>: replaced (top-level field)</li>
+<li><code>metadata.priority</code>: replaced (present in input)</li>
+<li><code>metadata.tags</code>: replaced entirely (array)</li>
+<li><code>metadata.author</code>: preserved (absent from input)</li>
+</ul>
+<h4 id="452-field-removal">4.5.2 Field Removal</h4>
+<p>To remove a field, clients MUST set its value to <code>null</code>:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;operation&quot;</span><span class="fu">:</span> <span class="st">&quot;update_resource&quot;</span><span class="fu">,</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;params&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;resource_id&quot;</span><span class="fu">:</span> <span class="st">&quot;res_123&quot;</span><span class="fu">,</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;input&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;metadata&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;deprecated_field&quot;</span><span class="fu">:</span> <span class="kw">null</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>      <span class="fu">}</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h4 id="453-validation">4.5.3 Validation</h4>
+<p>Adapters MUST validate the <code>input</code> object:</p>
+<ol type="1">
+<li>The <code>input</code> field MUST be present for UPDATE operations; adapters MUST reject requests missing <code>input</code> with a <code>VALIDATION_MISSING_PARAM</code> error</li>
+<li>The <code>input</code> field MUST be an object when present</li>
+<li>Fields within <code>input</code> MUST be validated against the resource schema</li>
+<li>Unknown fields within <code>input</code> SHOULD be rejected with a <code>VALIDATION_UNKNOWN_FIELD</code> error</li>
+<li>Identifier parameters MUST NOT appear inside <code>input</code></li>
+</ol>
+<p>See <a href="../adr/ADR-002-graphql-style-input.html">ADR-002: GraphQL-Style Input Objects</a> for design rationale.</p>
+<h3 id="46-unknown-parameter-handling">4.6 Unknown Parameter Handling</h3>
+<p>Adapters MUST reject requests containing parameters not defined in the operation schema.</p>
+<p>When an unknown parameter is detected, adapters MUST return a <code>VALIDATION_UNKNOWN_PARAM</code> error:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;error&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;code&quot;</span><span class="fu">:</span> <span class="st">&quot;VALIDATION_UNKNOWN_PARAM&quot;</span><span class="fu">,</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;Unknown parameter &#39;force_create&#39; for operation &#39;create_user&#39;&quot;</span><span class="fu">,</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;details&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;operation&quot;</span><span class="fu">:</span> <span class="st">&quot;create_user&quot;</span><span class="fu">,</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;unknown_params&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;force_create&quot;</span><span class="ot">,</span> <span class="st">&quot;admin_override&quot;</span><span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;valid_params&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;user_name&quot;</span><span class="ot">,</span> <span class="st">&quot;password&quot;</span><span class="ot">,</span> <span class="st">&quot;email&quot;</span><span class="ot">]</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p>This requirement:</p>
+<ul>
+<li>Prevents typos from silently failing</li>
+<li>Prevents LLM hallucination of non-existent parameters</li>
+<li>Provides actionable feedback for correction</li>
+</ul>
+<h4 id="461-scope">4.6.1 Scope</h4>
+<p>Unknown parameter validation applies to:</p>
+<ul>
+<li>Parameters within the <code>params</code> object</li>
+<li>Top-level parameters (when parameter resolution is enabled per Section 4.2)</li>
+</ul>
+<p>Unknown parameter validation does NOT apply to:</p>
+<ul>
+<li>Protocol-level fields (<code>operation</code>, <code>params</code>)</li>
+<li>Metadata fields prefixed with underscore (<code>_meta</code>, <code>_request_id</code>)</li>
+</ul>
+<h4 id="462-strict-mode-configuration">4.6.2 Strict Mode Configuration</h4>
+<p>Adapters MAY implement a <code>strict_mode</code> configuration option. When <code>strict_mode</code> is disabled (development environments only), adapters MAY log warnings for unknown parameters instead of rejecting the request.</p>
+<p>When <code>strict_mode</code> is enabled or not configured, the default behavior MUST be rejection.</p>
+<blockquote>
+<p><strong>Implementation Note:</strong> The <code>strict_mode</code> setting is considered implementation-internal configuration and is not exposed via introspection. Clients SHOULD always assume strict validation is enabled and not rely on lenient behavior.</p>
+</blockquote>
+<h3 id="47-data-types-and-encoding">4.7 Data Types and Encoding</h3>
+<p>This section defines data encoding requirements for interoperability across adapters.</p>
+<h4 id="471-character-encoding">4.7.1 Character Encoding</h4>
+<p>All text MUST be encoded as UTF-8. Adapters MUST reject requests containing invalid UTF-8 sequences with a <code>VALIDATION_INVALID_ENCODING</code> error.</p>
+<p><strong>Invalid UTF-8 sequences include:</strong></p>
+<ul>
+<li>Overlong encodings (e.g., using 2 bytes to encode a character that fits in 1)</li>
+<li>Invalid continuation bytes</li>
+<li>Truncated multi-byte sequences</li>
+<li>Surrogate code points (U+D800 to U+DFFF)</li>
+</ul>
+<p>Adapters SHOULD reject strings containing null bytes (U+0000) unless explicitly documented as supported for the parameter, as null bytes can cause issues in many languages and databases.</p>
+<h4 id="472-date-and-time">4.7.2 Date and Time</h4>
+<p>Dates and timestamps MUST use <a href="https://www.iso.org/iso-8601-date-and-time-format.html">ISO 8601</a> format:</p>
+<ul>
+<li><strong>Date only:</strong> <code>2026-02-04</code></li>
+<li><strong>Date-time (UTC):</strong> <code>2026-02-04T10:30:00Z</code></li>
+<li><strong>Date-time with offset:</strong> <code>2026-02-04T10:30:00+05:30</code></li>
+</ul>
+<p>Adapters SHOULD use UTC (Z suffix) for timestamps in responses. Adapters MUST document timezone handling for date-only values.</p>
+<h4 id="473-numbers">4.7.3 Numbers</h4>
+<p>Numeric values follow JSON number syntax (<a href="https://www.rfc-editor.org/rfc/rfc8259">RFC 8259</a>), which uses IEEE 754 double-precision floating-point:</p>
+<ul>
+<li><strong>Safe integer range:</strong> ±(2^53 - 1), i.e., ±9,007,199,254,740,991</li>
+<li><strong>Precision:</strong> Approximately 15-17 significant decimal digits</li>
+</ul>
+<p>For values requiring higher precision (e.g., financial amounts, large identifiers), adapters SHOULD use string representation:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;amount&quot;</span><span class="fu">:</span> <span class="st">&quot;12345678901234567890&quot;</span><span class="fu">,</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;amount_type&quot;</span><span class="fu">:</span> <span class="st">&quot;bigint&quot;</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<blockquote>
+<p><strong>Note:</strong> The type indicator field name (e.g., <code>amount_type</code>) is adapter-specific. Adapters SHOULD document their conventions for distinguishing string-encoded numbers from regular strings.</p>
+</blockquote>
+<p>Adapters MUST document when string representation is required for numeric parameters.</p>
+<h4 id="474-binary-data">4.7.4 Binary Data</h4>
+<p>Binary data MUST be encoded as base64 (<a href="https://www.rfc-editor.org/rfc/rfc4648">RFC 4648</a>) with standard padding (<code>=</code> characters) and metadata:</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;file_content&quot;</span><span class="fu">:</span> <span class="st">&quot;SGVsbG8gV29ybGQ=&quot;</span><span class="fu">,</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;file_encoding&quot;</span><span class="fu">:</span> <span class="st">&quot;base64&quot;</span><span class="fu">,</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;file_mime_type&quot;</span><span class="fu">:</span> <span class="st">&quot;text/plain&quot;</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p>Adapters MAY support alternative binary handling (e.g., URL references, multipart) but MUST document this behavior via introspection.</p>
+<h4 id="475-payload-size-limits">4.7.5 Payload Size Limits</h4>
+<p>Adapters MUST enforce payload size limits to prevent resource exhaustion:</p>
+<table>
+<thead>
+<tr>
+<th>Limit</th>
+<th>Default</th>
+<th>Configurable Range</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Request payload</td>
+<td>1 MB</td>
+<td>64 KB – 10 MB</td>
+</tr>
+<tr>
+<td>Response payload</td>
+<td>10 MB</td>
+<td>1 MB – 100 MB</td>
+</tr>
+<tr>
+<td>Single string value</td>
+<td>1 MB</td>
+<td>64 KB – 10 MB</td>
+</tr>
+<tr>
+<td>Array elements</td>
+<td>10,000</td>
+<td>100 – 100,000</td>
+</tr>
+<tr>
+<td>Object nesting depth</td>
+<td>32 levels</td>
+<td>8 – 64 levels</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Nesting depth counting:</strong> Depth counts the levels of nested objects or arrays. For example, <code>{"a": {"b": {"c": {}}}}</code> has a depth of 4. The root object counts as level 1.</p>
+</blockquote>
+<p>When a limit is exceeded, adapters MUST return a <code>VALIDATION_PAYLOAD_TOO_LARGE</code> error with details indicating which limit was exceeded.</p>
+<p>Adapters MUST document their configured limits via introspection or adapter documentation. Adapters SHOULD expose limits in protocol metadata (see Section 9.3.3) to enable client-side pre-validation:</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;_protocol&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;limits&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;max_request_size&quot;</span><span class="fu">:</span> <span class="dv">1048576</span><span class="fu">,</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;max_response_size&quot;</span><span class="fu">:</span> <span class="dv">10485760</span><span class="fu">,</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;max_string_length&quot;</span><span class="fu">:</span> <span class="dv">1048576</span><span class="fu">,</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;max_array_elements&quot;</span><span class="fu">:</span> <span class="dv">10000</span><span class="fu">,</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;max_nesting_depth&quot;</span><span class="fu">:</span> <span class="dv">32</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h4 id="476-null-handling">4.7.6 Null Handling</h4>
+<p>JSON <code>null</code> represents the absence of a value:</p>
+<ul>
+<li><strong>In requests:</strong> Omitting a field and explicitly setting it to <code>null</code> MAY have different semantics. See Section 4.5.2 for UPDATE operations where <code>null</code> removes fields.</li>
+<li><strong>In responses:</strong> <code>null</code> indicates the field exists but has no value.</li>
+</ul>
+<p>Adapters MUST document null semantics for parameters where the distinction matters.</p>
+<hr />
+<h2 id="5-response-format">5. Response Format</h2>
+<h3 id="51-discriminated-union">5.1 Discriminated Union</h3>
+<p>All operations return a discriminated union result:</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> OperationResult <span class="op">=</span> OperationSuccess <span class="op">|</span> OperationFailure<span class="op">;</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> OperationSuccess {</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  success<span class="op">:</span> <span class="kw">true</span><span class="op">;</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  data<span class="op">:</span> <span class="dt">any</span><span class="op">;</span>      <span class="co">// Operation-specific payload</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> OperationFailure {</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  success<span class="op">:</span> <span class="kw">false</span><span class="op">;</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>  error<span class="op">:</span> ErrorDetail<span class="op">;</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> ErrorDetail {</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>  code<span class="op">:</span> <span class="dt">string</span><span class="op">;</span>     <span class="co">// Machine-readable error code (e.g., &quot;VALIDATION_MISSING_PARAM&quot;)</span></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>  message<span class="op">:</span> <span class="dt">string</span><span class="op">;</span>  <span class="co">// Human-readable error message</span></span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>  details<span class="op">?:</span> <span class="bu">Record</span><span class="op">&lt;</span><span class="dt">string</span><span class="op">,</span> <span class="dt">unknown</span><span class="op">&gt;;</span>  <span class="co">// Optional contextual information</span></span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<blockquote>
+<p><strong>Note:</strong> See <a href="../error-codes.html">Structured Error Codes Specification</a> for the complete error code taxonomy and usage guidelines.</p>
+</blockquote>
+<h3 id="52-success-response">5.2 Success Response</h3>
+<div class="sourceCode" id="cb18"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;data&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="st">&quot;doc_789&quot;</span><span class="fu">,</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;title&quot;</span><span class="fu">:</span> <span class="st">&quot;Quarterly Report&quot;</span><span class="fu">,</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;created_at&quot;</span><span class="fu">:</span> <span class="st">&quot;2024-01-15T10:30:00Z&quot;</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h3 id="53-error-response">5.3 Error Response</h3>
+<div class="sourceCode" id="cb19"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;error&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;code&quot;</span><span class="fu">:</span> <span class="st">&quot;VALIDATION_MISSING_PARAM&quot;</span><span class="fu">,</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;Missing required parameter &#39;title&#39; for operation &#39;create_document&#39;&quot;</span><span class="fu">,</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;details&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;param_name&quot;</span><span class="fu">:</span> <span class="st">&quot;title&quot;</span><span class="fu">,</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;operation&quot;</span><span class="fu">:</span> <span class="st">&quot;create_document&quot;</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<hr />
+<h2 id="6-crude-endpoints">6. CRUDE Endpoints</h2>
+<h3 id="61-endpoint-summary">6.1 Endpoint Summary</h3>
+<table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Read-Only</th>
+<th>Destructive</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CREATE</td>
+<td>false</td>
+<td>false</td>
+<td>Additive operations</td>
+</tr>
+<tr>
+<td>READ</td>
+<td>true</td>
+<td>false</td>
+<td>Query operations</td>
+</tr>
+<tr>
+<td>UPDATE</td>
+<td>false</td>
+<td>true</td>
+<td>Modification operations</td>
+</tr>
+<tr>
+<td>DELETE</td>
+<td>false</td>
+<td>true</td>
+<td>Removal operations</td>
+</tr>
+<tr>
+<td>EXECUTE</td>
+<td>false</td>
+<td>true</td>
+<td>Runtime lifecycle operations</td>
+</tr>
+</tbody>
+</table>
+<h3 id="62-operation-routing">6.2 Operation Routing</h3>
+<p>Each operation MUST be routed to exactly one endpoint based on its characteristics. Implementations MUST reject operations sent to incorrect endpoints in CRUDE mode.</p>
+<p>See <a href="../overview.html">Protocol Overview</a> for detailed endpoint definitions and classification guidelines.</p>
+<hr />
+<h2 id="7-introspection">7. Introspection</h2>
+<h3 id="71-purpose">7.1 Purpose</h3>
+<p>Introspection enables clients to discover available operations without parsing tool schemas, providing:</p>
+<ul>
+<li>On-demand operation discovery</li>
+<li>Parameter documentation</li>
+<li>Type information</li>
+<li>Usage examples</li>
+</ul>
+<h3 id="72-the-introspect-operation">7.2 The <code>introspect</code> Operation</h3>
+<p><strong>Endpoint:</strong> READ</p>
+<p>Every MCP-AQL adapter MUST implement the <code>introspect</code> operation.</p>
+<p><strong>Parameters:</strong> | Parameter | Type | Required | Description | |-----------|------|----------|-------------| | <code>query</code> | string | Yes | Query type: "operations" or "types" | | <code>name</code> | string | No | Specific item name for details |</p>
+<h3 id="73-query-types">7.3 Query Types</h3>
+<p><strong>List Operations:</strong></p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span> <span class="dt">&quot;operation&quot;</span><span class="fu">:</span> <span class="st">&quot;introspect&quot;</span><span class="fu">,</span> <span class="dt">&quot;params&quot;</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">&quot;query&quot;</span><span class="fu">:</span> <span class="st">&quot;operations&quot;</span> <span class="fu">}</span> <span class="fu">}</span></span></code></pre></div>
+<p><strong>Operation Details:</strong></p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span> <span class="dt">&quot;operation&quot;</span><span class="fu">:</span> <span class="st">&quot;introspect&quot;</span><span class="fu">,</span> <span class="dt">&quot;params&quot;</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">&quot;query&quot;</span><span class="fu">:</span> <span class="st">&quot;operations&quot;</span><span class="fu">,</span> <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;create_document&quot;</span> <span class="fu">}</span> <span class="fu">}</span></span></code></pre></div>
+<p><strong>List Types:</strong></p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span> <span class="dt">&quot;operation&quot;</span><span class="fu">:</span> <span class="st">&quot;introspect&quot;</span><span class="fu">,</span> <span class="dt">&quot;params&quot;</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">&quot;query&quot;</span><span class="fu">:</span> <span class="st">&quot;types&quot;</span> <span class="fu">}</span> <span class="fu">}</span></span></code></pre></div>
+<p><strong>Type Details:</strong></p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span> <span class="dt">&quot;operation&quot;</span><span class="fu">:</span> <span class="st">&quot;introspect&quot;</span><span class="fu">,</span> <span class="dt">&quot;params&quot;</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">&quot;query&quot;</span><span class="fu">:</span> <span class="st">&quot;types&quot;</span><span class="fu">,</span> <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;DocumentStatus&quot;</span> <span class="fu">}</span> <span class="fu">}</span></span></code></pre></div>
+<p>See <a href="../introspection.html">Introspection Specification</a> for detailed response structures.</p>
+<hr />
+<h2 id="8-operation-classification">8. Operation Classification</h2>
+<h3 id="81-classification-guidelines">8.1 Classification Guidelines</h3>
+<p>Adapters classify their operations into CRUDE endpoints based on characteristics:</p>
+<p><strong>CREATE</strong> - Operations that:</p>
+<ul>
+<li>Add new resources or state</li>
+<li>Do not remove or overwrite existing data</li>
+<li>Are non-destructive</li>
+</ul>
+<p><strong>READ</strong> - Operations that:</p>
+<ul>
+<li>Query or retrieve data</li>
+<li>Have no side effects on stored state</li>
+<li>Are safe to call repeatedly (idempotent)</li>
+</ul>
+<p><strong>UPDATE</strong> - Operations that:</p>
+<ul>
+<li>Modify existing resources</li>
+<li>Overwrite previous values</li>
+<li>Require the resource to exist</li>
+</ul>
+<p><strong>DELETE</strong> - Operations that:</p>
+<ul>
+<li>Remove resources permanently</li>
+<li>Are irreversible without backup</li>
+<li>May require confirmation</li>
+</ul>
+<p><strong>EXECUTE</strong> - Operations that:</p>
+<ul>
+<li>Manage runtime lifecycle (start, stop, monitor)</li>
+<li>Are non-idempotent (each call may create new state)</li>
+<li>May have external side effects</li>
+</ul>
+<h3 id="82-classification-examples">8.2 Classification Examples</h3>
+<table>
+<thead>
+<tr>
+<th>Operation</th>
+<th>Endpoint</th>
+<th>Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>create_user</code></td>
+<td>CREATE</td>
+<td>Adds new user</td>
+</tr>
+<tr>
+<td><code>upload_file</code></td>
+<td>CREATE</td>
+<td>Adds new file</td>
+</tr>
+<tr>
+<td><code>list_users</code></td>
+<td>READ</td>
+<td>Queries without modification</td>
+</tr>
+<tr>
+<td><code>search</code></td>
+<td>READ</td>
+<td>Queries without modification</td>
+</tr>
+<tr>
+<td><code>get_status</code></td>
+<td>READ</td>
+<td>Retrieves state</td>
+</tr>
+<tr>
+<td><code>update_profile</code></td>
+<td>UPDATE</td>
+<td>Modifies existing resource</td>
+</tr>
+<tr>
+<td><code>rename_file</code></td>
+<td>UPDATE</td>
+<td>Modifies existing resource</td>
+</tr>
+<tr>
+<td><code>delete_user</code></td>
+<td>DELETE</td>
+<td>Removes permanently</td>
+</tr>
+<tr>
+<td><code>purge_cache</code></td>
+<td>DELETE</td>
+<td>Removes data</td>
+</tr>
+<tr>
+<td><code>execute_job</code></td>
+<td>EXECUTE</td>
+<td>Starts runtime process</td>
+</tr>
+<tr>
+<td><code>cancel_task</code></td>
+<td>EXECUTE</td>
+<td>Lifecycle management</td>
+</tr>
+</tbody>
+</table>
+<h3 id="83-edge-cases">8.3 Edge Cases</h3>
+<p>When classification is ambiguous:</p>
+<ul>
+<li>Prefer READ if operation has no side effects</li>
+<li>Prefer CREATE over UPDATE if resource may not exist</li>
+<li>Prefer EXECUTE for operations with external effects</li>
+<li>Document reasoning in adapter specification</li>
+</ul>
+<h3 id="84-execution-lifecycle">8.4 Execution Lifecycle</h3>
+<p>EXECUTE operations that create or manage long-running processes SHOULD follow the standard execution lifecycle defined in this section.</p>
+<h4 id="841-core-states">8.4.1 Core States</h4>
+<table>
+<thead>
+<tr>
+<th>State</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pending</code></td>
+<td>Execution created but not yet started</td>
+</tr>
+<tr>
+<td><code>running</code></td>
+<td>Execution actively processing</td>
+</tr>
+<tr>
+<td><code>completed</code></td>
+<td>Execution finished successfully</td>
+</tr>
+<tr>
+<td><code>failed</code></td>
+<td>Execution terminated with error</td>
+</tr>
+<tr>
+<td><code>cancelled</code></td>
+<td>Execution terminated by user request</td>
+</tr>
+</tbody>
+</table>
+<h4 id="842-state-transitions">8.4.2 State Transitions</h4>
+<pre><code>                              ┌───────────┐
+                              │ cancelled │
+                              └───────────┘
+                                    ▲
+                    cancel          │           cancel
+              ┌─────────────────────┼─────────────────────┐
+              │                     │                     │
+     ┌────────┴─┐             ┌─────┴────┐          ┌─────┴────┐
+     │ pending  │───start────▶│ running  │◄──retry──│  failed  │
+     └──────────┘             └────┬─────┘          └──────────┘
+                                   │                      ▲
+                                   │ success/error        │
+                                   ▼                      │
+                              ┌─────┴────┐                │
+                              │          │────────────────┘
+                              ▼          ▼
+                         ┌────────┐  ┌────────┐
+                         │completed│  │ failed │
+                         └────────┘  └────────┘
+                          (terminal)  (may retry)</code></pre>
+<p><strong>Terminal States:</strong> <code>completed</code>, <code>failed</code>, and <code>cancelled</code> are terminal states. Once an execution reaches a terminal state, it MUST NOT transition to any other state except for the optional <code>failed</code> → <code>running</code> retry transition when supported.</p>
+<p>Valid state transitions:</p>
+<ul>
+<li><code>pending</code> → <code>running</code> (start)</li>
+<li><code>pending</code> → <code>cancelled</code> (cancel before start)</li>
+<li><code>running</code> → <code>completed</code> (successful completion)</li>
+<li><code>running</code> → <code>failed</code> (error during execution)</li>
+<li><code>running</code> → <code>cancelled</code> (user cancellation)</li>
+<li><code>failed</code> → <code>running</code> (retry, if supported)</li>
+</ul>
+<h4 id="843-state-response-format">8.4.3 State Response Format</h4>
+<p>Operations that return execution state SHOULD include:</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;execution_id&quot;</span><span class="fu">:</span> <span class="st">&quot;exec_123&quot;</span><span class="fu">,</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;status&quot;</span><span class="fu">:</span> <span class="st">&quot;running&quot;</span><span class="fu">,</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;started_at&quot;</span><span class="fu">:</span> <span class="st">&quot;2026-02-04T10:00:00Z&quot;</span><span class="fu">,</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;progress&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;current&quot;</span><span class="fu">:</span> <span class="dv">45</span><span class="fu">,</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;total&quot;</span><span class="fu">:</span> <span class="dv">100</span><span class="fu">,</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;Processing step 5 of 10&quot;</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><strong>Required Fields:</strong> | Field | Type | Description | |-------|------|-------------| | <code>execution_id</code> | string | Unique identifier for the execution | | <code>status</code> | string | Current state (one of the core states) |</p>
+<p><strong>Optional Fields:</strong> | Field | Type | Description | |-------|------|-------------| | <code>started_at</code> | string (ISO 8601) | When execution started | | <code>finished_at</code> | string (ISO 8601) | When execution reached a terminal state | | <code>progress</code> | object | Progress information (see below) | | <code>error</code> | object | Error details if <code>status</code> is <code>failed</code> (see <a href="#53-error-response">Error Response Format</a>) |</p>
+<p><strong>Progress Object:</strong></p>
+<p>When <code>progress</code> is present, at least one of the following SHOULD be included:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>percentage</code></td>
+<td>number</td>
+<td>Completion percentage (0-100) — use for determinate progress</td>
+</tr>
+<tr>
+<td><code>current</code> + <code>total</code></td>
+<td>number</td>
+<td>Current and total values — use when count information is available</td>
+</tr>
+<tr>
+<td><code>message</code></td>
+<td>string</td>
+<td>Human-readable status — use for indeterminate progress or additional context</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example — Completed Execution:</strong></p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;execution_id&quot;</span><span class="fu">:</span> <span class="st">&quot;exec_123&quot;</span><span class="fu">,</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;status&quot;</span><span class="fu">:</span> <span class="st">&quot;completed&quot;</span><span class="fu">,</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;started_at&quot;</span><span class="fu">:</span> <span class="st">&quot;2026-02-04T10:00:00Z&quot;</span><span class="fu">,</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;finished_at&quot;</span><span class="fu">:</span> <span class="st">&quot;2026-02-04T10:05:32Z&quot;</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><strong>Example — Failed Execution:</strong></p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;execution_id&quot;</span><span class="fu">:</span> <span class="st">&quot;exec_456&quot;</span><span class="fu">,</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;status&quot;</span><span class="fu">:</span> <span class="st">&quot;failed&quot;</span><span class="fu">,</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;started_at&quot;</span><span class="fu">:</span> <span class="st">&quot;2026-02-04T10:00:00Z&quot;</span><span class="fu">,</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;finished_at&quot;</span><span class="fu">:</span> <span class="st">&quot;2026-02-04T10:02:15Z&quot;</span><span class="fu">,</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;error&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;code&quot;</span><span class="fu">:</span> <span class="st">&quot;INTERNAL_ERROR&quot;</span><span class="fu">,</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;Connection timeout while processing&quot;</span><span class="fu">,</span></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;details&quot;</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">&quot;step&quot;</span><span class="fu">:</span> <span class="st">&quot;data_fetch&quot;</span><span class="fu">,</span> <span class="dt">&quot;attempt&quot;</span><span class="fu">:</span> <span class="dv">3</span> <span class="fu">}</span></span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><strong>Example — Cancelled Execution:</strong></p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;execution_id&quot;</span><span class="fu">:</span> <span class="st">&quot;exec_789&quot;</span><span class="fu">,</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;status&quot;</span><span class="fu">:</span> <span class="st">&quot;cancelled&quot;</span><span class="fu">,</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;started_at&quot;</span><span class="fu">:</span> <span class="st">&quot;2026-02-04T10:00:00Z&quot;</span><span class="fu">,</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;finished_at&quot;</span><span class="fu">:</span> <span class="st">&quot;2026-02-04T10:01:45Z&quot;</span><span class="fu">,</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;progress&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;percentage&quot;</span><span class="fu">:</span> <span class="dv">35</span><span class="fu">,</span></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;Cancelled by user during data processing&quot;</span></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h4 id="844-adapter-extensions">8.4.4 Adapter Extensions</h4>
+<p>Adapters MAY define additional states beyond the core set (e.g., <code>paused</code>, <code>queued</code>, <code>retrying</code>). When extending the state machine:</p>
+<ol type="1">
+<li>Custom states MUST be documented via introspection</li>
+<li>Custom states SHOULD map conceptually to core states for generic client compatibility</li>
+<li>Adapters MUST support transitions to <code>cancelled</code> from any non-terminal state</li>
+<li>Adapters SHOULD document which operations trigger each state transition</li>
+</ol>
+<p><strong>Example Extended State Mapping:</strong> | Adapter State | Maps To | Description | |---------------|---------|-------------| | <code>queued</code> | <code>pending</code> | Waiting in job queue | | <code>paused</code> | <code>running</code> | Temporarily suspended | | <code>retrying</code> | <code>running</code> | Automatic retry in progress |</p>
+<h4 id="845-introspection-support">8.4.5 Introspection Support</h4>
+<p>EXECUTE operations that manage lifecycle SHOULD expose their supported states via introspection. The <code>lifecycle</code> field in operation details indicates lifecycle support:</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;operation&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;execute_job&quot;</span><span class="fu">,</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;endpoint&quot;</span><span class="fu">:</span> <span class="st">&quot;EXECUTE&quot;</span><span class="fu">,</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;lifecycle&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;states&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;pending&quot;</span><span class="ot">,</span> <span class="st">&quot;queued&quot;</span><span class="ot">,</span> <span class="st">&quot;running&quot;</span><span class="ot">,</span> <span class="st">&quot;completed&quot;</span><span class="ot">,</span> <span class="st">&quot;failed&quot;</span><span class="ot">,</span> <span class="st">&quot;cancelled&quot;</span><span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;supports_cancel&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;supports_retry&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;progress_reporting&quot;</span><span class="fu">:</span> <span class="kw">true</span></span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p>See <a href="../introspection.html">Introspection Specification</a> for the complete schema.</p>
+<h3 id="85-operation-naming-grammar">8.5 Operation Naming Grammar</h3>
+<h4 id="851-canonical-verbs">8.5.1 Canonical Verbs</h4>
+<p>Each endpoint has one or more canonical verbs that SHOULD be used for standard operations:</p>
+<table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Canonical Verb</th>
+<th>Usage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CREATE</td>
+<td><code>create</code></td>
+<td>Creating new resources</td>
+</tr>
+<tr>
+<td>READ</td>
+<td><code>get</code> (single), <code>list</code> (multiple)</td>
+<td>Retrieving resources</td>
+</tr>
+<tr>
+<td>UPDATE</td>
+<td><code>update</code></td>
+<td>Modifying existing resources</td>
+</tr>
+<tr>
+<td>DELETE</td>
+<td><code>delete</code></td>
+<td>Removing resources</td>
+</tr>
+<tr>
+<td>EXECUTE</td>
+<td><code>execute</code> (initiate), <code>cancel</code> (terminate)</td>
+<td>Lifecycle operations</td>
+</tr>
+</tbody>
+</table>
+<p><code>cancel</code> covers both aborting a pending/queued operation and halting a currently running one. Adapters that need to distinguish these cases MAY use additional verbs (e.g., <code>stop</code>) alongside <code>cancel</code>.</p>
+<p>Using canonical verbs improves cross-adapter consistency, enabling LLMs to predict operation names without requiring introspection for every adapter.</p>
+<p>For developers familiar with REST conventions, the following mapping provides context:</p>
+<table>
+<thead>
+<tr>
+<th>Canonical Verb</th>
+<th>Typical HTTP Method</th>
+<th>Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>create</code></td>
+<td>POST</td>
+<td>Add new resource</td>
+</tr>
+<tr>
+<td><code>get</code> / <code>list</code></td>
+<td>GET</td>
+<td>Retrieve resource(s)</td>
+</tr>
+<tr>
+<td><code>update</code></td>
+<td>PUT / PATCH</td>
+<td>Modify resource</td>
+</tr>
+<tr>
+<td><code>delete</code></td>
+<td>DELETE</td>
+<td>Remove resource</td>
+</tr>
+<tr>
+<td><code>execute</code> / <code>cancel</code></td>
+<td>POST</td>
+<td>Lifecycle control</td>
+</tr>
+</tbody>
+</table>
+<h4 id="852-operation-name-format">8.5.2 Operation Name Format</h4>
+<p>Operation names MUST use snake_case naming (a lowercase letter followed by lowercase letters, digits, and underscores), matching the schema pattern <code>^[a-z][a-z0-9_]*$</code>. Operations SHOULD follow the pattern: <code>{verb}_{resource}</code></p>
+<p>Examples:</p>
+<ul>
+<li><code>create_user</code> (not <code>add_user</code>)</li>
+<li><code>get_document</code> (not <code>fetch_document</code>)</li>
+<li><code>list_items</code> (not <code>find_items</code>)</li>
+<li><code>update_profile</code> (not <code>edit_profile</code>)</li>
+<li><code>delete_account</code> (not <code>remove_account</code>)</li>
+<li><code>execute_workflow</code> (not <code>run_workflow</code>)</li>
+</ul>
+<p>Operations that act on the system as a whole (rather than a specific resource) MAY omit the resource suffix (e.g., <code>introspect</code>).</p>
+<h4 id="853-when-to-use-non-canonical-verbs">8.5.3 When to Use Non-Canonical Verbs</h4>
+<p>Non-canonical verbs MAY be used when:</p>
+<ol type="1">
+<li>The operation has domain-specific semantics (e.g., <code>upload_file</code> vs <code>create_file</code> when the operation involves binary transfer)</li>
+<li>The canonical verb would be misleading (e.g., <code>search</code> implies query semantics that <code>list</code> does not)</li>
+<li>Industry convention strongly favors a different verb (e.g., <code>import</code>/<code>export</code>)</li>
+</ol>
+<p>When using non-canonical verbs, adapters SHOULD:</p>
+<ul>
+<li>Document the rationale in the operation description</li>
+<li>Note the canonical equivalent in the operation description (e.g., "Similar to <code>create</code>, but handles binary upload")</li>
+</ul>
+<h4 id="854-reserved-operations">8.5.4 Reserved Operations</h4>
+<p>The following operation names are reserved for protocol use and MUST NOT be used by adapters for other purposes:</p>
+<table>
+<thead>
+<tr>
+<th>Operation</th>
+<th>Endpoint</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>introspect</code></td>
+<td>READ</td>
+<td>Protocol introspection (Section 7)</td>
+</tr>
+<tr>
+<td><code>execute_agent</code></td>
+<td>EXECUTE</td>
+<td>Start execution safety loop (Section 8.6)</td>
+</tr>
+<tr>
+<td><code>record_execution_step</code></td>
+<td>CREATE</td>
+<td>Report intended action for safety evaluation (Section 8.6)</td>
+</tr>
+<tr>
+<td><code>complete_execution</code></td>
+<td>EXECUTE</td>
+<td>Signal normal execution completion (Section 8.6)</td>
+</tr>
+<tr>
+<td><code>abort_execution</code></td>
+<td>EXECUTE</td>
+<td>Signal abnormal execution termination (Section 8.6)</td>
+</tr>
+<tr>
+<td><code>confirm_operation</code></td>
+<td>EXECUTE</td>
+<td>Confirm a Gatekeeper-blocked operation or Autonomy Evaluator <code>confirm</code> tier pause (Section 8.7.3)</td>
+</tr>
+<tr>
+<td><code>verify_challenge</code></td>
+<td>CREATE</td>
+<td>Submit out-of-band verification code (Section 8.8)</td>
+</tr>
+</tbody>
+</table>
+<p>Adapters MUST NOT define custom operations with these names for other purposes. Future specification versions MAY reserve additional operation names.</p>
+<h3 id="86-execution-safety-loop">8.6 Execution Safety Loop</h3>
+<p>The execution safety loop is an opt-in enforcement pattern that provides continuous safety evaluation of an agent's intended actions during execution. When active, it turns the execute lifecycle (Section 8.4) into a monitored enforcement boundary rather than a simple state tracker.</p>
+<blockquote>
+<p><strong>Terminology Note:</strong> The "execution safety loop" is distinct from the full agent lifecycle that a specific adapter may implement. The safety loop is a protocol-level monitoring pattern; agent lifecycle management (personas, elements, state) is an adapter concern.</p>
+<p><strong>Forward Reference:</strong> This section references the Autonomy Evaluator (Section 8.7) and Out-of-Band Verification (Section 8.8), which are defined as companion sections. The <code>AutonomyDirective</code> response type is formally defined in Section 8.7.1.</p>
+</blockquote>
+<h4 id="861-opt-in-activation">8.6.1 Opt-In Activation</h4>
+<p>The execution safety loop is an OPTIONAL feature. Adapters MAY support it, and clients MAY choose to enable it.</p>
+<ul>
+<li>When not enabled, the adapter operates normally without safety enforcement overhead</li>
+<li>Activation is explicit — via <code>execute_agent</code> to start a monitored execution, or via adapter configuration to enable safety-loop mode</li>
+<li>Adapters MUST document whether they support the execution safety loop via introspection</li>
+</ul>
+<p>Adapters that support the execution safety loop SHOULD expose this capability in their introspection response:</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;capabilities&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;execution_safety_loop&quot;</span><span class="fu">:</span> <span class="st">&quot;enforcing&quot;</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p>Valid values for <code>execution_safety_loop</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>"enforcing"</code></td>
+<td>Full enforcement — actions are evaluated and directives are authoritative</td>
+</tr>
+<tr>
+<td><code>"monitoring"</code></td>
+<td>Actions are evaluated but <code>continue</code> is always <code>true</code> (advisory only)</td>
+</tr>
+<tr>
+<td><code>"logging"</code></td>
+<td>Actions are recorded for audit purposes without evaluation</td>
+</tr>
+<tr>
+<td><code>"disabled"</code></td>
+<td>Safety loop is supported but currently disabled</td>
+</tr>
+</tbody>
+</table>
+<h4 id="862-enforcement-boundary-property">8.6.2 Enforcement Boundary Property</h4>
+<p>When the execution safety loop is active, it establishes a <strong>mandatory enforcement boundary</strong>: all intended actions MUST be reported before execution, and all reports MUST be evaluated before the agent proceeds.</p>
+<p>The enforcement chain:</p>
+<ol type="1">
+<li>An agent starts via <code>execute_agent</code>, which requires explicit approval (one-time gate)</li>
+<li>The agent is now running inside the execution safety loop</li>
+<li>Every action the agent intends to take MUST be reported via <code>record_execution_step</code> with <code>nextActionHint</code></li>
+<li>Each report is evaluated by the adapter's safety pipeline (Gatekeeper, Autonomy Evaluator, Danger Zone — see Sections 8.7, 8.8)</li>
+<li>The evaluation returns an <code>AutonomyDirective</code> (Section 8.7.1) indicating whether the agent may proceed</li>
+<li>The loop continues until <code>complete_execution</code> or <code>abort_execution</code></li>
+</ol>
+<p>The initial <code>execute_agent</code> approval grants <strong>monitored trust</strong>, not blanket trust. The approval starts continuous per-action evaluation.</p>
+<p>Between <code>execute_agent</code> approval and the first <code>record_execution_step</code> call, the agent MAY perform internal reasoning (planning, context gathering) but MUST NOT take any externally-visible action. The first action with external effects MUST be reported before execution.</p>
+<p>The loop terminates via <code>complete_execution</code> (normal success) or <code>abort_execution</code> (abnormal termination, e.g., after a stop directive or user cancellation).</p>
+<h4 id="863-mandatory-action-reporting">8.6.3 Mandatory Action Reporting</h4>
+<p>When the execution safety loop is active, agents MUST report all intended actions through <code>record_execution_step</code> with a <code>nextActionHint</code> describing the planned action. Actions taken without reporting are a protocol violation.</p>
+<p>A reportable action is any operation that causes effects beyond the agent's internal reasoning:</p>
+<ul>
+<li>Tool calls to any MCP server (including other adapters)</li>
+<li>File system operations (read, write, delete)</li>
+<li>Shell command execution</li>
+<li>Network requests to external services</li>
+<li>Database queries or mutations</li>
+<li>State changes in any connected system</li>
+</ul>
+<p>The <code>record_execution_step</code> operation accepts the following parameters:</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>element_name</code></td>
+<td>string</td>
+<td>MUST</td>
+<td>The agent reporting the step</td>
+</tr>
+<tr>
+<td><code>stepDescription</code></td>
+<td>string</td>
+<td>SHOULD</td>
+<td>Description of the action just completed</td>
+</tr>
+<tr>
+<td><code>outcome</code></td>
+<td>string</td>
+<td>SHOULD</td>
+<td>Result of the previous step: <code>"success"</code>, <code>"failure"</code>, or <code>"skipped"</code></td>
+</tr>
+<tr>
+<td><code>nextActionHint</code></td>
+<td>string</td>
+<td>MUST</td>
+<td>Description of the intended next action</td>
+</tr>
+<tr>
+<td><code>findings</code></td>
+<td>string</td>
+<td>MAY</td>
+<td>Data or observations from the completed step</td>
+</tr>
+</tbody>
+</table>
+<p>The <code>nextActionHint</code> field MUST be a human-readable string describing the intended action with sufficient detail for safety evaluation. Examples:</p>
+<ul>
+<li><code>"calling write_file on project/config.json to update database URL"</code></li>
+<li><code>"executing shell command: npm install express"</code></li>
+<li><code>"sending message to #general channel via Slack MCP server"</code></li>
+</ul>
+<h4 id="864-continuous-enforcement">8.6.4 Continuous Enforcement</h4>
+<p>Every <code>record_execution_step</code> call is an evaluation checkpoint. The response includes an <code>AutonomyDirective</code> (Section 8.7.1) that is authoritative:</p>
+<ul>
+<li>When <code>continue</code> is <code>true</code>, the agent MAY proceed with the reported action</li>
+<li>When <code>continue</code> is <code>false</code>, the agent MUST NOT proceed. The agent SHOULD report the pause to the user or upstream system</li>
+<li>When <code>stopped</code> is <code>true</code>, the agent has been hard-blocked (Section 8.8). The agent MUST cease all actions until unblocked via out-of-band verification</li>
+</ul>
+<p>Implementations MUST NOT allow agents to proceed after a stop directive. Implementations SHOULD NOT allow agents to proceed after <code>continue: false</code> without human intervention.</p>
+<p>In monitoring mode (<code>"monitoring"</code>), <code>continue</code> is always <code>true</code> and <code>stopped</code> MUST NOT be set to <code>true</code>. Monitoring mode is advisory only — it evaluates and logs but does not block. In logging mode (<code>"logging"</code>), no evaluation occurs and no directive fields are authoritative.</p>
+<h4 id="865-non-bypass-property">8.6.5 Non-Bypass Property</h4>
+<p>If an agent is executing through the execution safety loop, it MUST NOT perform actions outside the reported loop. This property is essential to the safety model:</p>
+<ul>
+<li>The agent MUST NOT call tools on other MCP servers without first reporting intent via <code>record_execution_step</code></li>
+<li>The agent MUST NOT take file system or shell actions without reporting</li>
+<li>If the agent acts without reporting, it is a protocol violation</li>
+</ul>
+<blockquote>
+<p><strong>Implementation Note:</strong> This property is enforced cooperatively — the agent (typically an LLM following system prompt instructions) must be instructed to check in with the safety loop before every action. The protocol defines the contract; the client integration enforces it.</p>
+</blockquote>
+<h4 id="866-scope-of-monitoring">8.6.6 Scope of Monitoring</h4>
+<p>The execution safety loop monitors ALL intended actions, not only MCP-AQL operations on the same adapter. This includes:</p>
+<ul>
+<li>Tool calls to other MCP servers in the same client session</li>
+<li>Tool calls to non-MCP-AQL MCP servers</li>
+<li>Built-in client capabilities (file I/O, shell access, web requests)</li>
+<li>Any operation that produces effects beyond the agent's reasoning context</li>
+</ul>
+<p>This broad scope is what makes the safety dongle deployment model possible: a standalone MCP-AQL server can function as a universal safety layer for all tool calls in a client session, regardless of which server handles the actual operation.</p>
+<h4 id="867-disabling-the-safety-loop">8.6.7 Disabling the Safety Loop</h4>
+<p>Clients or adapter configuration MAY disable the execution safety loop entirely. When disabled:</p>
+<ul>
+<li>The execution lifecycle operations (<code>execute_agent</code>, <code>record_execution_step</code>, <code>complete_execution</code>, <code>abort_execution</code>) are either unavailable or operate as no-op progress tracking without safety enforcement</li>
+<li>No <code>AutonomyDirective</code> evaluation occurs</li>
+<li>No action reporting is required</li>
+</ul>
+<p>The adapter MUST clearly indicate via introspection whether safety enforcement is active or disabled:</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;capabilities&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;execution_safety_loop&quot;</span><span class="fu">:</span> <span class="st">&quot;disabled&quot;</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h3 id="87-autonomy-evaluation">8.7 Autonomy Evaluation</h3>
+<p>When the execution safety loop is active, every <code>record_execution_step</code> call triggers an autonomy evaluation. This section defines the evaluation pipeline and the <code>AutonomyDirective</code> response contract.</p>
+<h4 id="871-the-autonomydirective-contract">8.7.1 The AutonomyDirective Contract</h4>
+<p>The <code>AutonomyDirective</code> is returned as part of the <code>record_execution_step</code> response. It is the authoritative signal for whether the agent may proceed.</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> AutonomyDirective {</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">continue</span><span class="op">:</span> <span class="dt">boolean</span><span class="op">;</span>              <span class="co">// Whether the agent may proceed</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  factors<span class="op">:</span> <span class="dt">string</span>[]<span class="op">;</span>              <span class="co">// Human-readable decision factors</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  stopped<span class="op">?:</span> <span class="dt">boolean</span><span class="op">;</span>              <span class="co">// True if hard-blocked (Section 8.8)</span></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>  reason<span class="op">?:</span> <span class="dt">string</span><span class="op">;</span>                <span class="co">// Why paused or stopped</span></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>  stepsRemaining<span class="op">?:</span> <span class="dt">number</span><span class="op">;</span>        <span class="co">// Steps before mandatory pause</span></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>  nextStepRisk<span class="op">?:</span> SafetyTier<span class="op">;</span>      <span class="co">// Risk tier of the evaluated action</span></span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>  notifications<span class="op">?:</span> AgentNotification[]<span class="op">;</span> <span class="co">// Pending events (Section 8.7.3)</span></span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> SafetyTier <span class="op">=</span> <span class="st">&quot;advisory&quot;</span> <span class="op">|</span> <span class="st">&quot;confirm&quot;</span> <span class="op">|</span> <span class="st">&quot;verify&quot;</span> <span class="op">|</span> <span class="st">&quot;danger_zone&quot;</span><span class="op">;</span></span></code></pre></div>
+<p>Implementations MUST include <code>continue</code> and <code>factors</code> in every <code>AutonomyDirective</code>. All other fields are OPTIONAL except where specific sections impose MUST requirements (see Sections 8.8.1 and 8.8.2 for mandatory <code>notifications</code> in <code>verify</code> tier, <code>danger_zone</code> tier, and <code>deny</code> pattern scenarios).</p>
+<h4 id="872-evaluation-pipeline">8.7.2 Evaluation Pipeline</h4>
+<p>Implementations SHOULD evaluate actions through a multi-stage pipeline. The stages are evaluated in order; the first stage that triggers a pause or stop ends the evaluation:</p>
+<p><strong>Stage 1 — Step Limit Check:</strong></p>
+<p>Compares the current step count against a configurable <code>maxAutonomousSteps</code> threshold.</p>
+<ul>
+<li>When the step count exceeds the limit, the evaluator SHOULD return <code>continue: false</code> with <code>reason: "Step limit exceeded"</code></li>
+<li>The default limit is implementation-defined but SHOULD be documented via introspection</li>
+<li>Implementations MUST support configuring the step limit</li>
+</ul>
+<p><strong>Stage 2 — Previous Step Outcome:</strong></p>
+<p>If the <code>outcome</code> field of the current <code>record_execution_step</code> call reports <code>"failure"</code>, the evaluator SHOULD return <code>continue: false</code>.</p>
+<ul>
+<li>Pausing after failure prevents cascading errors from autonomous recovery attempts</li>
+<li>The agent SHOULD report the failure to the user or upstream system before retrying</li>
+<li>If <code>outcome</code> is omitted, this stage is skipped</li>
+</ul>
+<p><strong>Stage 3 — Action Pattern Matching:</strong></p>
+<p>Matches the <code>nextActionHint</code> string against configurable glob patterns:</p>
+<ul>
+<li><code>deny</code> patterns → <code>continue: false</code>, <code>stopped: true</code> (triggers out-of-band verification — Section 8.8)</li>
+<li><code>requiresApproval</code> patterns → <code>continue: false</code> (human review needed)</li>
+<li><code>autoApprove</code> patterns → <code>continue: true</code> (skip remaining stages)</li>
+<li>Resolution order: <code>deny</code> &gt; <code>requiresApproval</code> &gt; <code>autoApprove</code></li>
+<li>Unmatched actions fall through to Stage 4</li>
+</ul>
+<p>Pattern examples:</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">deny</span><span class="op">:</span> [<span class="st">&quot;drop_*&quot;</span><span class="op">,</span> <span class="st">&quot;delete_all*&quot;</span><span class="op">,</span> <span class="st">&quot;rm -rf*&quot;</span>]<span class="op">,</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">requiresApproval</span><span class="op">:</span> [<span class="st">&quot;delete_*&quot;</span><span class="op">,</span> <span class="st">&quot;*force*&quot;</span><span class="op">,</span> <span class="st">&quot;deploy_*&quot;</span><span class="op">,</span> <span class="st">&quot;git push*&quot;</span>]<span class="op">,</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">autoApprove</span><span class="op">:</span> [<span class="st">&quot;read_*&quot;</span><span class="op">,</span> <span class="st">&quot;list_*&quot;</span><span class="op">,</span> <span class="st">&quot;get_*&quot;</span><span class="op">,</span> <span class="st">&quot;search_*&quot;</span>]</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><strong>Stage 4 — Safety Tier Evaluation:</strong></p>
+<p>Assigns a risk score (0-100) to the action and maps it to a safety tier:</p>
+<table>
+<thead>
+<tr>
+<th>Risk Score</th>
+<th>Tier</th>
+<th>Default Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0-30</td>
+<td><code>advisory</code></td>
+<td>Continue (log only)</td>
+</tr>
+<tr>
+<td>31-60</td>
+<td><code>confirm</code></td>
+<td>Pause for human review via <code>confirm_operation</code></td>
+</tr>
+<tr>
+<td>61-85</td>
+<td><code>verify</code></td>
+<td>Pause + out-of-band verification via <code>verify_challenge</code> (Section 8.8)</td>
+</tr>
+<tr>
+<td>86-100</td>
+<td><code>danger_zone</code></td>
+<td>Hard stop + out-of-band verification via <code>verify_challenge</code> (Section 8.8)</td>
+</tr>
+</tbody>
+</table>
+<p>The <code>verify</code> and <code>danger_zone</code> tiers both use the out-of-band verification protocol defined in Section 8.8. The difference is enforcement severity: <code>verify</code> sets <code>continue: false</code> (pause — the agent may resume after verification), while <code>danger_zone</code> sets <code>stopped: true</code> (hard block — the agent is blocked at the agent level until verified).</p>
+<p>Risk scoring MAY use pattern matching against known dangerous operations, LLM-provided risk assessments, or adapter-specific heuristics.</p>
+<p><strong>Stage 5 — Risk Tolerance Threshold:</strong></p>
+<p>Compares the risk score against the agent's configured tolerance:</p>
+<table>
+<thead>
+<tr>
+<th>Tolerance</th>
+<th>Threshold</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>conservative</code></td>
+<td>25</td>
+<td>Pause for any risk above 25</td>
+</tr>
+<tr>
+<td><code>moderate</code></td>
+<td>50</td>
+<td>Pause for risk above 50 (default)</td>
+</tr>
+<tr>
+<td><code>aggressive</code></td>
+<td>75</td>
+<td>Pause only for high risk above 75</td>
+</tr>
+</tbody>
+</table>
+<p>Actions with risk scores below the threshold in the <code>advisory</code> tier MAY proceed without pausing.</p>
+<h4 id="873-agent-notification-system">8.7.3 Agent Notification System</h4>
+<p>Notifications inform the agent of events that occurred since the last <code>record_execution_step</code> call. They are included in the <code>AutonomyDirective</code> response.</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> AgentNotification {</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  type<span class="op">:</span> NotificationType<span class="op">;</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  message<span class="op">:</span> <span class="dt">string</span><span class="op">;</span>               <span class="co">// Human-readable description</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>  metadata<span class="op">?:</span> {</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>    operation<span class="op">?:</span> <span class="dt">string</span><span class="op">;</span>          <span class="co">// Operation that triggered the event</span></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>    reason<span class="op">?:</span> <span class="dt">string</span><span class="op">;</span>             <span class="co">// Detailed reason</span></span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>    level<span class="op">?:</span> <span class="dt">string</span><span class="op">;</span>              <span class="co">// Permission level that caused the block</span></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>    verificationId<span class="op">?:</span> <span class="dt">string</span><span class="op">;</span>     <span class="co">// For verify and danger_zone challenges</span></span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>  }<span class="op">;</span></span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>  timestamp<span class="op">:</span> <span class="dt">string</span><span class="op">;</span>             <span class="co">// ISO 8601</span></span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> NotificationType <span class="op">=</span></span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="st">&quot;permission_pending&quot;</span>    <span class="co">// Gatekeeper blocked an operation</span></span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="st">&quot;autonomy_pause&quot;</span>        <span class="co">// Autonomy Evaluator paused execution</span></span>
+<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="st">&quot;danger_zone&quot;</span>           <span class="co">// Danger Zone hard block (system-wide broadcast)</span></span>
+<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="st">&quot;status&quot;</span>                <span class="co">// Informational status update</span></span>
+<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="st">&quot;error&quot;</span><span class="op">;</span>                <span class="co">// Error condition</span></span></code></pre></div>
+<p><strong>Notification sources:</strong></p>
+<ul>
+<li><strong><code>permission_pending</code>:</strong> Generated when the Gatekeeper denies an operation that requires confirmation. Cleared when <code>confirm_operation</code> is called with a valid confirmation token for the blocked operation. Failed or invalid confirmation attempts do not clear the notification.</li>
+<li><strong><code>autonomy_pause</code>:</strong> Generated when the Autonomy Evaluator returns <code>continue: false</code>. Provides the reason and contributing factors. For <code>confirm</code> tier pauses, cleared when <code>confirm_operation</code> is called for the paused action. For <code>verify</code> tier pauses, MUST include <code>verificationId</code> in metadata; cleared when <code>verify_challenge</code> succeeds for the associated challenge ID or the challenge expires.</li>
+<li><strong><code>danger_zone</code>:</strong> Broadcast to ALL executing agents (including the affected agent) when any agent triggers a hard block (<code>danger_zone</code> tier or <code>deny</code> pattern match). MUST include the <code>verificationId</code> for the affected agent. Cleared when the blocked agent is unblocked via successful <code>verify_challenge</code> or admin override.</li>
+</ul>
+<p>The notification system is <strong>pull-based</strong>: notifications accumulate between <code>record_execution_step</code> calls and are delivered in the response. There is no push channel.</p>
+<p><strong>Self-Approval Prevention:</strong> When <code>permission_pending</code> notifications expose the blocked operation name, the executing agent could attempt to call <code>confirm_operation</code> to approve its own blocked operations. Implementations MUST prevent self-approval — the entity confirming an operation MUST NOT be the same agent that triggered the block. Server-side controls such as caller identity validation, confirmation tokens bound to a human-only channel, or out-of-band confirmation delivery satisfy this requirement.</p>
+<h4 id="874-configurable-elements">8.7.4 Configurable Elements</h4>
+<p>The following elements of the evaluation pipeline SHOULD be configurable per agent or per adapter:</p>
+<table>
+<thead>
+<tr>
+<th>Element</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>maxAutonomousSteps</code></td>
+<td>number</td>
+<td>Maximum steps before mandatory pause</td>
+</tr>
+<tr>
+<td><code>riskTolerance</code></td>
+<td>string</td>
+<td><code>"conservative"</code>, <code>"moderate"</code>, or <code>"aggressive"</code></td>
+</tr>
+<tr>
+<td><code>deny</code></td>
+<td>string[]</td>
+<td>Glob patterns that trigger hard block and out-of-band verification (Section 8.8)</td>
+</tr>
+<tr>
+<td><code>requiresApproval</code></td>
+<td>string[]</td>
+<td>Glob patterns that always require human review</td>
+</tr>
+<tr>
+<td><code>autoApprove</code></td>
+<td>string[]</td>
+<td>Glob patterns that bypass evaluation</td>
+</tr>
+</tbody>
+</table>
+<p>Adapters SHOULD document their default configuration and supported configuration options via introspection.</p>
+<h4 id="875-minimum-viable-implementation">8.7.5 Minimum Viable Implementation</h4>
+<p>Not all stages of the evaluation pipeline are equally important. The following defines the minimum requirements:</p>
+<table>
+<thead>
+<tr>
+<th>Stage</th>
+<th>Requirement</th>
+<th>Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Step Limit</td>
+<td>MUST</td>
+<td>Prevents runaway autonomous execution</td>
+</tr>
+<tr>
+<td>Previous Outcome</td>
+<td>SHOULD</td>
+<td>Prevents cascading failures</td>
+</tr>
+<tr>
+<td>Pattern Matching</td>
+<td>SHOULD</td>
+<td>Primary safety control mechanism</td>
+</tr>
+<tr>
+<td>Safety Tier</td>
+<td>MAY</td>
+<td>Requires risk scoring capability</td>
+</tr>
+<tr>
+<td>Risk Tolerance</td>
+<td>MAY</td>
+<td>Depends on Safety Tier implementation</td>
+</tr>
+</tbody>
+</table>
+<p>An implementation that supports only the Step Limit stage (with a configurable limit and hard pause at the threshold) is a conformant minimum viable implementation.</p>
+<h3 id="88-out-of-band-verification">8.8 Out-of-Band Verification</h3>
+<p>When the Autonomy Evaluator assigns a <code>verify</code> or <code>danger_zone</code> safety tier (Section 8.7.2, Stage 4), the system MUST require out-of-band human verification before the agent may proceed. Out-of-band verification requires a human to provide a verification code through a channel that the AI cannot access, creating cryptographic proof that a human reviewed and approved the action. The <code>verify</code> tier pauses the agent; the <code>danger_zone</code> tier hard-blocks it.</p>
+<h4 id="881-trigger-conditions">8.8.1 Trigger Conditions</h4>
+<p>Out-of-band verification is triggered when:</p>
+<ul>
+<li>The safety tier evaluation assigns <code>verify</code> (risk score 61-85) or <code>danger_zone</code> (risk score 86-100), OR</li>
+<li>The <code>nextActionHint</code> matches a hard-block (<code>deny</code>) pattern configured in the adapter (Section 8.7.2, Stage 3)</li>
+</ul>
+<p>For <code>danger_zone</code> and <code>deny</code> pattern triggers, the <code>AutonomyDirective</code> MUST return <code>stopped: true</code> and MUST include a <code>danger_zone</code> notification broadcast to all executing agents. For <code>verify</code> triggers, the <code>AutonomyDirective</code> returns <code>continue: false</code> (pause) without <code>stopped: true</code> — the agent is paused but not permanently blocked.</p>
+<h4 id="882-challenge-protocol">8.8.2 Challenge Protocol</h4>
+<p>The verification protocol follows these steps:</p>
+<p><strong>1. Challenge Generation:</strong></p>
+<ul>
+<li>The adapter generates a verification code with at least 128 bits of entropy from a cryptographically secure random source</li>
+<li>The adapter generates a unique challenge ID (UUID v4 recommended)</li>
+<li>The code MUST be cryptographically unpredictable (not sequential, not time-based)</li>
+</ul>
+<p><strong>2. Out-of-Band Display:</strong></p>
+<ul>
+<li>The verification code MUST be displayed through a channel inaccessible to the AI agent</li>
+<li>The code MUST NOT appear in any MCP response, tool result, <code>_meta</code> field, or log accessible to the AI</li>
+<li>Valid display channels include (but are not limited to):
+<ul>
+<li>OS-native dialogs (AppleScript on macOS, zenity on Linux, PowerShell on Windows)</li>
+<li>Hardware security tokens</li>
+<li>SMS or email to a registered operator</li>
+<li>Dedicated security dashboard</li>
+</ul></li>
+<li>The AI agent receives only the challenge ID and a human-readable prompt — never the code itself</li>
+<li>The initial <code>AutonomyDirective</code> MUST include the challenge ID via a notification: <code>autonomy_pause</code> with <code>metadata.verificationId</code> for <code>verify</code> tier, or <code>danger_zone</code> with <code>metadata.verificationId</code> for <code>danger_zone</code> tier and <code>deny</code> pattern matches</li>
+</ul>
+<p><strong>3. Verification:</strong></p>
+<ul>
+<li>The human provides the code via the <code>verify_challenge</code> operation with the challenge ID and code</li>
+<li>On successful verification, the blocked agent is unblocked and execution may resume</li>
+<li>On failed verification, the code is invalidated (one-time use)</li>
+</ul>
+<p><strong>4. Expiration:</strong></p>
+<ul>
+<li>Verification challenges SHOULD expire after a configurable timeout (default: 5 minutes)</li>
+<li>Expired challenges MUST be treated as failed</li>
+</ul>
+<h4 id="883-blocking-semantics">8.8.3 Blocking Semantics</h4>
+<p>When an agent is hard-blocked by any event that sets <code>stopped: true</code> (a <code>danger_zone</code> safety tier assignment, a <code>deny</code> pattern match, or equivalent adapter-specific trigger):</p>
+<ul>
+<li>The <code>AutonomyDirective</code> returns <code>stopped: true</code></li>
+<li>All subsequent execution operations for the blocked agent MUST be rejected until unblocked</li>
+<li>The blocked state MUST persist across server restarts (file-based or database storage)</li>
+<li>Only successful verification via <code>verify_challenge</code> or an explicit admin override can unblock the agent</li>
+</ul>
+<p>Adapters MUST NOT allow an agent to bypass a hard block by starting a new execution. The block is applied at the agent level, not the execution level.</p>
+<p>For <code>verify</code> tier challenges (where <code>stopped</code> is not <code>true</code>), the agent is paused rather than blocked. While a <code>verify</code> challenge is pending, subsequent <code>record_execution_step</code> calls for the same agent SHOULD return <code>continue: false</code> with the pending challenge ID in the reason field, until the challenge is completed or expires. Unlike hard blocks, <code>verify</code> pauses do not persist across server restarts and do not prevent starting new executions. When a <code>verify</code> challenge expires, the pause is lifted and subsequent <code>record_execution_step</code> calls SHOULD re-evaluate the action normally — if the same action is reported again, a new challenge is generated.</p>
+<h4 id="884-channel-separation-requirements">8.8.4 Channel Separation Requirements</h4>
+<p>The security of out-of-band verification depends entirely on channel separation. The verification code:</p>
+<ul>
+<li>MUST NOT appear in any MCP tool response or result</li>
+<li>MUST NOT appear in any <code>_meta</code> field of an MCP response</li>
+<li>MUST NOT be logged in any location accessible to the AI agent</li>
+<li>MUST NOT be included in error messages, debug output, or diagnostic information accessible to the AI</li>
+<li>MUST NOT be derivable from any information available to the AI (e.g., timestamps, sequential IDs)</li>
+</ul>
+<blockquote>
+<p><strong>Security Principle:</strong> Even a fully prompt-injected LLM that has been instructed to bypass safety checks cannot complete out-of-band verification, because the code exists only in a channel the LLM cannot observe.</p>
+</blockquote>
+<h4 id="885-rate-limiting">8.8.5 Rate Limiting</h4>
+<p>Failed verification attempts SHOULD be rate-limited to prevent brute-force attacks:</p>
+<ul>
+<li>Implementations SHOULD allow no more than 10 failed attempts per 60-second window per agent</li>
+<li>After exceeding the rate limit, subsequent verification attempts SHOULD be rejected with an appropriate error</li>
+<li>The failure counter resets after the window expires (sliding or fixed window); however, implementations MAY apply progressive lockout (e.g., doubling the window duration) after repeated rate-limit violations</li>
+<li>Rate limit state SHOULD persist across server restarts</li>
+<li>Failed verification attempts SHOULD trigger security audit events</li>
+</ul>
+<h4 id="886-implementation-flexibility">8.8.6 Implementation Flexibility</h4>
+<p>This specification defines the <strong>verification protocol</strong>, not the display mechanism. Implementations MAY use any display channel that satisfies the channel separation requirements (Section 8.8.4):</p>
+<table>
+<thead>
+<tr>
+<th>Channel</th>
+<th>Platform</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OS dialog</td>
+<td>Desktop</td>
+<td>AppleScript, zenity, PowerShell</td>
+</tr>
+<tr>
+<td>Hardware token</td>
+<td>Any</td>
+<td>Physical device with display</td>
+</tr>
+<tr>
+<td>SMS/Email</td>
+<td>Any</td>
+<td>Requires operator contact info</td>
+</tr>
+<tr>
+<td>Security dashboard</td>
+<td>Web</td>
+<td>Dedicated approval interface</td>
+</tr>
+<tr>
+<td>Mobile push notification</td>
+<td>Any</td>
+<td>Requires companion app</td>
+</tr>
+</tbody>
+</table>
+<p>The only requirement is that the channel is inaccessible to the AI agent performing the action.</p>
+<hr />
+<h2 id="9-type-system">9. Type System</h2>
+<h3 id="91-protocol-types">9.1 Protocol Types</h3>
+<p>MCP-AQL defines these protocol-level types:</p>
+<p><strong>EndpointCategory</strong> (enum)</p>
+<pre><code>CREATE | READ | UPDATE | DELETE | EXECUTE</code></pre>
+<p><strong>OperationResult</strong> (union)</p>
+<pre><code>OperationSuccess | OperationFailure</code></pre>
+<p>See <a href="#appendix-d-json-schemas">Appendix D: JSON Schemas</a> for formal schema definitions.</p>
+<h3 id="92-adapter-types">9.2 Adapter Types</h3>
+<p>Adapters define their own domain-specific types, which MUST be discoverable via the <code>introspect</code> operation with <code>query: "types"</code>.</p>
+<h3 id="93-request-concurrency">9.3 Request Concurrency</h3>
+<p>MCP allows request pipelining, enabling clients to send multiple requests without waiting for responses. MCP-AQL defines ordering guarantees for batch operations (see <a href="../operations.html">Operations Reference</a> Section 7) but does not mandate ordering for concurrent independent requests.</p>
+<h4 id="931-concurrency-requirements">9.3.1 Concurrency Requirements</h4>
+<p>Adapters MUST document their concurrency behavior. The following concurrency categories are defined:</p>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>serialized</code></td>
+<td>All requests processed sequentially in arrival order</td>
+</tr>
+<tr>
+<td><code>read-concurrent</code></td>
+<td>READ operations may execute concurrently; writes serialized</td>
+</tr>
+<tr>
+<td><code>fully-concurrent</code></td>
+<td>All operations may execute concurrently</td>
+</tr>
+<tr>
+<td><code>resource-locked</code></td>
+<td>Concurrent on different resources; serialized per resource</td>
+</tr>
+</tbody>
+</table>
+<h4 id="932-state-modifying-operations">9.3.2 State-Modifying Operations</h4>
+<p>Adapters supporting concurrent state modification SHOULD implement optimistic concurrency control:</p>
+<ol type="1">
+<li><strong>ETag/Version Response:</strong> Include <code>_etag</code> or <code>_version</code> field in responses for mutable resources</li>
+<li><strong>Precondition Request:</strong> Accept <code>if_match</code> parameter for conditional updates</li>
+<li><strong>Conflict Detection:</strong> Return <code>CONFLICT_VERSION_MISMATCH</code> error when precondition fails</li>
+</ol>
+<p><strong>Example response with version:</strong></p>
+<div class="sourceCode" id="cb37"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;data&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="st">&quot;doc_123&quot;</span><span class="fu">,</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;title&quot;</span><span class="fu">:</span> <span class="st">&quot;My Document&quot;</span><span class="fu">,</span></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;_etag&quot;</span><span class="fu">:</span> <span class="st">&quot;W/</span><span class="ch">\&quot;</span><span class="st">a1b2c3d4</span><span class="ch">\&quot;</span><span class="st">&quot;</span></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><strong>Example conditional update:</strong></p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;operation&quot;</span><span class="fu">:</span> <span class="st">&quot;update_document&quot;</span><span class="fu">,</span></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;params&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="st">&quot;doc_123&quot;</span><span class="fu">,</span></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;title&quot;</span><span class="fu">:</span> <span class="st">&quot;Updated Title&quot;</span><span class="fu">,</span></span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;if_match&quot;</span><span class="fu">:</span> <span class="st">&quot;W/</span><span class="ch">\&quot;</span><span class="st">a1b2c3d4</span><span class="ch">\&quot;</span><span class="st">&quot;</span></span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h4 id="933-concurrency-metadata">9.3.3 Concurrency Metadata</h4>
+<p>Adapters MAY expose concurrency behavior via introspection in protocol metadata:</p>
+<div class="sourceCode" id="cb39"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;_protocol&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;concurrency&quot;</span><span class="fu">:</span> <span class="st">&quot;resource-locked&quot;</span><span class="fu">,</span></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;supports_etag&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;max_concurrent_requests&quot;</span><span class="fu">:</span> <span class="dv">10</span></span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<hr />
+<h2 id="10-conformance">10. Conformance</h2>
+<h3 id="101-conformance-levels">10.1 Conformance Levels</h3>
+<p><strong>Level 1: Basic Conformance</strong></p>
+<ul>
+<li>MUST support at least one endpoint mode (CRUDE or Single)</li>
+<li>MUST implement the <code>introspect</code> operation</li>
+<li>MUST use standard request/response formats</li>
+<li>MUST classify operations correctly into CRUDE endpoints</li>
+<li>MUST reject operations sent to wrong endpoints (CRUDE mode)</li>
+</ul>
+<p><strong>Level 2: Full Conformance</strong></p>
+<ul>
+<li>MUST meet Level 1 requirements</li>
+<li>MUST support both CRUDE and Single endpoint modes</li>
+<li>MUST pass the conformance test suite</li>
+<li>SHOULD implement field selection</li>
+<li>SHOULD implement batch operations</li>
+</ul>
+<h3 id="102-claiming-conformance">10.2 Claiming Conformance</h3>
+<p>Implementations claiming MCP-AQL conformance MUST:</p>
+<ol type="1">
+<li>State their conformance level</li>
+<li>Document their operations via introspection</li>
+<li>Document any extensions</li>
+</ol>
+<h3 id="103-extensions">10.3 Extensions</h3>
+<p>Implementations MAY extend MCP-AQL with additional:</p>
+<ul>
+<li>Features (field selection, batch operations, etc.)</li>
+<li>Response metadata fields</li>
+</ul>
+<p>Extensions MUST be documented and MUST NOT conflict with core specification behavior.</p>
+<hr />
+<h2 id="appendix-a-token-efficiency">Appendix A: Token Efficiency</h2>
+<h3 id="a1-measured-token-costs">A.1 Measured Token Costs</h3>
+<table>
+<thead>
+<tr>
+<th>Configuration</th>
+<th>Tools</th>
+<th>Tokens</th>
+<th>Reduction</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Discrete Tools</td>
+<td>50+</td>
+<td>~29,600</td>
+<td>Baseline</td>
+</tr>
+<tr>
+<td>CRUDE Mode</td>
+<td>5</td>
+<td>~4,300</td>
+<td>~85%</td>
+</tr>
+<tr>
+<td>Single Mode</td>
+<td>1</td>
+<td>~1,100</td>
+<td>~96%</td>
+</tr>
+</tbody>
+</table>
+<h3 id="a2-introspection-pattern">A.2 Introspection Pattern</h3>
+<pre><code>Total context for 10 operations with introspection:
+- Tool registration: ~1,100 tokens
+- 10 × introspect calls: ~1,500 tokens
+- Total: ~2,600 tokens (vs ~29,600 baseline)</code></pre>
+<hr />
+<h2 id="appendix-b-references">Appendix B: References</h2>
+<h3 id="core-documentation">Core Documentation</h3>
+<ul>
+<li><a href="../overview.html">Protocol Overview</a></li>
+<li><a href="../operations.html">Operations Reference</a></li>
+<li><a href="../endpoint-modes.html">Endpoint Modes</a></li>
+<li><a href="../mcp-integration.html">MCP Integration</a></li>
+<li><a href="../introspection.html">Introspection Specification</a></li>
+<li><a href="../plugin-contracts.html">Plugin Interface Contracts</a></li>
+<li><a href="../adapter/element-type.html">Adapter Element Type Specification</a></li>
+</ul>
+<h3 id="implementation-documentation">Implementation Documentation</h3>
+<ul>
+<li><a href="../../adapter-reference/architecture/overview.html">Architecture Overview</a> (in mcpaql-adapter repo)</li>
+<li><a href="../../adapter-reference/architecture/runtime.html">Universal Adapter Runtime</a> (in mcpaql-adapter repo)</li>
+<li><a href="../../adapter-reference/architecture/plugin-system.html">Plugin System Implementation</a> (in mcpaql-adapter repo)</li>
+<li><a href="../../adapter-reference/guides/development.html">Development Guide</a> (in mcpaql-adapter repo)</li>
+</ul>
+<h3 id="examples">Examples</h3>
+<ul>
+<li><a href="https://github.com/MCPAQL/examples/blob/develop/adapters/github-api-adapter.md">GitHub API Adapter</a> (in examples repo)</li>
+</ul>
+<h3 id="guides">Guides</h3>
+<ul>
+<li><a href="../guides/protocol-comparison.html">Protocol Comparison Guide</a></li>
+</ul>
+<h3 id="process--decision-records">Process &amp; Decision Records</h3>
+<ul>
+<li><a href="../adr/index.html">Architecture Decision Records</a></li>
+</ul>
+<h3 id="external-references">External References</h3>
+<ul>
+<li><a href="https://spec.modelcontextprotocol.io/">Model Context Protocol Specification</a> (note: may be unreachable)</li>
+<li><a href="https://www.ietf.org/rfc/rfc2119.txt">RFC 2119 - Key words for use in RFCs</a></li>
+</ul>
+<hr />
+<h2 id="appendix-c-change-log">Appendix C: Change Log</h2>
+<table>
+<thead>
+<tr>
+<th>Version</th>
+<th>Date</th>
+<th>Changes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1.0.0-draft</td>
+<td>2026-01-05</td>
+<td>Initial draft specification</td>
+</tr>
+<tr>
+<td>1.0.0-draft</td>
+<td>2026-01-14</td>
+<td>Revised to be adapter-agnostic</td>
+</tr>
+<tr>
+<td>1.0.0-draft</td>
+<td>2026-01-16</td>
+<td>Added schema references, updated documentation links, renamed EndpointCategory</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="appendix-d-json-schemas">Appendix D: JSON Schemas</h2>
+<p>Formal JSON Schema definitions are provided for validation:</p>
+<table>
+<thead>
+<tr>
+<th>Schema</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://github.com/MCPAQL/spec/blob/main/schemas/operation-input.schema.json">operation-input.schema.json</a></td>
+<td>Request format validation</td>
+</tr>
+<tr>
+<td><a href="https://github.com/MCPAQL/spec/blob/main/schemas/operation-result.schema.json">operation-result.schema.json</a></td>
+<td>Response format validation</td>
+</tr>
+<tr>
+<td><a href="https://github.com/MCPAQL/spec/blob/main/schemas/introspection-response.schema.json">introspection-response.schema.json</a></td>
+<td>Introspection response validation</td>
+</tr>
+<tr>
+<td><a href="https://github.com/MCPAQL/spec/blob/main/schemas/danger-level.schema.json">danger-level.schema.json</a></td>
+<td>Operation danger classification</td>
+</tr>
+</tbody>
+</table>
+<p>Schemas use JSON Schema 2020-12 draft and are normative for this specification.</p>
+
+          </div>
+        </section>
+        <nav class="page-nav" aria-label="Page navigation">
+  <a class="page-nav-link prev" href="../repo/README.html">
+    <span class="page-nav-eyebrow">Previous page</span>
+    <strong class="page-nav-label">MCP-AQL Specification</strong>
+  </a>
+  <a class="page-nav-link next" href="../adapter/danger-levels.html">
+    <span class="page-nav-eyebrow">Next page</span>
+    <strong class="page-nav-label">Dangerous Operation Classification Specification</strong>
+  </a>
+</nav>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.</p>
+      <div class="footer-links">
+        <a href="../../docs/index.html">Docs Library</a><a href="../index.html">Repo-Synced Spec</a><a href="https://github.com/MCPAQL">MCPAQL Organization</a><a href="https://dollhouseresearch.com">Dollhouse Research</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../js/search.js"></script>
+</body>
+</html>

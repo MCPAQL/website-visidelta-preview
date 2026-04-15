@@ -1,0 +1,23 @@
+MCP-AQL Aggregations
+MCP-AQL Computed Fields
+MCP-AQL Relationship Queries
+Cross-Domain Implementation Guide
+MCP-AQL (Model Context Protocol - Agent Query Language) is a protocol that consolidates discrete MCP tools into a small number of semantic endpoint families, providing significant token reduction while maintaining full f
+Semantic Endpoint Mode
+MCP-AQL (Model Context Protocol - Agent Query Language) is a protocol that consolidates discrete MCP tools into a small number of semantic endpoint families, providing significant token reduction while maintaining full functionality. The standard semantic-endpoint profile is CRUDE (Create, Read, Update, Delete, Execute), but adapters MAY define alternate semantic endpoint families.
+Consolidates Operations - Many discrete tools into a small number of semantic endpoint families
+Supports Flexibility - Implementations MAY offer semantic endpoint mode with the standard CRUDE profile or alternate semantic endpoint families, or Single mode
+Note: This diagram shows a runtime lifecycle flow, not endpoint classification. Operations like get_execution_state that query execution state belong to the READ semantic category, not EXECUTE. In the standard CRUDE profile they are exposed on the READ endpoint. See CRUDE Pattern Classification for details.
+The standard CRUDE profile exposes 5 separate endpoints, each with semantic meaning:
+An alternate semantic-endpoint profile can expose a different but still semantically legible set:
+mcp_aql_discover - Discovery and inspection operations
+mcp_aql_query - Retrieval and filtering operations
+mcp_aql_manage - Mutating and administrative operations
+mcp_aql_operate - Runtime and lifecycle operations
+Semantic Endpoint Mode (CRUDE profile, 5 endpoints)
+~4,300 tokens
+Implementations MUST support the introspect operation as a READ-category operation on a documented endpoint family.
+semantic_category - The standard CREATE/READ/UPDATE/DELETE/EXECUTE classification
+endpoint - The exposed endpoint family name
+Implements at least one endpoint mode (semantic or Single)
+Provides the introspect operation as a READ-category operation on a documented endpoint family

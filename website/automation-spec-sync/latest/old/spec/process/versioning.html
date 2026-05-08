@@ -50,10 +50,10 @@
   <ul><li><a href="../security/confirmation-tokens.html">Confirmation Token Specification</a></li><li><a href="../security/execution-safety-loop.html">Execution Safety Loop Specification</a></li><li><a href="../security/gatekeeper.html">Security Model: Gatekeeper Specification</a></li></ul>
 </div><div class="docs-side-group">
   <h3>Features</h3>
-  <ul><li><a href="../features/collection-querying.html">MCP-AQL Collection Querying</a></li><li><a href="../features/field-selection.html">Field Selection Specification</a></li><li><a href="../features/pagination.html">Cursor-Based Pagination Specification</a></li><li><a href="../features/warnings.html">Warnings Array Specification</a></li></ul>
+  <ul><li><a href="../features/aggregations.html">MCP-AQL Aggregations</a></li><li><a href="../features/collection-querying.html">MCP-AQL Collection Querying</a></li><li><a href="../features/computed-fields.html">MCP-AQL Computed Fields</a></li><li><a href="../features/field-selection.html">Field Selection Specification</a></li><li><a href="../features/pagination.html">Cursor-Based Pagination Specification</a></li><li><a href="../features/relationship-queries.html">MCP-AQL Relationship Queries</a></li><li><a href="../features/warnings.html">Warnings Array Specification</a></li></ul>
 </div><div class="docs-side-group">
   <h3>Guides</h3>
-  <ul><li><a href="../guides/protocol-comparison.html">Protocol Comparison Guide</a></li><li><a href="../guides/README.html">Developer Guides</a></li></ul>
+  <ul><li><a href="../guides/cross-domain-implementation.html">Cross-Domain Implementation Guide</a></li><li><a href="../guides/protocol-comparison.html">Protocol Comparison Guide</a></li><li><a href="../guides/README.html">Developer Guides</a></li></ul>
 </div><div class="docs-side-group">
   <h3>Process</h3>
   <ul><li><a href="breaking-changes.html">MCP-AQL Breaking Change Policy</a></li><li><a href="preliminary-public-launch-checklist.html">Preliminary Public Launch Checklist</a></li><li><a href="rfc-process.html">RFC Process for MCP-AQL Specification</a></li><li><a class="current" aria-current="page" href="versioning.html">Versioning Strategy</a></li><li><a href="../repo/CHANGELOG.html">Changelog</a></li></ul>
@@ -117,25 +117,25 @@
 <h3 id="components">Components</h3>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Component</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td>MAJOR</td>
 <td>Breaking changes that require implementation updates</td>
 </tr>
-<tr>
+<tr class="even">
 <td>MINOR</td>
 <td>New features, backward compatible</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>PATCH</td>
 <td>Bug fixes, clarifications, backward compatible</td>
 </tr>
-<tr>
+<tr class="even">
 <td>PRERELEASE</td>
 <td>Optional tag indicating release maturity</td>
 </tr>
@@ -144,29 +144,29 @@
 <h3 id="examples">Examples</h3>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Version</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><code>1.0.0-draft</code></td>
 <td>Current working draft</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>1.0.0</code></td>
 <td>First stable release</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>1.1.0</code></td>
 <td>New features added (backward compatible)</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>1.1.1</code></td>
 <td>Bug fixes or clarifications</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>2.0.0</code></td>
 <td>Breaking changes from v1.x</td>
 </tr>
@@ -277,21 +277,21 @@
 <p>Version information is maintained in the following locations:</p>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Location</th>
 <th>Purpose</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><code>docs/versions/vX.Y.Z.md</code></td>
 <td>Full specification document for each version</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>CHANGELOG.md</code></td>
 <td>Complete version history with changes</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>README.md</code></td>
 <td>Version badge showing current stable version</td>
 </tr>

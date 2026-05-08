@@ -50,10 +50,10 @@
   <ul><li><a href="security/confirmation-tokens.html">Confirmation Token Specification</a></li><li><a href="security/execution-safety-loop.html">Execution Safety Loop Specification</a></li><li><a href="security/gatekeeper.html">Security Model: Gatekeeper Specification</a></li></ul>
 </div><div class="docs-side-group">
   <h3>Features</h3>
-  <ul><li><a href="features/collection-querying.html">MCP-AQL Collection Querying</a></li><li><a href="features/field-selection.html">Field Selection Specification</a></li><li><a href="features/pagination.html">Cursor-Based Pagination Specification</a></li><li><a href="features/warnings.html">Warnings Array Specification</a></li></ul>
+  <ul><li><a href="features/aggregations.html">MCP-AQL Aggregations</a></li><li><a href="features/collection-querying.html">MCP-AQL Collection Querying</a></li><li><a href="features/computed-fields.html">MCP-AQL Computed Fields</a></li><li><a href="features/field-selection.html">Field Selection Specification</a></li><li><a href="features/pagination.html">Cursor-Based Pagination Specification</a></li><li><a href="features/relationship-queries.html">MCP-AQL Relationship Queries</a></li><li><a href="features/warnings.html">Warnings Array Specification</a></li></ul>
 </div><div class="docs-side-group">
   <h3>Guides</h3>
-  <ul><li><a href="guides/protocol-comparison.html">Protocol Comparison Guide</a></li><li><a href="guides/README.html">Developer Guides</a></li></ul>
+  <ul><li><a href="guides/cross-domain-implementation.html">Cross-Domain Implementation Guide</a></li><li><a href="guides/protocol-comparison.html">Protocol Comparison Guide</a></li><li><a href="guides/README.html">Developer Guides</a></li></ul>
 </div><div class="docs-side-group">
   <h3>Process</h3>
   <ul><li><a href="process/breaking-changes.html">MCP-AQL Breaking Change Policy</a></li><li><a href="process/preliminary-public-launch-checklist.html">Preliminary Public Launch Checklist</a></li><li><a href="process/rfc-process.html">RFC Process for MCP-AQL Specification</a></li><li><a href="process/versioning.html">Versioning Strategy</a></li><li><a href="repo/CHANGELOG.html">Changelog</a></li></ul>
@@ -120,46 +120,46 @@
 <h3 id="core-specification">Core Specification</h3>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Document</th>
 <th>Description</th>
 <th>Status</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><a href="versions/v1.0.0-draft.html">v1.0.0-draft</a></td>
 <td>Current specification version</td>
 <td>Draft</td>
 </tr>
-<tr>
+<tr class="even">
 <td><a href="crude-pattern.html">CRUDE Pattern</a></td>
-<td>Endpoint semantics and routing</td>
+<td>Standard semantic-endpoint profile and routing</td>
 <td>Draft</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><a href="endpoint-modes.html">Endpoint Modes</a></td>
-<td>CRUDE vs Single mode configuration</td>
+<td>Semantic endpoint mode and Single mode configuration</td>
 <td>Draft</td>
 </tr>
-<tr>
+<tr class="even">
 <td><a href="introspection.html">Introspection</a></td>
 <td>Runtime discovery system</td>
 <td>Draft</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><a href="operations.html">Operations</a></td>
 <td>Operation design guide</td>
 <td>Draft</td>
 </tr>
-<tr>
+<tr class="even">
 <td><a href="error-codes.html">Error Codes</a></td>
 <td>Structured error code system</td>
 <td>Draft (MVP)</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><a href="conformance-testing.html">Conformance Testing</a></td>
-<td>Test requirements and evaluation methodology</td>
+<td>Test requirements plus the fixture-driven runner model used in this repo</td>
 <td>Draft</td>
 </tr>
 </tbody>
@@ -167,24 +167,24 @@
 <h3 id="plugin--adapter-contracts">Plugin &amp; Adapter Contracts</h3>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Document</th>
 <th>Description</th>
 <th>Status</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><a href="plugin-contracts.html">Plugin Interface Contracts</a></td>
 <td>What each plugin type MUST provide</td>
 <td>Draft (MVP)</td>
 </tr>
-<tr>
+<tr class="even">
 <td><a href="adapter/element-type.html">Element Type Specification</a></td>
 <td>Declarative adapter schema format</td>
 <td>Draft (MVP)</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><a href="adapter/discovery-bundle.html">MCP Server Discovery Bundle</a></td>
 <td>Raw capture + normalized bundle contract for generator pipelines</td>
 <td>Draft</td>
@@ -194,26 +194,41 @@
 <h3 id="features">Features</h3>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Document</th>
 <th>Description</th>
 <th>Impl Status</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><a href="features/field-selection.html">Field Selection</a></td>
 <td>GraphQL-style response filtering</td>
 <td>Implemented</td>
 </tr>
-<tr>
+<tr class="even">
 <td><a href="features/collection-querying.html">Collection Querying</a></td>
 <td>Preferred query contract for list/search/query operations</td>
 <td>Draft</td>
 </tr>
-<tr>
+<tr class="odd">
+<td><a href="features/aggregations.html">Aggregations</a></td>
+<td>Server-side summaries for collection queries</td>
+<td>Draft</td>
+</tr>
+<tr class="even">
+<td><a href="features/computed-fields.html">Computed Fields</a></td>
+<td>Adapter-declared derived values and <code>_computed.</code> paths</td>
+<td>Draft</td>
+</tr>
+<tr class="odd">
 <td><a href="features/pagination.html">Pagination</a></td>
 <td>Cursor-based pagination semantics and response shape</td>
+<td>Draft</td>
+</tr>
+<tr class="even">
+<td><a href="features/relationship-queries.html">Relationship Queries</a></td>
+<td>Graph traversal and relationship query conventions</td>
 <td>Draft</td>
 </tr>
 </tbody>
@@ -221,14 +236,14 @@
 <h3 id="security">Security</h3>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Document</th>
 <th>Description</th>
 <th>Impl Status</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><a href="security/gatekeeper.html">Gatekeeper</a></td>
 <td>Multi-layer access control</td>
 <td>Implemented</td>
@@ -238,25 +253,25 @@
 <h3 id="process">Process</h3>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Document</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><a href="process/rfc-process.html">RFC Process</a></td>
 <td>How to propose specification changes</td>
 </tr>
-<tr>
+<tr class="even">
 <td><a href="process/breaking-changes.html">Breaking Changes</a></td>
 <td>Policy for handling breaking changes</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><a href="process/versioning.html">Versioning</a></td>
 <td>Version numbering and release process</td>
 </tr>
-<tr>
+<tr class="even">
 <td><a href="process/preliminary-public-launch-checklist.html">Preliminary Launch Checklist</a></td>
 <td>Coordinated draft-launch criteria</td>
 </tr>
@@ -265,15 +280,19 @@
 <h3 id="guides">Guides</h3>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Document</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><a href="guides/protocol-comparison.html">Protocol Comparison</a></td>
 <td>MCP-AQL vs other protocols</td>
+</tr>
+<tr class="even">
+<td><a href="guides/cross-domain-implementation.html">Cross-Domain Implementation</a></td>
+<td>Step-by-step guide for adapting MCP-AQL to domains beyond Dollhouse-style element management</td>
 </tr>
 </tbody>
 </table>
@@ -295,16 +314,14 @@
 </ul>
 <p><strong>Phase 2+ - Advanced:</strong></p>
 <ul>
-<li>Computed fields (#42)</li>
 <li>Streaming responses (#43)</li>
-<li>Relationship queries (#44)</li>
 <li>Schema versioning (#48)</li>
 </ul>
 <h2 id="reading-order">Reading Order</h2>
 <p>For newcomers to MCP-AQL:</p>
 <ol type="1">
 <li><strong><a href="versions/v1.0.0-draft.html">v1.0.0-draft</a></strong> - Start with the main specification</li>
-<li><strong><a href="crude-pattern.html">CRUDE Pattern</a></strong> - Understand the endpoint semantics</li>
+<li><strong><a href="crude-pattern.html">CRUDE Pattern</a></strong> - Understand the standard semantic-endpoint profile</li>
 <li><strong><a href="operations.html">Operations</a></strong> - Learn operation design patterns</li>
 <li><strong><a href="introspection.html">Introspection</a></strong> - Learn the discovery system</li>
 <li><strong><a href="conformance-testing.html">Conformance Testing</a></strong> - Understand conformance requirements</li>
@@ -313,15 +330,15 @@
 <ol type="1">
 <li><strong><a href="adapter/element-type.html">Element Type Specification</a></strong> - Declarative schema format</li>
 <li><strong><a href="plugin-contracts.html">Plugin Interface Contracts</a></strong> - Plugin system contracts</li>
-<li><strong><a href="../adapter-reference/architecture/overview.html">Architecture Overview</a></strong> - Understand adapter structure (in mcpaql-adapter repo)</li>
-<li><strong><a href="../adapter-reference/guides/development.html">Development Guide</a></strong> - Implementation walkthrough (in mcpaql-adapter repo)</li>
+<li><strong><a href="https://github.com/MCPAQL/mcpaql-adapter/blob/develop/docs/architecture/overview.md">Architecture Overview</a></strong> - Understand adapter structure (in mcpaql-adapter repo)</li>
+<li><strong><a href="https://github.com/MCPAQL/mcpaql-adapter/blob/develop/docs/guides/development.md">Development Guide</a></strong> - Implementation walkthrough (in mcpaql-adapter repo)</li>
 <li><strong><a href="security/gatekeeper.html">Gatekeeper</a></strong> - Security implementation</li>
 </ol>
 <h2 id="cross-repository-content">Cross-Repository Content</h2>
 <p>MCP-AQL follows a four-level protocol model:</p>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Level</th>
 <th>What</th>
 <th>Normative?</th>
@@ -329,25 +346,25 @@
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td>1. Wire format</td>
 <td>Request/response JSON, error codes, introspection</td>
 <td>MUST</td>
 <td><strong>this repo</strong></td>
 </tr>
-<tr>
+<tr class="even">
 <td>2. Schema semantics</td>
 <td>Operation declarations, params, auth, target</td>
 <td>MUST/SHOULD</td>
 <td><strong>this repo</strong></td>
 </tr>
-<tr>
+<tr class="odd">
 <td>3. Canonical format</td>
 <td>Markdown + YAML front matter interchange format</td>
 <td>SHOULD</td>
 <td><strong>this repo</strong></td>
 </tr>
-<tr>
+<tr class="even">
 <td>4. Implementation guidance</td>
 <td>Runtime architecture, plugin pipeline, dispatch</td>
 <td>Non-normative</td>

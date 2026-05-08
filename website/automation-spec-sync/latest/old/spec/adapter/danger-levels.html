@@ -50,10 +50,10 @@
   <ul><li><a href="../security/confirmation-tokens.html">Confirmation Token Specification</a></li><li><a href="../security/execution-safety-loop.html">Execution Safety Loop Specification</a></li><li><a href="../security/gatekeeper.html">Security Model: Gatekeeper Specification</a></li></ul>
 </div><div class="docs-side-group">
   <h3>Features</h3>
-  <ul><li><a href="../features/collection-querying.html">MCP-AQL Collection Querying</a></li><li><a href="../features/field-selection.html">Field Selection Specification</a></li><li><a href="../features/pagination.html">Cursor-Based Pagination Specification</a></li><li><a href="../features/warnings.html">Warnings Array Specification</a></li></ul>
+  <ul><li><a href="../features/aggregations.html">MCP-AQL Aggregations</a></li><li><a href="../features/collection-querying.html">MCP-AQL Collection Querying</a></li><li><a href="../features/computed-fields.html">MCP-AQL Computed Fields</a></li><li><a href="../features/field-selection.html">Field Selection Specification</a></li><li><a href="../features/pagination.html">Cursor-Based Pagination Specification</a></li><li><a href="../features/relationship-queries.html">MCP-AQL Relationship Queries</a></li><li><a href="../features/warnings.html">Warnings Array Specification</a></li></ul>
 </div><div class="docs-side-group">
   <h3>Guides</h3>
-  <ul><li><a href="../guides/protocol-comparison.html">Protocol Comparison Guide</a></li><li><a href="../guides/README.html">Developer Guides</a></li></ul>
+  <ul><li><a href="../guides/cross-domain-implementation.html">Cross-Domain Implementation Guide</a></li><li><a href="../guides/protocol-comparison.html">Protocol Comparison Guide</a></li><li><a href="../guides/README.html">Developer Guides</a></li></ul>
 </div><div class="docs-side-group">
   <h3>Process</h3>
   <ul><li><a href="../process/breaking-changes.html">MCP-AQL Breaking Change Policy</a></li><li><a href="../process/preliminary-public-launch-checklist.html">Preliminary Public Launch Checklist</a></li><li><a href="../process/rfc-process.html">RFC Process for MCP-AQL Specification</a></li><li><a href="../process/versioning.html">Versioning Strategy</a></li><li><a href="../repo/CHANGELOG.html">Changelog</a></li></ul>
@@ -155,7 +155,7 @@
 <h3 id="21-danger-level-values">2.1 Danger Level Values</h3>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Level</th>
 <th>Value</th>
 <th>Name</th>
@@ -163,31 +163,31 @@
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td>0</td>
 <td><code>safe</code></td>
 <td>Safe</td>
 <td>No restrictions</td>
 </tr>
-<tr>
+<tr class="even">
 <td>1</td>
 <td><code>reversible</code></td>
 <td>Reversible</td>
 <td>Standard confirmation</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>2</td>
 <td><code>destructive</code></td>
 <td>Destructive</td>
 <td>Enhanced confirmation</td>
 </tr>
-<tr>
+<tr class="even">
 <td>3</td>
 <td><code>dangerous</code></td>
 <td>Dangerous</td>
 <td>Explicit unlock required</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>4</td>
 <td><code>forbidden</code></td>
 <td>Forbidden</td>
@@ -333,34 +333,34 @@
 <p>When <code>danger.level</code> is not specified, defaults are inferred:</p>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>CRUDE Category</th>
 <th>Default Danger Level</th>
 <th>Rationale</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td>Read</td>
 <td><code>safe</code> (0)</td>
 <td>No state modification</td>
 </tr>
-<tr>
+<tr class="even">
 <td>Create</td>
 <td><code>reversible</code> (1)</td>
 <td>Adds data, reversible by delete</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>Update</td>
 <td><code>reversible</code> (1)</td>
 <td>Modifies data, often reversible</td>
 </tr>
-<tr>
+<tr class="even">
 <td>Delete</td>
 <td><code>destructive</code> (2)</td>
 <td>Removes data</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>Execute</td>
 <td><code>reversible</code> (1)</td>
 <td>Depends on operation</td>
@@ -399,7 +399,7 @@
 <p>The combination of adapter trust level and operation danger level determines behavior:</p>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Danger Level</th>
 <th>untested</th>
 <th>generated</th>
@@ -409,7 +409,7 @@
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td>safe (0)</td>
 <td>introspect_only</td>
 <td>allow</td>
@@ -417,7 +417,7 @@
 <td>allow</td>
 <td>allow</td>
 </tr>
-<tr>
+<tr class="even">
 <td>reversible (1)</td>
 <td>deny</td>
 <td>deny</td>
@@ -425,7 +425,7 @@
 <td>allow</td>
 <td>allow</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>destructive (2)</td>
 <td>deny</td>
 <td>deny</td>
@@ -433,7 +433,7 @@
 <td>allow</td>
 <td>allow</td>
 </tr>
-<tr>
+<tr class="even">
 <td>dangerous (3)</td>
 <td>deny</td>
 <td>deny</td>
@@ -441,7 +441,7 @@
 <td>confirm</td>
 <td>allow</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>forbidden (4)</td>
 <td>deny</td>
 <td>deny</td>
@@ -454,25 +454,25 @@
 <h3 id="42-behavior-definitions">4.2 Behavior Definitions</h3>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Behavior</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><code>allow</code></td>
 <td>Operation executes without additional gates</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>confirm</code></td>
 <td>Operation requires explicit user confirmation</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>deny</code></td>
 <td>Operation blocked with error response</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>introspect_only</code></td>
 <td>Only introspection operations permitted; all other operations (including safe ones) are blocked</td>
 </tr>
@@ -580,44 +580,44 @@
 <p>Operations matching these patterns SHOULD default to <code>dangerous</code>:</p>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Pattern</th>
 <th>Description</th>
 <th>Examples</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><code>force_*</code></td>
 <td>Force operations bypassing safety</td>
 <td><code>force_push</code>, <code>force_delete</code></td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>*_permanently</code></td>
 <td>Permanent/irreversible actions</td>
 <td><code>remove_permanently</code></td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>bulk_delete*</code></td>
 <td>Mass deletion operations</td>
 <td><code>bulk_delete_users</code></td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>override_*</code></td>
 <td>Safety override operations</td>
 <td><code>override_validation</code></td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>bypass_*</code></td>
 <td>Validation bypass</td>
 <td><code>bypass_approval</code></td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>*_without_backup</code></td>
 <td>Operations skipping backup</td>
 <td><code>delete_without_backup</code></td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>purge_*</code></td>
 <td>Purge/clean operations</td>
 <td><code>purge_logs</code>, <code>purge_cache</code></td>
@@ -628,44 +628,44 @@
 <p>Operations matching these patterns SHOULD default to <code>forbidden</code>:</p>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Pattern</th>
 <th>Description</th>
 <th>Examples</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><code>drop_*</code></td>
 <td>Drop database/table/collection</td>
 <td><code>drop_table</code>, <code>drop_database</code></td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>delete_all*</code></td>
 <td>Delete all records</td>
 <td><code>delete_all_users</code></td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>truncate_*</code></td>
 <td>Truncate operations</td>
 <td><code>truncate_table</code></td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>reset_*</code></td>
 <td>Reset to empty/factory state</td>
 <td><code>reset_database</code></td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>destroy_*</code></td>
 <td>Complete destruction</td>
 <td><code>destroy_environment</code></td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>wipe_*</code></td>
 <td>Wipe operations</td>
 <td><code>wipe_data</code></td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>*_production</code></td>
 <td>Production mutations</td>
 <td><code>deploy_production</code></td>
@@ -676,39 +676,39 @@
 <p>Operations matching these patterns are confirmed <code>safe</code>:</p>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Pattern</th>
 <th>Description</th>
 <th>Examples</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><code>get_*</code></td>
 <td>Retrieve single resource</td>
 <td><code>get_user</code>, <code>get_repo</code></td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>list_*</code></td>
 <td>List resources</td>
 <td><code>list_repos</code>, <code>list_users</code></td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>search_*</code></td>
 <td>Search operations</td>
 <td><code>search_issues</code></td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>count_*</code></td>
 <td>Count operations</td>
 <td><code>count_records</code></td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>check_*</code></td>
 <td>Validation checks</td>
 <td><code>check_status</code></td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>introspect*</code></td>
 <td>Introspection</td>
 <td><code>introspect</code></td>
@@ -763,7 +763,7 @@
 <p>The Autonomy Evaluator maps danger levels to safety tiers using a numeric risk score (0-100):</p>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Danger Level</th>
 <th>Risk Score Range</th>
 <th>Safety Tier</th>
@@ -771,31 +771,31 @@
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td>safe (0)</td>
 <td>0-15</td>
 <td><code>advisory</code></td>
 <td>No intervention</td>
 </tr>
-<tr>
+<tr class="even">
 <td>reversible (1)</td>
 <td>16-40</td>
 <td><code>advisory</code> or <code>confirm</code></td>
 <td>Depends on risk tolerance</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>destructive (2)</td>
 <td>41-60</td>
 <td><code>confirm</code></td>
 <td>Requires approval</td>
 </tr>
-<tr>
+<tr class="even">
 <td>dangerous (3)</td>
 <td>61-85</td>
 <td><code>verify</code></td>
 <td>Mandatory pause + approval</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>forbidden (4)</td>
 <td>86-100</td>
 <td><code>danger_zone</code></td>

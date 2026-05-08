@@ -131,25 +131,25 @@
 <h3 id="13-test-result-classifications">1.3 Test Result Classifications</h3>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Result</th>
 <th>Meaning</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><strong>PASS</strong></td>
 <td>Test criteria fully satisfied</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>FAIL</strong></td>
 <td>Test criteria not met, conformance blocked</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>WARN</strong></td>
 <td>Test criteria partially met, conformance not blocked</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>SKIP</strong></td>
 <td>Test not applicable to this implementation</td>
 </tr>
@@ -162,33 +162,33 @@
 <p><strong>Requirements:</strong></p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Requirement</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>Introspect (operations)</td>
 <td><code>introspect</code> operation with <code>query: "operations"</code> implemented</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Introspect (types)</td>
 <td><code>introspect</code> operation with <code>query: "types"</code> implemented</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Endpoint routing</td>
 <td>Operations routed to the correct documented semantic endpoint family in semantic endpoint mode</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Response format</td>
 <td>Discriminated union responses (<code>{ success, data }</code> or <code>{ success, error }</code>)</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Error handling</td>
 <td>Structured error responses with code and message</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Parameter naming</td>
 <td>snake_case parameter naming convention</td>
 </tr>
@@ -206,29 +206,29 @@
 <p><strong>Requirements:</strong></p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Requirement</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>Level 1</td>
 <td>All Level 1 requirements</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Endpoint modes</td>
 <td><code>crude</code> semantic endpoint mode and <code>single</code> mode supported</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Field selection</td>
 <td><code>fields</code> parameter on READ operations, with preset-name support documented where implemented</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Batch operations</td>
 <td>Multi-operation batching with individual results</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Cross-cutting params</td>
 <td>Consistent documentation for collection-query controls such as <code>query</code>, <code>filter</code>, pagination, field selection, and sorting</td>
 </tr>
@@ -363,29 +363,29 @@ MCP-AQL Level 2 Conformant</code></pre>
 <p>The following test categories MUST pass for Level 1 conformance:</p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Category</th>
 <th>Tests</th>
 <th>Rationale</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>Introspection Fidelity</td>
 <td>4</td>
 <td>LLMs must trust introspection</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Parameter Handling</td>
 <td>4</td>
 <td>Consistent behavior across operations</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Error Quality</td>
 <td>3</td>
 <td>Usable error messages</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Round-Trip Integrity</td>
 <td>2</td>
 <td>Data consistency guarantee</td>
@@ -397,24 +397,24 @@ MCP-AQL Level 2 Conformant</code></pre>
 <p>The following test categories SHOULD pass for Level 2 conformance:</p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Category</th>
 <th>Tests</th>
 <th>Rationale</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>Constraint Documentation</td>
 <td>2</td>
 <td>Discoverable constraints</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Level 2 Features</td>
 <td>3</td>
 <td>Endpoint modes, field selection, and batch operations</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Semantic Evaluation</td>
 <td>Per implementation</td>
 <td>LLM discoverability</td>
@@ -467,29 +467,29 @@ MCP-AQL Level 2 Conformant</code></pre>
 <h3 id="53-test-categories-requiring-semantic-evaluation">5.3 Test Categories Requiring Semantic Evaluation</h3>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Category</th>
 <th>Example Prompt</th>
 <th>Why Semantic Matters</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>Introspection Discovery</td>
 <td>"List available operations"</td>
 <td>LLM may describe operations differently</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Field Selection Discovery</td>
 <td>"Does search support field selection?"</td>
 <td>Affirmative answer may use varied phrasing</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Error Understanding</td>
 <td>"Handle this error gracefully"</td>
 <td>Recovery strategies may vary</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Operation Selection</td>
 <td>"Create an element"</td>
 <td>Correct tool choice matters more than exact call format</td>
@@ -550,29 +550,29 @@ MCP-AQL Level 2 Conformant</code></pre>
 <h3 id="72-commands">7.2 Commands</h3>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Command</th>
 <th>Description</th>
 <th>Example</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><code>test</code></td>
 <td>Run conformance tests against a fixture evidence bundle</td>
 <td><code>node scripts/run-conformance-tests.mjs test tests/conformance/evidence/reference-level2.json --level 2</code></td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>verify-fixtures</code></td>
 <td>Verify all repository reference fixtures against their expected exit codes</td>
 <td><code>node scripts/run-conformance-tests.mjs verify-fixtures</code></td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>report</code></td>
 <td>Generate formatted output from a JSON results file</td>
 <td><code>node scripts/run-conformance-tests.mjs report ./results.json --format markdown</code></td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>version</code></td>
 <td>Print tool version</td>
 <td><code>node scripts/run-conformance-tests.mjs version</code></td>
@@ -583,34 +583,34 @@ MCP-AQL Level 2 Conformant</code></pre>
 <h3 id="73-test-command-options">7.3 Test Command Options</h3>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Option</th>
 <th>Description</th>
 <th>Default</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><code>--level</code>, <code>-l</code></td>
 <td>Conformance level to test (1 or 2)</td>
 <td><code>1</code></td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>--output</code>, <code>-o</code></td>
 <td>Output file for results</td>
 <td>stdout</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>--format</code>, <code>-f</code></td>
 <td>Output format (<code>json</code>, <code>text</code>, <code>markdown</code>)</td>
 <td><code>text</code></td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>--tier</code></td>
 <td>Evaluation tier (<code>1</code>, <code>2</code>, <code>both</code>)</td>
 <td><code>both</code></td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>--category</code>, <code>-c</code></td>
 <td>Run specific test category only</td>
 <td>All</td>
@@ -621,29 +621,29 @@ MCP-AQL Level 2 Conformant</code></pre>
 <h3 id="74-exit-codes">7.4 Exit Codes</h3>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Code</th>
 <th>Meaning</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><code>0</code></td>
 <td>All tests passed</td>
 <td>Conformance achieved at requested level</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>1</code></td>
 <td>Tests failed</td>
 <td>One or more MUST PASS tests failed</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>2</code></td>
 <td>Tests warned</td>
 <td>All MUST PASS passed, but SHOULD PASS tests warned</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>3</code></td>
 <td>Configuration error</td>
 <td>Invalid fixture/report path, malformed JSON, unknown command, or invalid report input</td>

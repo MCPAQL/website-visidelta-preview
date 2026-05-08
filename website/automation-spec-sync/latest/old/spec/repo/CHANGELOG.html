@@ -50,10 +50,10 @@
   <ul><li><a href="../security/confirmation-tokens.html">Confirmation Token Specification</a></li><li><a href="../security/execution-safety-loop.html">Execution Safety Loop Specification</a></li><li><a href="../security/gatekeeper.html">Security Model: Gatekeeper Specification</a></li></ul>
 </div><div class="docs-side-group">
   <h3>Features</h3>
-  <ul><li><a href="../features/collection-querying.html">MCP-AQL Collection Querying</a></li><li><a href="../features/field-selection.html">Field Selection Specification</a></li><li><a href="../features/pagination.html">Cursor-Based Pagination Specification</a></li><li><a href="../features/warnings.html">Warnings Array Specification</a></li></ul>
+  <ul><li><a href="../features/aggregations.html">MCP-AQL Aggregations</a></li><li><a href="../features/collection-querying.html">MCP-AQL Collection Querying</a></li><li><a href="../features/computed-fields.html">MCP-AQL Computed Fields</a></li><li><a href="../features/field-selection.html">Field Selection Specification</a></li><li><a href="../features/pagination.html">Cursor-Based Pagination Specification</a></li><li><a href="../features/relationship-queries.html">MCP-AQL Relationship Queries</a></li><li><a href="../features/warnings.html">Warnings Array Specification</a></li></ul>
 </div><div class="docs-side-group">
   <h3>Guides</h3>
-  <ul><li><a href="../guides/protocol-comparison.html">Protocol Comparison Guide</a></li><li><a href="../guides/README.html">Developer Guides</a></li></ul>
+  <ul><li><a href="../guides/cross-domain-implementation.html">Cross-Domain Implementation Guide</a></li><li><a href="../guides/protocol-comparison.html">Protocol Comparison Guide</a></li><li><a href="../guides/README.html">Developer Guides</a></li></ul>
 </div><div class="docs-side-group">
   <h3>Process</h3>
   <ul><li><a href="../process/breaking-changes.html">MCP-AQL Breaking Change Policy</a></li><li><a href="../process/preliminary-public-launch-checklist.html">Preliminary Public Launch Checklist</a></li><li><a href="../process/rfc-process.html">RFC Process for MCP-AQL Specification</a></li><li><a href="../process/versioning.html">Versioning Strategy</a></li><li><a class="current" aria-current="page" href="CHANGELOG.html">Changelog</a></li></ul>
@@ -114,6 +114,35 @@
 <h2 id="unreleased">[Unreleased]</h2>
 <h3 id="added">Added</h3>
 <ul>
+<li>Generalized semantic-endpoint model alongside the standard CRUDE profile
+<ul>
+<li>Updated the normative draft to distinguish standardized semantic categories from exposed endpoint families</li>
+<li>Reframed <code>docs/endpoint-modes.md</code> around semantic endpoint mode versus single mode, with CRUDE as the standard profile inside semantic endpoint mode</li>
+<li>Updated introspection docs and schema so operations disclose both <code>semantic_category</code> and <code>endpoint</code></li>
+<li>Clarified MCP integration, conformance, and top-level docs so CRUDE remains the standard profile rather than the only in-spec semantic-endpoint shape</li>
+<li>Breaking draft change: introspection examples and schema guidance now require <code>semantic_category</code>, treat <code>endpoint</code> as the exposed endpoint-family name, and use <code>_protocol.mode: "semantic"</code> for both CRUDE and alternate semantic-endpoint profiles</li>
+</ul></li>
+<li>Query-language feature guides for aggregations, computed fields, and relationship traversal (#36, #42, #44)
+<ul>
+<li>Added <code>docs/features/aggregations.md</code> for the preferred <code>aggregate</code> request and <code>aggregations</code> response shape</li>
+<li>Added <code>docs/features/computed-fields.md</code> for the <code>_computed.</code> field path convention and metadata pattern</li>
+<li>Added <code>docs/features/relationship-queries.md</code> for <code>query_relationships</code>, graph traversal semantics, and relationship capability discovery</li>
+<li>Added non-normative helper schemas for aggregation, computed-field, and relationship-query shapes</li>
+<li>Extended <code>introspection-response.schema.json</code> and introspection docs with optional metadata for aggregation support, computed fields, and relationship capabilities</li>
+<li>Updated collection-querying, field-selection, operations, README, and schema index docs to wire the new query-language features into the existing collection-query surface</li>
+</ul></li>
+<li>Fixture-driven conformance runner and semantic evaluation baseline (#10, #56)
+<ul>
+<li>Added <code>scripts/run-conformance-tests.mjs</code> with <code>test</code>, <code>verify-fixtures</code>, <code>report</code>, and <code>version</code> commands</li>
+<li>Added <code>tests/conformance/</code> evidence bundles covering passing Level 1, passing Level 2, semantic-warning, and failing reference cases</li>
+<li>Added CI integration via <code>.github/workflows/conformance-tests.yml</code></li>
+<li>Updated conformance, README, and generator docs to reflect the implemented fixture-first runner model and two-tier semantic evaluation flow</li>
+</ul></li>
+<li>Cross-domain implementation guide for adapting MCP-AQL beyond the Dollhouse reference profile (#34)
+<ul>
+<li>Added <code>docs/guides/cross-domain-implementation.md</code> with domain mapping guidance, CRUDE design advice, introspection checklist, four non-Dollhouse examples, and reusable operation templates</li>
+<li>Linked the new guide from the root README, docs index, and guides index</li>
+</ul></li>
 <li>Pagination response structure guidance for collection operations (#164)
 <ul>
 <li>Added <code>docs/operations.md</code> guidance for cursor-native, page-based, and offset-based pagination metadata in responses</li>

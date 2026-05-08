@@ -1,22 +1,498 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Old snapshot unavailable - public/spec/guides/cross-domain-implementation.html</title>
-    <style>
-      body { font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; margin: 1rem; color: #111827; }
-      h1 { font-size: 1.05rem; margin: 0 0 0.75rem; }
-      pre { white-space: pre-wrap; word-break: break-word; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 0.45rem; padding: 0.85rem; }
-    </style>
-  </head>
-  <body>
-    <h1>Old snapshot unavailable - public/spec/guides/cross-domain-implementation.html</h1>
-    <pre>No source file found in base ref (origin/develop) for route /spec/guides/cross-domain-implementation.html.
-Tried:
-public/spec/guides/cross-domain-implementation.html
-public/spec/guides/cross-domain-implementation.html.html
-public/spec/guides/cross-domain-implementation.html/index.html
-</pre>
-  </body>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Document Status: This document is informative. For normative protocol requirements, see MCP-AQL Specification v1.0.0.">
+  <title>MCP-AQL Spec | Cross-Domain Implementation Guide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <a class="logo" href="../../index.html"><span class="logo-mark"></span>MCP-AQL</a>
+        <ul class="nav-links">
+          <li><a href="../../index.html">Home</a></li>
+          <li><a href="../../docs/index.html">Docs</a></li>
+          <li><a href="../../launch-checklist.html">Launch Checklist</a></li>
+          <li><a href="../../apis/index.html">Adapter Patterns</a></li>
+        </ul>
+        <form class="site-search" data-search-form data-index-url="../../data/search-index.json" role="search">
+          <label class="sr-only" for="site-search-input">Search MCP-AQL docs</label>
+          <input id="site-search-input" data-search-input type="search" placeholder="Search MCP-AQL docs, spec pages, and adapter patterns...">
+          <span class="search-count" data-search-count></span>
+          <ul class="search-results" data-search-results hidden></ul>
+        </form>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container docs-shell">
+      <aside class="docs-side">
+        <h2>Repo-Synced Spec</h2>
+        <p class="docs-side-note">Generated from <code>MCPAQL/spec</code> so the website carries the deeper protocol material too.</p>
+        <div class="docs-side-group">
+  <h3>Core</h3>
+  <ul><li><a href="../conformance-testing.html">MCP-AQL Conformance Testing Specification</a></li><li><a href="../crude-pattern.html">MCP-AQL CRUDE Pattern Specification</a></li><li><a href="../endpoint-modes.html">MCP-AQL Endpoint Modes Specification</a></li><li><a href="../error-codes.html">Structured Error Codes Specification</a></li><li><a href="../introspection.html">MCP-AQL Introspection Specification</a></li><li><a href="../licensing-options.html">MCP-AQL Licensing Options (Working Notes)</a></li><li><a href="../mcp-integration.html">MCP Integration Specification</a></li><li><a href="../operations.html">MCP-AQL Operations Specification</a></li><li><a href="../overview.html">MCP-AQL Protocol Overview</a></li><li><a href="../plugin-contracts.html">Plugin Interface Contracts</a></li><li><a href="../README.html">MCP-AQL Specification Documentation</a></li><li><a href="../repo/README.html">MCP-AQL Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Versions</h3>
+  <ul><li><a href="../versions/v1.0.0-draft.html">MCP-AQL Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Adapter</h3>
+  <ul><li><a href="../adapter/danger-levels.html">Dangerous Operation Classification Specification</a></li><li><a href="../adapter/discovery-bundle.html">MCP Server Discovery Bundle</a></li><li><a href="../adapter/element-type.html">Adapter Element Type Specification</a></li><li><a href="../adapter/generator.html">Adapter Generator Specification</a></li><li><a href="../adapter/rate-limiting.html">Rate Limiting and Quota Management Specification</a></li><li><a href="../adapter/trust-levels.html">Trust Levels Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Security</h3>
+  <ul><li><a href="../security/confirmation-tokens.html">Confirmation Token Specification</a></li><li><a href="../security/execution-safety-loop.html">Execution Safety Loop Specification</a></li><li><a href="../security/gatekeeper.html">Security Model: Gatekeeper Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Features</h3>
+  <ul><li><a href="../features/aggregations.html">MCP-AQL Aggregations</a></li><li><a href="../features/collection-querying.html">MCP-AQL Collection Querying</a></li><li><a href="../features/computed-fields.html">MCP-AQL Computed Fields</a></li><li><a href="../features/field-selection.html">Field Selection Specification</a></li><li><a href="../features/pagination.html">Cursor-Based Pagination Specification</a></li><li><a href="../features/relationship-queries.html">MCP-AQL Relationship Queries</a></li><li><a href="../features/warnings.html">Warnings Array Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Guides</h3>
+  <ul><li><a class="current" aria-current="page" href="cross-domain-implementation.html">Cross-Domain Implementation Guide</a></li><li><a href="protocol-comparison.html">Protocol Comparison Guide</a></li><li><a href="README.html">Developer Guides</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Process</h3>
+  <ul><li><a href="../process/breaking-changes.html">MCP-AQL Breaking Change Policy</a></li><li><a href="../process/preliminary-public-launch-checklist.html">Preliminary Public Launch Checklist</a></li><li><a href="../process/rfc-process.html">RFC Process for MCP-AQL Specification</a></li><li><a href="../process/versioning.html">Versioning Strategy</a></li><li><a href="../repo/CHANGELOG.html">Changelog</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Architecture</h3>
+  <ul><li><a href="../architecture/README.html">Architecture Documentation</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Research</h3>
+  <ul><li><a href="../research/mcp-vs-mcpaql-vs-a2a.html">Protocol Landscape: MCP vs MCP-AQL vs A2A</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Reference</h3>
+  <ul><li><a href="../reference/README.html">Reference Documentation</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>ADRs</h3>
+  <ul><li><a href="../adr/ADR-001-crude-pattern.html">ADR-001: CRUDE Pattern (Extending CRUD with Execute)</a></li><li><a href="../adr/ADR-002-graphql-style-input.html">ADR-002: GraphQL-Style Input Objects for Updates</a></li><li><a href="../adr/ADR-003-snake-case-parameters.html">ADR-003: snake_case Parameter Convention</a></li><li><a href="../adr/ADR-004-schema-driven-operations.html">ADR-004: Schema-Driven Operation Definitions</a></li><li><a href="../adr/ADR-005-introspection-system.html">ADR-005: GraphQL-Style Introspection System</a></li><li><a href="../adr/ADR-006-discriminated-responses.html">ADR-006: Discriminated Response Format</a></li><li><a href="../adr/index.html">Architecture Decision Records</a></li><li><a href="../adr/README.html">Architecture Decision Records</a></li></ul>
+</div>
+      </aside>
+
+      <article class="docs-main">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+          <ol>
+            <li><a href="../../index.html">Home</a></li>
+            <li><a href="../index.html">Full Spec</a></li>
+            <li><span class="current">Cross-Domain Implementation Guide</span></li>
+          </ol>
+        </nav>
+        <section class="hero docs-hero">
+          <div class="hero-inner">
+            <span class="status-pill">REPO-SYNCED SPEC DOC</span>
+            <h1>Cross-Domain Implementation Guide</h1>
+            <p class="lede">Document Status: This document is informative. For normative protocol requirements, see MCP-AQL Specification v1.0.0.</p>
+            <div class="spec-meta"><span class="state-chip live">Support document</span><span class="state-chip pending">Draft</span><span class="state-chip">1.0.0-draft</span><span class="state-chip">2026-04-15</span></div>
+            <p class="spec-source">Source: <a href="https://github.com/MCPAQL/spec/blob/main/docs/guides/cross-domain-implementation.md">spec/docs/guides/cross-domain-implementation.md</a></p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="https://github.com/MCPAQL/spec/blob/main/docs/guides/cross-domain-implementation.md">Open Source Markdown</a><a class="btn btn-secondary" href="../index.html">Browse Full Spec Reference</a>
+            </div>
+          </div>
+        </section>
+
+        <section class="page-toc-shell" data-page-toc>
+          <div class="card page-toc-card">
+            <div class="page-toc-head">
+              <p class="page-toc-kicker">On this page</p>
+              <h2>Jump to a section</h2>
+              <p class="page-toc-intro">Use the outline to move through longer pages without losing your place.</p>
+            </div>
+            <ol class="page-toc-list" data-page-toc-list>
+              <li class="page-toc-item level-2"><a href="#abstract" data-toc-target="abstract">Abstract</a></li><li class="page-toc-item level-2"><a href="#1-start-with-domain-mapping" data-toc-target="1-start-with-domain-mapping">1. Start with Domain Mapping</a></li><li class="page-toc-item level-2"><a href="#2-choose-stable-resource-identifiers" data-toc-target="2-choose-stable-resource-identifiers">2. Choose Stable Resource Identifiers</a></li><li class="page-toc-item level-2"><a href="#3-design-operations-around-crude" data-toc-target="3-design-operations-around-crude">3. Design Operations Around CRUDE</a></li><li class="page-toc-item level-2"><a href="#4-build-introspection-first" data-toc-target="4-build-introspection-first">4. Build Introspection First</a></li><li class="page-toc-item level-2"><a href="#5-use-predictable-response-shapes" data-toc-target="5-use-predictable-response-shapes">5. Use Predictable Response Shapes</a></li><li class="page-toc-item level-2"><a href="#6-domain-examples" data-toc-target="6-domain-examples">6. Domain Examples</a></li><li class="page-toc-item level-3"><a href="#61-database-management" data-toc-target="61-database-management">6.1 Database Management</a></li><li class="page-toc-item level-3"><a href="#62-file-system-management" data-toc-target="62-file-system-management">6.2 File System Management</a></li><li class="page-toc-item level-3"><a href="#63-api-gateway-administration" data-toc-target="63-api-gateway-administration">6.3 API Gateway Administration</a></li><li class="page-toc-item level-3"><a href="#64-iot-device-control" data-toc-target="64-iot-device-control">6.4 IoT Device Control</a></li><li class="page-toc-item level-2"><a href="#7-conformance-checklist" data-toc-target="7-conformance-checklist">7. Conformance Checklist</a></li><li class="page-toc-item level-2"><a href="#8-implementation-templates" data-toc-target="8-implementation-templates">8. Implementation Templates</a></li><li class="page-toc-item level-3"><a href="#81-operation-template" data-toc-target="81-operation-template">8.1 Operation Template</a></li><li class="page-toc-item level-3"><a href="#82-introspection-detail-template" data-toc-target="82-introspection-detail-template">8.2 Introspection Detail Template</a></li><li class="page-toc-item level-3"><a href="#83-collection-query-template" data-toc-target="83-collection-query-template">8.3 Collection Query Template</a></li><li class="page-toc-item level-2"><a href="#9-common-pitfalls" data-toc-target="9-common-pitfalls">9. Common Pitfalls</a></li><li class="page-toc-item level-2"><a href="#references" data-toc-target="references">References</a></li>
+            </ol>
+          </div>
+        </section>
+
+
+        <section>
+          <div class="card spec-prose">
+            <p><strong>Version:</strong> 1.0.0-draft <strong>Status:</strong> Draft <strong>Last Updated:</strong> 2026-04-15</p>
+<blockquote>
+<p><strong>Document Status:</strong> This document is <strong>informative</strong>. For normative protocol requirements, see <a href="../versions/v1.0.0-draft.html">MCP-AQL Specification v1.0.0</a>.</p>
+</blockquote>
+<h2 id="abstract">Abstract</h2>
+<p>This guide shows how to adapt MCP-AQL to domains beyond AI element management. It focuses on the practical translation step: taking an existing API or system, mapping its resources and operations into MCP-AQL, and preserving the discoverability and token-efficiency benefits that make the protocol useful for AI clients.</p>
+<h2 id="1-start-with-domain-mapping">1. Start with Domain Mapping</h2>
+<p>Before you name any operations, identify three core pieces:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Question</th>
+<th>What you are mapping</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>What are the primary resources?</td>
+<td>MCP-AQL resource or type names</td>
+<td><code>database</code>, <code>table</code>, <code>file</code>, <code>route</code>, <code>device</code></td>
+</tr>
+<tr class="even">
+<td>How are they identified?</td>
+<td>Stable lookup parameters</td>
+<td><code>database_name</code>, <code>table_name</code>, <code>file_path</code>, <code>route_id</code>, <code>device_id</code></td>
+</tr>
+<tr class="odd">
+<td>Which actions matter most?</td>
+<td>MCP-AQL operations</td>
+<td><code>list_tables</code>, <code>get_file</code>, <code>update_route</code>, <code>execute_firmware_upgrade</code></td>
+</tr>
+</tbody>
+</table>
+<p>The best first pass is usually:</p>
+<ol type="1">
+<li>list the nouns in your domain</li>
+<li>list the real tasks users perform</li>
+<li>group those tasks into CRUDE semantics</li>
+</ol>
+<h2 id="2-choose-stable-resource-identifiers">2. Choose Stable Resource Identifiers</h2>
+<p>MCP-AQL works best when identifiers are:</p>
+<ul>
+<li>stable across sessions</li>
+<li>explicit in parameter names</li>
+<li>specific enough to avoid ambiguity</li>
+</ul>
+<p>Good examples:</p>
+<ul>
+<li><code>database_name</code></li>
+<li><code>table_name</code></li>
+<li><code>file_path</code></li>
+<li><code>route_id</code></li>
+<li><code>device_id</code></li>
+</ul>
+<p>Avoid vague identifiers like <code>name</code> or <code>id</code> when the operation could target more than one resource type.</p>
+<h2 id="3-design-operations-around-crude">3. Design Operations Around CRUDE</h2>
+<p>CRUDE (Create, Read, Update, Delete, Execute) maps each operation to its effect on system state. See the <a href="../crude-pattern.html">CRUDE Pattern</a> for full classification rules.</p>
+<p>Map each real action to the endpoint that best reflects its effect:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Endpoint</th>
+<th>Use for</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>CREATE</code></td>
+<td>Additive changes</td>
+<td><code>create_route</code>, <code>create_table_snapshot</code></td>
+</tr>
+<tr class="even">
+<td><code>READ</code></td>
+<td>Safe lookups and queries</td>
+<td><code>list_tables</code>, <code>search_files</code>, <code>query_relationships</code></td>
+</tr>
+<tr class="odd">
+<td><code>UPDATE</code></td>
+<td>Mutations to existing state</td>
+<td><code>update_device_config</code>, <code>update_route</code></td>
+</tr>
+<tr class="even">
+<td><code>DELETE</code></td>
+<td>Removals</td>
+<td><code>delete_route</code>, <code>delete_file_alias</code></td>
+</tr>
+<tr class="odd">
+<td><code>EXECUTE</code></td>
+<td>Runtime or non-idempotent actions</td>
+<td><code>execute_backup</code>, <code>execute_firmware_upgrade</code></td>
+</tr>
+</tbody>
+</table>
+<p>If an action starts a process or can be retried/cancelled later, it usually belongs in <code>EXECUTE</code>, not <code>UPDATE</code>.</p>
+<h2 id="4-build-introspection-first">4. Build Introspection First</h2>
+<blockquote>
+<p><strong>Note:</strong> The <code>introspect</code> operation (READ endpoint) is the only operation MCP-AQL requires all adapters to implement. Everything else is adapter-defined.</p>
+</blockquote>
+<p>An adapter is much easier for AI clients to use when the <code>introspect</code> experience is accurate before the business logic is complete.</p>
+<p>For each operation, make sure introspection can answer:</p>
+<ul>
+<li>what the operation is called</li>
+<li>which endpoint it belongs to</li>
+<li>which parameters are accepted</li>
+<li>which parameters are required</li>
+<li>what type comes back</li>
+<li>which optional query features it supports</li>
+</ul>
+<p>For collection-oriented READ operations, document query-language controls such as:</p>
+<ul>
+<li><code>query</code></li>
+<li><code>filter</code></li>
+<li><code>sort</code></li>
+<li><code>fields</code></li>
+<li><code>aggregate</code></li>
+<li>pagination parameters</li>
+</ul>
+<h2 id="5-use-predictable-response-shapes">5. Use Predictable Response Shapes</h2>
+<p>Every operation should still return MCP-AQL’s discriminated response pattern:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;data&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;items&quot;</span><span class="fu">:</span> <span class="ot">[]</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p>Single-resource lookups keep the same envelope but return one object:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;data&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;device&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;device_id&quot;</span><span class="fu">:</span> <span class="st">&quot;dev_001&quot;</span><span class="fu">,</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;status&quot;</span><span class="fu">:</span> <span class="st">&quot;online&quot;</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;error&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;code&quot;</span><span class="fu">:</span> <span class="st">&quot;VALIDATION_MISSING_PARAM&quot;</span><span class="fu">,</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;Missing required parameter &#39;table_name&#39;.&quot;</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p>That consistency matters more than the domain itself. It lets a client move from one adapter to another without re-learning the envelope. See <a href="../error-codes.html">Error Codes</a> for the standard validation and execution error catalog.</p>
+<h2 id="6-domain-examples">6. Domain Examples</h2>
+<h3 id="61-database-management">6.1 Database Management</h3>
+<p><strong>Resources</strong></p>
+<ul>
+<li><code>database</code></li>
+<li><code>table</code></li>
+<li><code>query_job</code></li>
+</ul>
+<p><strong>Representative operations</strong></p>
+<ul>
+<li><code>list_databases</code></li>
+<li><code>list_tables</code></li>
+<li><code>get_table_schema</code></li>
+<li><code>query_rows</code></li>
+<li><code>execute_query_job</code></li>
+</ul>
+<p><strong>Identifier pattern</strong></p>
+<ul>
+<li><code>database_name</code></li>
+<li><code>table_name</code></li>
+<li><code>query_job_id</code></li>
+</ul>
+<p><strong>Useful query controls</strong></p>
+<ul>
+<li><code>fields</code> for projections</li>
+<li><code>filter</code> for row predicates</li>
+<li><code>aggregate</code> for counts and grouped summaries</li>
+</ul>
+<h3 id="62-file-system-management">6.2 File System Management</h3>
+<p><strong>Resources</strong></p>
+<ul>
+<li><code>file</code></li>
+<li><code>directory</code></li>
+<li><code>permission_entry</code></li>
+</ul>
+<p><strong>Representative operations</strong></p>
+<ul>
+<li><code>list_directory</code></li>
+<li><code>get_file</code></li>
+<li><code>search_files</code></li>
+<li><code>update_file_metadata</code></li>
+<li><code>delete_file</code></li>
+</ul>
+<p><strong>Identifier pattern</strong></p>
+<ul>
+<li><code>file_path</code></li>
+<li><code>directory_path</code></li>
+</ul>
+<p><strong>Useful query controls</strong></p>
+<ul>
+<li><code>query</code> for name/content search</li>
+<li><code>fields</code> for light listings</li>
+<li>computed fields such as <code>_computed.size_human</code> (see <a href="../features/field-selection.html">Field Selection</a> for computed field semantics)</li>
+</ul>
+<h3 id="63-api-gateway-administration">6.3 API Gateway Administration</h3>
+<p><strong>Resources</strong></p>
+<ul>
+<li><code>route</code></li>
+<li><code>service</code></li>
+<li><code>consumer</code></li>
+<li><code>plugin</code></li>
+</ul>
+<p><strong>Representative operations</strong></p>
+<ul>
+<li><code>list_routes</code></li>
+<li><code>get_route</code></li>
+<li><code>create_route</code></li>
+<li><code>update_route</code></li>
+<li><code>delete_route</code></li>
+<li><code>query_relationships</code></li>
+</ul>
+<p><strong>Identifier pattern</strong></p>
+<ul>
+<li><code>route_id</code></li>
+<li><code>service_id</code></li>
+<li><code>consumer_id</code></li>
+</ul>
+<p><strong>Useful query controls</strong></p>
+<ul>
+<li>relationship queries for route-to-service and plugin-to-route traversal</li>
+<li><code>aggregate</code> for route counts by status or environment</li>
+</ul>
+<h3 id="64-iot-device-control">6.4 IoT Device Control</h3>
+<p><strong>Resources</strong></p>
+<ul>
+<li><code>device</code></li>
+<li><code>group</code></li>
+<li><code>firmware_job</code></li>
+<li><code>telemetry_event</code></li>
+</ul>
+<p><strong>Representative operations</strong></p>
+<ul>
+<li><code>list_devices</code></li>
+<li><code>get_device</code></li>
+<li><code>update_device_config</code></li>
+<li><code>execute_firmware_upgrade</code></li>
+<li><code>list_telemetry_events</code></li>
+</ul>
+<p><strong>Identifier pattern</strong></p>
+<ul>
+<li><code>device_id</code></li>
+<li><code>group_id</code></li>
+<li><code>firmware_job_id</code></li>
+</ul>
+<p><strong>Useful query controls</strong></p>
+<ul>
+<li><code>filter</code> on status, site, or firmware version</li>
+<li>computed fields like <code>_computed.is_stale</code></li>
+</ul>
+<p>Long-running jobs such as <code>execute_firmware_upgrade</code> SHOULD expose lifecycle state through introspection so clients can discover supported statuses and follow-up actions.</p>
+<h2 id="7-conformance-checklist">7. Conformance Checklist</h2>
+<p>Use this as a pre-release checklist for a new domain adapter:</p>
+<ul>
+<li>Every operation has a stable snake_case name.</li>
+<li>Every operation is placed on the correct CRUDE endpoint.</li>
+<li><code>introspect</code> documents every accepted parameter.</li>
+<li>Required parameters fail with structured validation errors.</li>
+<li>Collection READ operations document their supported query controls.</li>
+<li>READ responses use <code>fields</code> and pagination consistently where supported. See <a href="../features/collection-querying.html">Collection Querying</a> and <a href="../features/pagination.html">Pagination</a>.</li>
+<li>Errors avoid leaking implementation details.</li>
+<li>At least one round-trip create/read or update/read example is tested.</li>
+<li>Any domain-specific constraints are documented in introspection.</li>
+</ul>
+<h2 id="8-implementation-templates">8. Implementation Templates</h2>
+<h3 id="81-operation-template">8.1 Operation Template</h3>
+<div class="sourceCode" id="cb4"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;list_tables&quot;</span><span class="fu">,</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;description&quot;</span><span class="fu">:</span> <span class="st">&quot;List tables within a database&quot;</span><span class="fu">,</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;endpoint&quot;</span><span class="fu">:</span> <span class="st">&quot;READ&quot;</span><span class="fu">,</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;params&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;database_name&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;type&quot;</span><span class="fu">:</span> <span class="st">&quot;string&quot;</span><span class="fu">,</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;required&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;description&quot;</span><span class="fu">:</span> <span class="st">&quot;Database to inspect&quot;</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">},</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;query&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;type&quot;</span><span class="fu">:</span> <span class="st">&quot;string&quot;</span><span class="fu">,</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;required&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;description&quot;</span><span class="fu">:</span> <span class="st">&quot;Optional free-text table search&quot;</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">},</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;fields&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;type&quot;</span><span class="fu">:</span> <span class="st">&quot;array&quot;</span><span class="fu">,</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;required&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;description&quot;</span><span class="fu">:</span> <span class="st">&quot;Optional field projection&quot;</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">},</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;returns&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;TableList&quot;</span><span class="fu">,</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;kind&quot;</span><span class="fu">:</span> <span class="st">&quot;object&quot;</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h3 id="82-introspection-detail-template">8.2 Introspection Detail Template</h3>
+<div class="sourceCode" id="cb5"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;list_tables&quot;</span><span class="fu">,</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;semantic_category&quot;</span><span class="fu">:</span> <span class="st">&quot;READ&quot;</span><span class="fu">,</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;endpoint&quot;</span><span class="fu">:</span> <span class="st">&quot;read&quot;</span><span class="fu">,</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;mcpTool&quot;</span><span class="fu">:</span> <span class="st">&quot;mcp_aql_read&quot;</span><span class="fu">,</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;description&quot;</span><span class="fu">:</span> <span class="st">&quot;List tables within a database.&quot;</span><span class="fu">,</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;permissions&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;readOnly&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;destructive&quot;</span><span class="fu">:</span> <span class="kw">false</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">},</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;parameters&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;database_name&quot;</span><span class="fu">,</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;type&quot;</span><span class="fu">:</span> <span class="st">&quot;string&quot;</span><span class="fu">,</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;required&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;description&quot;</span><span class="fu">:</span> <span class="st">&quot;Database to inspect.&quot;</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;fields&quot;</span><span class="fu">,</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;type&quot;</span><span class="fu">:</span> <span class="st">&quot;array&quot;</span><span class="fu">,</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;required&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;description&quot;</span><span class="fu">:</span> <span class="st">&quot;Optional field projection.&quot;</span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;returns&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;TableList&quot;</span><span class="fu">,</span></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;kind&quot;</span><span class="fu">:</span> <span class="st">&quot;object&quot;</span></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h3 id="83-collection-query-template">8.3 Collection Query Template</h3>
+<div class="sourceCode" id="cb6"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;operation&quot;</span><span class="fu">:</span> <span class="st">&quot;search_routes&quot;</span><span class="fu">,</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;params&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;query&quot;</span><span class="fu">:</span> <span class="st">&quot;payments&quot;</span><span class="fu">,</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;filter&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;status&quot;</span><span class="fu">:</span> <span class="st">&quot;active&quot;</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">},</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;sort&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;field&quot;</span><span class="fu">:</span> <span class="st">&quot;updated_at&quot;</span><span class="fu">,</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;order&quot;</span><span class="fu">:</span> <span class="st">&quot;desc&quot;</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">},</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;fields&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;route_id&quot;</span><span class="ot">,</span> <span class="st">&quot;path&quot;</span><span class="ot">,</span> <span class="st">&quot;_computed.health_score&quot;</span><span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;first&quot;</span><span class="fu">:</span> <span class="dv">25</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h2 id="9-common-pitfalls">9. Common Pitfalls</h2>
+<ul>
+<li>Mirroring backend naming exactly instead of exposing a stable MCP-AQL surface.</li>
+<li>Using overly generic identifiers like <code>id</code> when <code>route_id</code> or <code>device_id</code> is clearer.</li>
+<li>Treating long-running actions as <code>UPDATE</code> when they should be <code>EXECUTE</code>.</li>
+<li>Forgetting to document compatibility pagination shapes (such as <code>limit</code> / <code>offset</code>) or alias parameters that an adapter accepts alongside the preferred MCP-AQL names.</li>
+<li>Adding query features in implementation without exposing them in introspection.</li>
+</ul>
+<h2 id="references">References</h2>
+<ul>
+<li><a href="../versions/v1.0.0-draft.html">MCP-AQL Specification</a></li>
+<li><a href="../operations.html">Operations Guide</a></li>
+<li><a href="../introspection.html">Introspection Specification</a></li>
+<li><a href="../features/collection-querying.html">Collection Querying</a></li>
+<li><a href="../conformance-testing.html">Conformance Testing</a></li>
+</ul>
+
+          </div>
+        </section>
+        <nav class="page-nav" aria-label="Page navigation">
+  <a class="page-nav-link prev" href="../features/warnings.html">
+    <span class="page-nav-eyebrow">Previous page</span>
+    <strong class="page-nav-label">Warnings Array Specification</strong>
+  </a>
+  <a class="page-nav-link next" href="protocol-comparison.html">
+    <span class="page-nav-eyebrow">Next page</span>
+    <strong class="page-nav-label">Protocol Comparison Guide</strong>
+  </a>
+</nav>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.</p>
+      <div class="footer-links">
+        <a href="../../docs/index.html">Docs Library</a><a href="../index.html">Repo-Synced Spec</a><a href="https://github.com/MCPAQL">MCPAQL Organization</a><a href="https://dollhouseresearch.com">Dollhouse Research</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../js/search.js"></script>
+</body>
 </html>

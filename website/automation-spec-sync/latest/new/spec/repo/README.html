@@ -129,34 +129,34 @@
 <p>MCP-AQL supports semantic endpoint mode or a single unified endpoint. The standard semantic-endpoint profile extends traditional CRUD with an <strong>Execute</strong> endpoint, creating the CRUDE pattern:</p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Endpoint</th>
 <th>Safety</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><strong>Create</strong></td>
 <td>Non-destructive</td>
 <td>Additive operations that create new state</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>Read</strong></td>
 <td>Read-only</td>
 <td>Safe operations that query state</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>Update</strong></td>
 <td>Modifying</td>
 <td>Operations that modify existing state</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>Delete</strong></td>
 <td>Destructive</td>
 <td>Operations that remove state</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>Execute</strong></td>
 <td>Stateful</td>
 <td>Runtime lifecycle operations (non-idempotent)</td>
@@ -175,7 +175,7 @@ discover / query / manage / operate</code></pre>
 <p><strong>Per-tool overhead:</strong> A typical MCP tool definition consumes ~500-700 tokens in context.</p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Configuration</th>
 <th>Tool Count</th>
 <th>Token Cost</th>
@@ -183,25 +183,25 @@ discover / query / manage / operate</code></pre>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>Discrete Tools</td>
 <td>~30 tools</td>
 <td>~18,000</td>
 <td>Baseline</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Discrete Tools</td>
 <td>~50 tools</td>
 <td>~30,000</td>
 <td>Baseline</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>Semantic Endpoint Mode (CRUDE profile)</strong></td>
 <td>5 endpoints</td>
 <td>~4,300</td>
 <td>~80-85%</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>Single Mode</strong></td>
 <td>1 endpoint</td>
 <td>~1,000</td>
@@ -243,61 +243,61 @@ discover / query / manage / operate</code></pre>
 <h2 id="specification-documents">Specification Documents</h2>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Document</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><a href="../versions/v1.0.0-draft.html">Specification v1.0.0-draft</a></td>
 <td>Current working draft</td>
 </tr>
-<tr class="even">
+<tr>
 <td><a href="../crude-pattern.html">CRUDE Pattern</a></td>
 <td>Standard semantic-endpoint profile</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><a href="../endpoint-modes.html">Endpoint Modes</a></td>
 <td>CRUDE, semantic-endpoint, and single endpoint configuration</td>
 </tr>
-<tr class="even">
+<tr>
 <td><a href="../introspection.html">Introspection</a></td>
 <td>Discovery system specification</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><a href="../operations.html">Operations Guide</a></td>
 <td>Operation design patterns</td>
 </tr>
-<tr class="even">
+<tr>
 <td><a href="../features/collection-querying.html">Collection Querying</a></td>
 <td>Preferred query contract for list/search/query operations</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><a href="../features/aggregations.html">Aggregations</a></td>
 <td>Preferred summary/query shape for server-side aggregations</td>
 </tr>
-<tr class="even">
+<tr>
 <td><a href="../features/computed-fields.html">Computed Fields</a></td>
 <td>Preferred <code>_computed.</code> convention for adapter-declared derived values</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><a href="../features/relationship-queries.html">Relationship Queries</a></td>
 <td>Preferred traversal contract for graph-style READ operations</td>
 </tr>
-<tr class="even">
+<tr>
 <td><a href="../adapter/discovery-bundle.html">MCP Server Discovery Bundle</a></td>
 <td>Interrogation bundle contract for MCP-to-MCP-AQL generation</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><a href="../guides/cross-domain-implementation.html">Cross-Domain Implementation Guide</a></td>
 <td>Step-by-step guide for adapting MCP-AQL to databases, filesystems, API gateways, IoT, and other domains</td>
 </tr>
-<tr class="even">
+<tr>
 <td><a href="../README.html">Documentation Index</a></td>
 <td>Full documentation structure</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><a href="CHANGELOG.html">Changelog</a></td>
 <td>Version history</td>
 </tr>

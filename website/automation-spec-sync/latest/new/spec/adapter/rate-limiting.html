@@ -323,24 +323,24 @@
 <h3 id="32-threshold-behaviors">3.2 Threshold Behaviors</h3>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Threshold</th>
 <th>Behavior</th>
 <th>User Experience</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><code>warn</code></td>
 <td>Log warning, continue</td>
 <td>Notification displayed</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>pause</code></td>
 <td>Require confirmation</td>
 <td>"Continue?" prompt</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>hard_stop</code></td>
 <td>Block all requests</td>
 <td>Error response</td>
@@ -474,29 +474,29 @@
 <h3 id="51-rate-limit-error-codes">5.1 Rate Limit Error Codes</h3>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Code</th>
 <th>Description</th>
 <th>Recovery</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><code>RATE_LIMIT_EXCEEDED</code></td>
 <td>Target API rate limit reached</td>
 <td>Wait for reset</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>RATE_LIMIT_QUOTA_PAUSE</code></td>
 <td>User quota pause threshold</td>
 <td>Confirm to continue</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>RATE_LIMIT_QUOTA_EXHAUSTED</code></td>
 <td>User quota hard stop</td>
 <td>Wait for reset</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>RATE_LIMIT_QUOTA_WARNING</code></td>
 <td>Approaching limit (in warnings)</td>
 <td>Consider slowing</td>
@@ -573,25 +573,25 @@
 <h3 id="63-status-values">6.3 Status Values</h3>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Status</th>
 <th>Meaning</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><code>ok</code></td>
 <td>Below warn threshold</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>warn</code></td>
 <td>Above warn, below pause</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>paused</code></td>
 <td>At pause threshold, confirmation required</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>exhausted</code></td>
 <td>At hard stop, requests blocked</td>
 </tr>

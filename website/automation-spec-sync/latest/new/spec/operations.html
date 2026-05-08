@@ -138,7 +138,7 @@
 <h3 id="22-required-fields">2.2 Required Fields</h3>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Field</th>
 <th>Type</th>
 <th>Required</th>
@@ -146,13 +146,13 @@
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><code>operation</code></td>
 <td>string</td>
 <td>REQUIRED</td>
 <td>The operation to perform</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>params</code></td>
 <td>object</td>
 <td>OPTIONAL</td>
@@ -312,7 +312,7 @@
 <h4 id="441-standard-cross-cutting-parameters">4.4.1 Standard Cross-Cutting Parameters</h4>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Parameter</th>
 <th>Type</th>
 <th>Operations</th>
@@ -320,49 +320,49 @@
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><code>fields</code></td>
 <td><code>string | string[]</code></td>
 <td>All READ operations returning data</td>
 <td>Field selection: preset name or array of field paths</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>query</code></td>
 <td><code>string | object</code></td>
 <td><code>search_*</code> and <code>query_*</code> collection operations</td>
 <td>Free-text search input or documented structured query object</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>filter</code></td>
 <td><code>object</code></td>
 <td>List/search/query operations</td>
 <td>Structured filtering criteria</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>sort</code></td>
 <td><code>object</code></td>
 <td>List/search/query operations</td>
 <td>Sort object with <code>field</code> and <code>order</code></td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>aggregate</code></td>
 <td><code>object</code></td>
 <td>Collection READ operations with aggregation support</td>
 <td>Named server-side summary expressions such as <code>count</code>, <code>group_by</code>, <code>sum</code>, <code>avg</code>, <code>min</code>, and <code>max</code></td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>first</code>, <code>after</code>, <code>last</code>, <code>before</code></td>
 <td><code>number</code> / <code>string</code></td>
 <td>Cursor-paginated collection operations</td>
 <td>Cursor-based pagination parameters</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>limit</code>, <code>offset</code>, <code>page</code>, <code>page_size</code></td>
 <td><code>number</code></td>
 <td>Collection operations with adapter-specific pagination</td>
 <td>Offset or page-based compatibility parameters when documented</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>dry_run</code></td>
 <td><code>boolean</code></td>
 <td>All mutating operations</td>
@@ -491,24 +491,24 @@
 <p>Recommended metadata by pagination style:</p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Style</th>
 <th>Location</th>
 <th>Recommended Fields</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>Cursor</td>
 <td><code>data.pageInfo</code></td>
 <td><code>hasNextPage</code>, <code>hasPreviousPage</code>, <code>startCursor</code>, <code>endCursor</code>, optional <code>totalCount</code></td>
 </tr>
-<tr class="even">
+<tr>
 <td>Page-based</td>
 <td><code>data.pagination</code></td>
 <td><code>page</code>, <code>page_size</code>, optional <code>total_items</code>, optional <code>total_pages</code>, optional <code>has_more</code></td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Offset-based</td>
 <td><code>data.pagination</code></td>
 <td><code>limit</code>, <code>offset</code>, optional <code>returned</code>, optional <code>total_items</code>, optional <code>has_more</code></td>
@@ -582,7 +582,7 @@
 <p><strong>Schema Properties:</strong></p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Property</th>
 <th>Type</th>
 <th>Required</th>
@@ -590,37 +590,37 @@
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><code>semantic_category</code></td>
 <td>string</td>
 <td>REQUIRED</td>
 <td>Standard semantic category: CREATE, READ, UPDATE, DELETE, or EXECUTE</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>endpoint</code></td>
 <td>string</td>
 <td>REQUIRED in semantic endpoint mode</td>
 <td>Exposed endpoint family that receives the operation</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>description</code></td>
 <td>string</td>
 <td>REQUIRED</td>
 <td>Human-readable description</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>params</code></td>
 <td>object</td>
 <td>OPTIONAL</td>
 <td>Parameter definitions</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>handler</code></td>
 <td>string</td>
 <td>OPTIONAL</td>
 <td>Internal handler reference</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>dangerous</code></td>
 <td>boolean</td>
 <td>OPTIONAL</td>
@@ -632,7 +632,7 @@
 <p>Each parameter in the <code>params</code> object MUST include:</p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Property</th>
 <th>Type</th>
 <th>Required</th>
@@ -640,25 +640,25 @@
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><code>type</code></td>
 <td>string</td>
 <td>REQUIRED</td>
 <td>Data type: "string", "number", "boolean", "object", "array"</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>required</code></td>
 <td>boolean</td>
 <td>OPTIONAL</td>
 <td>Whether parameter is required (default: false)</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>description</code></td>
 <td>string</td>
 <td>OPTIONAL</td>
 <td>Human-readable description</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>default</code></td>
 <td>any</td>
 <td>OPTIONAL</td>
@@ -669,39 +669,39 @@
 <p>Additional properties MAY be included:</p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Property</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><code>mapTo</code></td>
 <td>string</td>
 <td>Internal parameter name mapping</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>sources</code></td>
 <td>array</td>
 <td>Ordered list of resolution paths</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>enum</code></td>
 <td>array</td>
 <td>Allowed values for string parameters</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>minimum</code></td>
 <td>number</td>
 <td>Minimum value for numeric parameters</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>maximum</code></td>
 <td>number</td>
 <td>Maximum value for numeric parameters</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>pattern</code></td>
 <td>string</td>
 <td>Regex pattern for string validation</td>
@@ -759,34 +759,34 @@
 <p>Operations MUST be assigned to endpoints based on their semantics:</p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Endpoint</th>
 <th>Semantics</th>
 <th>Characteristics</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><strong>CREATE</strong></td>
 <td>Additive, non-destructive</td>
 <td>Creates new resources; idempotent if duplicate detection enabled</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>READ</strong></td>
 <td>Safe, read-only</td>
 <td>No side effects; cacheable; always safe to retry</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>UPDATE</strong></td>
 <td>Modifying</td>
 <td>Changes existing resources; may be partially idempotent</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>DELETE</strong></td>
 <td>Destructive</td>
 <td>Removes resources; potentially irreversible</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>EXECUTE</strong></td>
 <td>Lifecycle, non-idempotent</td>
 <td>Triggers actions; manages runtime state</td>
@@ -797,24 +797,24 @@
 <p><strong>Standard and Alternate Semantic-Endpoint Profiles</strong></p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Profile</th>
 <th>Endpoint Set</th>
 <th>Typical Intent Split</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><strong>Standard CRUDE profile</strong></td>
 <td><code>create</code> / <code>read</code> / <code>update</code> / <code>delete</code> / <code>execute</code></td>
 <td>Direct alignment to the five standardized semantic categories</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>Extended CRUDE-style profile</strong></td>
 <td><code>create</code> / <code>read</code> / <code>update</code> / <code>delete</code> / <code>execute</code> / <code>authorize</code></td>
 <td>Standard CRUDE plus a dedicated semantic endpoint for permissioning and approval workflows</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>Alternative semantic profile</strong></td>
 <td><code>discover</code> / <code>query</code> / <code>manage</code> / <code>operate</code></td>
 <td>Discovery and inspection, retrieval and filtering, mutating and administrative changes, runtime and lifecycle actions</td>
@@ -826,34 +826,34 @@
 <p>Each endpoint has canonical verbs (shown in bold) that SHOULD be used for standard operations, plus additional verbs for domain-specific semantics. See <a href="versions/v1.0.0-draft.html#85-operation-naming-grammar">Section 8.5</a> of the normative specification for naming requirements.</p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Endpoint</th>
 <th>Canonical</th>
 <th>Additional Verbs</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>CREATE</td>
 <td><strong>create</strong></td>
 <td>add, upload, register, import, insert</td>
 </tr>
-<tr class="even">
+<tr>
 <td>READ</td>
 <td><strong>get</strong>, <strong>list</strong></td>
 <td>search, find, export, count</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>UPDATE</td>
 <td><strong>update</strong></td>
 <td>edit, set, rename, move, patch, merge</td>
 </tr>
-<tr class="even">
+<tr>
 <td>DELETE</td>
 <td><strong>delete</strong></td>
 <td>remove, purge, unregister, clear, drop</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>EXECUTE</td>
 <td><strong>execute</strong>, <strong>cancel</strong></td>
 <td>run, start, stop, resume, trigger, invoke</td>
@@ -1045,44 +1045,44 @@
 <p>Adapters MUST categorize errors using structured error codes. The table below shows error categories and their corresponding codes:</p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Category</th>
 <th>Error Code</th>
 <th>Example Message</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>Missing Parameter</td>
 <td><code>VALIDATION_MISSING_PARAM</code></td>
 <td>"Missing required parameter 'name'"</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Invalid Type</td>
 <td><code>VALIDATION_INVALID_TYPE</code></td>
 <td>"Parameter 'price' expected 'number', got 'string'"</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Resource Not Found</td>
 <td><code>NOT_FOUND_RESOURCE</code></td>
 <td>"Item 'item_999' not found"</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Unknown Operation</td>
 <td><code>NOT_FOUND_OPERATION</code></td>
 <td>"Unknown operation: 'create_widget'"</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Permission Denied</td>
 <td><code>PERMISSION_DENIED</code></td>
 <td>"Permission denied: requires 'admin' scope"</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Rate Limited</td>
 <td><code>RATE_LIMIT_EXCEEDED</code></td>
 <td>"API rate limit exceeded"</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Internal Error</td>
 <td><code>INTERNAL_ERROR</code></td>
 <td>"Internal error: database connection failed"</td>
@@ -1114,37 +1114,37 @@
 <p>Adapters MUST use standardized error codes for programmatic handling. Common codes include:</p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Code</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><code>VALIDATION_MISSING_PARAM</code></td>
 <td>Required parameter not provided</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>VALIDATION_INVALID_TYPE</code></td>
 <td>Parameter type mismatch</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>NOT_FOUND_OPERATION</code></td>
 <td>Operation name not recognized</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>NOT_FOUND_RESOURCE</code></td>
 <td>Resource not found</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>PERMISSION_DENIED</code></td>
 <td>Operation not permitted</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>RATE_LIMIT_EXCEEDED</code></td>
 <td>Too many requests</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>INTERNAL_ERROR</code></td>
 <td>Server error</td>
 </tr>

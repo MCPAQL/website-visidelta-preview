@@ -425,24 +425,24 @@ Use introspection to discover all available operations and their parameters.</co
 <h4 id="411-mapping-table">4.1.1 Mapping Table</h4>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>MCP-AQL Response</th>
 <th>MCP <code>isError</code></th>
 <th>Rationale</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><code>success: true</code></td>
 <td><code>false</code></td>
 <td>Normal success</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>success: false</code>, recoverable error</td>
 <td><code>false</code></td>
 <td>Domain-level error; agent should interpret and recover</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>success: false</code>, unrecoverable error</td>
 <td><code>true</code></td>
 <td>Protocol failure; agent cannot recover without intervention</td>
@@ -502,29 +502,29 @@ Use introspection to discover all available operations and their parameters.</co
 <p>MCP JSON-RPC errors (-32600 to -32603) are reserved for transport and protocol-level failures. MCP-AQL adapters MUST NOT use these codes for domain-level errors.</p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>JSON-RPC Code</th>
 <th>Description</th>
 <th>When Used</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>-32600</td>
 <td>Invalid Request</td>
 <td>Malformed JSON-RPC request</td>
 </tr>
-<tr class="even">
+<tr>
 <td>-32601</td>
 <td>Method not found</td>
 <td>Unknown MCP method</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>-32602</td>
 <td>Invalid params</td>
 <td>Invalid MCP method parameters</td>
 </tr>
-<tr class="even">
+<tr>
 <td>-32603</td>
 <td>Internal error</td>
 <td>MCP server internal error</td>
@@ -536,49 +536,49 @@ Use introspection to discover all available operations and their parameters.</co
 <p>When adapters wrap HTTP APIs, HTTP status codes SHOULD be mapped to MCP-AQL error codes:</p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>HTTP Status</th>
 <th>MCP-AQL Error Code</th>
 <th>Notes</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>400</td>
 <td><code>VALIDATION_INVALID_TYPE</code></td>
 <td>Bad request</td>
 </tr>
-<tr class="even">
+<tr>
 <td>401</td>
 <td><code>PERMISSION_DENIED</code></td>
 <td>Authentication required</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>403</td>
 <td><code>PERMISSION_DENIED</code></td>
 <td>Forbidden</td>
 </tr>
-<tr class="even">
+<tr>
 <td>404</td>
 <td><code>NOT_FOUND_RESOURCE</code></td>
 <td>Not found</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>409</td>
 <td><code>CONFLICT_ALREADY_EXISTS</code></td>
 <td>Conflict</td>
 </tr>
-<tr class="even">
+<tr>
 <td>422</td>
 <td><code>VALIDATION_INVALID_TYPE</code></td>
 <td>Unprocessable entity</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>429</td>
 <td><code>RATE_LIMIT_EXCEEDED</code></td>
 <td>Rate limited</td>
 </tr>
-<tr class="even">
+<tr>
 <td>500+</td>
 <td><code>INTERNAL_ERROR</code></td>
 <td>Server errors</td>
@@ -624,24 +624,24 @@ Use introspection to discover all available operations and their parameters.</co
 <p>For EXECUTE operations with defined state machines, map states to progress:</p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>EXECUTE State</th>
 <th>Progress Range</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>Initializing</td>
 <td>0-10%</td>
 <td>Setting up execution context</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Running</td>
 <td>10-90%</td>
 <td>Main execution phase</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Completing</td>
 <td>90-100%</td>
 <td>Finalizing and cleaning up</td>

@@ -225,49 +225,49 @@
 <h3 id="32-category-prefixes">3.2 Category Prefixes</h3>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Category</th>
 <th>Description</th>
 <th>HTTP Range</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><code>VALIDATION_</code></td>
 <td>Input validation errors</td>
 <td>400, 422</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>NOT_FOUND_</code></td>
 <td>Resource not found</td>
 <td>404</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>PERMISSION_</code></td>
 <td>Authentication/authorization</td>
 <td>401, 403</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>CONFLICT_</code></td>
 <td>Resource conflicts</td>
 <td>409</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>RATE_LIMIT_</code></td>
 <td>Rate limiting</td>
 <td>429</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>TOKEN_</code></td>
 <td>Confirmation token errors</td>
 <td>400, 403</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>SCHEMA_</code></td>
 <td>Schema validation errors (generators)</td>
 <td>N/A</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>INTERNAL_</code></td>
 <td>Server errors</td>
 <td>500+</td>
@@ -283,54 +283,54 @@
 <p>The MVP includes 8 essential error codes:</p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Code</th>
 <th>Category</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><code>VALIDATION_MISSING_PARAM</code></td>
 <td>Validation</td>
 <td>Required parameter not provided</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>VALIDATION_INVALID_TYPE</code></td>
 <td>Validation</td>
 <td>Parameter has wrong type</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>VALIDATION_UNKNOWN_PARAM</code></td>
 <td>Validation</td>
 <td>Request contains parameter not defined in operation schema</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>VALIDATION_INVALID_ENCODING</code></td>
 <td>Validation</td>
 <td>Request contains invalid character encoding</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>VALIDATION_PAYLOAD_TOO_LARGE</code></td>
 <td>Validation</td>
 <td>Request or response exceeds size limits</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>NOT_FOUND_OPERATION</code></td>
 <td>Not Found</td>
 <td>Requested operation does not exist</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>NOT_FOUND_RESOURCE</code></td>
 <td>Not Found</td>
 <td>Target resource not found (HTTP 404)</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>PERMISSION_DENIED</code></td>
 <td>Permission</td>
 <td>Access denied (HTTP 401/403)</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>INTERNAL_ERROR</code></td>
 <td>Internal</td>
 <td>Server error or unexpected failure</td>
@@ -605,64 +605,64 @@
 <h3 id="51-phase-1-error-code-registry">5.1 Phase 1 Error Code Registry</h3>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Code</th>
 <th>Category</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><code>PERMISSION_TRUST_LEVEL_INSUFFICIENT</code></td>
 <td>Permission</td>
 <td>Adapter trust level too low for operation</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>PERMISSION_DANGER_LEVEL_DENIED</code></td>
 <td>Permission</td>
 <td>Operation danger level exceeds trust allowance</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>CONFIRMATION_REQUIRED</code></td>
 <td>Permission</td>
 <td>Dangerous operation requires user confirmation</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>RATE_LIMIT_EXCEEDED</code></td>
 <td>Rate Limit</td>
 <td>Target API rate limit reached</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>RATE_LIMIT_QUOTA_PAUSE</code></td>
 <td>Rate Limit</td>
 <td>User quota pause threshold reached</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>RATE_LIMIT_QUOTA_EXHAUSTED</code></td>
 <td>Rate Limit</td>
 <td>User quota hard stop reached</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>RATE_LIMIT_QUOTA_WARNING</code></td>
 <td>Rate Limit</td>
 <td>Approaching quota limit (warning)</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>TOKEN_INVALID</code></td>
 <td>Token</td>
 <td>Confirmation token not found or malformed</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>TOKEN_EXPIRED</code></td>
 <td>Token</td>
 <td>Confirmation token has expired</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>TOKEN_ALREADY_USED</code></td>
 <td>Token</td>
 <td>Confirmation token has already been redeemed</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>TOKEN_SCOPE_MISMATCH</code></td>
 <td>Token</td>
 <td>Token issued for different operation or parameters</td>
@@ -1011,64 +1011,64 @@
 <p>The runtime maps HTTP status codes to MCP-AQL error codes:</p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>HTTP Status</th>
 <th>Error Code</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>400</td>
 <td><code>VALIDATION_INVALID_TYPE</code></td>
 <td>Bad request (default for validation errors)</td>
 </tr>
-<tr class="even">
+<tr>
 <td>400</td>
 <td><code>VALIDATION_MISSING_PARAM</code></td>
 <td>Bad request (missing required parameter)</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>400</td>
 <td><code>VALIDATION_UNKNOWN_PARAM</code></td>
 <td>Bad request (unknown parameter)</td>
 </tr>
-<tr class="even">
+<tr>
 <td>401</td>
 <td><code>PERMISSION_DENIED</code></td>
 <td>Authentication required</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>403</td>
 <td><code>PERMISSION_DENIED</code></td>
 <td>Forbidden</td>
 </tr>
-<tr class="even">
+<tr>
 <td>404</td>
 <td><code>NOT_FOUND_RESOURCE</code></td>
 <td>Not found</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>422</td>
 <td><code>VALIDATION_INVALID_TYPE</code></td>
 <td>Unprocessable entity</td>
 </tr>
-<tr class="even">
+<tr>
 <td>500</td>
 <td><code>INTERNAL_ERROR</code></td>
 <td>Internal server error</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>502</td>
 <td><code>INTERNAL_ERROR</code></td>
 <td>Bad gateway</td>
 </tr>
-<tr class="even">
+<tr>
 <td>503</td>
 <td><code>INTERNAL_ERROR</code></td>
 <td>Service unavailable</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>504</td>
 <td><code>INTERNAL_ERROR</code></td>
 <td>Gateway timeout</td>

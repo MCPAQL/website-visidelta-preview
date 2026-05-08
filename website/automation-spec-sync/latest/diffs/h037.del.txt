@@ -1,2 +1,0 @@
-# Run conformance tests on generated adapter
-mcpaql-conformance test ./generated-adapter

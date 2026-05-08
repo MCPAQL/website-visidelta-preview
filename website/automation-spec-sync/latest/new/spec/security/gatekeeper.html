@@ -181,7 +181,7 @@
 <p><strong>Endpoint Safety Matrix:</strong></p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Endpoint</th>
 <th>readOnly</th>
 <th>destructive</th>
@@ -189,31 +189,31 @@
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>CREATE</td>
 <td>false</td>
 <td>false</td>
 <td>Additive only</td>
 </tr>
-<tr class="even">
+<tr>
 <td>READ</td>
 <td>true</td>
 <td>false</td>
 <td>No state changes</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>UPDATE</td>
 <td>false</td>
 <td>true</td>
 <td>May overwrite data</td>
 </tr>
-<tr class="even">
+<tr>
 <td>DELETE</td>
 <td>false</td>
 <td>true</td>
 <td>Removes data permanently</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>EXECUTE</td>
 <td>false</td>
 <td>true</td>
@@ -238,21 +238,21 @@
 <h3 id="31-permission-types">3.1 Permission Types</h3>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Permission</th>
 <th>Behavior</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><code>allow</code></td>
 <td>Operation proceeds without additional checks</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>deny</code></td>
 <td>Operation rejected with error</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>confirm</code></td>
 <td>Operation requires explicit confirmation</td>
 </tr>
@@ -298,21 +298,21 @@
 <p>Adapters implementing security SHOULD log:</p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Event</th>
 <th>Logged Data</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><code>OPERATION_DENIED</code></td>
 <td>Operation, reason</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>CONFIRMATION_REQUIRED</code></td>
 <td>Operation, token</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>CONFIRMATION_GRANTED</code></td>
 <td>Operation, token</td>
 </tr>

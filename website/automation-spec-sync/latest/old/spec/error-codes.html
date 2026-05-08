@@ -50,10 +50,10 @@
   <ul><li><a href="security/confirmation-tokens.html">Confirmation Token Specification</a></li><li><a href="security/execution-safety-loop.html">Execution Safety Loop Specification</a></li><li><a href="security/gatekeeper.html">Security Model: Gatekeeper Specification</a></li></ul>
 </div><div class="docs-side-group">
   <h3>Features</h3>
-  <ul><li><a href="features/collection-querying.html">MCP-AQL Collection Querying</a></li><li><a href="features/field-selection.html">Field Selection Specification</a></li><li><a href="features/pagination.html">Cursor-Based Pagination Specification</a></li><li><a href="features/warnings.html">Warnings Array Specification</a></li></ul>
+  <ul><li><a href="features/aggregations.html">MCP-AQL Aggregations</a></li><li><a href="features/collection-querying.html">MCP-AQL Collection Querying</a></li><li><a href="features/computed-fields.html">MCP-AQL Computed Fields</a></li><li><a href="features/field-selection.html">Field Selection Specification</a></li><li><a href="features/pagination.html">Cursor-Based Pagination Specification</a></li><li><a href="features/relationship-queries.html">MCP-AQL Relationship Queries</a></li><li><a href="features/warnings.html">Warnings Array Specification</a></li></ul>
 </div><div class="docs-side-group">
   <h3>Guides</h3>
-  <ul><li><a href="guides/protocol-comparison.html">Protocol Comparison Guide</a></li><li><a href="guides/README.html">Developer Guides</a></li></ul>
+  <ul><li><a href="guides/cross-domain-implementation.html">Cross-Domain Implementation Guide</a></li><li><a href="guides/protocol-comparison.html">Protocol Comparison Guide</a></li><li><a href="guides/README.html">Developer Guides</a></li></ul>
 </div><div class="docs-side-group">
   <h3>Process</h3>
   <ul><li><a href="process/breaking-changes.html">MCP-AQL Breaking Change Policy</a></li><li><a href="process/preliminary-public-launch-checklist.html">Preliminary Public Launch Checklist</a></li><li><a href="process/rfc-process.html">RFC Process for MCP-AQL Specification</a></li><li><a href="process/versioning.html">Versioning Strategy</a></li><li><a href="repo/CHANGELOG.html">Changelog</a></li></ul>
@@ -225,49 +225,49 @@
 <h3 id="32-category-prefixes">3.2 Category Prefixes</h3>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Category</th>
 <th>Description</th>
 <th>HTTP Range</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><code>VALIDATION_</code></td>
 <td>Input validation errors</td>
 <td>400, 422</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>NOT_FOUND_</code></td>
 <td>Resource not found</td>
 <td>404</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>PERMISSION_</code></td>
 <td>Authentication/authorization</td>
 <td>401, 403</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>CONFLICT_</code></td>
 <td>Resource conflicts</td>
 <td>409</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>RATE_LIMIT_</code></td>
 <td>Rate limiting</td>
 <td>429</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>TOKEN_</code></td>
 <td>Confirmation token errors</td>
 <td>400, 403</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>SCHEMA_</code></td>
 <td>Schema validation errors (generators)</td>
 <td>N/A</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>INTERNAL_</code></td>
 <td>Server errors</td>
 <td>500+</td>
@@ -283,54 +283,54 @@
 <p>The MVP includes 8 essential error codes:</p>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Code</th>
 <th>Category</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><code>VALIDATION_MISSING_PARAM</code></td>
 <td>Validation</td>
 <td>Required parameter not provided</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>VALIDATION_INVALID_TYPE</code></td>
 <td>Validation</td>
 <td>Parameter has wrong type</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>VALIDATION_UNKNOWN_PARAM</code></td>
 <td>Validation</td>
 <td>Request contains parameter not defined in operation schema</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>VALIDATION_INVALID_ENCODING</code></td>
 <td>Validation</td>
 <td>Request contains invalid character encoding</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>VALIDATION_PAYLOAD_TOO_LARGE</code></td>
 <td>Validation</td>
 <td>Request or response exceeds size limits</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>NOT_FOUND_OPERATION</code></td>
 <td>Not Found</td>
 <td>Requested operation does not exist</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>NOT_FOUND_RESOURCE</code></td>
 <td>Not Found</td>
 <td>Target resource not found (HTTP 404)</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>PERMISSION_DENIED</code></td>
 <td>Permission</td>
 <td>Access denied (HTTP 401/403)</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>INTERNAL_ERROR</code></td>
 <td>Internal</td>
 <td>Server error or unexpected failure</td>
@@ -605,64 +605,64 @@
 <h3 id="51-phase-1-error-code-registry">5.1 Phase 1 Error Code Registry</h3>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Code</th>
 <th>Category</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><code>PERMISSION_TRUST_LEVEL_INSUFFICIENT</code></td>
 <td>Permission</td>
 <td>Adapter trust level too low for operation</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>PERMISSION_DANGER_LEVEL_DENIED</code></td>
 <td>Permission</td>
 <td>Operation danger level exceeds trust allowance</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>CONFIRMATION_REQUIRED</code></td>
 <td>Permission</td>
 <td>Dangerous operation requires user confirmation</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>RATE_LIMIT_EXCEEDED</code></td>
 <td>Rate Limit</td>
 <td>Target API rate limit reached</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>RATE_LIMIT_QUOTA_PAUSE</code></td>
 <td>Rate Limit</td>
 <td>User quota pause threshold reached</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>RATE_LIMIT_QUOTA_EXHAUSTED</code></td>
 <td>Rate Limit</td>
 <td>User quota hard stop reached</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>RATE_LIMIT_QUOTA_WARNING</code></td>
 <td>Rate Limit</td>
 <td>Approaching quota limit (warning)</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>TOKEN_INVALID</code></td>
 <td>Token</td>
 <td>Confirmation token not found or malformed</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>TOKEN_EXPIRED</code></td>
 <td>Token</td>
 <td>Confirmation token has expired</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>TOKEN_ALREADY_USED</code></td>
 <td>Token</td>
 <td>Confirmation token has already been redeemed</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>TOKEN_SCOPE_MISMATCH</code></td>
 <td>Token</td>
 <td>Token issued for different operation or parameters</td>
@@ -1011,64 +1011,64 @@
 <p>The runtime maps HTTP status codes to MCP-AQL error codes:</p>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>HTTP Status</th>
 <th>Error Code</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td>400</td>
 <td><code>VALIDATION_INVALID_TYPE</code></td>
 <td>Bad request (default for validation errors)</td>
 </tr>
-<tr>
+<tr class="even">
 <td>400</td>
 <td><code>VALIDATION_MISSING_PARAM</code></td>
 <td>Bad request (missing required parameter)</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>400</td>
 <td><code>VALIDATION_UNKNOWN_PARAM</code></td>
 <td>Bad request (unknown parameter)</td>
 </tr>
-<tr>
+<tr class="even">
 <td>401</td>
 <td><code>PERMISSION_DENIED</code></td>
 <td>Authentication required</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>403</td>
 <td><code>PERMISSION_DENIED</code></td>
 <td>Forbidden</td>
 </tr>
-<tr>
+<tr class="even">
 <td>404</td>
 <td><code>NOT_FOUND_RESOURCE</code></td>
 <td>Not found</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>422</td>
 <td><code>VALIDATION_INVALID_TYPE</code></td>
 <td>Unprocessable entity</td>
 </tr>
-<tr>
+<tr class="even">
 <td>500</td>
 <td><code>INTERNAL_ERROR</code></td>
 <td>Internal server error</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>502</td>
 <td><code>INTERNAL_ERROR</code></td>
 <td>Bad gateway</td>
 </tr>
-<tr>
+<tr class="even">
 <td>503</td>
 <td><code>INTERNAL_ERROR</code></td>
 <td>Service unavailable</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>504</td>
 <td><code>INTERNAL_ERROR</code></td>
 <td>Gateway timeout</td>
@@ -1199,7 +1199,7 @@
 <li><a href="adapter/danger-levels.html">Dangerous Operation Classification</a></li>
 <li><a href="adapter/trust-levels.html">Trust Levels Specification</a></li>
 <li><a href="adapter/rate-limiting.html">Rate Limiting Specification</a></li>
-<li><a href="../adapter-reference/architecture/runtime.html">Universal Adapter Runtime</a> (in mcpaql-adapter repo)</li>
+<li><a href="https://github.com/MCPAQL/mcpaql-adapter/blob/develop/docs/architecture/runtime.md">Universal Adapter Runtime</a> (in mcpaql-adapter repo)</li>
 <li><a href="https://github.com/DollhouseMCP/mcp-server-v2-refactor/issues/298">DollhouseMCP Implementation</a></li>
 <li>GitHub Issue: <a href="https://github.com/MCPAQL/spec/issues/35">#35</a></li>
 </ul>

@@ -366,34 +366,34 @@ mcp_aql_execute  - EXECUTE operations</code></pre>
 <p>Each endpoint has canonical verbs that adapters SHOULD use for standard operations:</p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Endpoint</th>
 <th>Canonical Verb</th>
 <th>Example Operation</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>CREATE</td>
 <td><code>create</code></td>
 <td><code>create_user</code></td>
 </tr>
-<tr class="even">
+<tr>
 <td>READ</td>
 <td><code>get</code> (single), <code>list</code> (multiple)</td>
 <td><code>get_document</code>, <code>list_users</code></td>
 </tr>
-<tr class="odd">
+<tr>
 <td>UPDATE</td>
 <td><code>update</code></td>
 <td><code>update_profile</code></td>
 </tr>
-<tr class="even">
+<tr>
 <td>DELETE</td>
 <td><code>delete</code></td>
 <td><code>delete_account</code></td>
 </tr>
-<tr class="odd">
+<tr>
 <td>EXECUTE</td>
 <td><code>execute</code> (initiate), <code>cancel</code> (terminate)</td>
 <td><code>execute_workflow</code>, <code>cancel_task</code></td>

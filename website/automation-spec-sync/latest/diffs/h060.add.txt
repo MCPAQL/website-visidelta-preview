@@ -1,6 +1,0 @@
-MCP-AQL Aggregations
-MCP-AQL Computed Fields
-MCP-AQL Relationship Queries
-Cross-Domain Implementation Guide
-Protocol Comparison - Understand MCP-AQL through familiar protocols
-Cross-Domain Implementation - Map your own domain into MCP-AQL operations, introspection, and query controls

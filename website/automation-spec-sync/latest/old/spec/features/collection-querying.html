@@ -50,10 +50,10 @@
   <ul><li><a href="../security/confirmation-tokens.html">Confirmation Token Specification</a></li><li><a href="../security/execution-safety-loop.html">Execution Safety Loop Specification</a></li><li><a href="../security/gatekeeper.html">Security Model: Gatekeeper Specification</a></li></ul>
 </div><div class="docs-side-group">
   <h3>Features</h3>
-  <ul><li><a class="current" aria-current="page" href="collection-querying.html">MCP-AQL Collection Querying</a></li><li><a href="field-selection.html">Field Selection Specification</a></li><li><a href="pagination.html">Cursor-Based Pagination Specification</a></li><li><a href="warnings.html">Warnings Array Specification</a></li></ul>
+  <ul><li><a href="aggregations.html">MCP-AQL Aggregations</a></li><li><a class="current" aria-current="page" href="collection-querying.html">MCP-AQL Collection Querying</a></li><li><a href="computed-fields.html">MCP-AQL Computed Fields</a></li><li><a href="field-selection.html">Field Selection Specification</a></li><li><a href="pagination.html">Cursor-Based Pagination Specification</a></li><li><a href="relationship-queries.html">MCP-AQL Relationship Queries</a></li><li><a href="warnings.html">Warnings Array Specification</a></li></ul>
 </div><div class="docs-side-group">
   <h3>Guides</h3>
-  <ul><li><a href="../guides/protocol-comparison.html">Protocol Comparison Guide</a></li><li><a href="../guides/README.html">Developer Guides</a></li></ul>
+  <ul><li><a href="../guides/cross-domain-implementation.html">Cross-Domain Implementation Guide</a></li><li><a href="../guides/protocol-comparison.html">Protocol Comparison Guide</a></li><li><a href="../guides/README.html">Developer Guides</a></li></ul>
 </div><div class="docs-side-group">
   <h3>Process</h3>
   <ul><li><a href="../process/breaking-changes.html">MCP-AQL Breaking Change Policy</a></li><li><a href="../process/preliminary-public-launch-checklist.html">Preliminary Public Launch Checklist</a></li><li><a href="../process/rfc-process.html">RFC Process for MCP-AQL Specification</a></li><li><a href="../process/versioning.html">Versioning Strategy</a></li><li><a href="../repo/CHANGELOG.html">Changelog</a></li></ul>
@@ -101,7 +101,7 @@
               <p class="page-toc-intro">Use the outline to move through longer pages without losing your place.</p>
             </div>
             <ol class="page-toc-list" data-page-toc-list>
-              <li class="page-toc-item level-2"><a href="#abstract" data-toc-target="abstract">Abstract</a></li><li class="page-toc-item level-2"><a href="#1-operation-families" data-toc-target="1-operation-families">1. Operation Families</a></li><li class="page-toc-item level-2"><a href="#2-preferred-request-shape" data-toc-target="2-preferred-request-shape">2. Preferred Request Shape</a></li><li class="page-toc-item level-3"><a href="#21-text-query" data-toc-target="21-text-query">2.1 Text Query</a></li><li class="page-toc-item level-3"><a href="#22-structured-filters" data-toc-target="22-structured-filters">2.2 Structured Filters</a></li><li class="page-toc-item level-3"><a href="#23-sorting" data-toc-target="23-sorting">2.3 Sorting</a></li><li class="page-toc-item level-3"><a href="#24-field-selection" data-toc-target="24-field-selection">2.4 Field Selection</a></li><li class="page-toc-item level-3"><a href="#25-pagination" data-toc-target="25-pagination">2.5 Pagination</a></li><li class="page-toc-item level-2"><a href="#3-capability-matrix" data-toc-target="3-capability-matrix">3. Capability Matrix</a></li><li class="page-toc-item level-2"><a href="#4-search-semantics" data-toc-target="4-search-semantics">4. Search Semantics</a></li><li class="page-toc-item level-3"><a href="#41-multi-word-queries" data-toc-target="41-multi-word-queries">4.1 Multi-Word Queries</a></li><li class="page-toc-item level-3"><a href="#42-structured-query-grammars" data-toc-target="42-structured-query-grammars">4.2 Structured Query Grammars</a></li><li class="page-toc-item level-2"><a href="#5-validation-guidance" data-toc-target="5-validation-guidance">5. Validation Guidance</a></li><li class="page-toc-item level-2"><a href="#6-introspection-guidance" data-toc-target="6-introspection-guidance">6. Introspection Guidance</a></li><li class="page-toc-item level-2"><a href="#7-relationship-to-other-feature-docs" data-toc-target="7-relationship-to-other-feature-docs">7. Relationship to Other Feature Docs</a></li>
+              <li class="page-toc-item level-2"><a href="#abstract" data-toc-target="abstract">Abstract</a></li><li class="page-toc-item level-2"><a href="#1-operation-families" data-toc-target="1-operation-families">1. Operation Families</a></li><li class="page-toc-item level-2"><a href="#2-preferred-request-shape" data-toc-target="2-preferred-request-shape">2. Preferred Request Shape</a></li><li class="page-toc-item level-3"><a href="#21-text-query" data-toc-target="21-text-query">2.1 Text Query</a></li><li class="page-toc-item level-3"><a href="#22-structured-filters" data-toc-target="22-structured-filters">2.2 Structured Filters</a></li><li class="page-toc-item level-3"><a href="#23-sorting" data-toc-target="23-sorting">2.3 Sorting</a></li><li class="page-toc-item level-3"><a href="#24-field-selection" data-toc-target="24-field-selection">2.4 Field Selection</a></li><li class="page-toc-item level-3"><a href="#25-aggregations" data-toc-target="25-aggregations">2.5 Aggregations</a></li><li class="page-toc-item level-3"><a href="#26-pagination" data-toc-target="26-pagination">2.6 Pagination</a></li><li class="page-toc-item level-2"><a href="#3-capability-matrix" data-toc-target="3-capability-matrix">3. Capability Matrix</a></li><li class="page-toc-item level-2"><a href="#4-search-semantics" data-toc-target="4-search-semantics">4. Search Semantics</a></li><li class="page-toc-item level-3"><a href="#41-multi-word-queries" data-toc-target="41-multi-word-queries">4.1 Multi-Word Queries</a></li><li class="page-toc-item level-3"><a href="#42-structured-query-grammars" data-toc-target="42-structured-query-grammars">4.2 Structured Query Grammars</a></li><li class="page-toc-item level-2"><a href="#5-validation-guidance" data-toc-target="5-validation-guidance">5. Validation Guidance</a></li><li class="page-toc-item level-2"><a href="#6-introspection-guidance" data-toc-target="6-introspection-guidance">6. Introspection Guidance</a></li><li class="page-toc-item level-2"><a href="#7-relationship-to-other-feature-docs" data-toc-target="7-relationship-to-other-feature-docs">7. Relationship to Other Feature Docs</a></li>
             </ol>
           </div>
         </section>
@@ -114,31 +114,31 @@
 <p><strong>Document Status:</strong> This document is <strong>informative</strong>. For normative requirements, see <a href="../versions/v1.0.0-draft.html">MCP-AQL Specification v1.0.0</a>.</p>
 </blockquote>
 <h2 id="abstract">Abstract</h2>
-<p>This document defines the preferred request contract for collection-returning READ operations in MCP-AQL. It aligns <code>list_*</code>, <code>search_*</code>, and <code>query_*</code> operations around a consistent shape for free-text search, structured filtering, sorting, field selection, and pagination.</p>
+<p>This document defines the preferred request contract for collection-returning READ operations in MCP-AQL. It aligns <code>list_*</code>, <code>search_*</code>, and <code>query_*</code> operations around a consistent shape for free-text search, structured filtering, sorting, field selection, aggregation, and pagination.</p>
 <p>The goal is not to force every adapter into the same backend implementation. The goal is to give clients, adapter authors, and future spec work a stable query-language surface to build on.</p>
 <hr />
 <h2 id="1-operation-families">1. Operation Families</h2>
 <p>MCP-AQL commonly exposes three collection-oriented READ patterns:</p>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Pattern</th>
 <th>Purpose</th>
 <th>Typical Example</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><code>list_*</code></td>
 <td>Enumerate a collection without requiring text search</td>
 <td><code>list_elements</code></td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>search_*</code></td>
 <td>Free-text retrieval over a collection</td>
 <td><code>search_elements</code></td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>query_*</code></td>
 <td>Structured or adapter-defined query grammar</td>
 <td><code>query_elements</code></td>
@@ -201,40 +201,55 @@
 <li>A preset string such as <code>minimal</code>, <code>standard</code>, or <code>full</code></li>
 <li>An array of explicit field paths</li>
 </ul></li>
+<li>Computed fields SHOULD use the <code>_computed.</code> prefix when they are projected through <code>fields</code>, for example <code>_computed.age_days</code>.</li>
 <li>Separate <code>preset</code> parameters SHOULD be treated as compatibility aliases only.</li>
 </ul>
-<h3 id="25-pagination">2.5 Pagination</h3>
-<p>Cursor pagination is the preferred collection-pagination shape:</p>
+<h3 id="25-aggregations">2.5 Aggregations</h3>
+<ul>
+<li><code>aggregate</code> is the preferred summary-computation control for collection operations.</li>
+<li>The preferred shape is a map of named aggregation expressions:</li>
+</ul>
 <div class="sourceCode" id="cb3"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>{</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">first</span><span class="op">:</span> <span class="dv">25</span><span class="op">,</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">after</span><span class="op">:</span> <span class="st">&quot;cursor_abc123&quot;</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">aggregate</span><span class="op">:</span> {</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">total</span><span class="op">:</span> { <span class="dt">count</span><span class="op">:</span> <span class="kw">true</span> }<span class="op">,</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">by_status</span><span class="op">:</span> { <span class="dt">group_by</span><span class="op">:</span> <span class="st">&quot;status&quot;</span><span class="op">,</span> <span class="dt">count</span><span class="op">:</span> <span class="kw">true</span> }</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<ul>
+<li>When <code>aggregate</code> is present, adapters SHOULD return summary data by default unless <code>include_items: true</code> is explicitly requested.</li>
+</ul>
+<h3 id="26-pagination">2.6 Pagination</h3>
+<p>Cursor pagination is the preferred collection-pagination shape:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">first</span><span class="op">:</span> <span class="dv">25</span><span class="op">,</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">after</span><span class="op">:</span> <span class="st">&quot;cursor_abc123&quot;</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <p>Preferred cursor parameters:</p>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Parameter</th>
 <th>Type</th>
 <th>Meaning</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><code>first</code></td>
 <td>number</td>
 <td>Number of items from the start</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>after</code></td>
 <td>string</td>
 <td>Cursor to continue after</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>last</code></td>
 <td>number</td>
 <td>Number of items from the end</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>before</code></td>
 <td>string</td>
 <td>Cursor to continue before</td>
@@ -253,37 +268,41 @@
 <p>The following matrix describes the preferred forward direction for collection-returning READ operations:</p>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Operation Family</th>
 <th><code>query</code></th>
 <th><code>filter</code></th>
 <th><code>sort</code></th>
+<th><code>aggregate</code></th>
 <th>Pagination</th>
 <th><code>fields</code></th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><code>list_*</code></td>
 <td>Not required</td>
 <td>SHOULD support</td>
 <td>SHOULD support</td>
+<td>MAY support</td>
 <td>SHOULD support</td>
 <td>SHOULD support</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>search_*</code></td>
 <td>SHOULD support as the canonical text parameter</td>
 <td>SHOULD support</td>
 <td>SHOULD support</td>
+<td>SHOULD support for summary-style searches</td>
 <td>SHOULD support</td>
 <td>SHOULD support</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>query_*</code></td>
 <td>MUST document grammar</td>
 <td>SHOULD document composition rules</td>
 <td>SHOULD support when meaningful</td>
+<td>SHOULD document support when meaningful</td>
 <td>SHOULD support</td>
 <td>SHOULD support</td>
 </tr>
@@ -331,6 +350,8 @@
 <ul>
 <li>Supported collection-query parameters in <code>OperationDetails.parameters</code></li>
 <li>Whether the operation supports field selection</li>
+<li>Whether the operation supports aggregation and which functions are available</li>
+<li>Which computed fields are available, if any</li>
 <li>Which pagination style is supported</li>
 <li>Which filter keys and sort fields are accepted</li>
 <li>Examples combining multiple controls in one request</li>
@@ -340,6 +361,8 @@
 <h2 id="7-relationship-to-other-feature-docs">7. Relationship to Other Feature Docs</h2>
 <ul>
 <li><a href="field-selection.html">Field Selection</a> defines how <code>fields</code> works</li>
+<li><a href="aggregations.html">Aggregations</a> defines the preferred <code>aggregate</code> request and response shape</li>
+<li><a href="computed-fields.html">Computed Fields</a> defines the <code>_computed.</code> projection and metadata pattern</li>
 <li><a href="pagination.html">Pagination</a> defines cursor pagination response semantics</li>
 <li><a href="../operations.html">Operations</a> defines general parameter conventions and operation schema guidance</li>
 </ul>
@@ -348,13 +371,13 @@
           </div>
         </section>
         <nav class="page-nav" aria-label="Page navigation">
-  <a class="page-nav-link prev" href="../security/gatekeeper.html">
+  <a class="page-nav-link prev" href="aggregations.html">
     <span class="page-nav-eyebrow">Previous page</span>
-    <strong class="page-nav-label">Security Model: Gatekeeper Specification</strong>
+    <strong class="page-nav-label">MCP-AQL Aggregations</strong>
   </a>
-  <a class="page-nav-link next" href="field-selection.html">
+  <a class="page-nav-link next" href="computed-fields.html">
     <span class="page-nav-eyebrow">Next page</span>
-    <strong class="page-nav-label">Field Selection Specification</strong>
+    <strong class="page-nav-label">MCP-AQL Computed Fields</strong>
   </a>
 </nav>
       </article>

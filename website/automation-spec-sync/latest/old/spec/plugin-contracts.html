@@ -50,10 +50,10 @@
   <ul><li><a href="security/confirmation-tokens.html">Confirmation Token Specification</a></li><li><a href="security/execution-safety-loop.html">Execution Safety Loop Specification</a></li><li><a href="security/gatekeeper.html">Security Model: Gatekeeper Specification</a></li></ul>
 </div><div class="docs-side-group">
   <h3>Features</h3>
-  <ul><li><a href="features/collection-querying.html">MCP-AQL Collection Querying</a></li><li><a href="features/field-selection.html">Field Selection Specification</a></li><li><a href="features/pagination.html">Cursor-Based Pagination Specification</a></li><li><a href="features/warnings.html">Warnings Array Specification</a></li></ul>
+  <ul><li><a href="features/aggregations.html">MCP-AQL Aggregations</a></li><li><a href="features/collection-querying.html">MCP-AQL Collection Querying</a></li><li><a href="features/computed-fields.html">MCP-AQL Computed Fields</a></li><li><a href="features/field-selection.html">Field Selection Specification</a></li><li><a href="features/pagination.html">Cursor-Based Pagination Specification</a></li><li><a href="features/relationship-queries.html">MCP-AQL Relationship Queries</a></li><li><a href="features/warnings.html">Warnings Array Specification</a></li></ul>
 </div><div class="docs-side-group">
   <h3>Guides</h3>
-  <ul><li><a href="guides/protocol-comparison.html">Protocol Comparison Guide</a></li><li><a href="guides/README.html">Developer Guides</a></li></ul>
+  <ul><li><a href="guides/cross-domain-implementation.html">Cross-Domain Implementation Guide</a></li><li><a href="guides/protocol-comparison.html">Protocol Comparison Guide</a></li><li><a href="guides/README.html">Developer Guides</a></li></ul>
 </div><div class="docs-side-group">
   <h3>Process</h3>
   <ul><li><a href="process/breaking-changes.html">MCP-AQL Breaking Change Policy</a></li><li><a href="process/preliminary-public-launch-checklist.html">Preliminary Public Launch Checklist</a></li><li><a href="process/rfc-process.html">RFC Process for MCP-AQL Specification</a></li><li><a href="process/versioning.html">Versioning Strategy</a></li><li><a href="repo/CHANGELOG.html">Changelog</a></li></ul>
@@ -137,25 +137,25 @@
 <p><strong>Included:</strong></p>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Category</th>
 <th>Plugins</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td>Transport</td>
 <td><code>http</code></td>
 </tr>
-<tr>
+<tr class="even">
 <td>Protocol</td>
 <td><code>rest</code></td>
 </tr>
-<tr>
+<tr class="odd">
 <td>Serialization</td>
 <td><code>json</code></td>
 </tr>
-<tr>
+<tr class="even">
 <td>Auth</td>
 <td><code>none</code>, <code>api_key</code>, <code>bearer</code></td>
 </tr>
@@ -164,29 +164,29 @@
 <p><strong>Deferred to future specifications:</strong></p>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Category</th>
 <th>Deferred Plugins</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td>Transport</td>
 <td><code>websocket</code>, <code>serial</code>, <code>native-*</code></td>
 </tr>
-<tr>
+<tr class="even">
 <td>Protocol</td>
 <td><code>graphql</code>, <code>grpc</code>, <code>jsonrpc</code>, <code>custom</code></td>
 </tr>
-<tr>
+<tr class="odd">
 <td>Serialization</td>
 <td><code>xml</code>, <code>protobuf</code>, <code>msgpack</code>, <code>form</code>, <code>multipart</code></td>
 </tr>
-<tr>
+<tr class="even">
 <td>Auth</td>
 <td><code>basic</code>, <code>oauth</code>, <code>mtls</code>, <code>aws-sig4</code></td>
 </tr>
-<tr>
+<tr class="odd">
 <td>Pagination</td>
 <td>All pagination plugins (see #37)</td>
 </tr>
@@ -199,29 +199,29 @@
 <h3 id="21-category-summary">2.1 Category Summary</h3>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Category</th>
 <th>Responsibility</th>
 <th>MVP Plugin</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td>Transport</td>
 <td>Communication channel</td>
 <td><code>http</code></td>
 </tr>
-<tr>
+<tr class="even">
 <td>Protocol</td>
 <td>Request/response structure</td>
 <td><code>rest</code></td>
 </tr>
-<tr>
+<tr class="odd">
 <td>Serialization</td>
 <td>Data encoding/decoding</td>
 <td><code>json</code></td>
 </tr>
-<tr>
+<tr class="even">
 <td>Auth</td>
 <td>Credential attachment</td>
 <td><code>none</code>, <code>api_key</code>, <code>bearer</code></td>
@@ -510,69 +510,69 @@
 <h3 id="83-mvp-error-codes">8.3 MVP Error Codes</h3>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Code</th>
 <th>Category</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><code>PLUGIN_NOT_FOUND</code></td>
 <td>Runtime</td>
 <td>Requested plugin does not exist</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>TRANSPORT_DNS_ERROR</code></td>
 <td>Transport</td>
 <td>DNS resolution failed</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>TRANSPORT_CONNECTION_REFUSED</code></td>
 <td>Transport</td>
 <td>Connection refused</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>TRANSPORT_TIMEOUT</code></td>
 <td>Transport</td>
 <td>Request timed out</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>TRANSPORT_TLS_ERROR</code></td>
 <td>Transport</td>
 <td>TLS/SSL error</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>TRANSPORT_NETWORK_ERROR</code></td>
 <td>Transport</td>
 <td>General network error</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>PROTOCOL_INVALID_MAPPING</code></td>
 <td>Protocol</td>
 <td>Invalid maps_to format</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>PROTOCOL_MISSING_PARAM</code></td>
 <td>Protocol</td>
 <td>Path parameter missing</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>SERIALIZATION_CIRCULAR_REF</code></td>
 <td>Serialization</td>
 <td>Circular reference in data</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>SERIALIZATION_PARSE_ERROR</code></td>
 <td>Serialization</td>
 <td>Failed to parse response</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>AUTH_CONFIG_INVALID</code></td>
 <td>Auth</td>
 <td>Invalid auth configuration</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>AUTH_CREDENTIAL_MISSING</code></td>
 <td>Auth</td>
 <td>Credential not found</td>
@@ -585,7 +585,7 @@
 <li><a href="adapter/element-type.html">Adapter Element Type Specification</a></li>
 <li><a href="error-codes.html">Error Codes Specification</a></li>
 <li><a href="versions/v1.0.0-draft.html">MCP-AQL Specification</a></li>
-<li><a href="../adapter-reference/architecture/plugin-system.html">Plugin System Implementation</a> (implementation details)</li>
+<li><a href="https://github.com/MCPAQL/mcpaql-adapter/blob/develop/docs/architecture/plugin-system.md">Plugin System Implementation</a> (implementation details)</li>
 <li>GitHub Issue: <a href="https://github.com/MCPAQL/spec/issues/62">#62</a></li>
 </ul>
 

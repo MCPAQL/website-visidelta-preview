@@ -121,24 +121,24 @@
 <p>MCP-AQL commonly exposes three collection-oriented READ patterns:</p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Pattern</th>
 <th>Purpose</th>
 <th>Typical Example</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><code>list_*</code></td>
 <td>Enumerate a collection without requiring text search</td>
 <td><code>list_elements</code></td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>search_*</code></td>
 <td>Free-text retrieval over a collection</td>
 <td><code>search_elements</code></td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>query_*</code></td>
 <td>Structured or adapter-defined query grammar</td>
 <td><code>query_elements</code></td>
@@ -227,29 +227,29 @@
 <p>Preferred cursor parameters:</p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Parameter</th>
 <th>Type</th>
 <th>Meaning</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><code>first</code></td>
 <td>number</td>
 <td>Number of items from the start</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>after</code></td>
 <td>string</td>
 <td>Cursor to continue after</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>last</code></td>
 <td>number</td>
 <td>Number of items from the end</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>before</code></td>
 <td>string</td>
 <td>Cursor to continue before</td>
@@ -268,7 +268,7 @@
 <p>The following matrix describes the preferred forward direction for collection-returning READ operations:</p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Operation Family</th>
 <th><code>query</code></th>
 <th><code>filter</code></th>
@@ -279,7 +279,7 @@
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><code>list_*</code></td>
 <td>Not required</td>
 <td>SHOULD support</td>
@@ -288,7 +288,7 @@
 <td>SHOULD support</td>
 <td>SHOULD support</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>search_*</code></td>
 <td>SHOULD support as the canonical text parameter</td>
 <td>SHOULD support</td>
@@ -297,7 +297,7 @@
 <td>SHOULD support</td>
 <td>SHOULD support</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>query_*</code></td>
 <td>MUST document grammar</td>
 <td>SHOULD document composition rules</td>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Document Status: This document is an informative conformance framework specification aligned to the normative protocol requirements in docs/versions/v1.0.0-draft.md. Implementation Status: The full mcpaql-conformance run">
+  <meta name="description" content="Document Status: This document is an informative conformance framework specification aligned to the normative protocol requirements in docs/versions/v1.0.0-draft.md. Implementation Status: This repository now includes a ">
   <title>MCP-AQL Spec | MCP-AQL Conformance Testing Specification</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -50,10 +50,10 @@
   <ul><li><a href="security/confirmation-tokens.html">Confirmation Token Specification</a></li><li><a href="security/execution-safety-loop.html">Execution Safety Loop Specification</a></li><li><a href="security/gatekeeper.html">Security Model: Gatekeeper Specification</a></li></ul>
 </div><div class="docs-side-group">
   <h3>Features</h3>
-  <ul><li><a href="features/collection-querying.html">MCP-AQL Collection Querying</a></li><li><a href="features/field-selection.html">Field Selection Specification</a></li><li><a href="features/pagination.html">Cursor-Based Pagination Specification</a></li><li><a href="features/warnings.html">Warnings Array Specification</a></li></ul>
+  <ul><li><a href="features/aggregations.html">MCP-AQL Aggregations</a></li><li><a href="features/collection-querying.html">MCP-AQL Collection Querying</a></li><li><a href="features/computed-fields.html">MCP-AQL Computed Fields</a></li><li><a href="features/field-selection.html">Field Selection Specification</a></li><li><a href="features/pagination.html">Cursor-Based Pagination Specification</a></li><li><a href="features/relationship-queries.html">MCP-AQL Relationship Queries</a></li><li><a href="features/warnings.html">Warnings Array Specification</a></li></ul>
 </div><div class="docs-side-group">
   <h3>Guides</h3>
-  <ul><li><a href="guides/protocol-comparison.html">Protocol Comparison Guide</a></li><li><a href="guides/README.html">Developer Guides</a></li></ul>
+  <ul><li><a href="guides/cross-domain-implementation.html">Cross-Domain Implementation Guide</a></li><li><a href="guides/protocol-comparison.html">Protocol Comparison Guide</a></li><li><a href="guides/README.html">Developer Guides</a></li></ul>
 </div><div class="docs-side-group">
   <h3>Process</h3>
   <ul><li><a href="process/breaking-changes.html">MCP-AQL Breaking Change Policy</a></li><li><a href="process/preliminary-public-launch-checklist.html">Preliminary Public Launch Checklist</a></li><li><a href="process/rfc-process.html">RFC Process for MCP-AQL Specification</a></li><li><a href="process/versioning.html">Versioning Strategy</a></li><li><a href="repo/CHANGELOG.html">Changelog</a></li></ul>
@@ -84,7 +84,7 @@
           <div class="hero-inner">
             <span class="status-pill">REPO-SYNCED SPEC DOC</span>
             <h1>MCP-AQL Conformance Testing Specification</h1>
-            <p class="lede">Document Status: This document is an informative conformance framework specification aligned to the normative protocol requirements in docs/versions/v1.0.0-draft.md. Implementation Status: The full mcpaql-conformance run</p>
+            <p class="lede">Document Status: This document is an informative conformance framework specification aligned to the normative protocol requirements in docs/versions/v1.0.0-draft.md. Implementation Status: This repository now includes a </p>
             <div class="spec-meta"><span class="state-chip live">Support document</span><span class="state-chip pending">Draft</span><span class="state-chip">1.0.0-draft</span><span class="state-chip">2026-04-15</span></div>
             <p class="spec-source">Source: <a href="https://github.com/MCPAQL/spec/blob/main/docs/conformance-testing.md">spec/docs/conformance-testing.md</a></p>
             <div class="hero-actions">
@@ -112,7 +112,7 @@
             <p><strong>Version:</strong> 1.0.0-draft <strong>Status:</strong> Draft <strong>Last Updated:</strong> 2026-04-15</p>
 <blockquote>
 <p><strong>Document Status:</strong> This document is an <strong>informative conformance framework specification</strong> aligned to the normative protocol requirements in <code>docs/versions/v1.0.0-draft.md</code>.</p>
-<p><strong>Implementation Status:</strong> The full <code>mcpaql-conformance</code> runner defined here is not yet published in this repository. Current implemented checks are schema/example validation in <code>scripts/validate-schema-examples.mjs</code>.</p>
+<p><strong>Implementation Status:</strong> This repository now includes a fixture-driven prototype runner in <code>scripts/run-conformance-tests.mjs</code> plus reference evidence bundles under <code>tests/conformance/</code>. A future packaged <code>mcpaql-conformance</code> tool may add live adapter execution on top of this baseline.</p>
 </blockquote>
 <h2 id="abstract">Abstract</h2>
 <p>This document specifies the conformance testing requirements for MCP-AQL implementations. It defines conformance levels, test categories, pass/fail criteria, and evaluation methodologies including LLM-based semantic evaluation.</p>
@@ -125,30 +125,31 @@
 <li>How to evaluate test results</li>
 <li>How to report conformance levels</li>
 </ul>
+<p>The repository implementation currently validates <strong>evidence bundles</strong> instead of probing live adapters over the network. Each bundle captures introspection responses, accepted parameter sets, representative success and failure results, and optional semantic-discoverability examples. This keeps the spec repo reviewable and deterministic while a future external runner grows into direct adapter execution.</p>
 <h3 id="12-terminology">1.2 Terminology</h3>
 <p>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <a href="https://www.rfc-editor.org/rfc/rfc2119">RFC 2119</a>.</p>
 <h3 id="13-test-result-classifications">1.3 Test Result Classifications</h3>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Result</th>
 <th>Meaning</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><strong>PASS</strong></td>
 <td>Test criteria fully satisfied</td>
 </tr>
-<tr>
+<tr class="even">
 <td><strong>FAIL</strong></td>
 <td>Test criteria not met, conformance blocked</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><strong>WARN</strong></td>
 <td>Test criteria partially met, conformance not blocked</td>
 </tr>
-<tr>
+<tr class="even">
 <td><strong>SKIP</strong></td>
 <td>Test not applicable to this implementation</td>
 </tr>
@@ -161,33 +162,33 @@
 <p><strong>Requirements:</strong></p>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Requirement</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td>Introspect (operations)</td>
 <td><code>introspect</code> operation with <code>query: "operations"</code> implemented</td>
 </tr>
-<tr>
+<tr class="even">
 <td>Introspect (types)</td>
 <td><code>introspect</code> operation with <code>query: "types"</code> implemented</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>Endpoint routing</td>
-<td>Operations routed to correct CRUDE endpoint</td>
+<td>Operations routed to the correct documented semantic endpoint family in semantic endpoint mode</td>
 </tr>
-<tr>
+<tr class="even">
 <td>Response format</td>
 <td>Discriminated union responses (<code>{ success, data }</code> or <code>{ success, error }</code>)</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>Error handling</td>
 <td>Structured error responses with code and message</td>
 </tr>
-<tr>
+<tr class="even">
 <td>Parameter naming</td>
 <td>snake_case parameter naming convention</td>
 </tr>
@@ -205,29 +206,29 @@
 <p><strong>Requirements:</strong></p>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Requirement</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td>Level 1</td>
 <td>All Level 1 requirements</td>
 </tr>
-<tr>
+<tr class="even">
 <td>Endpoint modes</td>
-<td>Both CRUDE mode and Single-endpoint mode supported</td>
+<td><code>crude</code> semantic endpoint mode and <code>single</code> mode supported</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>Field selection</td>
 <td><code>fields</code> parameter on READ operations, with preset-name support documented where implemented</td>
 </tr>
-<tr>
+<tr class="even">
 <td>Batch operations</td>
 <td>Multi-operation batching with individual results</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>Cross-cutting params</td>
 <td>Consistent documentation for collection-query controls such as <code>query</code>, <code>filter</code>, pagination, field selection, and sorting</td>
 </tr>
@@ -236,6 +237,7 @@
 <p><strong>Test Categories Required:</strong></p>
 <ul>
 <li>All Level 1 test categories</li>
+<li>Level 2 Features (SHOULD PASS)</li>
 <li>Constraint Documentation (SHOULD PASS)</li>
 <li>Semantic Evaluation (SHOULD PASS)</li>
 </ul>
@@ -361,53 +363,58 @@ MCP-AQL Level 2 Conformant</code></pre>
 <p>The following test categories MUST pass for Level 1 conformance:</p>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Category</th>
 <th>Tests</th>
 <th>Rationale</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td>Introspection Fidelity</td>
-<td>2</td>
+<td>4</td>
 <td>LLMs must trust introspection</td>
 </tr>
-<tr>
+<tr class="even">
 <td>Parameter Handling</td>
-<td>3</td>
+<td>4</td>
 <td>Consistent behavior across operations</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>Error Quality</td>
-<td>2</td>
+<td>3</td>
 <td>Usable error messages</td>
 </tr>
-<tr>
+<tr class="even">
 <td>Round-Trip Integrity</td>
 <td>2</td>
 <td>Data consistency guarantee</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Total MUST PASS tests:</strong> 9</p>
+<p><strong>Total MUST PASS tests:</strong> 13</p>
 <h3 id="42-should-pass-requirements">4.2 SHOULD PASS Requirements</h3>
 <p>The following test categories SHOULD pass for Level 2 conformance:</p>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Category</th>
 <th>Tests</th>
 <th>Rationale</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td>Constraint Documentation</td>
 <td>2</td>
 <td>Discoverable constraints</td>
 </tr>
-<tr>
+<tr class="even">
+<td>Level 2 Features</td>
+<td>3</td>
+<td>Endpoint modes, field selection, and batch operations</td>
+</tr>
+<tr class="odd">
 <td>Semantic Evaluation</td>
 <td>Per implementation</td>
 <td>LLM discoverability</td>
@@ -460,29 +467,29 @@ MCP-AQL Level 2 Conformant</code></pre>
 <h3 id="53-test-categories-requiring-semantic-evaluation">5.3 Test Categories Requiring Semantic Evaluation</h3>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Category</th>
 <th>Example Prompt</th>
 <th>Why Semantic Matters</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td>Introspection Discovery</td>
 <td>"List available operations"</td>
 <td>LLM may describe operations differently</td>
 </tr>
-<tr>
+<tr class="even">
 <td>Field Selection Discovery</td>
 <td>"Does search support field selection?"</td>
 <td>Affirmative answer may use varied phrasing</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>Error Understanding</td>
 <td>"Handle this error gracefully"</td>
 <td>Recovery strategies may vary</td>
 </tr>
-<tr>
+<tr class="even">
 <td>Operation Selection</td>
 <td>"Create an element"</td>
 <td>Correct tool choice matters more than exact call format</td>
@@ -492,14 +499,12 @@ MCP-AQL Level 2 Conformant</code></pre>
 <h3 id="54-evaluation-workflow">5.4 Evaluation Workflow</h3>
 <pre class="mermaid"><code>graph TD
     A[Run Test] --&gt; B{Tier 1 Pass?}
-    B --&gt;|Yes| C{Tier 2 Required?}
+    B --&gt;|Yes| C{Tier 2 Pass?}
     B --&gt;|No| D{Tier 2 Pass?}
-    C --&gt;|No| E[PASS]
-    C --&gt;|Yes| F{Tier 2 Pass?}
+    C --&gt;|Yes| E[PASS]
+    C --&gt;|No| F[FAIL]
     D --&gt;|Yes| G[WARN: Update patterns]
-    D --&gt;|No| H[FAIL]
-    F --&gt;|Yes| E
-    F --&gt;|No| H</code></pre>
+    D --&gt;|No| F</code></pre>
 <hr />
 <h2 id="6-reporting">6. Reporting</h2>
 <h3 id="61-conformance-report-format">6.1 Conformance Report Format</h3>
@@ -508,7 +513,7 @@ MCP-AQL Level 2 Conformant</code></pre>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;implementation&quot;</span><span class="fu">:</span> <span class="st">&quot;example-adapter&quot;</span><span class="fu">,</span></span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;version&quot;</span><span class="fu">:</span> <span class="st">&quot;1.0.0&quot;</span><span class="fu">,</span></span>
 <span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;specVersion&quot;</span><span class="fu">:</span> <span class="st">&quot;1.0.0-draft&quot;</span><span class="fu">,</span></span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;testDate&quot;</span><span class="fu">:</span> <span class="st">&quot;2026-01-29T00:00:00Z&quot;</span><span class="fu">,</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;requestedLevel&quot;</span><span class="fu">:</span> <span class="dv">1</span><span class="fu">,</span></span>
 <span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;conformanceLevel&quot;</span><span class="fu">:</span> <span class="dv">1</span><span class="fu">,</span></span>
 <span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;summary&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
 <span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;total&quot;</span><span class="fu">:</span> <span class="dv">11</span><span class="fu">,</span></span>
@@ -520,7 +525,7 @@ MCP-AQL Level 2 Conformant</code></pre>
 <span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;categories&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
 <span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
 <span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;Introspection Fidelity&quot;</span><span class="fu">,</span></span>
-<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;required&quot;</span><span class="fu">:</span> <span class="st">&quot;MUST&quot;</span><span class="fu">,</span></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;required&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
 <span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;result&quot;</span><span class="fu">:</span> <span class="st">&quot;PASS&quot;</span><span class="fu">,</span></span>
 <span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;tests&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
 <span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>        <span class="fu">{</span> <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;Parameter Accuracy&quot;</span><span class="fu">,</span> <span class="dt">&quot;result&quot;</span><span class="fu">:</span> <span class="st">&quot;PASS&quot;</span> <span class="fu">}</span><span class="ot">,</span></span>
@@ -540,30 +545,37 @@ MCP-AQL Level 2 Conformant</code></pre>
 <h3 id="71-cli-invocation">7.1 CLI Invocation</h3>
 <p>Conformance test runners SHOULD provide a command-line interface:</p>
 <div class="sourceCode" id="cb18"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="ex">mcpaql-conformance</span> <span class="op">&lt;</span>command<span class="op">&gt;</span> <span class="pp">[</span><span class="ss">options</span><span class="pp">]</span></span></code></pre></div>
+<p>The current repository prototype is invoked as:</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="ex">node</span> scripts/run-conformance-tests.mjs <span class="op">&lt;</span>command<span class="op">&gt;</span> <span class="pp">[</span><span class="ss">options</span><span class="pp">]</span></span></code></pre></div>
 <h3 id="72-commands">7.2 Commands</h3>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Command</th>
 <th>Description</th>
 <th>Example</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><code>test</code></td>
-<td>Run conformance tests against an adapter</td>
-<td><code>mcpaql-conformance test ./adapter</code></td>
+<td>Run conformance tests against a fixture evidence bundle</td>
+<td><code>node scripts/run-conformance-tests.mjs test tests/conformance/evidence/reference-level2.json --level 2</code></td>
 </tr>
-<tr>
+<tr class="even">
+<td><code>verify-fixtures</code></td>
+<td>Verify all repository reference fixtures against their expected exit codes</td>
+<td><code>node scripts/run-conformance-tests.mjs verify-fixtures</code></td>
+</tr>
+<tr class="odd">
 <td><code>report</code></td>
-<td>Generate formatted report from test results file</td>
-<td><code>mcpaql-conformance report ./results.json</code></td>
+<td>Generate formatted output from a JSON results file</td>
+<td><code>node scripts/run-conformance-tests.mjs report ./results.json --format markdown</code></td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>version</code></td>
 <td>Print tool version</td>
-<td><code>mcpaql-conformance version</code></td>
+<td><code>node scripts/run-conformance-tests.mjs version</code></td>
 </tr>
 </tbody>
 </table>
@@ -571,110 +583,105 @@ MCP-AQL Level 2 Conformant</code></pre>
 <h3 id="73-test-command-options">7.3 Test Command Options</h3>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Option</th>
 <th>Description</th>
 <th>Default</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><code>--level</code>, <code>-l</code></td>
 <td>Conformance level to test (1 or 2)</td>
 <td><code>1</code></td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>--output</code>, <code>-o</code></td>
 <td>Output file for results</td>
 <td>stdout</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>--format</code>, <code>-f</code></td>
 <td>Output format (<code>json</code>, <code>text</code>, <code>markdown</code>)</td>
 <td><code>text</code></td>
 </tr>
-<tr>
-<td><code>--verbose</code>, <code>-v</code></td>
-<td>Enable verbose output</td>
-<td><code>false</code></td>
-</tr>
-<tr>
+<tr class="even">
 <td><code>--tier</code></td>
 <td>Evaluation tier (<code>1</code>, <code>2</code>, <code>both</code>)</td>
 <td><code>both</code></td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>--category</code>, <code>-c</code></td>
 <td>Run specific test category only</td>
 <td>All</td>
 </tr>
-<tr>
-<td><code>--timeout</code></td>
-<td>Test timeout in seconds</td>
-<td><code>30</code></td>
-</tr>
 </tbody>
 </table>
+<p><code>--tier 2</code> and <code>--tier both</code> currently produce the same semantic-evaluation behavior. The runner reserves the distinction for future live-adapter or split-tier expansion.</p>
 <h3 id="74-exit-codes">7.4 Exit Codes</h3>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Code</th>
 <th>Meaning</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><code>0</code></td>
 <td>All tests passed</td>
 <td>Conformance achieved at requested level</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>1</code></td>
 <td>Tests failed</td>
 <td>One or more MUST PASS tests failed</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>2</code></td>
 <td>Tests warned</td>
 <td>All MUST PASS passed, but SHOULD PASS tests warned</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>3</code></td>
 <td>Configuration error</td>
-<td>Invalid adapter path or configuration</td>
-</tr>
-<tr>
-<td><code>4</code></td>
-<td>Timeout</td>
-<td>Tests exceeded timeout limit</td>
-</tr>
-<tr>
-<td><code>5</code></td>
-<td>Internal error</td>
-<td>Unexpected error in test runner</td>
+<td>Invalid fixture/report path, malformed JSON, unknown command, or invalid report input</td>
 </tr>
 </tbody>
 </table>
 <h3 id="75-example-usage">7.5 Example Usage</h3>
 <p><strong>Run Level 1 conformance tests:</strong></p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="ex">mcpaql-conformance</span> test ./generated-adapter <span class="at">--level</span> 1</span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="ex">node</span> scripts/run-conformance-tests.mjs test <span class="dt">\</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  tests/conformance/evidence/reference-level1.json <span class="dt">\</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">--level</span> 1</span></code></pre></div>
 <p><strong>Run Level 2 tests with JSON output:</strong></p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="ex">mcpaql-conformance</span> test ./adapter <span class="at">--level</span> 2 <span class="at">--format</span> json <span class="at">--output</span> results.json</span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="ex">node</span> scripts/run-conformance-tests.mjs test <span class="dt">\</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  tests/conformance/evidence/reference-level2.json <span class="dt">\</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">--level</span> 2 <span class="dt">\</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">--format</span> json <span class="dt">\</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">--output</span> results.json</span></code></pre></div>
 <p><strong>Run specific test category:</strong></p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="ex">mcpaql-conformance</span> test ./adapter <span class="at">--category</span> <span class="st">&quot;Introspection Fidelity&quot;</span></span></code></pre></div>
-<p><strong>Verbose output with Tier 2 semantic evaluation:</strong></p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="ex">mcpaql-conformance</span> test ./adapter <span class="at">--level</span> 2 <span class="at">--tier</span> both <span class="at">--verbose</span></span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="ex">node</span> scripts/run-conformance-tests.mjs test <span class="dt">\</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  tests/conformance/evidence/reference-level2.json <span class="dt">\</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">--level</span> 2 <span class="dt">\</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">--category</span> <span class="st">&quot;Introspection Fidelity&quot;</span></span></code></pre></div>
+<p><strong>Tier 2 semantic evaluation:</strong></p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="ex">node</span> scripts/run-conformance-tests.mjs test <span class="dt">\</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  tests/conformance/evidence/reference-level2.json <span class="dt">\</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">--level</span> 2 <span class="dt">\</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">--tier</span> both</span></code></pre></div>
 <p><strong>Generate markdown report from results:</strong></p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="ex">mcpaql-conformance</span> report ./results.json <span class="at">--format</span> markdown <span class="op">&gt;</span> CONFORMANCE.md</span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="ex">node</span> scripts/run-conformance-tests.mjs report ./results.json <span class="at">--format</span> markdown <span class="op">&gt;</span> CONFORMANCE.md</span></code></pre></div>
+<p><strong>Verify the repository reference fixtures:</strong></p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> run test:conformance</span></code></pre></div>
 <h3 id="76-integration-with-generator">7.6 Integration with Generator</h3>
 <p>The adapter generator (see <a href="adapter/generator.html">Adapter Generator Specification</a>) SHOULD invoke conformance tests as part of the generation workflow:</p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate adapter and run conformance tests</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="ex">mcpaql-generate</span> <span class="at">--schema</span> adapter.yaml <span class="at">--target</span> typescript <span class="at">--output</span> ./adapter</span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Test generated adapter</span></span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="ex">mcpaql-conformance</span> test ./adapter <span class="at">--level</span> 1</span></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate adapter and run conformance tests</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="ex">mcpaql-generate</span> <span class="at">--schema</span> adapter.yaml <span class="at">--target</span> typescript <span class="at">--output</span> ./adapter</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Test generated fixture evidence</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="ex">node</span> scripts/run-conformance-tests.mjs test ./adapter/conformance/reference.json <span class="at">--level</span> 1</span></code></pre></div>
 <hr />
 <h2 id="references">References</h2>
 <ul>
@@ -682,7 +689,6 @@ MCP-AQL Level 2 Conformant</code></pre>
 <li><a href="introspection.html">Introspection Specification</a></li>
 <li><a href="operations.html">Operations Specification</a></li>
 <li><a href="https://github.com/MCPAQL/spec/issues/10">GitHub Issue #10</a> - Conformance test suite</li>
-<li><a href="https://github.com/MCPAQL/spec/issues/55">GitHub Issue #55</a> - Conformance test requirements</li>
 <li><a href="https://github.com/MCPAQL/spec/issues/56">GitHub Issue #56</a> - LLM semantic evaluation</li>
 </ul>
 

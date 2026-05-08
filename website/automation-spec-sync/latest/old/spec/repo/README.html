@@ -50,10 +50,10 @@
   <ul><li><a href="../security/confirmation-tokens.html">Confirmation Token Specification</a></li><li><a href="../security/execution-safety-loop.html">Execution Safety Loop Specification</a></li><li><a href="../security/gatekeeper.html">Security Model: Gatekeeper Specification</a></li></ul>
 </div><div class="docs-side-group">
   <h3>Features</h3>
-  <ul><li><a href="../features/collection-querying.html">MCP-AQL Collection Querying</a></li><li><a href="../features/field-selection.html">Field Selection Specification</a></li><li><a href="../features/pagination.html">Cursor-Based Pagination Specification</a></li><li><a href="../features/warnings.html">Warnings Array Specification</a></li></ul>
+  <ul><li><a href="../features/aggregations.html">MCP-AQL Aggregations</a></li><li><a href="../features/collection-querying.html">MCP-AQL Collection Querying</a></li><li><a href="../features/computed-fields.html">MCP-AQL Computed Fields</a></li><li><a href="../features/field-selection.html">Field Selection Specification</a></li><li><a href="../features/pagination.html">Cursor-Based Pagination Specification</a></li><li><a href="../features/relationship-queries.html">MCP-AQL Relationship Queries</a></li><li><a href="../features/warnings.html">Warnings Array Specification</a></li></ul>
 </div><div class="docs-side-group">
   <h3>Guides</h3>
-  <ul><li><a href="../guides/protocol-comparison.html">Protocol Comparison Guide</a></li><li><a href="../guides/README.html">Developer Guides</a></li></ul>
+  <ul><li><a href="../guides/cross-domain-implementation.html">Cross-Domain Implementation Guide</a></li><li><a href="../guides/protocol-comparison.html">Protocol Comparison Guide</a></li><li><a href="../guides/README.html">Developer Guides</a></li></ul>
 </div><div class="docs-side-group">
   <h3>Process</h3>
   <ul><li><a href="../process/breaking-changes.html">MCP-AQL Breaking Change Policy</a></li><li><a href="../process/preliminary-public-launch-checklist.html">Preliminary Public Launch Checklist</a></li><li><a href="../process/rfc-process.html">RFC Process for MCP-AQL Specification</a></li><li><a href="../process/versioning.html">Versioning Strategy</a></li><li><a href="CHANGELOG.html">Changelog</a></li></ul>
@@ -101,7 +101,7 @@
               <p class="page-toc-intro">Use the outline to move through longer pages without losing your place.</p>
             </div>
             <ol class="page-toc-list" data-page-toc-list>
-              <li class="page-toc-item level-2"><a href="#overview" data-toc-target="overview">Overview</a></li><li class="page-toc-item level-2"><a href="#preliminary-draft-positioning" data-toc-target="preliminary-draft-positioning">Preliminary Draft Positioning</a></li><li class="page-toc-item level-2"><a href="#the-crude-pattern" data-toc-target="the-crude-pattern">The CRUDE Pattern</a></li><li class="page-toc-item level-2"><a href="#token-efficiency" data-toc-target="token-efficiency">Token Efficiency</a></li><li class="page-toc-item level-2"><a href="#key-features" data-toc-target="key-features">Key Features</a></li><li class="page-toc-item level-2"><a href="#quick-start" data-toc-target="quick-start">Quick Start</a></li><li class="page-toc-item level-3"><a href="#discover-available-operations" data-toc-target="discover-available-operations">Discover Available Operations</a></li><li class="page-toc-item level-3"><a href="#get-operation-details" data-toc-target="get-operation-details">Get Operation Details</a></li><li class="page-toc-item level-3"><a href="#execute-an-operation" data-toc-target="execute-an-operation">Execute an Operation</a></li><li class="page-toc-item level-2"><a href="#specification-documents" data-toc-target="specification-documents">Specification Documents</a></li><li class="page-toc-item level-2"><a href="#reference-profile" data-toc-target="reference-profile">Reference Profile</a></li><li class="page-toc-item level-2"><a href="#conformance" data-toc-target="conformance">Conformance</a></li><li class="page-toc-item level-2"><a href="#contributing" data-toc-target="contributing">Contributing</a></li><li class="page-toc-item level-2"><a href="#license" data-toc-target="license">License</a></li><li class="page-toc-item level-2"><a href="#acknowledgments" data-toc-target="acknowledgments">Acknowledgments</a></li>
+              <li class="page-toc-item level-2"><a href="#overview" data-toc-target="overview">Overview</a></li><li class="page-toc-item level-2"><a href="#preliminary-draft-positioning" data-toc-target="preliminary-draft-positioning">Preliminary Draft Positioning</a></li><li class="page-toc-item level-2"><a href="#endpoint-families" data-toc-target="endpoint-families">Endpoint Families</a></li><li class="page-toc-item level-2"><a href="#token-efficiency" data-toc-target="token-efficiency">Token Efficiency</a></li><li class="page-toc-item level-2"><a href="#key-features" data-toc-target="key-features">Key Features</a></li><li class="page-toc-item level-2"><a href="#quick-start" data-toc-target="quick-start">Quick Start</a></li><li class="page-toc-item level-3"><a href="#discover-available-operations" data-toc-target="discover-available-operations">Discover Available Operations</a></li><li class="page-toc-item level-3"><a href="#get-operation-details" data-toc-target="get-operation-details">Get Operation Details</a></li><li class="page-toc-item level-3"><a href="#execute-an-operation" data-toc-target="execute-an-operation">Execute an Operation</a></li><li class="page-toc-item level-2"><a href="#specification-documents" data-toc-target="specification-documents">Specification Documents</a></li><li class="page-toc-item level-2"><a href="#reference-profile" data-toc-target="reference-profile">Reference Profile</a></li><li class="page-toc-item level-2"><a href="#conformance" data-toc-target="conformance">Conformance</a></li><li class="page-toc-item level-2"><a href="#contributing" data-toc-target="contributing">Contributing</a></li><li class="page-toc-item level-2"><a href="#license" data-toc-target="license">License</a></li><li class="page-toc-item level-2"><a href="#acknowledgments" data-toc-target="acknowledgments">Acknowledgments</a></li>
             </ol>
           </div>
         </section>
@@ -115,7 +115,7 @@
 </blockquote>
 <p><a href="../versions/v1.0.0-draft.html"><img src="https://img.shields.io/badge/spec-v1.0.0--draft-blue" alt="Spec Version" /></a> <a href="https://github.com/MCPAQL/spec/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-AGPL%20v3-blue.svg" alt="License: AGPL v3" /></a></p>
 <h2 id="overview">Overview</h2>
-<p>MCP-AQL is a protocol specification that consolidates multiple MCP (Model Context Protocol) tools into semantic endpoints, providing approximately <strong>96% token reduction</strong> while maintaining full functionality. It enables structured communication between AI models and context-providing services through a unified query language.</p>
+<p>MCP-AQL is a protocol specification that consolidates multiple MCP (Model Context Protocol) tools into semantic endpoint families, providing approximately <strong>96% token reduction</strong> while maintaining full functionality. It enables structured communication between AI models and context-providing services through a unified query language.</p>
 <h2 id="preliminary-draft-positioning">Preliminary Draft Positioning</h2>
 <p>The current publication target is a <strong>preliminary public draft</strong> of MCP-AQL.</p>
 <p>This draft is intended to:</p>
@@ -124,51 +124,58 @@
 <li>Show how semantic endpoint consolidation reduces token bloat</li>
 <li>Validate flexibility for modular integrations (security, execution, code/compute workflows)</li>
 </ul>
-<p>This draft is not yet a final certification baseline. Some conformance automation and ecosystem hardening work is still in progress.</p>
-<h2 id="the-crude-pattern">The CRUDE Pattern</h2>
-<p>MCP-AQL extends traditional CRUD with an <strong>Execute</strong> endpoint, creating the CRUDE pattern:</p>
+<p>This draft is not yet a final certification baseline. The repository now includes a fixture-driven conformance runner and semantic evaluation baseline, but broader ecosystem hardening is still in progress.</p>
+<h2 id="endpoint-families">Endpoint Families</h2>
+<p>MCP-AQL supports semantic endpoint mode or a single unified endpoint. The standard semantic-endpoint profile extends traditional CRUD with an <strong>Execute</strong> endpoint, creating the CRUDE pattern:</p>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Endpoint</th>
 <th>Safety</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><strong>Create</strong></td>
 <td>Non-destructive</td>
 <td>Additive operations that create new state</td>
 </tr>
-<tr>
+<tr class="even">
 <td><strong>Read</strong></td>
 <td>Read-only</td>
 <td>Safe operations that query state</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><strong>Update</strong></td>
 <td>Modifying</td>
 <td>Operations that modify existing state</td>
 </tr>
-<tr>
+<tr class="even">
 <td><strong>Delete</strong></td>
 <td>Destructive</td>
 <td>Operations that remove state</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><strong>Execute</strong></td>
 <td>Stateful</td>
 <td>Runtime lifecycle operations (non-idempotent)</td>
 </tr>
 </tbody>
 </table>
+<p>Adapters MAY also define alternate semantic endpoint families when the target API is better represented by semantically explicit sets such as <code>discover</code> / <code>query</code> / <code>manage</code> / <code>operate</code>, database-oriented profiles like <code>inspect</code> / <code>query</code> / <code>mutate</code> / <code>administer</code>, or hardware-oriented profiles like <code>discover</code> / <code>observe</code> / <code>control</code> / <code>maintain</code>. Operations still retain standardized semantic categories for CREATE, READ, UPDATE, DELETE, and EXECUTE.</p>
+<p>Examples of alternate semantic-endpoint profiles:</p>
+<pre class="text"><code>Extended CRUDE-style profile:
+create / read / update / delete / execute / authorize
+
+Alternative semantic profile:
+discover / query / manage / operate</code></pre>
 <h2 id="token-efficiency">Token Efficiency</h2>
 <p>MCP-AQL dramatically reduces token consumption for LLM interactions.</p>
 <p><strong>Per-tool overhead:</strong> A typical MCP tool definition consumes ~500-700 tokens in context.</p>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Configuration</th>
 <th>Tool Count</th>
 <th>Token Cost</th>
@@ -176,25 +183,25 @@
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td>Discrete Tools</td>
 <td>~30 tools</td>
 <td>~18,000</td>
 <td>Baseline</td>
 </tr>
-<tr>
+<tr class="even">
 <td>Discrete Tools</td>
 <td>~50 tools</td>
 <td>~30,000</td>
 <td>Baseline</td>
 </tr>
-<tr>
-<td><strong>CRUDE Mode</strong></td>
+<tr class="odd">
+<td><strong>Semantic Endpoint Mode (CRUDE profile)</strong></td>
 <td>5 endpoints</td>
-<td>~4,000</td>
+<td>~4,300</td>
 <td>~80-85%</td>
 </tr>
-<tr>
+<tr class="even">
 <td><strong>Single Mode</strong></td>
 <td>1 endpoint</td>
 <td>~1,000</td>
@@ -214,63 +221,83 @@
 </ul>
 <h2 id="quick-start">Quick Start</h2>
 <h3 id="discover-available-operations">Discover Available Operations</h3>
-<div class="sourceCode" id="cb1"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>{</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;introspect&quot;</span><span class="op">,</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">params</span><span class="op">:</span> { <span class="dt">query</span><span class="op">:</span> <span class="st">&quot;operations&quot;</span> }</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
-<h3 id="get-operation-details">Get Operation Details</h3>
 <div class="sourceCode" id="cb2"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>{</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;introspect&quot;</span><span class="op">,</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">params</span><span class="op">:</span> { <span class="dt">query</span><span class="op">:</span> <span class="st">&quot;operations&quot;</span><span class="op">,</span> <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;create_user&quot;</span> }</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">params</span><span class="op">:</span> { <span class="dt">query</span><span class="op">:</span> <span class="st">&quot;operations&quot;</span> }</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="get-operation-details">Get Operation Details</h3>
+<div class="sourceCode" id="cb3"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;introspect&quot;</span><span class="op">,</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">params</span><span class="op">:</span> { <span class="dt">query</span><span class="op">:</span> <span class="st">&quot;operations&quot;</span><span class="op">,</span> <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;create_user&quot;</span> }</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <h3 id="execute-an-operation">Execute an Operation</h3>
-<div class="sourceCode" id="cb3"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Operations are adapter-specific - this example from a user management adapter</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>{</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;create_user&quot;</span><span class="op">,</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">params</span><span class="op">:</span> {</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">email</span><span class="op">:</span> <span class="st">&quot;alice@example.com&quot;</span><span class="op">,</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;Alice&quot;</span><span class="op">,</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">role</span><span class="op">:</span> <span class="st">&quot;admin&quot;</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Operations are adapter-specific - this example from a user management adapter</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;create_user&quot;</span><span class="op">,</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">params</span><span class="op">:</span> {</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">email</span><span class="op">:</span> <span class="st">&quot;alice@example.com&quot;</span><span class="op">,</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;Alice&quot;</span><span class="op">,</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">role</span><span class="op">:</span> <span class="st">&quot;admin&quot;</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <h2 id="specification-documents">Specification Documents</h2>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Document</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><a href="../versions/v1.0.0-draft.html">Specification v1.0.0-draft</a></td>
 <td>Current working draft</td>
 </tr>
-<tr>
+<tr class="even">
 <td><a href="../crude-pattern.html">CRUDE Pattern</a></td>
-<td>Detailed endpoint semantics</td>
+<td>Standard semantic-endpoint profile</td>
 </tr>
-<tr>
+<tr class="odd">
+<td><a href="../endpoint-modes.html">Endpoint Modes</a></td>
+<td>CRUDE, semantic-endpoint, and single endpoint configuration</td>
+</tr>
+<tr class="even">
 <td><a href="../introspection.html">Introspection</a></td>
 <td>Discovery system specification</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><a href="../operations.html">Operations Guide</a></td>
 <td>Operation design patterns</td>
 </tr>
-<tr>
+<tr class="even">
 <td><a href="../features/collection-querying.html">Collection Querying</a></td>
 <td>Preferred query contract for list/search/query operations</td>
 </tr>
-<tr>
+<tr class="odd">
+<td><a href="../features/aggregations.html">Aggregations</a></td>
+<td>Preferred summary/query shape for server-side aggregations</td>
+</tr>
+<tr class="even">
+<td><a href="../features/computed-fields.html">Computed Fields</a></td>
+<td>Preferred <code>_computed.</code> convention for adapter-declared derived values</td>
+</tr>
+<tr class="odd">
+<td><a href="../features/relationship-queries.html">Relationship Queries</a></td>
+<td>Preferred traversal contract for graph-style READ operations</td>
+</tr>
+<tr class="even">
 <td><a href="../adapter/discovery-bundle.html">MCP Server Discovery Bundle</a></td>
 <td>Interrogation bundle contract for MCP-to-MCP-AQL generation</td>
 </tr>
-<tr>
+<tr class="odd">
+<td><a href="../guides/cross-domain-implementation.html">Cross-Domain Implementation Guide</a></td>
+<td>Step-by-step guide for adapting MCP-AQL to databases, filesystems, API gateways, IoT, and other domains</td>
+</tr>
+<tr class="even">
 <td><a href="../README.html">Documentation Index</a></td>
 <td>Full documentation structure</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><a href="CHANGELOG.html">Changelog</a></td>
 <td>Version history</td>
 </tr>
@@ -283,13 +310,13 @@
 <p>Implementations claiming MCP-AQL conformance MUST:</p>
 <ol type="1">
 <li>Implement the <code>introspect</code> operation for runtime discovery</li>
-<li>Use the CRUDE endpoint pattern (or single endpoint mode)</li>
+<li>Use semantic endpoint mode or single endpoint mode</li>
 <li>Return discriminated union responses (<code>{ success, data }</code> or <code>{ success, error }</code>)</li>
 <li>Document supported operations via introspection</li>
 </ol>
 <p>Implementations SHOULD also pass the conformance test suite in <a href="https://github.com/MCPAQL/spec/blob/main/tests/">tests/</a>.</p>
 <blockquote>
-<p><strong>Status Note:</strong> Schema/example validation is implemented in this repository. The full cross-implementation conformance runner described in <code>docs/conformance-testing.md</code> is still being finalized.</p>
+<p><strong>Status Note:</strong> This repository includes schema/example validation plus a fixture-driven conformance runner in <code>scripts/run-conformance-tests.mjs</code>. The future packaged runner described in <code>docs/conformance-testing.md</code> can still grow beyond this baseline into direct live-adapter execution.</p>
 </blockquote>
 <h2 id="contributing">Contributing</h2>
 <p>We welcome contributions to the specification. Please see <a href="https://github.com/MCPAQL/spec/blob/main/CONTRIBUTING.md">CONTRIBUTING.md</a> for guidelines.</p>

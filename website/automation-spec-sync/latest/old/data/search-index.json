@@ -274,18 +274,6 @@
     ]
   },
   {
-    "title": "Reference Adapter Docs",
-    "url": "/adapter-reference/index.html",
-    "excerpt": "Website-hosted mirror of the reference adapter repo docs covering runtime architecture, guides, ADRs, and examples.",
-    "keywords": [
-      "adapter docs",
-      "implementation",
-      "runtime",
-      "guides",
-      "reference adapter"
-    ]
-  },
-  {
     "title": "Spec: Dangerous Operation Classification Specification",
     "url": "/spec/adapter/danger-levels.html",
     "excerpt": "This document defines a standard classification system for dangerous operations in MCP-AQL adapters. Danger levels enable automatic lockdown of high-risk actions, consistent confirmation requirements, and trust-based per",
@@ -516,7 +504,7 @@
   {
     "title": "Spec: MCP-AQL Conformance Testing Specification",
     "url": "/spec/conformance-testing.html",
-    "excerpt": "Document Status: This document is an informative conformance framework specification aligned to the normative protocol requirements in docs/versions/v1.0.0-draft.md. Implementation Status: The full mcpaql-conformance run",
+    "excerpt": "Document Status: This document is an informative conformance framework specification aligned to the normative protocol requirements in docs/versions/v1.0.0-draft.md. Implementation Status: This repository now includes a ",
     "keywords": [
       "spec",
       "core",
@@ -573,6 +561,19 @@
     ]
   },
   {
+    "title": "Spec: MCP-AQL Aggregations",
+    "url": "/spec/features/aggregations.html",
+    "excerpt": "Document Status: This document is informative. For normative requirements, see MCP-AQL Specification v1.0.0.",
+    "keywords": [
+      "spec",
+      "features",
+      "docs",
+      "aggregations",
+      "mcp",
+      "aql"
+    ]
+  },
+  {
     "title": "Spec: MCP-AQL Collection Querying",
     "url": "/spec/features/collection-querying.html",
     "excerpt": "Document Status: This document is informative. For normative requirements, see MCP-AQL Specification v1.0.0.",
@@ -582,6 +583,20 @@
       "docs",
       "collection",
       "querying",
+      "mcp",
+      "aql"
+    ]
+  },
+  {
+    "title": "Spec: MCP-AQL Computed Fields",
+    "url": "/spec/features/computed-fields.html",
+    "excerpt": "Document Status: This document is informative. For normative requirements, see MCP-AQL Specification v1.0.0.",
+    "keywords": [
+      "spec",
+      "features",
+      "docs",
+      "computed",
+      "fields",
       "mcp",
       "aql"
     ]
@@ -614,6 +629,20 @@
     ]
   },
   {
+    "title": "Spec: MCP-AQL Relationship Queries",
+    "url": "/spec/features/relationship-queries.html",
+    "excerpt": "Document Status: This document is informative. For normative requirements, see MCP-AQL Specification v1.0.0.",
+    "keywords": [
+      "spec",
+      "features",
+      "docs",
+      "relationship",
+      "queries",
+      "mcp",
+      "aql"
+    ]
+  },
+  {
     "title": "Spec: Warnings Array Specification",
     "url": "/spec/features/warnings.html",
     "excerpt": "This document specifies the warnings array extension to MCP-AQL's discriminated response format. Warnings provide a mechanism to communicate non-fatal conditions to clients within successful responses, enabling proactive",
@@ -624,6 +653,20 @@
       "warnings",
       "array",
       "specification"
+    ]
+  },
+  {
+    "title": "Spec: Cross-Domain Implementation Guide",
+    "url": "/spec/guides/cross-domain-implementation.html",
+    "excerpt": "Document Status: This document is informative. For normative protocol requirements, see MCP-AQL Specification v1.0.0.",
+    "keywords": [
+      "spec",
+      "guides",
+      "docs",
+      "cross",
+      "domain",
+      "implementation",
+      "guide"
     ]
   },
   {
@@ -711,7 +754,7 @@
   {
     "title": "Spec: MCP-AQL Protocol Overview",
     "url": "/spec/overview.html",
-    "excerpt": "MCP-AQL (Model Context Protocol - Agent Query Language) is a protocol that consolidates discrete MCP tools into 5 CRUDE endpoints (Create, Read, Update, Delete, Execute), providing significant token reduction while maint",
+    "excerpt": "MCP-AQL (Model Context Protocol - Agent Query Language) is a protocol that consolidates discrete MCP tools into a small number of semantic endpoint families, providing significant token reduction while maintaining full f",
     "keywords": [
       "spec",
       "core",
@@ -880,7 +923,7 @@
   {
     "title": "Spec: MCP-AQL Specification",
     "url": "/spec/versions/v1.0.0-draft.html",
-    "excerpt": "MCP-AQL (Model Context Protocol - Advanced Agent API Adapter Query Language) is a protocol specification that consolidates multiple MCP tools into semantic CRUDE endpoints, providing significant token reduction while ena",
+    "excerpt": "MCP-AQL (Model Context Protocol - Advanced Agent API Adapter Query Language) is a protocol specification that consolidates multiple MCP tools into a small number of semantic endpoints, providing significant token reducti",
     "keywords": [
       "spec",
       "versions",
@@ -913,6 +956,18 @@
       "spec",
       "process",
       "changelog"
+    ]
+  },
+  {
+    "title": "Reference Adapter Docs",
+    "url": "/adapter-reference/index.html",
+    "excerpt": "Website-hosted mirror of the reference adapter repo docs covering runtime architecture, guides, ADRs, and examples.",
+    "keywords": [
+      "adapter docs",
+      "implementation",
+      "runtime",
+      "guides",
+      "reference adapter"
     ]
   },
   {

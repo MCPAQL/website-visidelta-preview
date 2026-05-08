@@ -1,8 +1,0 @@
-Document Status: This document is an informative conformance framework specification aligned to the normative protocol requirements in docs/versions/v1.0.0-draft.md. Implementation Status: This repository now includes a
-MCP-AQL (Model Context Protocol - Agent Query Language) is a protocol that consolidates discrete MCP tools into a small number of semantic endpoint families, providing significant token reduction while maintaining full f
-MCP-AQL (Model Context Protocol - Advanced Agent API Adapter Query Language) is a protocol specification that consolidates multiple MCP tools into a small number of semantic endpoints, providing significant token reducti
-MCP-AQL Aggregations
-MCP-AQL Computed Fields
-MCP-AQL Relationship Queries
-Cross-Domain Implementation Guide
-Document Status: This document is informative. For normative protocol requirements, see MCP-AQL Specification v1.0.0.

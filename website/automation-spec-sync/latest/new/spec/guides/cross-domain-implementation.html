@@ -119,24 +119,24 @@
 <p>Before you name any operations, identify three core pieces:</p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Question</th>
 <th>What you are mapping</th>
 <th>Example</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>What are the primary resources?</td>
 <td>MCP-AQL resource or type names</td>
 <td><code>database</code>, <code>table</code>, <code>file</code>, <code>route</code>, <code>device</code></td>
 </tr>
-<tr class="even">
+<tr>
 <td>How are they identified?</td>
 <td>Stable lookup parameters</td>
 <td><code>database_name</code>, <code>table_name</code>, <code>file_path</code>, <code>route_id</code>, <code>device_id</code></td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Which actions matter most?</td>
 <td>MCP-AQL operations</td>
 <td><code>list_tables</code>, <code>get_file</code>, <code>update_route</code>, <code>execute_firmware_upgrade</code></td>
@@ -170,34 +170,34 @@
 <p>Map each real action to the endpoint that best reflects its effect:</p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Endpoint</th>
 <th>Use for</th>
 <th>Example</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><code>CREATE</code></td>
 <td>Additive changes</td>
 <td><code>create_route</code>, <code>create_table_snapshot</code></td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>READ</code></td>
 <td>Safe lookups and queries</td>
 <td><code>list_tables</code>, <code>search_files</code>, <code>query_relationships</code></td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>UPDATE</code></td>
 <td>Mutations to existing state</td>
 <td><code>update_device_config</code>, <code>update_route</code></td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>DELETE</code></td>
 <td>Removals</td>
 <td><code>delete_route</code>, <code>delete_file_alias</code></td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>EXECUTE</code></td>
 <td>Runtime or non-idempotent actions</td>
 <td><code>execute_backup</code>, <code>execute_firmware_upgrade</code></td>

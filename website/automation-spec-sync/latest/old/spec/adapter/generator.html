@@ -50,10 +50,10 @@
   <ul><li><a href="../security/confirmation-tokens.html">Confirmation Token Specification</a></li><li><a href="../security/execution-safety-loop.html">Execution Safety Loop Specification</a></li><li><a href="../security/gatekeeper.html">Security Model: Gatekeeper Specification</a></li></ul>
 </div><div class="docs-side-group">
   <h3>Features</h3>
-  <ul><li><a href="../features/collection-querying.html">MCP-AQL Collection Querying</a></li><li><a href="../features/field-selection.html">Field Selection Specification</a></li><li><a href="../features/pagination.html">Cursor-Based Pagination Specification</a></li><li><a href="../features/warnings.html">Warnings Array Specification</a></li></ul>
+  <ul><li><a href="../features/aggregations.html">MCP-AQL Aggregations</a></li><li><a href="../features/collection-querying.html">MCP-AQL Collection Querying</a></li><li><a href="../features/computed-fields.html">MCP-AQL Computed Fields</a></li><li><a href="../features/field-selection.html">Field Selection Specification</a></li><li><a href="../features/pagination.html">Cursor-Based Pagination Specification</a></li><li><a href="../features/relationship-queries.html">MCP-AQL Relationship Queries</a></li><li><a href="../features/warnings.html">Warnings Array Specification</a></li></ul>
 </div><div class="docs-side-group">
   <h3>Guides</h3>
-  <ul><li><a href="../guides/protocol-comparison.html">Protocol Comparison Guide</a></li><li><a href="../guides/README.html">Developer Guides</a></li></ul>
+  <ul><li><a href="../guides/cross-domain-implementation.html">Cross-Domain Implementation Guide</a></li><li><a href="../guides/protocol-comparison.html">Protocol Comparison Guide</a></li><li><a href="../guides/README.html">Developer Guides</a></li></ul>
 </div><div class="docs-side-group">
   <h3>Process</h3>
   <ul><li><a href="../process/breaking-changes.html">MCP-AQL Breaking Change Policy</a></li><li><a href="../process/preliminary-public-launch-checklist.html">Preliminary Public Launch Checklist</a></li><li><a href="../process/rfc-process.html">RFC Process for MCP-AQL Specification</a></li><li><a href="../process/versioning.html">Versioning Strategy</a></li><li><a href="../repo/CHANGELOG.html">Changelog</a></li></ul>
@@ -125,24 +125,24 @@
 <h3 id="12-generator-types">1.2 Generator Types</h3>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Type</th>
 <th>Description</th>
 <th>Use Case</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><strong>Schema-to-Code</strong></td>
 <td>Generates adapter source code from schema</td>
 <td>Development workflow</td>
 </tr>
-<tr>
+<tr class="even">
 <td><strong>Schema-to-Runtime</strong></td>
 <td>Generates runtime configuration</td>
 <td>Dynamic adapter loading</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><strong>Code-to-Schema</strong></td>
 <td>Extracts schema from existing adapter</td>
 <td>Migration, documentation</td>
@@ -267,34 +267,34 @@
 <p><strong>Validation error codes:</strong></p>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Validation</th>
 <th>Error Code</th>
 <th>Example Message</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td>Missing required field</td>
 <td><code>SCHEMA_MISSING_FIELD</code></td>
 <td>"Required field 'adapter.name' is missing"</td>
 </tr>
-<tr>
+<tr class="even">
 <td>Type mismatch</td>
 <td><code>SCHEMA_INVALID_TYPE</code></td>
 <td>"Field 'params[0].required' expected boolean, got string"</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>Unresolved reference</td>
 <td><code>SCHEMA_UNRESOLVED_REF</code></td>
 <td>"Type reference 'Repository' not found in types"</td>
 </tr>
-<tr>
+<tr class="even">
 <td>Duplicate name</td>
 <td><code>SCHEMA_DUPLICATE_NAME</code></td>
 <td>"Operation 'get_user' defined multiple times in read endpoint"</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>Invalid naming</td>
 <td><code>SCHEMA_INVALID_NAME</code></td>
 <td>"Parameter name 'userName' must be snake_case (try 'user_name')"</td>
@@ -419,24 +419,24 @@
 <p><strong>Evolution strategy:</strong></p>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Change Type</th>
 <th>Version Increment</th>
 <th>Example</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td>Breaking schema changes</td>
 <td>Major (<code>1.0</code> → <code>2.0</code>)</td>
 <td>Removing required fields, restructuring <code>endpoints</code></td>
 </tr>
-<tr>
+<tr class="even">
 <td>New optional features</td>
 <td>Minor (<code>1.0</code> → <code>1.1</code>)</td>
 <td>Adding <code>auth.config.scopes</code> field</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>Clarifications, fixes</td>
 <td>No change</td>
 <td>Documentation updates, validation improvements</td>
@@ -584,24 +584,24 @@
 <p>Generators MUST include the following licensing files:</p>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>File</th>
 <th>Content</th>
 <th>Notes</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><code>LICENSE</code></td>
 <td>AGPL-3.0 full text</td>
 <td>Standard AGPL-3.0 license</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>NOTICE.md</code></td>
 <td>Attribution notice</td>
 <td>Credits MCP-AQL project</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>COMMERCIAL-LICENSE.md</code></td>
 <td>Commercial options</td>
 <td>Contact information</td>
@@ -791,39 +791,39 @@
 <p>Generators SHOULD support multiple target languages:</p>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Language</th>
 <th>Status</th>
 <th>Template ID</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td>TypeScript</td>
 <td>Required</td>
 <td><code>typescript</code></td>
 </tr>
-<tr>
+<tr class="even">
 <td>JavaScript</td>
 <td>Required</td>
 <td><code>javascript</code></td>
 </tr>
-<tr>
+<tr class="odd">
 <td>Python</td>
 <td>Recommended</td>
 <td><code>python</code></td>
 </tr>
-<tr>
+<tr class="even">
 <td>Go</td>
 <td>Optional</td>
 <td><code>go</code></td>
 </tr>
-<tr>
+<tr class="odd">
 <td>Rust</td>
 <td>Optional</td>
 <td><code>rust</code></td>
 </tr>
-<tr>
+<tr class="even">
 <td>Java</td>
 <td>Optional</td>
 <td><code>java</code></td>
@@ -879,34 +879,34 @@
 <p>Generators MAY support template customization:</p>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Option</th>
 <th>Description</th>
 <th>Default</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><code>strict_mode</code></td>
 <td>Enable strict type checking</td>
 <td><code>true</code></td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>include_tests</code></td>
 <td>Generate test stubs</td>
 <td><code>true</code></td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>inline_docs</code></td>
 <td>Include JSDoc/docstrings</td>
 <td><code>true</code></td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>error_handling</code></td>
 <td>Error handling style</td>
 <td><code>structured</code></td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>http_client</code></td>
 <td>HTTP client library</td>
 <td>Language default</td>
@@ -921,19 +921,19 @@
 <h3 id="72-required-arguments">7.2 Required Arguments</h3>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Argument</th>
 <th>Description</th>
 <th>Example</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><code>--schema</code>, <code>-s</code></td>
 <td>Path to the input schema file (YAML or JSON)</td>
 <td><code>--schema adapter.yaml</code></td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>--target</code>, <code>-t</code></td>
 <td>Target language/platform</td>
 <td><code>--target typescript</code></td>
@@ -943,54 +943,54 @@
 <h3 id="73-optional-arguments">7.3 Optional Arguments</h3>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Argument</th>
 <th>Description</th>
 <th>Default</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><code>--output</code>, <code>-o</code></td>
 <td>Output directory for generated code</td>
 <td><code>./generated</code></td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>--config</code>, <code>-c</code></td>
 <td>Path to generator configuration file</td>
 <td>None</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>--output-format</code></td>
 <td>Output format (<code>human</code> or <code>json</code>)</td>
 <td><code>human</code></td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>--strict</code></td>
 <td>Enable strict validation mode (fail on warnings, enforce all optional constraints)</td>
 <td><code>false</code></td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>--dry-run</code></td>
 <td>Validate schema without generating output</td>
 <td><code>false</code></td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>--verbose</code>, <code>-v</code></td>
 <td>Enable verbose output</td>
 <td><code>false</code></td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>--quiet</code>, <code>-q</code></td>
 <td>Suppress non-error output</td>
 <td><code>false</code></td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>--version</code></td>
 <td>Print generator version and exit</td>
 <td>-</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>--help</code>, <code>-h</code></td>
 <td>Print help message and exit</td>
 <td>-</td>
@@ -1006,39 +1006,39 @@
 <p>Generators MUST use consistent exit codes:</p>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Code</th>
 <th>Meaning</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><code>0</code></td>
 <td>Success</td>
 <td>Generation completed successfully</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>1</code></td>
 <td>Internal error</td>
 <td>Unexpected error (assertion failures, uncaught exceptions)</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>2</code></td>
 <td>Schema validation error</td>
 <td>Input schema is invalid</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>3</code></td>
 <td>Configuration error</td>
 <td>Invalid generator configuration</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>4</code></td>
 <td>I/O error</td>
 <td>File read/write failure</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>5</code></td>
 <td>Template error</td>
 <td>Language template processing failed</td>
@@ -1120,8 +1120,12 @@
 </ol>
 <h3 id="83-conformance-testing">8.3 Conformance Testing</h3>
 <p>Generators SHOULD include conformance test generation:</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Run conformance tests on generated adapter</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="ex">mcpaql-conformance</span> test ./generated-adapter</span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Export fixture evidence alongside the adapter using the generator&#39;s own tooling</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="ex">node</span> ./generated-adapter/scripts/export-conformance-evidence.mjs <span class="op">&gt;</span> ./generated-adapter/conformance/reference.json</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Run conformance tests on generated evidence</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="ex">node</span> scripts/run-conformance-tests.mjs test ./generated-adapter/conformance/reference.json <span class="at">--level</span> 1</span></code></pre></div>
+<p><code>export-conformance-evidence.mjs</code> is illustrative here: generators SHOULD provide an equivalent export step, but the exact script name and packaging are implementation-defined.</p>
 <p>See <a href="../conformance-testing.html">Conformance Testing Specification</a> for test requirements.</p>
 <hr />
 <h2 id="references">References</h2>

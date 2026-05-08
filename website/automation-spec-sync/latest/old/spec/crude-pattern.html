@@ -50,10 +50,10 @@
   <ul><li><a href="security/confirmation-tokens.html">Confirmation Token Specification</a></li><li><a href="security/execution-safety-loop.html">Execution Safety Loop Specification</a></li><li><a href="security/gatekeeper.html">Security Model: Gatekeeper Specification</a></li></ul>
 </div><div class="docs-side-group">
   <h3>Features</h3>
-  <ul><li><a href="features/collection-querying.html">MCP-AQL Collection Querying</a></li><li><a href="features/field-selection.html">Field Selection Specification</a></li><li><a href="features/pagination.html">Cursor-Based Pagination Specification</a></li><li><a href="features/warnings.html">Warnings Array Specification</a></li></ul>
+  <ul><li><a href="features/aggregations.html">MCP-AQL Aggregations</a></li><li><a href="features/collection-querying.html">MCP-AQL Collection Querying</a></li><li><a href="features/computed-fields.html">MCP-AQL Computed Fields</a></li><li><a href="features/field-selection.html">Field Selection Specification</a></li><li><a href="features/pagination.html">Cursor-Based Pagination Specification</a></li><li><a href="features/relationship-queries.html">MCP-AQL Relationship Queries</a></li><li><a href="features/warnings.html">Warnings Array Specification</a></li></ul>
 </div><div class="docs-side-group">
   <h3>Guides</h3>
-  <ul><li><a href="guides/protocol-comparison.html">Protocol Comparison Guide</a></li><li><a href="guides/README.html">Developer Guides</a></li></ul>
+  <ul><li><a href="guides/cross-domain-implementation.html">Cross-Domain Implementation Guide</a></li><li><a href="guides/protocol-comparison.html">Protocol Comparison Guide</a></li><li><a href="guides/README.html">Developer Guides</a></li></ul>
 </div><div class="docs-side-group">
   <h3>Process</h3>
   <ul><li><a href="process/breaking-changes.html">MCP-AQL Breaking Change Policy</a></li><li><a href="process/preliminary-public-launch-checklist.html">Preliminary Public Launch Checklist</a></li><li><a href="process/rfc-process.html">RFC Process for MCP-AQL Specification</a></li><li><a href="process/versioning.html">Versioning Strategy</a></li><li><a href="repo/CHANGELOG.html">Changelog</a></li></ul>
@@ -114,10 +114,10 @@
 <p><strong>Document Status:</strong> This document is <strong>informative</strong>. For normative requirements, see <a href="versions/v1.0.0-draft.html">MCP-AQL Specification v1.0.0</a>.</p>
 </blockquote>
 <h2 id="abstract">Abstract</h2>
-<p>This document specifies the CRUDE (Create, Read, Update, Delete, Execute) endpoint pattern, which extends traditional CRUD semantics with an Execute endpoint for runtime lifecycle operations.</p>
+<p>This document specifies the CRUDE (Create, Read, Update, Delete, Execute) endpoint pattern, which extends traditional CRUD semantics with an Execute endpoint for runtime lifecycle operations. CRUDE is the standard semantic-endpoint profile in MCP-AQL, not the only allowed endpoint-family design.</p>
 <h2 id="1-introduction">1. Introduction</h2>
 <h3 id="11-purpose">1.1 Purpose</h3>
-<p>The CRUDE pattern provides semantic grouping of operations by their effect on system state. This grouping enables:</p>
+<p>The CRUDE pattern provides a standard semantic grouping of operations by their effect on system state. This grouping enables:</p>
 <ul>
 <li>Permission-based access control at the endpoint level</li>
 <li>Clear separation of read-only, additive, modifying, and destructive operations</li>
@@ -136,8 +136,9 @@
 <ul>
 <li>Defines its own operations</li>
 <li>Classifies each operation into the appropriate CRUDE endpoint</li>
-<li>Documents its operation-to-endpoint mapping via introspection</li>
+<li>Documents its operation-to-endpoint mapping via introspection when exposing the CRUDE profile</li>
 </ul>
+<p>Adapters MAY instead expose alternate semantic endpoint families when that better matches the target API. See <a href="endpoint-modes.html">Endpoint Modes</a> and the normative specification for the generalized semantic-endpoint model.</p>
 <hr />
 <h2 id="2-endpoint-definitions">2. Endpoint Definitions</h2>
 <h3 id="21-create-endpoint">2.1 CREATE Endpoint</h3>
@@ -238,8 +239,8 @@ EXECUTE     false        true</code></pre>
 </ul>
 <hr />
 <h2 id="4-endpoint-modes">4. Endpoint Modes</h2>
-<h3 id="41-crude-mode">4.1 CRUDE Mode</h3>
-<p>Exposes five separate MCP tools, one per endpoint:</p>
+<h3 id="41-crude-profile-within-semantic-endpoint-mode">4.1 CRUDE Profile Within Semantic Endpoint Mode</h3>
+<p>Within semantic endpoint mode, the standard CRUDE profile exposes five separate MCP tools, one per endpoint:</p>
 <pre><code>mcp_aql_create   - CREATE operations
 mcp_aql_read     - READ operations
 mcp_aql_update   - UPDATE operations
@@ -365,34 +366,34 @@ mcp_aql_execute  - EXECUTE operations</code></pre>
 <p>Each endpoint has canonical verbs that adapters SHOULD use for standard operations:</p>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Endpoint</th>
 <th>Canonical Verb</th>
 <th>Example Operation</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td>CREATE</td>
 <td><code>create</code></td>
 <td><code>create_user</code></td>
 </tr>
-<tr>
+<tr class="even">
 <td>READ</td>
 <td><code>get</code> (single), <code>list</code> (multiple)</td>
 <td><code>get_document</code>, <code>list_users</code></td>
 </tr>
-<tr>
+<tr class="odd">
 <td>UPDATE</td>
 <td><code>update</code></td>
 <td><code>update_profile</code></td>
 </tr>
-<tr>
+<tr class="even">
 <td>DELETE</td>
 <td><code>delete</code></td>
 <td><code>delete_account</code></td>
 </tr>
-<tr>
+<tr class="odd">
 <td>EXECUTE</td>
 <td><code>execute</code> (initiate), <code>cancel</code> (terminate)</td>
 <td><code>execute_workflow</code>, <code>cancel_task</code></td>
@@ -405,16 +406,16 @@ mcp_aql_execute  - EXECUTE operations</code></pre>
 <hr />
 <h2 id="7-conformance-requirements">7. Conformance Requirements</h2>
 <h3 id="71-must-requirements">7.1 MUST Requirements</h3>
-<p>Conforming implementations MUST:</p>
+<p>Implementations exposing the CRUDE profile MUST:</p>
 <ol type="1">
-<li>Implement all five CRUDE endpoints OR the single unified endpoint</li>
+<li>Implement all five CRUDE endpoints, or offer a single unified endpoint that preserves the same CRUDE semantic classification internally</li>
 <li>Route operations to their correct endpoints according to classification</li>
-<li>Return errors for operations sent to incorrect endpoints (CRUDE mode)</li>
+<li>Return errors for operations sent to incorrect endpoints in CRUDE mode</li>
 <li>Apply permission flags accurately for each endpoint</li>
-<li>Implement the <code>introspect</code> operation (READ endpoint)</li>
+<li>Implement the <code>introspect</code> operation as a READ-category operation</li>
 </ol>
 <h3 id="72-should-requirements">7.2 SHOULD Requirements</h3>
-<p>Conforming implementations SHOULD:</p>
+<p>Implementations exposing the CRUDE profile SHOULD:</p>
 <ol type="1">
 <li>Support both CRUDE and Single endpoint modes</li>
 <li>Provide configuration for mode selection</li>

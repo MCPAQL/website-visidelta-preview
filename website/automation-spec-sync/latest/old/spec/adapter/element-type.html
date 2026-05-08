@@ -50,10 +50,10 @@
   <ul><li><a href="../security/confirmation-tokens.html">Confirmation Token Specification</a></li><li><a href="../security/execution-safety-loop.html">Execution Safety Loop Specification</a></li><li><a href="../security/gatekeeper.html">Security Model: Gatekeeper Specification</a></li></ul>
 </div><div class="docs-side-group">
   <h3>Features</h3>
-  <ul><li><a href="../features/collection-querying.html">MCP-AQL Collection Querying</a></li><li><a href="../features/field-selection.html">Field Selection Specification</a></li><li><a href="../features/pagination.html">Cursor-Based Pagination Specification</a></li><li><a href="../features/warnings.html">Warnings Array Specification</a></li></ul>
+  <ul><li><a href="../features/aggregations.html">MCP-AQL Aggregations</a></li><li><a href="../features/collection-querying.html">MCP-AQL Collection Querying</a></li><li><a href="../features/computed-fields.html">MCP-AQL Computed Fields</a></li><li><a href="../features/field-selection.html">Field Selection Specification</a></li><li><a href="../features/pagination.html">Cursor-Based Pagination Specification</a></li><li><a href="../features/relationship-queries.html">MCP-AQL Relationship Queries</a></li><li><a href="../features/warnings.html">Warnings Array Specification</a></li></ul>
 </div><div class="docs-side-group">
   <h3>Guides</h3>
-  <ul><li><a href="../guides/protocol-comparison.html">Protocol Comparison Guide</a></li><li><a href="../guides/README.html">Developer Guides</a></li></ul>
+  <ul><li><a href="../guides/cross-domain-implementation.html">Cross-Domain Implementation Guide</a></li><li><a href="../guides/protocol-comparison.html">Protocol Comparison Guide</a></li><li><a href="../guides/README.html">Developer Guides</a></li></ul>
 </div><div class="docs-side-group">
   <h3>Process</h3>
   <ul><li><a href="../process/breaking-changes.html">MCP-AQL Breaking Change Policy</a></li><li><a href="../process/preliminary-public-launch-checklist.html">Preliminary Public Launch Checklist</a></li><li><a href="../process/rfc-process.html">RFC Process for MCP-AQL Specification</a></li><li><a href="../process/versioning.html">Versioning Strategy</a></li><li><a href="../repo/CHANGELOG.html">Changelog</a></li></ul>
@@ -425,39 +425,39 @@
 <p><strong>Supported types:</strong></p>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Type</th>
 <th>Description</th>
 <th>Example</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><code>string</code></td>
 <td>Text value</td>
 <td><code>"hello"</code></td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>integer</code></td>
 <td>Whole number</td>
 <td><code>42</code></td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>number</code></td>
 <td>Decimal number</td>
 <td><code>3.14</code></td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>boolean</code></td>
 <td>True/false</td>
 <td><code>true</code></td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>array</code></td>
 <td>List of values</td>
 <td><code>[1, 2, 3]</code></td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>object</code></td>
 <td>Key-value map</td>
 <td><code>{"key": "value"}</code></td>
@@ -560,8 +560,8 @@
 <li><a href="trust-levels.html">Trust Levels Specification</a></li>
 <li><a href="danger-levels.html">Dangerous Operation Classification</a></li>
 <li><a href="rate-limiting.html">Rate Limiting Specification</a></li>
-<li><a href="../../adapter-reference/guides/development.html">Adapter Development Guide</a> (in mcpaql-adapter repo)</li>
-<li><a href="../../adapter-reference/architecture/runtime.html">Universal Adapter Runtime</a> (in mcpaql-adapter repo)</li>
+<li><a href="https://github.com/MCPAQL/mcpaql-adapter/blob/develop/docs/guides/development.md">Adapter Development Guide</a> (in mcpaql-adapter repo)</li>
+<li><a href="https://github.com/MCPAQL/mcpaql-adapter/blob/develop/docs/architecture/runtime.md">Universal Adapter Runtime</a> (in mcpaql-adapter repo)</li>
 <li>GitHub Issue: <a href="https://github.com/MCPAQL/spec/issues/61">#61</a></li>
 </ul>
 

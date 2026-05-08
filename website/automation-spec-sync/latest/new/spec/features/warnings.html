@@ -139,34 +139,34 @@
 <h3 id="13-relationship-to-errors">1.3 Relationship to Errors</h3>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Aspect</th>
 <th>Error</th>
 <th>Warning</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>Response success</td>
 <td><code>false</code></td>
 <td><code>true</code></td>
 </tr>
-<tr class="even">
+<tr>
 <td>Operation completed</td>
 <td>No</td>
 <td>Yes</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Client action</td>
 <td>Required</td>
 <td>Optional</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Blocks execution</td>
 <td>Yes</td>
 <td>No</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Schema structure</td>
 <td><code>error</code> object</td>
 <td><code>warnings</code> array</td>
@@ -288,24 +288,24 @@
 <p>The optional <code>severity</code> field helps clients prioritize warnings when multiple are present:</p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Level</th>
 <th>Description</th>
 <th>Example Use Cases</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><code>high</code></td>
 <td>Requires immediate attention; may affect operations soon</td>
 <td>Quota nearly exhausted, imminent deprecation removal</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>medium</code></td>
 <td>Should be addressed but not urgent</td>
 <td>Approaching limits, scheduled deprecation</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>low</code></td>
 <td>Informational; can be safely deferred or filtered</td>
 <td>Performance hints, soft deprecation notices</td>
@@ -316,24 +316,24 @@
 <p>For sorting, filtering, and programmatic comparison, implementations SHOULD use this numeric mapping:</p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Severity</th>
 <th>Numeric Value</th>
 <th>Sort Order</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><code>high</code></td>
 <td>0</td>
 <td>First (most urgent)</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>medium</code></td>
 <td>1</td>
 <td>Second</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>low</code></td>
 <td>2</td>
 <td>Third (least urgent)</td>
@@ -387,29 +387,29 @@
 <h3 id="34-warning-categories">3.4 Warning Categories</h3>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Category</th>
 <th>Description</th>
 <th>Example</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><code>RATE_LIMIT_</code></td>
 <td>Approaching rate/quota limits</td>
 <td><code>RATE_LIMIT_QUOTA_WARNING</code></td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>DEPRECATION_</code></td>
 <td>Deprecated feature usage</td>
 <td><code>DEPRECATION_WARNING</code></td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>VALIDATION_</code></td>
 <td>Data quality issues</td>
 <td><code>VALIDATION_TRUNCATED_WARNING</code></td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>PERFORMANCE_</code></td>
 <td>Performance concerns</td>
 <td><code>PERFORMANCE_SLOW_QUERY_WARNING</code></td>
@@ -425,19 +425,19 @@
 <p><strong>Severity recommendations:</strong></p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Condition</th>
 <th>Severity</th>
 <th>Rationale</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>&gt;90% of quota consumed</td>
 <td><code>high</code></td>
 <td>Imminent limit, requires immediate attention</td>
 </tr>
-<tr class="even">
+<tr>
 <td>At warn_threshold (default 80%)</td>
 <td><code>medium</code></td>
 <td>Standard warning, action advisable</td>
@@ -475,24 +475,24 @@
 <p><strong>Severity recommendations:</strong></p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Condition</th>
 <th>Severity</th>
 <th>Rationale</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>Within 30 days of removal_date</td>
 <td><code>high</code></td>
 <td>Urgent migration required</td>
 </tr>
-<tr class="even">
+<tr>
 <td>More than 30 days from removal_date</td>
 <td><code>medium</code></td>
 <td>Migration advisable</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>No removal_date set (soft deprecation)</td>
 <td><code>low</code></td>
 <td>Informational, no urgency</td>
@@ -530,19 +530,19 @@
 <p><strong>Severity recommendations:</strong></p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Condition</th>
 <th>Severity</th>
 <th>Rationale</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>Significant data loss (&gt;50% truncated)</td>
 <td><code>medium</code></td>
 <td>User may miss important data</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Minor truncation (≤50% truncated)</td>
 <td><code>low</code></td>
 <td>Informational, pagination available</td>
@@ -578,24 +578,24 @@
 <p><strong>Severity recommendations:</strong></p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Condition</th>
 <th>Severity</th>
 <th>Rationale</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>&gt;10x threshold exceeded</td>
 <td><code>high</code></td>
 <td>Severe degradation, may indicate systemic issue</td>
 </tr>
-<tr class="even">
+<tr>
 <td>2-10x threshold exceeded</td>
 <td><code>medium</code></td>
 <td>Notable slowdown, optimization recommended</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Just above threshold (&lt;2x)</td>
 <td><code>low</code></td>
 <td>Minor performance concern</td>
@@ -672,25 +672,25 @@
 <p>When displaying warnings to users:</p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Warning Category</th>
 <th>Display Recommendation</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><code>RATE_LIMIT_</code></td>
 <td>Prominent, real-time indicator</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>DEPRECATION_</code></td>
 <td>One-time notification per session</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>VALIDATION_</code></td>
 <td>Inline with affected data</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>PERFORMANCE_</code></td>
 <td>Status bar or background notification</td>
 </tr>
@@ -776,25 +776,25 @@
 <h4 id="deduplication-recommendations">Deduplication Recommendations</h4>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Context</th>
 <th>Recommendation</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>Single request</td>
 <td>Server SHOULD deduplicate identical warnings</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Batch operations</td>
 <td>Server SHOULD collapse per-item warnings into summary</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Client session</td>
 <td>Client MAY deduplicate across requests</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Long-running clients</td>
 <td>Client SHOULD use time-based expiration</td>
 </tr>

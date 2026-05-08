@@ -145,41 +145,41 @@
 <p><strong>Examples of Breaking Changes:</strong></p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Change Type</th>
 <th>Example</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>Removing required operations</td>
 <td>Removing the <code>introspect</code> operation</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Incompatible request structure changes</td>
 <td>Changing <code>operation</code> field to <code>op</code></td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Incompatible response structure changes</td>
 <td>Restructuring the success/error envelope</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Removing CRUDE endpoints</td>
 <td>Eliminating the EXECUTE endpoint</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Changing introspection response format</td>
 <td>Altering the structure of OperationDetails</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Removing required fields from protocol types</td>
 <td>Removing <code>endpoint</code> from OperationInfo</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Changing field types incompatibly</td>
 <td>Changing <code>required</code> from boolean to string</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Changing endpoint routing rules</td>
 <td>Requiring different operation-to-endpoint mappings</td>
 </tr>
@@ -190,37 +190,37 @@
 <p><strong>Examples of Non-Breaking Changes:</strong></p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Change Type</th>
 <th>Example</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>Adding new optional operations</td>
 <td>New <code>validate</code> operation on READ endpoint</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Adding new optional parameters</td>
 <td>Adding <code>timeout</code> parameter to existing operations</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Adding new fields to responses (additive)</td>
 <td>Adding <code>deprecated</code> flag to OperationInfo</td>
 </tr>
-<tr class="even">
+<tr>
 <td>New optional features</td>
 <td>Field selection support</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Deprecating features (without removal)</td>
 <td>Marking an operation as deprecated</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Adding new optional protocol types</td>
 <td>New TypeInfo subtypes</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Extending enum values</td>
 <td>Adding new endpoint mode options</td>
 </tr>
@@ -231,33 +231,33 @@
 <p><strong>Examples of Patch Changes:</strong></p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Change Type</th>
 <th>Example</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>Clarifications that don't change behavior</td>
 <td>Explaining existing edge case handling</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Typo fixes</td>
 <td>Correcting spelling in specification text</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Example corrections</td>
 <td>Fixing incorrect JSON in examples</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Documentation improvements</td>
 <td>Adding diagrams or additional context</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Formatting changes</td>
 <td>Restructuring sections for clarity</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Non-normative additions</td>
 <td>Adding implementation notes</td>
 </tr>
@@ -308,7 +308,7 @@
 <p>When implementing deprecation warnings in introspection, include:</p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Field</th>
 <th>Type</th>
 <th>Required</th>
@@ -316,25 +316,25 @@
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><code>deprecated</code></td>
 <td>boolean</td>
 <td>Yes</td>
 <td>Whether the item is deprecated</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>deprecationMessage</code></td>
 <td>string</td>
 <td>Yes</td>
 <td>Human-readable explanation and alternative</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>deprecatedSince</code></td>
 <td>string</td>
 <td>No</td>
 <td>Version when deprecation began</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>removalVersion</code></td>
 <td>string</td>
 <td>No</td>

@@ -114,29 +114,29 @@
 <p>Traditional CRUD (Create, Read, Update, Delete) operations are well-suited for managing resource definitions and state. However, MCP-AQL needs to support runtime execution operations that have fundamentally different characteristics:</p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Characteristic</th>
 <th>CRUD Operations</th>
 <th>Execution Operations</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>Idempotency</td>
 <td>Generally idempotent</td>
 <td>Non-idempotent</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Target</td>
 <td>Element definitions</td>
 <td>Runtime state</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Lifecycle</td>
 <td>Discrete operations</td>
 <td>Stateful lifecycle</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Side effects</td>
 <td>Predictable</td>
 <td>Unbounded</td>

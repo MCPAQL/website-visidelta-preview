@@ -1,3 +1,0 @@
-Document Status: This document is an informative conformance framework specification aligned to the normative protocol requirements in docs/versions/v1.0.0-draft.md. Implementation Status: The full mcpaql-conformance run
-MCP-AQL (Model Context Protocol - Agent Query Language) is a protocol that consolidates discrete MCP tools into 5 CRUDE endpoints (Create, Read, Update, Delete, Execute), providing significant token reduction while maint
-MCP-AQL (Model Context Protocol - Advanced Agent API Adapter Query Language) is a protocol specification that consolidates multiple MCP tools into semantic CRUDE endpoints, providing significant token reduction while ena

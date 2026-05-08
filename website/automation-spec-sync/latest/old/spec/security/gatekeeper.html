@@ -50,10 +50,10 @@
   <ul><li><a href="confirmation-tokens.html">Confirmation Token Specification</a></li><li><a href="execution-safety-loop.html">Execution Safety Loop Specification</a></li><li><a class="current" aria-current="page" href="gatekeeper.html">Security Model: Gatekeeper Specification</a></li></ul>
 </div><div class="docs-side-group">
   <h3>Features</h3>
-  <ul><li><a href="../features/collection-querying.html">MCP-AQL Collection Querying</a></li><li><a href="../features/field-selection.html">Field Selection Specification</a></li><li><a href="../features/pagination.html">Cursor-Based Pagination Specification</a></li><li><a href="../features/warnings.html">Warnings Array Specification</a></li></ul>
+  <ul><li><a href="../features/aggregations.html">MCP-AQL Aggregations</a></li><li><a href="../features/collection-querying.html">MCP-AQL Collection Querying</a></li><li><a href="../features/computed-fields.html">MCP-AQL Computed Fields</a></li><li><a href="../features/field-selection.html">Field Selection Specification</a></li><li><a href="../features/pagination.html">Cursor-Based Pagination Specification</a></li><li><a href="../features/relationship-queries.html">MCP-AQL Relationship Queries</a></li><li><a href="../features/warnings.html">Warnings Array Specification</a></li></ul>
 </div><div class="docs-side-group">
   <h3>Guides</h3>
-  <ul><li><a href="../guides/protocol-comparison.html">Protocol Comparison Guide</a></li><li><a href="../guides/README.html">Developer Guides</a></li></ul>
+  <ul><li><a href="../guides/cross-domain-implementation.html">Cross-Domain Implementation Guide</a></li><li><a href="../guides/protocol-comparison.html">Protocol Comparison Guide</a></li><li><a href="../guides/README.html">Developer Guides</a></li></ul>
 </div><div class="docs-side-group">
   <h3>Process</h3>
   <ul><li><a href="../process/breaking-changes.html">MCP-AQL Breaking Change Policy</a></li><li><a href="../process/preliminary-public-launch-checklist.html">Preliminary Public Launch Checklist</a></li><li><a href="../process/rfc-process.html">RFC Process for MCP-AQL Specification</a></li><li><a href="../process/versioning.html">Versioning Strategy</a></li><li><a href="../repo/CHANGELOG.html">Changelog</a></li></ul>
@@ -181,7 +181,7 @@
 <p><strong>Endpoint Safety Matrix:</strong></p>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Endpoint</th>
 <th>readOnly</th>
 <th>destructive</th>
@@ -189,31 +189,31 @@
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td>CREATE</td>
 <td>false</td>
 <td>false</td>
 <td>Additive only</td>
 </tr>
-<tr>
+<tr class="even">
 <td>READ</td>
 <td>true</td>
 <td>false</td>
 <td>No state changes</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>UPDATE</td>
 <td>false</td>
 <td>true</td>
 <td>May overwrite data</td>
 </tr>
-<tr>
+<tr class="even">
 <td>DELETE</td>
 <td>false</td>
 <td>true</td>
 <td>Removes data permanently</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>EXECUTE</td>
 <td>false</td>
 <td>true</td>
@@ -238,21 +238,21 @@
 <h3 id="31-permission-types">3.1 Permission Types</h3>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Permission</th>
 <th>Behavior</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><code>allow</code></td>
 <td>Operation proceeds without additional checks</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>deny</code></td>
 <td>Operation rejected with error</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>confirm</code></td>
 <td>Operation requires explicit confirmation</td>
 </tr>
@@ -298,21 +298,21 @@
 <p>Adapters implementing security SHOULD log:</p>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Event</th>
 <th>Logged Data</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><code>OPERATION_DENIED</code></td>
 <td>Operation, reason</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>CONFIRMATION_REQUIRED</code></td>
 <td>Operation, token</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>CONFIRMATION_GRANTED</code></td>
 <td>Operation, token</td>
 </tr>
@@ -384,9 +384,9 @@
     <span class="page-nav-eyebrow">Previous page</span>
     <strong class="page-nav-label">Execution Safety Loop Specification</strong>
   </a>
-  <a class="page-nav-link next" href="../features/collection-querying.html">
+  <a class="page-nav-link next" href="../features/aggregations.html">
     <span class="page-nav-eyebrow">Next page</span>
-    <strong class="page-nav-label">MCP-AQL Collection Querying</strong>
+    <strong class="page-nav-label">MCP-AQL Aggregations</strong>
   </a>
 </nav>
       </article>

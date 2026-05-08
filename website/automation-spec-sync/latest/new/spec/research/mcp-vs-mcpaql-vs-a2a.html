@@ -182,7 +182,7 @@
 <h2 id="3-the-core-problem-each-solves">3. The Core Problem Each Solves</h2>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th></th>
 <th>MCP</th>
 <th>MCP-AQL</th>
@@ -190,19 +190,19 @@
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><strong>Core problem</strong></td>
 <td>Every AI app builds custom integrations for every tool/service (M x N explosion)</td>
 <td>LLMs can't reliably call arbitrary APIs -- they hallucinate parameters, miss constraints, and waste context on schemas</td>
 <td>Agents from different vendors/frameworks can't discover or collaborate with each other</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>Solution</strong></td>
 <td>Standardize the connection protocol (one universal wire format)</td>
 <td>Translate any API into an LLM-native interface with self-describing operations, constraint metadata, and safety enforcement</td>
 <td>Standardize agent discovery and task delegation via Agent Cards and multi-turn task conversations</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>Analogy</strong></td>
 <td>USB-C: a universal connector</td>
 <td>A universal interpreter that speaks every API dialect but presents one clean language</td>
@@ -298,7 +298,7 @@ Authorization: Bearer &lt;token&gt;</code></pre>
 <h3 id="discovery-and-self-description">Discovery and Self-Description</h3>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th></th>
 <th>MCP</th>
 <th>MCP-AQL</th>
@@ -306,25 +306,25 @@ Authorization: Bearer &lt;token&gt;</code></pre>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><strong>Discovery mechanism</strong></td>
 <td>Static -- client connects to pre-configured servers</td>
 <td>Runtime introspection -- <code>introspect</code> operation discovers operations on demand</td>
 <td>Agent Cards at well-known URLs</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>Schema loading</strong></td>
 <td>All tool definitions loaded upfront into LLM context</td>
 <td>Progressive disclosure -- discover what you need, when you need it</td>
 <td>Agent Card skills are high-level descriptions, not detailed schemas</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>Constraint metadata</strong></td>
 <td>Tool annotations (readOnly, destructive hints) + JSON Schema for inputs</td>
 <td>Rich constraints: enums, min/max, patterns, formats, sensitive markers, examples</td>
 <td>Minimal -- skill descriptions are natural language</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>Token cost of discovery</strong></td>
 <td>~500-700 tokens per tool (50 tools = ~30,000 tokens upfront)</td>
 <td>~1,100 tokens total (single mode) for unlimited operations</td>
@@ -335,7 +335,7 @@ Authorization: Bearer &lt;token&gt;</code></pre>
 <h3 id="token-efficiency">Token Efficiency</h3>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th></th>
 <th>MCP</th>
 <th>MCP-AQL</th>
@@ -343,31 +343,31 @@ Authorization: Bearer &lt;token&gt;</code></pre>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><strong>Registration overhead</strong></td>
 <td>~30,000 tokens for 50 tools</td>
 <td>~1,100 (single mode) to ~4,300 (CRUDE mode) for 50+ operations</td>
 <td>N/A -- agents, not tools</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>Reduction from baseline</strong></td>
 <td>Baseline (0%)</td>
 <td>85-96% reduction</td>
 <td>Not comparable</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>Response efficiency</strong></td>
 <td>Raw tool output dumped to context</td>
 <td>Field selection (minimal/standard/full presets) provides 65-86% additional reduction</td>
 <td>Artifacts with structured Parts</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>Repeated call optimization</strong></td>
 <td>Same cost every time</td>
 <td>"Ditto" shorthand pattern: 97% reduction on repeated calls (~15 tokens vs ~450)</td>
 <td>N/A</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>Fire-and-forget</strong></td>
 <td>No -- every tool call requires full response processing</td>
 <td><code>notify</code> operation returns minimal <code>{ ack: true }</code> (~15 tokens)</td>
@@ -378,7 +378,7 @@ Authorization: Bearer &lt;token&gt;</code></pre>
 <h3 id="safety-and-security">Safety and Security</h3>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th></th>
 <th>MCP</th>
 <th>MCP-AQL</th>
@@ -386,43 +386,43 @@ Authorization: Bearer &lt;token&gt;</code></pre>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><strong>Safety model</strong></td>
 <td>Tool annotations are hints; client decides whether to honor them</td>
 <td><strong>Protocol-enforced Gatekeeper</strong> -- 4-layer defense-in-depth; server-side enforcement that LLM cannot bypass</td>
 <td>Agent can reject tasks; standard auth schemes</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>Danger classification</strong></td>
 <td>Binary: readOnly or destructive annotation</td>
 <td>5-level system: safe → reversible → destructive → dangerous → forbidden</td>
 <td>N/A</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>Trust model</strong></td>
 <td>Implicit trust in configured servers</td>
 <td>5-level trust: untested → generated → validated → community_reviewed → certified; gating matrix with danger levels</td>
 <td>Authentication schemes (OAuth, OIDC, mTLS)</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>Hallucination prevention</strong></td>
 <td>Depends on tool description quality</td>
 <td>Unknown parameter rejection -- if LLM hallucinates <code>force: true</code>, adapter rejects and returns valid params</td>
 <td>Depends on Agent Card quality</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>Confirmation workflow</strong></td>
 <td>Human-in-the-loop via Sampling</td>
 <td>Confirmation tokens for destructive operations; pattern-based auto-classification (<code>force_*</code> → dangerous, <code>drop_*</code> → forbidden)</td>
 <td>N/A</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>Auth</strong></td>
 <td>OAuth 2.1 (as of Jun 2025)</td>
 <td>Inherits MCP + per-adapter auth plugins (API key, Bearer, OAuth, mTLS, AWS SigV4)</td>
 <td>OAuth 2.0, OIDC, mTLS, API keys, in-task auth escalation</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>Core principle</strong></td>
 <td>Security by design (but client-enforced)</td>
 <td>"LLM instructions are suggestions. Adapter policies are enforcement."</td>
@@ -433,7 +433,7 @@ Authorization: Bearer &lt;token&gt;</code></pre>
 <h3 id="scope-and-reach">Scope and Reach</h3>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th></th>
 <th>MCP</th>
 <th>MCP-AQL</th>
@@ -441,25 +441,25 @@ Authorization: Bearer &lt;token&gt;</code></pre>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><strong>What it connects to</strong></td>
 <td>MCP-compatible servers</td>
 <td><strong>Any system with an API</strong>: REST, GraphQL, gRPC, MCP servers, OS native APIs, hardware (serial/USB), IoT, databases, file systems, other agents</td>
 <td>Other A2A-compatible agents</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>Adapter creation</strong></td>
 <td>SDK integration + custom code per server</td>
 <td><strong>Declarative schema file</strong> (Markdown + YAML) -- no code generation, hot-reloadable</td>
 <td>SDK integration per agent</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>Plugin system</strong></td>
 <td>N/A</td>
 <td>Transport (HTTP, WebSocket, serial, native OS), Protocol (REST, GraphQL, gRPC, JSON-RPC), Serialization (JSON, XML, Protobuf, MessagePack), Auth (multiple schemes), Pagination (cursor, offset, page)</td>
 <td>N/A</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>Performance tiers</strong></td>
 <td>Single implementation</td>
 <td>Three-tier architecture planned: Standard (TypeScript) for MCP wrapping, Local Systems (Rust, 5-50x faster) for OS/hardware, Network API (Rust) for concurrent web API processing</td>
@@ -470,7 +470,7 @@ Authorization: Bearer &lt;token&gt;</code></pre>
 <h3 id="agent-to-agent-capabilities">Agent-to-Agent Capabilities</h3>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th></th>
 <th>MCP</th>
 <th>MCP-AQL</th>
@@ -478,25 +478,25 @@ Authorization: Bearer &lt;token&gt;</code></pre>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><strong>Agent-to-agent</strong></td>
 <td>No</td>
 <td>Yes -- via adapter chains, distributed tracing (W3C Trace Context), EXECUTE lifecycle</td>
 <td><strong>Primary purpose</strong></td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>Task delegation</strong></td>
 <td>No</td>
 <td>EXECUTE endpoint with state machine (pending → running → completed/failed/cancelled)</td>
 <td>First-class task lifecycle with 7-state machine and multi-turn conversation</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>Multi-agent coordination</strong></td>
 <td>No</td>
 <td>Optimistic concurrency (ETags), notifications/telemetry for inter-agent signaling</td>
 <td>Discovery via Agent Cards, context IDs for conversation threading</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>Distributed tracing</strong></td>
 <td>No</td>
 <td>W3C Trace Context propagation across adapter chains (traceId, spanId, parentSpanId)</td>
@@ -507,7 +507,7 @@ Authorization: Bearer &lt;token&gt;</code></pre>
 <h3 id="computational-middleware">Computational Middleware</h3>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th></th>
 <th>MCP</th>
 <th>MCP-AQL</th>
@@ -515,25 +515,25 @@ Authorization: Bearer &lt;token&gt;</code></pre>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><strong>Processing model</strong></td>
 <td>LLM calls tool → gets raw result → reasons about it</td>
 <td>Adapter can process server-side: computed fields, aggregations, multi-step API iteration <strong>without returning to the LLM</strong> -- LLM only sees final processed result</td>
 <td>Remote agent does all internal processing; returns artifacts</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>Server-side computation</strong></td>
 <td>Not built in</td>
 <td>Computed fields (so LLM doesn't do math), server-side aggregations (counts, groupings without fetching all records)</td>
 <td>Agent handles internally</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>Batch operations</strong></td>
 <td>No native batching</td>
 <td>Optional batch operations with per-item results, continueOnError, and atomic modes</td>
 <td>N/A</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>Dry-run mode</strong></td>
 <td>No</td>
 <td>Preview consequences before committing, including policy checks and estimated token costs</td>
@@ -620,7 +620,7 @@ Authorization: Bearer &lt;token&gt;</code></pre>
 <p><strong>Partially, in a good way.</strong> There is genuine overlap at the agent-to-agent boundary:</p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Capability</th>
 <th>MCP-AQL</th>
 <th>A2A</th>
@@ -628,31 +628,31 @@ Authorization: Bearer &lt;token&gt;</code></pre>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>Agent discovery</td>
 <td>Introspection (what operations exist?)</td>
 <td>Agent Cards (what can this agent do?)</td>
 <td><strong>Complementary</strong> -- different granularity</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Task delegation</td>
 <td>EXECUTE endpoint with lifecycle states</td>
 <td>Task lifecycle with 7-state machine</td>
 <td><strong>Overlapping</strong> -- but MCP-AQL is structured/typed while A2A is conversational</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Multi-turn interaction</td>
 <td>Not native (each call is independent)</td>
 <td>First-class multi-turn with context IDs</td>
 <td><strong>A2A is stronger here</strong></td>
 </tr>
-<tr class="even">
+<tr>
 <td>Distributed tracing</td>
 <td>W3C Trace Context across adapter chains</td>
 <td>Not built in</td>
 <td><strong>MCP-AQL is stronger here</strong></td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Safety enforcement</td>
 <td>Gatekeeper with danger/trust levels</td>
 <td>Agent-level accept/reject</td>
@@ -675,29 +675,29 @@ Authorization: Bearer &lt;token&gt;</code></pre>
 <h3 id="gaps-in-mcp-addressed-by-the-other-two">Gaps in MCP (Addressed by the Other Two)</h3>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Gap</th>
 <th>Who fills it</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>Tool sprawl / context window bloat</td>
 <td><strong>MCP-AQL</strong> (85-96% token reduction)</td>
 </tr>
-<tr class="even">
+<tr>
 <td>No agent-to-agent communication</td>
 <td><strong>A2A</strong> (primary purpose) and <strong>MCP-AQL</strong> (via adapter chains)</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Safety is advisory, not enforced</td>
 <td><strong>MCP-AQL</strong> (Gatekeeper with server-side authority)</td>
 </tr>
-<tr class="even">
+<tr>
 <td>No progressive discovery</td>
 <td><strong>MCP-AQL</strong> (introspection on demand)</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Raw tool output wastes tokens</td>
 <td><strong>MCP-AQL</strong> (field selection, server-side computation)</td>
 </tr>
@@ -706,59 +706,59 @@ Authorization: Bearer &lt;token&gt;</code></pre>
 <h3 id="gaps-in-a2a-not-yet-addressed">Gaps in A2A (Not Yet Addressed)</h3>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Gap</th>
 <th>Description</th>
 <th>Potential fill</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><strong>No message persistence</strong></td>
 <td>The spec does not specify whether agents must persist messages after task completion, how long task state must be retained, or storage format. An A2A server could lose everything on restart and still be conformant.</td>
 <td><strong>COMMS element type</strong> (file-based, database, Redis backends)</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>No message queuing</strong></td>
 <td>No guaranteed delivery, no ordering guarantees beyond streaming, no dead-letter queues, no backpressure mechanism. Push notification retry policy is the closest thing.</td>
 <td><strong>COMMS element type</strong> or external message broker</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>No offline delivery</strong></td>
 <td>If the server agent is unreachable, the request fails. No store-and-forward, no inbox/outbox pattern.</td>
 <td><strong>COMMS element type</strong> (file-based persistence survives offline)</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>No local agent-to-agent communication</strong></td>
 <td>All three standard bindings (JSON-RPC/HTTP, gRPC, REST) assume network communication. No Unix socket, shared memory, IPC, or localhost optimization.</td>
 <td><strong>COMMS element type</strong> (filesystem IPC at <code>~/.dollhouse/team-ipc/</code>)</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>No state management between sessions</strong></td>
 <td>No session concept at the protocol level, no session tokens or resumption, no requirement that context IDs persist across restarts.</td>
 <td><strong>Memory elements</strong> + <strong>COMMS element type</strong></td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>No orchestration</strong></td>
 <td>No workflow definition, conditional branching, routing, fan-out/fan-in, saga patterns, circuit breakers, or load balancing. Explicitly out of scope.</td>
 <td>Application layer / <strong>TEAM element type</strong></td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>No discovery registry</strong></td>
 <td>Agent Cards at well-known URLs require knowing the URL in advance. No search, marketplace, or broadcast discovery.</td>
 <td><strong>MCP-AQL adapter registry</strong> / <strong>COMMS discovery</strong></td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>No distributed tracing</strong></td>
 <td>No built-in tracing format; metadata maps can carry trace IDs but nothing is standardized.</td>
 <td><strong>MCP-AQL</strong> (W3C Trace Context)</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>No economics</strong></td>
 <td>No pricing, SLAs, inter-agent billing, or dispute resolution.</td>
 <td>Not addressed by any protocol yet</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>No streaming client-to-server</strong></td>
 <td>Clients cannot stream large inputs during task execution; only agents stream output back.</td>
 <td>Not addressed</td>
@@ -768,29 +768,29 @@ Authorization: Bearer &lt;token&gt;</code></pre>
 <h3 id="gaps-in-mcp-aql-not-yet-addressed">Gaps in MCP-AQL (Not Yet Addressed)</h3>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Gap</th>
 <th>Description</th>
 <th>Potential fill</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><strong>Multi-turn conversational context</strong></td>
 <td>Each MCP-AQL call is independent; no built-in context threading across calls</td>
 <td><strong>A2A</strong> (context IDs, multi-turn tasks)</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>Agent opaqueness</strong></td>
 <td>MCP-AQL introspection reveals operation details; no mechanism to hide internals when that's desirable</td>
 <td><strong>A2A</strong> (opaque by design)</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>Multimodal content exchange</strong></td>
 <td>MCP-AQL responses are structured JSON; no native audio, video, or rich media support</td>
 <td><strong>A2A</strong> (multimodal Parts)</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>Cross-vendor interoperability</strong></td>
 <td>MCP-AQL requires MCP as transport; cannot directly interoperate with non-MCP agents</td>
 <td><strong>A2A</strong> (framework-agnostic)</td>
@@ -804,21 +804,21 @@ Authorization: Bearer &lt;token&gt;</code></pre>
 <p>A2A is a <strong>real protocol with real wire bindings</strong>, not just a description. It has three layers:</p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Layer</th>
 <th>What A2A Defines</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><strong>Canonical Data Model</strong></td>
 <td>Protocol Buffers (<code>a2a.proto</code>) defining Task, Message, AgentCard, Artifact, Part types</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>Abstract Operations</strong></td>
 <td>11 transport-agnostic operations (SendMessage, GetTask, ListTasks, CancelTask, SubscribeToTask, etc.)</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>Protocol Bindings</strong></td>
 <td>Concrete mappings to JSON-RPC 2.0 over HTTP, gRPC over HTTP/2, and REST over HTTP</td>
 </tr>
@@ -829,45 +829,45 @@ Authorization: Bearer &lt;token&gt;</code></pre>
 <p>This is where the gaps are significant:</p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Concern</th>
 <th>A2A's Position</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><strong>Message persistence</strong></td>
 <td>Completely unspecified</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>Message queuing / guaranteed delivery</strong></td>
 <td>Not addressed; push notification retry is closest</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>Offline delivery</strong></td>
 <td>Not supported; synchronous with async extensions</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>Local IPC (same machine)</strong></td>
 <td>Not addressed; all bindings assume network</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>Session state management</strong></td>
 <td>Not specified; no session concept</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>Orchestration / routing</strong></td>
 <td>Explicitly out of scope</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>Agent registry / search</strong></td>
 <td>Not provided; must know URL to fetch Agent Card</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>Distributed tracing</strong></td>
 <td>Not standardized; metadata can carry trace IDs</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>Economics / billing</strong></td>
 <td>Not addressed</td>
 </tr>
@@ -893,44 +893,44 @@ Authorization: Bearer &lt;token&gt;</code></pre>
 <p><strong>Potential COMMS variants:</strong></p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Variant</th>
 <th>Protocol</th>
 <th>Use Case</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><strong>A2A comms</strong></td>
 <td>Google A2A</td>
 <td>Cross-vendor agent-to-agent delegation with task lifecycle</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>TCP/IP comms</strong></td>
 <td>Raw TCP/IP</td>
 <td>Low-level network communication, custom protocols</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>HTTP comms</strong></td>
 <td>HTTP/REST</td>
 <td>Direct web API messaging, webhooks</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>SMTP comms</strong></td>
 <td>SMTP/email</td>
 <td>Email-based notifications and async communication</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>WebSocket comms</strong></td>
 <td>WebSocket</td>
 <td>Real-time bidirectional messaging</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>Filesystem comms</strong></td>
 <td>Local IPC</td>
 <td>Same-machine agent-to-agent via file-based messaging</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>Mesh comms</strong></td>
 <td>WireGuard/Tailscale</td>
 <td>Encrypted multi-node agent mesh networking</td>
@@ -951,34 +951,34 @@ Authorization: Bearer &lt;token&gt;</code></pre>
 <h3 id="transport-mechanisms">Transport Mechanisms</h3>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Scope</th>
 <th>Likely Variant</th>
 <th>Mechanism</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>Same computer, different sessions</td>
 <td>Filesystem comms</td>
 <td>File-based IPC at <code>~/.dollhouse/team-ipc/</code></td>
 </tr>
-<tr class="even">
+<tr>
 <td>Different computers (network)</td>
 <td>HTTP comms / A2A comms</td>
 <td>REST/HTTP or A2A task delegation</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Encrypted enterprise mesh</td>
 <td>Mesh comms</td>
 <td>WireGuard via Tailscale or Headscale (self-hosted)</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Cross-vendor agent collaboration</td>
 <td>A2A comms</td>
 <td>A2A protocol with Agent Cards and task lifecycle</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Async notifications</td>
 <td>SMTP comms / HTTP comms</td>
 <td>Email or webhook-based</td>
@@ -997,37 +997,37 @@ Authorization: Bearer &lt;token&gt;</code></pre>
 <p>A2A leaves significant infrastructure gaps (see Section 9). Different COMMS variants address different gaps:</p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>A2A Gap</th>
 <th>Which COMMS Variant Fills It</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><strong>No message persistence</strong></td>
 <td>Filesystem comms, database-backed variants</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>No message queuing</strong></td>
 <td>Filesystem comms (natural queue semantics), database variants</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>No offline delivery</strong></td>
 <td>Filesystem comms (persists regardless of recipient availability)</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>No local IPC</strong></td>
 <td>Filesystem comms at <code>~/.dollhouse/team-ipc/</code> (sub-100ms)</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>No state between sessions</strong></td>
 <td>Memory elements + any persistent COMMS variant</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>No orchestration</strong></td>
 <td>TEAM element coordinates across COMMS variants</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>No discovery on local network</strong></td>
 <td>TEAM session discovery protocol (planned)</td>
 </tr>
@@ -1036,29 +1036,29 @@ Authorization: Bearer &lt;token&gt;</code></pre>
 <h3 id="where-a2a-provides-what-comms-variants-dont">Where A2A Provides What COMMS Variants Don't</h3>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Gap</th>
 <th>What A2A Provides</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><strong>Cross-vendor interoperability</strong></td>
 <td>A2A works across any framework; COMMS variants are DollhouseMCP elements</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>Standardized Agent Cards</strong></td>
 <td>A2A's discovery model is an industry standard</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>Multi-turn conversational protocol</strong></td>
 <td>A2A has formal message/task/artifact semantics</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>Multimodal content</strong></td>
 <td>A2A's Part type supports text, files, data, UI components</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>Industry governance</strong></td>
 <td>A2A is under the Linux Foundation with 150+ backers</td>
 </tr>
@@ -1121,84 +1121,84 @@ Authorization: Bearer &lt;token&gt;</code></pre>
 <h2 id="12-scenario-guide">12. Scenario Guide</h2>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Scenario</th>
 <th>Best fit</th>
 <th>Why</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>Connect my LLM to a few specific tools quickly</td>
 <td><strong>MCP</strong></td>
 <td>Simple, direct, massive ecosystem</td>
 </tr>
-<tr class="even">
+<tr>
 <td>50+ MCP tools and context window is choking</td>
 <td><strong>MCP-AQL</strong></td>
 <td>85-96% token reduction; progressive disclosure</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>LLM needs to correctly call an unfamiliar REST API</td>
 <td><strong>MCP-AQL</strong></td>
 <td>Introspection with constraint metadata eliminates hallucination</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Sales agent delegates to a research agent</td>
 <td><strong>A2A</strong></td>
 <td>Agent discovery and multi-turn task delegation</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Agents from LangChain and CrewAI need to collaborate</td>
 <td><strong>A2A</strong></td>
 <td>Cross-framework interoperability</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Permission control over destructive operations</td>
 <td><strong>MCP-AQL</strong></td>
 <td>CRUDE + Gatekeeper + danger levels + confirmation tokens</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>LLM needs to interact with OS or hardware APIs</td>
 <td><strong>MCP-AQL</strong></td>
 <td>Plugin system with native transport; Rust adapters planned</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Multi-day async tasks across agent boundaries</td>
 <td><strong>A2A</strong></td>
 <td>First-class long-running task lifecycle with push notifications</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Wrap any API for LLM access with zero code</td>
 <td><strong>MCP-AQL</strong></td>
 <td>Declarative adapter schemas; hot-reloadable</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Trace operations across a chain of systems</td>
 <td><strong>MCP-AQL</strong></td>
 <td>W3C Trace Context propagation</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Agents reasoning together about ambiguous problems</td>
 <td><strong>A2A</strong></td>
 <td>Unstructured multi-turn conversation between opaque peers</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Same-machine agent-to-agent messaging</td>
 <td><strong>Filesystem comms</strong></td>
 <td>IPC, sub-100ms, no network overhead</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Agent communication with offline persistence</td>
 <td><strong>Filesystem comms</strong></td>
 <td>File/database-backed; survives restarts and outages</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Cross-vendor agent delegation over network</td>
 <td><strong>A2A comms</strong></td>
 <td>A2A protocol with Agent Cards and task lifecycle</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Enterprise multi-computer agent orchestration</td>
 <td><strong>Mesh comms + TEAM</strong></td>
 <td>Encrypted WireGuard mesh, hierarchical coordination</td>
@@ -1209,7 +1209,7 @@ Authorization: Bearer &lt;token&gt;</code></pre>
 <h2 id="13-maturity-and-adoption">13. Maturity and Adoption</h2>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th></th>
 <th>MCP</th>
 <th>MCP-AQL</th>
@@ -1217,43 +1217,43 @@ Authorization: Bearer &lt;token&gt;</code></pre>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><strong>Announced</strong></td>
 <td>November 2024</td>
 <td>2025</td>
 <td>April 2025</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>Current version</strong></td>
 <td>2025-11-25 (4th revision)</td>
 <td>v1.0.0-draft</td>
 <td>v0.3</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>Governance</strong></td>
 <td>Agentic AI Foundation (Linux Foundation)</td>
 <td>Independent</td>
 <td>Linux Foundation (LF AI &amp; Data)</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>Spec maturity</strong></td>
 <td>Production-stable, widely adopted</td>
 <td>Nearing v1.0-rc; launch imminent</td>
 <td>Draft; breaking changes expected</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>Ecosystem</strong></td>
 <td>10,000+ servers, 300+ clients</td>
 <td>1 reference impl (DollhouseMCP V2 private beta)</td>
 <td>150+ backing organizations, Python SDK</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>SDK availability</strong></td>
 <td>TypeScript, Python, Java, C#, Go, Rust</td>
 <td>Via MCP SDKs (runs on MCP transport)</td>
 <td>Python</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>Notable adopters</strong></td>
 <td>OpenAI, Google, Microsoft, AWS, Cloudflare</td>
 <td>DollhouseMCP</td>

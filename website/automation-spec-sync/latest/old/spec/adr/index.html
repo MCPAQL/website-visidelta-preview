@@ -50,10 +50,10 @@
   <ul><li><a href="../security/confirmation-tokens.html">Confirmation Token Specification</a></li><li><a href="../security/execution-safety-loop.html">Execution Safety Loop Specification</a></li><li><a href="../security/gatekeeper.html">Security Model: Gatekeeper Specification</a></li></ul>
 </div><div class="docs-side-group">
   <h3>Features</h3>
-  <ul><li><a href="../features/collection-querying.html">MCP-AQL Collection Querying</a></li><li><a href="../features/field-selection.html">Field Selection Specification</a></li><li><a href="../features/pagination.html">Cursor-Based Pagination Specification</a></li><li><a href="../features/warnings.html">Warnings Array Specification</a></li></ul>
+  <ul><li><a href="../features/aggregations.html">MCP-AQL Aggregations</a></li><li><a href="../features/collection-querying.html">MCP-AQL Collection Querying</a></li><li><a href="../features/computed-fields.html">MCP-AQL Computed Fields</a></li><li><a href="../features/field-selection.html">Field Selection Specification</a></li><li><a href="../features/pagination.html">Cursor-Based Pagination Specification</a></li><li><a href="../features/relationship-queries.html">MCP-AQL Relationship Queries</a></li><li><a href="../features/warnings.html">Warnings Array Specification</a></li></ul>
 </div><div class="docs-side-group">
   <h3>Guides</h3>
-  <ul><li><a href="../guides/protocol-comparison.html">Protocol Comparison Guide</a></li><li><a href="../guides/README.html">Developer Guides</a></li></ul>
+  <ul><li><a href="../guides/cross-domain-implementation.html">Cross-Domain Implementation Guide</a></li><li><a href="../guides/protocol-comparison.html">Protocol Comparison Guide</a></li><li><a href="../guides/README.html">Developer Guides</a></li></ul>
 </div><div class="docs-side-group">
   <h3>Process</h3>
   <ul><li><a href="../process/breaking-changes.html">MCP-AQL Breaking Change Policy</a></li><li><a href="../process/preliminary-public-launch-checklist.html">Preliminary Public Launch Checklist</a></li><li><a href="../process/rfc-process.html">RFC Process for MCP-AQL Specification</a></li><li><a href="../process/versioning.html">Versioning Strategy</a></li><li><a href="../repo/CHANGELOG.html">Changelog</a></li></ul>
@@ -113,7 +113,7 @@
 <h2 id="adr-index">ADR Index</h2>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>ADR</th>
 <th>Title</th>
 <th>Status</th>
@@ -121,37 +121,37 @@
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><a href="ADR-001-crude-pattern.html">ADR-001</a></td>
 <td>CRUDE Pattern</td>
 <td>Accepted</td>
 <td>Extends CRUD with Execute endpoint for runtime operations</td>
 </tr>
-<tr>
+<tr class="even">
 <td><a href="ADR-002-graphql-style-input.html">ADR-002</a></td>
 <td>GraphQL-Style Input Objects</td>
 <td>Accepted</td>
 <td>Nested <code>input</code> objects for update operations</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><a href="ADR-003-snake-case-parameters.html">ADR-003</a></td>
 <td>snake_case Parameters</td>
 <td>Accepted</td>
 <td>Standardizes on snake_case for LLM compatibility</td>
 </tr>
-<tr>
+<tr class="even">
 <td><a href="ADR-004-schema-driven-operations.html">ADR-004</a></td>
 <td>Schema-Driven Operations</td>
 <td>Accepted</td>
 <td>Declarative operation definitions as single source of truth</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><a href="ADR-005-introspection-system.html">ADR-005</a></td>
 <td>Introspection System</td>
 <td>Accepted</td>
 <td>GraphQL-style runtime discovery via <code>introspect</code> operation</td>
 </tr>
-<tr>
+<tr class="even">
 <td><a href="ADR-006-discriminated-responses.html">ADR-006</a></td>
 <td>Discriminated Responses</td>
 <td>Accepted</td>

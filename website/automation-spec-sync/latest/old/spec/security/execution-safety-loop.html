@@ -50,10 +50,10 @@
   <ul><li><a href="confirmation-tokens.html">Confirmation Token Specification</a></li><li><a class="current" aria-current="page" href="execution-safety-loop.html">Execution Safety Loop Specification</a></li><li><a href="gatekeeper.html">Security Model: Gatekeeper Specification</a></li></ul>
 </div><div class="docs-side-group">
   <h3>Features</h3>
-  <ul><li><a href="../features/collection-querying.html">MCP-AQL Collection Querying</a></li><li><a href="../features/field-selection.html">Field Selection Specification</a></li><li><a href="../features/pagination.html">Cursor-Based Pagination Specification</a></li><li><a href="../features/warnings.html">Warnings Array Specification</a></li></ul>
+  <ul><li><a href="../features/aggregations.html">MCP-AQL Aggregations</a></li><li><a href="../features/collection-querying.html">MCP-AQL Collection Querying</a></li><li><a href="../features/computed-fields.html">MCP-AQL Computed Fields</a></li><li><a href="../features/field-selection.html">Field Selection Specification</a></li><li><a href="../features/pagination.html">Cursor-Based Pagination Specification</a></li><li><a href="../features/relationship-queries.html">MCP-AQL Relationship Queries</a></li><li><a href="../features/warnings.html">Warnings Array Specification</a></li></ul>
 </div><div class="docs-side-group">
   <h3>Guides</h3>
-  <ul><li><a href="../guides/protocol-comparison.html">Protocol Comparison Guide</a></li><li><a href="../guides/README.html">Developer Guides</a></li></ul>
+  <ul><li><a href="../guides/cross-domain-implementation.html">Cross-Domain Implementation Guide</a></li><li><a href="../guides/protocol-comparison.html">Protocol Comparison Guide</a></li><li><a href="../guides/README.html">Developer Guides</a></li></ul>
 </div><div class="docs-side-group">
   <h3>Process</h3>
   <ul><li><a href="../process/breaking-changes.html">MCP-AQL Breaking Change Policy</a></li><li><a href="../process/preliminary-public-launch-checklist.html">Preliminary Public Launch Checklist</a></li><li><a href="../process/rfc-process.html">RFC Process for MCP-AQL Specification</a></li><li><a href="../process/versioning.html">Versioning Strategy</a></li><li><a href="../repo/CHANGELOG.html">Changelog</a></li></ul>
@@ -192,34 +192,34 @@
 <p>The safety dongle and a full MCP-AQL adapter are both valid configurations of the same protocol. They differ only in scope:</p>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Aspect</th>
 <th>Safety Dongle</th>
 <th>Full MCP-AQL Adapter</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td>Purpose</td>
 <td>Safety enforcement only</td>
 <td>Domain operations + safety</td>
 </tr>
-<tr>
+<tr class="even">
 <td>Operations</td>
 <td>~7 (safety loop + introspection)</td>
 <td>Dozens (full CRUDE surface)</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>Elements</td>
 <td>None</td>
 <td>Personas, skills, agents, etc.</td>
 </tr>
-<tr>
+<tr class="even">
 <td>State</td>
 <td>Execution state + policies only</td>
 <td>Full domain state</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>Endpoints used</td>
 <td>CREATE, EXECUTE, READ (subset)</td>
 <td>All five CRUDE endpoints</td>
@@ -319,44 +319,44 @@
 <p>Key fields:</p>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Field</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><code>continue</code></td>
 <td>boolean</td>
 <td>Whether the LLM may proceed with the reported action</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>factors</code></td>
 <td>string[]</td>
 <td>Human-readable explanations of the evaluation decision</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>stopped</code></td>
 <td>boolean</td>
 <td>Whether the agent has been hard-blocked (Danger Zone)</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>reason</code></td>
 <td>string</td>
 <td>Why the agent was paused or stopped</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>stepsRemaining</code></td>
 <td>number</td>
 <td>Steps remaining before mandatory pause</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>nextStepRisk</code></td>
 <td>SafetyTier</td>
 <td>Safety tier assigned to the reported action</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>notifications</code></td>
 <td>AgentNotification[]</td>
 <td>Gatekeeper blocks, danger alerts, and other events</td>
@@ -375,44 +375,44 @@
 <p>A safety dongle implements a minimal set of operations:</p>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Operation</th>
 <th>Endpoint</th>
 <th>Purpose</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><code>execute_agent</code></td>
 <td>EXECUTE</td>
 <td>Start the execution safety loop</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>record_execution_step</code></td>
 <td>CREATE</td>
 <td>Report intended action, receive <code>AutonomyDirective</code></td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>complete_execution</code></td>
 <td>EXECUTE</td>
 <td>Signal normal completion of the safety loop</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>abort_execution</code></td>
 <td>EXECUTE</td>
 <td>Signal abnormal termination</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>confirm_operation</code></td>
 <td>EXECUTE</td>
 <td>Confirm Gatekeeper blocks or Autonomy Evaluator <code>confirm</code> tier pauses</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>verify_challenge</code></td>
 <td>CREATE</td>
 <td>Submit out-of-band verification code (<code>verify</code> tier and Danger Zone)</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>introspect</code></td>
 <td>READ</td>
 <td>Discover available operations and capabilities</td>
@@ -424,7 +424,7 @@
 <p>The endpoint placement of these operations is critical to the permission architecture:</p>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Endpoint</th>
 <th>Default Permission</th>
 <th>Operations</th>
@@ -432,19 +432,19 @@
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td>READ</td>
 <td><code>AUTO_APPROVE</code></td>
 <td><code>introspect</code></td>
 <td>Zero friction for discovery</td>
 </tr>
-<tr>
+<tr class="even">
 <td>CREATE</td>
 <td><code>CONFIRM_SESSION</code></td>
 <td><code>record_execution_step</code>, <code>verify_challenge</code></td>
 <td>Approve once, then frictionless for the session</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>EXECUTE</td>
 <td><code>CONFIRM_SINGLE_USE</code></td>
 <td><code>execute_agent</code>, <code>complete_execution</code>, <code>abort_execution</code>, <code>confirm_operation</code></td>
@@ -532,24 +532,24 @@ EXECUTE (CONFIRM_SINGLE_USE)
 <p>Notification types:</p>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Type</th>
 <th>Trigger</th>
 <th>Action Required</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><code>permission_pending</code></td>
 <td>Gatekeeper blocked an operation</td>
 <td>Call <code>confirm_operation</code> to approve</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>autonomy_pause</code></td>
 <td>Autonomy Evaluator returned <code>continue: false</code></td>
 <td>For <code>confirm</code> tier: call <code>confirm_operation</code>; for <code>verify</code> tier: out-of-band <code>verify_challenge</code> (Section 6)</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>danger_zone</code></td>
 <td>Hard block triggered (<code>danger_zone</code> tier or <code>deny</code> pattern)</td>
 <td>Out-of-band <code>verify_challenge</code> required (Section 6)</td>
@@ -563,29 +563,29 @@ EXECUTE (CONFIRM_SINGLE_USE)
 <p>When the Autonomy Evaluator assigns a high risk score to a <code>nextActionHint</code>, the action escalates through safety tiers defined in the <a href="../adapter/danger-levels.html">Danger Levels specification</a>:</p>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Risk Score</th>
 <th>Tier</th>
 <th>Behavior</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td>0-30</td>
 <td><code>advisory</code></td>
 <td>Log and continue</td>
 </tr>
-<tr>
+<tr class="even">
 <td>31-60</td>
 <td><code>confirm</code></td>
 <td>Pause for human review (<code>continue: false</code>)</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>61-85</td>
 <td><code>verify</code></td>
 <td>Pause + out-of-band verification via <code>verify_challenge</code> (Section 8.8)</td>
 </tr>
-<tr>
+<tr class="even">
 <td>86-100</td>
 <td><code>danger_zone</code></td>
 <td>Hard stop + out-of-band verification via <code>verify_challenge</code> (Section 8.8)</td>
@@ -813,104 +813,104 @@ Only proceed if the AutonomyDirective returns continue: true.</code></pre>
 <p>The following table maps each normative section to its corresponding Section 9 requirements, providing an audit trail for compliance verification.</p>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Normative Section</th>
 <th>Key Requirements</th>
 <th>Section 9 Coverage</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td>8.6.1 Opt-In Activation</td>
 <td>MUST document support; SHOULD expose capability value</td>
 <td>9.1 (introspection); 9.2 (capability value)</td>
 </tr>
-<tr>
+<tr class="even">
 <td>8.6.2 Enforcement Boundary</td>
 <td>MUST report and evaluate all actions</td>
 <td>9.1 (operations, AutonomyDirective on every call)</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>8.6.3 Action Reporting</td>
 <td>MUST/SHOULD/MAY parameter requirements</td>
 <td>9.1 (operations — parameter validation is part of implementing <code>record_execution_step</code>)</td>
 </tr>
-<tr>
+<tr class="even">
 <td>8.6.4 Continuous Enforcement</td>
 <td>MUST NOT proceed after stop; SHOULD NOT after pause; MUST NOT <code>stopped</code> in monitoring</td>
 <td>9.1 (stop directive, monitoring mode); 9.2 (SHOULD NOT after pause)</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>8.6.5 Non-Bypass Property</td>
 <td>Agent MUST NOT act outside loop</td>
 <td>Agent-side protocol obligation (not adapter-specific)</td>
 </tr>
-<tr>
+<tr class="even">
 <td>8.6.6 Scope of Monitoring</td>
 <td>Monitors all actions (informative)</td>
 <td>Described in Sections 3.2, 2.2 of this document</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>8.6.7 Disabling</td>
 <td>MAY disable; MUST indicate via introspection</td>
 <td>9.1 (introspection); 9.2 (monitoring); 9.3 (logging)</td>
 </tr>
-<tr>
+<tr class="even">
 <td>8.7.1 AutonomyDirective</td>
 <td>MUST include <code>continue</code> + <code>factors</code></td>
 <td>9.1 (AutonomyDirective fields)</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>8.7.2 Pipeline Stages 1–5</td>
 <td>MUST step limit; SHOULD stages 2–3; MAY stages 4–5</td>
 <td>9.1 (step limit MUST); 9.2 (stage 1 documentation SHOULDs, stages 2–3 SHOULDs); 9.3 (stages 4–5)</td>
 </tr>
-<tr>
+<tr class="even">
 <td>8.7.3 Notifications</td>
 <td>MUST notification contents; MUST prevent self-approval</td>
 <td>9.1 (notifications, self-approval); 9.2 (non-hard-block notifications)</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>8.7.4 Configurable Elements</td>
 <td>SHOULD configurable; SHOULD document</td>
 <td>9.2 (configuration, introspection)</td>
 </tr>
-<tr>
+<tr class="even">
 <td>8.7.5 Minimum Viable</td>
 <td>MUST Step Limit; SHOULD Previous Outcome + Pattern Matching; MAY Safety Tier + Risk Tolerance</td>
 <td>9.1 (step limit); 9.2 (outcome, patterns); 9.3 (tier, tolerance)</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>8.8 Introduction</td>
 <td>MUST require OOB for <code>verify</code>/<code>danger_zone</code></td>
 <td>9.1 (OOB verification)</td>
 </tr>
-<tr>
+<tr class="even">
 <td>8.8.1 Trigger Conditions</td>
 <td>MUST <code>stopped: true</code> + <code>danger_zone</code> notification</td>
 <td>9.1 (<code>stopped: true</code>, notification broadcast)</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>8.8.2 Challenge Protocol</td>
 <td>MUST entropy, display, notification, expiration</td>
 <td>9.1 (code generation, display, challenge ID, expiration); 9.2 (timeout)</td>
 </tr>
-<tr>
+<tr class="even">
 <td>8.8.3 Blocking Semantics</td>
 <td>MUST reject, persist, no bypass; SHOULD verify behavior</td>
 <td>9.1 (blocking); 9.2 (verify tier)</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>8.8.4 Channel Separation</td>
 <td>MUST NOT expose code (5 specific prohibitions)</td>
 <td>9.1 (display/channel separation — consolidated)</td>
 </tr>
-<tr>
+<tr class="even">
 <td>8.8.5 Rate Limiting</td>
 <td>SHOULD rate-limit, persist, audit; MAY progressive lockout</td>
 <td>9.2 (rate limiting); 9.3 (lockout)</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>8.8.6 Implementation Flexibility</td>
 <td>MAY any display channel</td>
 <td>9.3 (display channels)</td>

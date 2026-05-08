@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="MCP-AQL (Model Context Protocol - Agent Query Language) is a protocol that consolidates discrete MCP tools into 5 CRUDE endpoints (Create, Read, Update, Delete, Execute), providing significant token reduction while maint">
+  <meta name="description" content="MCP-AQL (Model Context Protocol - Agent Query Language) is a protocol that consolidates discrete MCP tools into a small number of semantic endpoint families, providing significant token reduction while maintaining full f">
   <title>MCP-AQL Spec | MCP-AQL Protocol Overview</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -50,10 +50,10 @@
   <ul><li><a href="security/confirmation-tokens.html">Confirmation Token Specification</a></li><li><a href="security/execution-safety-loop.html">Execution Safety Loop Specification</a></li><li><a href="security/gatekeeper.html">Security Model: Gatekeeper Specification</a></li></ul>
 </div><div class="docs-side-group">
   <h3>Features</h3>
-  <ul><li><a href="features/collection-querying.html">MCP-AQL Collection Querying</a></li><li><a href="features/field-selection.html">Field Selection Specification</a></li><li><a href="features/pagination.html">Cursor-Based Pagination Specification</a></li><li><a href="features/warnings.html">Warnings Array Specification</a></li></ul>
+  <ul><li><a href="features/aggregations.html">MCP-AQL Aggregations</a></li><li><a href="features/collection-querying.html">MCP-AQL Collection Querying</a></li><li><a href="features/computed-fields.html">MCP-AQL Computed Fields</a></li><li><a href="features/field-selection.html">Field Selection Specification</a></li><li><a href="features/pagination.html">Cursor-Based Pagination Specification</a></li><li><a href="features/relationship-queries.html">MCP-AQL Relationship Queries</a></li><li><a href="features/warnings.html">Warnings Array Specification</a></li></ul>
 </div><div class="docs-side-group">
   <h3>Guides</h3>
-  <ul><li><a href="guides/protocol-comparison.html">Protocol Comparison Guide</a></li><li><a href="guides/README.html">Developer Guides</a></li></ul>
+  <ul><li><a href="guides/cross-domain-implementation.html">Cross-Domain Implementation Guide</a></li><li><a href="guides/protocol-comparison.html">Protocol Comparison Guide</a></li><li><a href="guides/README.html">Developer Guides</a></li></ul>
 </div><div class="docs-side-group">
   <h3>Process</h3>
   <ul><li><a href="process/breaking-changes.html">MCP-AQL Breaking Change Policy</a></li><li><a href="process/preliminary-public-launch-checklist.html">Preliminary Public Launch Checklist</a></li><li><a href="process/rfc-process.html">RFC Process for MCP-AQL Specification</a></li><li><a href="process/versioning.html">Versioning Strategy</a></li><li><a href="repo/CHANGELOG.html">Changelog</a></li></ul>
@@ -84,7 +84,7 @@
           <div class="hero-inner">
             <span class="status-pill">REPO-SYNCED SPEC DOC</span>
             <h1>MCP-AQL Protocol Overview</h1>
-            <p class="lede">MCP-AQL (Model Context Protocol - Agent Query Language) is a protocol that consolidates discrete MCP tools into 5 CRUDE endpoints (Create, Read, Update, Delete, Execute), providing significant token reduction while maint</p>
+            <p class="lede">MCP-AQL (Model Context Protocol - Agent Query Language) is a protocol that consolidates discrete MCP tools into a small number of semantic endpoint families, providing significant token reduction while maintaining full f</p>
             <div class="spec-meta"><span class="state-chip live">Support document</span></div>
             <p class="spec-source">Source: <a href="https://github.com/MCPAQL/spec/blob/main/docs/overview.md">spec/docs/overview.md</a></p>
             <div class="hero-actions">
@@ -101,7 +101,7 @@
               <p class="page-toc-intro">Use the outline to move through longer pages without losing your place.</p>
             </div>
             <ol class="page-toc-list" data-page-toc-list>
-              <li class="page-toc-item level-2"><a href="#protocol-summary" data-toc-target="protocol-summary">Protocol Summary</a></li><li class="page-toc-item level-2"><a href="#the-crude-pattern" data-toc-target="the-crude-pattern">The CRUDE Pattern</a></li><li class="page-toc-item level-3"><a href="#permission-characteristics" data-toc-target="permission-characteristics">Permission Characteristics</a></li><li class="page-toc-item level-3"><a href="#why-crude-not-crud" data-toc-target="why-crude-not-crud">Why CRUDE not CRUD?</a></li><li class="page-toc-item level-2"><a href="#endpoint-modes" data-toc-target="endpoint-modes">Endpoint Modes</a></li><li class="page-toc-item level-3"><a href="#crude-mode" data-toc-target="crude-mode">CRUDE Mode</a></li><li class="page-toc-item level-3"><a href="#single-mode" data-toc-target="single-mode">Single Mode</a></li><li class="page-toc-item level-2"><a href="#token-efficiency" data-toc-target="token-efficiency">Token Efficiency</a></li><li class="page-toc-item level-3"><a href="#token-reduction" data-toc-target="token-reduction">Token Reduction</a></li><li class="page-toc-item level-3"><a href="#runtime-discovery" data-toc-target="runtime-discovery">Runtime Discovery</a></li><li class="page-toc-item level-2"><a href="#core-concepts" data-toc-target="core-concepts">Core Concepts</a></li><li class="page-toc-item level-3"><a href="#schema-driven-operations" data-toc-target="schema-driven-operations">Schema-Driven Operations</a></li><li class="page-toc-item level-3"><a href="#gatekeeper" data-toc-target="gatekeeper">Gatekeeper</a></li><li class="page-toc-item level-3"><a href="#introspection" data-toc-target="introspection">Introspection</a></li><li class="page-toc-item level-2"><a href="#request-flow" data-toc-target="request-flow">Request Flow</a></li><li class="page-toc-item level-3"><a href="#standard-request" data-toc-target="standard-request">Standard Request</a></li><li class="page-toc-item level-3"><a href="#response-format" data-toc-target="response-format">Response Format</a></li><li class="page-toc-item level-2"><a href="#batch-operations" data-toc-target="batch-operations">Batch Operations</a></li><li class="page-toc-item level-3"><a href="#batch-request-format" data-toc-target="batch-request-format">Batch Request Format</a></li><li class="page-toc-item level-3"><a href="#batch-response-format" data-toc-target="batch-response-format">Batch Response Format</a></li><li class="page-toc-item level-2"><a href="#conformance" data-toc-target="conformance">Conformance</a></li><li class="page-toc-item level-2"><a href="#related-specifications" data-toc-target="related-specifications">Related Specifications</a></li>
+              <li class="page-toc-item level-2"><a href="#protocol-summary" data-toc-target="protocol-summary">Protocol Summary</a></li><li class="page-toc-item level-2"><a href="#the-crude-pattern" data-toc-target="the-crude-pattern">The CRUDE Pattern</a></li><li class="page-toc-item level-3"><a href="#permission-characteristics" data-toc-target="permission-characteristics">Permission Characteristics</a></li><li class="page-toc-item level-3"><a href="#why-crude-not-crud" data-toc-target="why-crude-not-crud">Why CRUDE not CRUD?</a></li><li class="page-toc-item level-2"><a href="#endpoint-modes" data-toc-target="endpoint-modes">Endpoint Modes</a></li><li class="page-toc-item level-3"><a href="#semantic-endpoint-mode" data-toc-target="semantic-endpoint-mode">Semantic Endpoint Mode</a></li><li class="page-toc-item level-3"><a href="#single-mode" data-toc-target="single-mode">Single Mode</a></li><li class="page-toc-item level-2"><a href="#token-efficiency" data-toc-target="token-efficiency">Token Efficiency</a></li><li class="page-toc-item level-3"><a href="#token-reduction" data-toc-target="token-reduction">Token Reduction</a></li><li class="page-toc-item level-3"><a href="#runtime-discovery" data-toc-target="runtime-discovery">Runtime Discovery</a></li><li class="page-toc-item level-2"><a href="#core-concepts" data-toc-target="core-concepts">Core Concepts</a></li><li class="page-toc-item level-3"><a href="#schema-driven-operations" data-toc-target="schema-driven-operations">Schema-Driven Operations</a></li><li class="page-toc-item level-3"><a href="#gatekeeper" data-toc-target="gatekeeper">Gatekeeper</a></li><li class="page-toc-item level-3"><a href="#introspection" data-toc-target="introspection">Introspection</a></li><li class="page-toc-item level-2"><a href="#request-flow" data-toc-target="request-flow">Request Flow</a></li><li class="page-toc-item level-3"><a href="#standard-request" data-toc-target="standard-request">Standard Request</a></li><li class="page-toc-item level-3"><a href="#response-format" data-toc-target="response-format">Response Format</a></li><li class="page-toc-item level-2"><a href="#batch-operations" data-toc-target="batch-operations">Batch Operations</a></li><li class="page-toc-item level-3"><a href="#batch-request-format" data-toc-target="batch-request-format">Batch Request Format</a></li><li class="page-toc-item level-3"><a href="#batch-response-format" data-toc-target="batch-response-format">Batch Response Format</a></li><li class="page-toc-item level-2"><a href="#conformance" data-toc-target="conformance">Conformance</a></li><li class="page-toc-item level-2"><a href="#related-specifications" data-toc-target="related-specifications">Related Specifications</a></li>
             </ol>
           </div>
         </section>
@@ -110,16 +110,16 @@
         <section>
           <div class="card spec-prose">
             <blockquote>
-<p><strong>MCP-AQL</strong> (Model Context Protocol - Agent Query Language) is a protocol that consolidates discrete MCP tools into 5 CRUDE endpoints (Create, Read, Update, Delete, Execute), providing significant token reduction while maintaining full functionality.</p>
+<p><strong>MCP-AQL</strong> (Model Context Protocol - Agent Query Language) is a protocol that consolidates discrete MCP tools into a small number of semantic endpoint families, providing significant token reduction while maintaining full functionality. The standard semantic-endpoint profile is CRUDE (Create, Read, Update, Delete, Execute), but adapters MAY define alternate semantic endpoint families.</p>
 <p><strong>Document Status:</strong> This document is <strong>informative</strong>. For normative requirements, see <a href="versions/v1.0.0-draft.html">MCP-AQL Specification v1.0.0</a>.</p>
 </blockquote>
 <h2 id="protocol-summary">Protocol Summary</h2>
 <p>MCP-AQL defines a schema-driven operation dispatch protocol that:</p>
 <ol type="1">
-<li><strong>Consolidates Operations</strong> - Many discrete tools into 5 semantic endpoints</li>
+<li><strong>Consolidates Operations</strong> - Many discrete tools into a small number of semantic endpoint families</li>
 <li><strong>Enables Discovery</strong> - GraphQL-style introspection for runtime operation discovery</li>
 <li><strong>Enforces Safety</strong> - Endpoint classification validates operation/endpoint matching</li>
-<li><strong>Supports Flexibility</strong> - Implementations MAY offer CRUDE mode (5 endpoints) or Single mode (1 endpoint)</li>
+<li><strong>Supports Flexibility</strong> - Implementations MAY offer semantic endpoint mode with the standard CRUDE profile or alternate semantic endpoint families, or Single mode</li>
 </ol>
 <pre><code>+-------------------+
 |    MCP Client     |
@@ -154,7 +154,7 @@
 <p>MCP-AQL extends traditional CRUD with an <strong>EXECUTE</strong> endpoint, creating the CRUDE pattern:</p>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Endpoint</th>
 <th>Safety</th>
 <th>Description</th>
@@ -162,31 +162,31 @@
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><strong>CREATE</strong></td>
 <td>Non-destructive</td>
 <td>Additive operations that create new state</td>
 <td><code>create_entity</code>, <code>import_resource</code></td>
 </tr>
-<tr>
+<tr class="even">
 <td><strong>READ</strong></td>
 <td>Read-only</td>
 <td>Safe operations that query state</td>
 <td><code>list_entities</code>, <code>get_entity</code>, <code>search</code>, <code>introspect</code></td>
 </tr>
-<tr>
+<tr class="odd">
 <td><strong>UPDATE</strong></td>
 <td>Modifying</td>
 <td>Operations that modify existing state</td>
 <td><code>update_entity</code>, <code>update_resource</code></td>
 </tr>
-<tr>
+<tr class="even">
 <td><strong>DELETE</strong></td>
 <td>Destructive</td>
 <td>Operations that remove state</td>
 <td><code>delete_entity</code>, <code>clear</code></td>
 </tr>
-<tr>
+<tr class="odd">
 <td><strong>EXECUTE</strong></td>
 <td>Runtime</td>
 <td>Lifecycle operations for executable elements</td>
@@ -198,34 +198,34 @@
 <p>Each endpoint MUST have defined permission characteristics:</p>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Endpoint</th>
 <th>Read-Only</th>
 <th>Destructive</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td>CREATE</td>
 <td>false</td>
 <td>false</td>
 </tr>
-<tr>
+<tr class="even">
 <td>READ</td>
 <td>true</td>
 <td>false</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>UPDATE</td>
 <td>false</td>
 <td>true</td>
 </tr>
-<tr>
+<tr class="even">
 <td>DELETE</td>
 <td>false</td>
 <td>true</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>EXECUTE</td>
 <td>false</td>
 <td>true</td>
@@ -259,18 +259,23 @@
                      | complete_execution|           | continue_execution|
                      +-------------------+           +-------------------+</code></pre>
 <blockquote>
-<p><strong>Note:</strong> This diagram shows a runtime lifecycle flow, not endpoint classification. Operations like <code>get_execution_state</code> that query execution state belong to the READ endpoint, not EXECUTE. See <a href="crude-pattern.html#61-classification-principle">CRUDE Pattern Classification</a> for details.</p>
+<p><strong>Note:</strong> This diagram shows a runtime lifecycle flow, not endpoint classification. Operations like <code>get_execution_state</code> that query execution state belong to the READ semantic category, not EXECUTE. In the standard CRUDE profile they are exposed on the READ endpoint. See <a href="crude-pattern.html#61-classification-principle">CRUDE Pattern Classification</a> for details.</p>
 </blockquote>
 <hr />
 <h2 id="endpoint-modes">Endpoint Modes</h2>
 <p>MCP-AQL supports two operational modes. Implementations MUST support at least one mode and SHOULD support both:</p>
-<h3 id="crude-mode">CRUDE Mode</h3>
-<p>Exposes 5 separate endpoints, each with semantic meaning:</p>
+<h3 id="semantic-endpoint-mode">Semantic Endpoint Mode</h3>
+<p>The standard CRUDE profile exposes 5 separate endpoints, each with semantic meaning:</p>
 <pre><code>mcp_aql_create  - CREATE operations
 mcp_aql_read    - READ operations
 mcp_aql_update  - UPDATE operations
 mcp_aql_delete  - DELETE operations
 mcp_aql_execute - EXECUTE operations</code></pre>
+<p>An alternate semantic-endpoint profile can expose a different but still semantically legible set:</p>
+<pre class="text"><code>mcp_aql_discover - Discovery and inspection operations
+mcp_aql_query    - Retrieval and filtering operations
+mcp_aql_manage   - Mutating and administrative operations
+mcp_aql_operate  - Runtime and lifecycle operations</code></pre>
 <p><strong>Advantages:</strong></p>
 <ul>
 <li>Clear semantic grouping</li>
@@ -293,24 +298,24 @@ mcp_aql_execute - EXECUTE operations</code></pre>
 <p>The primary motivation for MCP-AQL is reducing the token cost of tool registration. Empirical measurements demonstrate:</p>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Configuration</th>
 <th>Approximate Token Cost</th>
 <th>Reduction</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td>Discrete Tools (50+)</td>
 <td>~30,000 tokens</td>
 <td>baseline</td>
 </tr>
-<tr>
-<td>CRUDE Mode (5 endpoints)</td>
-<td>~4,500 tokens</td>
+<tr class="even">
+<td>Semantic Endpoint Mode (CRUDE profile, 5 endpoints)</td>
+<td>~4,300 tokens</td>
 <td>~85%</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>Single Mode (1 endpoint)</td>
 <td>~1,100 tokens</td>
 <td>~96%</td>
@@ -319,22 +324,23 @@ mcp_aql_execute - EXECUTE operations</code></pre>
 </table>
 <h3 id="runtime-discovery">Runtime Discovery</h3>
 <p>Instead of parsing many tool schemas at registration time, clients use introspection at runtime:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Query all available operations</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>{ <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;introspect&quot;</span><span class="op">,</span> <span class="dt">params</span><span class="op">:</span> { <span class="dt">query</span><span class="op">:</span> <span class="st">&quot;operations&quot;</span> } }</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">// Get details for a specific operation</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>{ <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;introspect&quot;</span><span class="op">,</span> <span class="dt">params</span><span class="op">:</span> { <span class="dt">query</span><span class="op">:</span> <span class="st">&quot;operations&quot;</span><span class="op">,</span> <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;create_entity&quot;</span> } }</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">// Query available types</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>{ <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;introspect&quot;</span><span class="op">,</span> <span class="dt">params</span><span class="op">:</span> { <span class="dt">query</span><span class="op">:</span> <span class="st">&quot;types&quot;</span><span class="op">,</span> <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;EntityType&quot;</span> } }</span></code></pre></div>
-<p>Implementations MUST support the <code>introspect</code> operation on the READ endpoint.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Query all available operations</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>{ <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;introspect&quot;</span><span class="op">,</span> <span class="dt">params</span><span class="op">:</span> { <span class="dt">query</span><span class="op">:</span> <span class="st">&quot;operations&quot;</span> } }</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">// Get details for a specific operation</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>{ <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;introspect&quot;</span><span class="op">,</span> <span class="dt">params</span><span class="op">:</span> { <span class="dt">query</span><span class="op">:</span> <span class="st">&quot;operations&quot;</span><span class="op">,</span> <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;create_entity&quot;</span> } }</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">// Query available types</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>{ <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;introspect&quot;</span><span class="op">,</span> <span class="dt">params</span><span class="op">:</span> { <span class="dt">query</span><span class="op">:</span> <span class="st">&quot;types&quot;</span><span class="op">,</span> <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;EntityType&quot;</span> } }</span></code></pre></div>
+<p>Implementations MUST support the <code>introspect</code> operation as a READ-category operation on a documented endpoint family.</p>
 <hr />
 <h2 id="core-concepts">Core Concepts</h2>
 <h3 id="schema-driven-operations">Schema-Driven Operations</h3>
 <p>Operations SHOULD be defined declaratively with:</p>
 <ul>
 <li><strong>name</strong> - The operation identifier</li>
-<li><strong>endpoint</strong> - The CRUDE endpoint classification</li>
+<li><strong>semantic_category</strong> - The standard CREATE/READ/UPDATE/DELETE/EXECUTE classification</li>
+<li><strong>endpoint</strong> - The exposed endpoint family name</li>
 <li><strong>description</strong> - Human-readable description</li>
 <li><strong>params</strong> - Required and optional parameter definitions</li>
 <li><strong>handler</strong> - Reference to the implementation handler</li>
@@ -367,40 +373,40 @@ mcp_aql_execute - EXECUTE operations</code></pre>
 <h3 id="response-format">Response Format</h3>
 <p>All MCP-AQL operations MUST return discriminated responses:</p>
 <p><strong>Success:</strong></p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>{</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">success</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">data</span><span class="op">:</span> { <span class="co">/* operation result */</span> }</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
-<p><strong>Failure:</strong></p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>{</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">success</span><span class="op">:</span> <span class="kw">false</span><span class="op">,</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">error</span><span class="op">:</span> {</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">code</span><span class="op">:</span> <span class="st">&quot;VALIDATION_ERROR&quot;</span><span class="op">,</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">message</span><span class="op">:</span> <span class="st">&quot;Required parameter &#39;entity_name&#39; is missing&quot;</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">success</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">data</span><span class="op">:</span> { <span class="co">/* operation result */</span> }</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><strong>Failure:</strong></p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">success</span><span class="op">:</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">error</span><span class="op">:</span> {</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">code</span><span class="op">:</span> <span class="st">&quot;VALIDATION_ERROR&quot;</span><span class="op">,</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">message</span><span class="op">:</span> <span class="st">&quot;Required parameter &#39;entity_name&#39; is missing&quot;</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <p>Implementations SHOULD include an error <code>code</code> for programmatic handling and MUST include a human-readable <code>message</code>.</p>
 <hr />
 <h2 id="batch-operations">Batch Operations</h2>
 <p>MCP-AQL implementations MAY support batch operations for executing multiple operations in a single request.</p>
 <h3 id="batch-request-format">Batch Request Format</h3>
-<div class="sourceCode" id="cb9"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>{</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">operations</span><span class="op">:</span> [</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    { <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;create_entity&quot;</span><span class="op">,</span> <span class="dt">params</span><span class="op">:</span> { <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;entity1&quot;</span> } }<span class="op">,</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    { <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;create_entity&quot;</span><span class="op">,</span> <span class="dt">params</span><span class="op">:</span> { <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;entity2&quot;</span> } }<span class="op">,</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    { <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;activate_entity&quot;</span><span class="op">,</span> <span class="dt">params</span><span class="op">:</span> { <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;entity1&quot;</span> } }</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  ]</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
-<h3 id="batch-response-format">Batch Response Format</h3>
 <div class="sourceCode" id="cb10"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>{</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">success</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">results</span><span class="op">:</span> [</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    { <span class="dt">index</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span> <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;create_entity&quot;</span><span class="op">,</span> <span class="dt">result</span><span class="op">:</span> { <span class="dt">success</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span> <span class="dt">data</span><span class="op">:</span> { <span class="co">/* ... */</span> } } }<span class="op">,</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    { <span class="dt">index</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span> <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;create_entity&quot;</span><span class="op">,</span> <span class="dt">result</span><span class="op">:</span> { <span class="dt">success</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span> <span class="dt">data</span><span class="op">:</span> { <span class="co">/* ... */</span> } } }<span class="op">,</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    { <span class="dt">index</span><span class="op">:</span> <span class="dv">2</span><span class="op">,</span> <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;activate_entity&quot;</span><span class="op">,</span> <span class="dt">result</span><span class="op">:</span> { <span class="dt">success</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span> <span class="dt">data</span><span class="op">:</span> { <span class="co">/* ... */</span> } } }</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  ]<span class="op">,</span></span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">summary</span><span class="op">:</span> { <span class="dt">total</span><span class="op">:</span> <span class="dv">3</span><span class="op">,</span> <span class="dt">succeeded</span><span class="op">:</span> <span class="dv">3</span><span class="op">,</span> <span class="dt">failed</span><span class="op">:</span> <span class="dv">0</span> }</span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">operations</span><span class="op">:</span> [</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    { <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;create_entity&quot;</span><span class="op">,</span> <span class="dt">params</span><span class="op">:</span> { <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;entity1&quot;</span> } }<span class="op">,</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    { <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;create_entity&quot;</span><span class="op">,</span> <span class="dt">params</span><span class="op">:</span> { <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;entity2&quot;</span> } }<span class="op">,</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    { <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;activate_entity&quot;</span><span class="op">,</span> <span class="dt">params</span><span class="op">:</span> { <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;entity1&quot;</span> } }</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  ]</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="batch-response-format">Batch Response Format</h3>
+<div class="sourceCode" id="cb11"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">success</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">results</span><span class="op">:</span> [</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    { <span class="dt">index</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span> <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;create_entity&quot;</span><span class="op">,</span> <span class="dt">result</span><span class="op">:</span> { <span class="dt">success</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span> <span class="dt">data</span><span class="op">:</span> { <span class="co">/* ... */</span> } } }<span class="op">,</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    { <span class="dt">index</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span> <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;create_entity&quot;</span><span class="op">,</span> <span class="dt">result</span><span class="op">:</span> { <span class="dt">success</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span> <span class="dt">data</span><span class="op">:</span> { <span class="co">/* ... */</span> } } }<span class="op">,</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    { <span class="dt">index</span><span class="op">:</span> <span class="dv">2</span><span class="op">,</span> <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;activate_entity&quot;</span><span class="op">,</span> <span class="dt">result</span><span class="op">:</span> { <span class="dt">success</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span> <span class="dt">data</span><span class="op">:</span> { <span class="co">/* ... */</span> } } }</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  ]<span class="op">,</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">summary</span><span class="op">:</span> { <span class="dt">total</span><span class="op">:</span> <span class="dv">3</span><span class="op">,</span> <span class="dt">succeeded</span><span class="op">:</span> <span class="dv">3</span><span class="op">,</span> <span class="dt">failed</span><span class="op">:</span> <span class="dv">0</span> }</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <p>When batch operations are supported, implementations:</p>
 <ul>
 <li>MUST process operations in order</li>
@@ -412,9 +418,9 @@ mcp_aql_execute - EXECUTE operations</code></pre>
 <h2 id="conformance">Conformance</h2>
 <p>An MCP-AQL implementation is conformant if it:</p>
 <ol type="1">
-<li>Implements at least one endpoint mode (CRUDE or Single)</li>
+<li>Implements at least one endpoint mode (semantic or Single)</li>
 <li>Enforces endpoint classification for all operations</li>
-<li>Provides the <code>introspect</code> operation on the READ endpoint</li>
+<li>Provides the <code>introspect</code> operation as a READ-category operation on a documented endpoint family</li>
 <li>Returns discriminated responses for all operations</li>
 <li>Validates required parameters before dispatching</li>
 </ol>

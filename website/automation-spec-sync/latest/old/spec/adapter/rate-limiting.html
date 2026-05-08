@@ -50,10 +50,10 @@
   <ul><li><a href="../security/confirmation-tokens.html">Confirmation Token Specification</a></li><li><a href="../security/execution-safety-loop.html">Execution Safety Loop Specification</a></li><li><a href="../security/gatekeeper.html">Security Model: Gatekeeper Specification</a></li></ul>
 </div><div class="docs-side-group">
   <h3>Features</h3>
-  <ul><li><a href="../features/collection-querying.html">MCP-AQL Collection Querying</a></li><li><a href="../features/field-selection.html">Field Selection Specification</a></li><li><a href="../features/pagination.html">Cursor-Based Pagination Specification</a></li><li><a href="../features/warnings.html">Warnings Array Specification</a></li></ul>
+  <ul><li><a href="../features/aggregations.html">MCP-AQL Aggregations</a></li><li><a href="../features/collection-querying.html">MCP-AQL Collection Querying</a></li><li><a href="../features/computed-fields.html">MCP-AQL Computed Fields</a></li><li><a href="../features/field-selection.html">Field Selection Specification</a></li><li><a href="../features/pagination.html">Cursor-Based Pagination Specification</a></li><li><a href="../features/relationship-queries.html">MCP-AQL Relationship Queries</a></li><li><a href="../features/warnings.html">Warnings Array Specification</a></li></ul>
 </div><div class="docs-side-group">
   <h3>Guides</h3>
-  <ul><li><a href="../guides/protocol-comparison.html">Protocol Comparison Guide</a></li><li><a href="../guides/README.html">Developer Guides</a></li></ul>
+  <ul><li><a href="../guides/cross-domain-implementation.html">Cross-Domain Implementation Guide</a></li><li><a href="../guides/protocol-comparison.html">Protocol Comparison Guide</a></li><li><a href="../guides/README.html">Developer Guides</a></li></ul>
 </div><div class="docs-side-group">
   <h3>Process</h3>
   <ul><li><a href="../process/breaking-changes.html">MCP-AQL Breaking Change Policy</a></li><li><a href="../process/preliminary-public-launch-checklist.html">Preliminary Public Launch Checklist</a></li><li><a href="../process/rfc-process.html">RFC Process for MCP-AQL Specification</a></li><li><a href="../process/versioning.html">Versioning Strategy</a></li><li><a href="../repo/CHANGELOG.html">Changelog</a></li></ul>
@@ -323,24 +323,24 @@
 <h3 id="32-threshold-behaviors">3.2 Threshold Behaviors</h3>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Threshold</th>
 <th>Behavior</th>
 <th>User Experience</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><code>warn</code></td>
 <td>Log warning, continue</td>
 <td>Notification displayed</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>pause</code></td>
 <td>Require confirmation</td>
 <td>"Continue?" prompt</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>hard_stop</code></td>
 <td>Block all requests</td>
 <td>Error response</td>
@@ -474,29 +474,29 @@
 <h3 id="51-rate-limit-error-codes">5.1 Rate Limit Error Codes</h3>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Code</th>
 <th>Description</th>
 <th>Recovery</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><code>RATE_LIMIT_EXCEEDED</code></td>
 <td>Target API rate limit reached</td>
 <td>Wait for reset</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>RATE_LIMIT_QUOTA_PAUSE</code></td>
 <td>User quota pause threshold</td>
 <td>Confirm to continue</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>RATE_LIMIT_QUOTA_EXHAUSTED</code></td>
 <td>User quota hard stop</td>
 <td>Wait for reset</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>RATE_LIMIT_QUOTA_WARNING</code></td>
 <td>Approaching limit (in warnings)</td>
 <td>Consider slowing</td>
@@ -573,25 +573,25 @@
 <h3 id="63-status-values">6.3 Status Values</h3>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Status</th>
 <th>Meaning</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><code>ok</code></td>
 <td>Below warn threshold</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>warn</code></td>
 <td>Above warn, below pause</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>paused</code></td>
 <td>At pause threshold, confirmation required</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>exhausted</code></td>
 <td>At hard stop, requests blocked</td>
 </tr>

@@ -50,10 +50,10 @@
   <ul><li><a href="../security/confirmation-tokens.html">Confirmation Token Specification</a></li><li><a href="../security/execution-safety-loop.html">Execution Safety Loop Specification</a></li><li><a href="../security/gatekeeper.html">Security Model: Gatekeeper Specification</a></li></ul>
 </div><div class="docs-side-group">
   <h3>Features</h3>
-  <ul><li><a href="collection-querying.html">MCP-AQL Collection Querying</a></li><li><a href="field-selection.html">Field Selection Specification</a></li><li><a class="current" aria-current="page" href="pagination.html">Cursor-Based Pagination Specification</a></li><li><a href="warnings.html">Warnings Array Specification</a></li></ul>
+  <ul><li><a href="aggregations.html">MCP-AQL Aggregations</a></li><li><a href="collection-querying.html">MCP-AQL Collection Querying</a></li><li><a href="computed-fields.html">MCP-AQL Computed Fields</a></li><li><a href="field-selection.html">Field Selection Specification</a></li><li><a class="current" aria-current="page" href="pagination.html">Cursor-Based Pagination Specification</a></li><li><a href="relationship-queries.html">MCP-AQL Relationship Queries</a></li><li><a href="warnings.html">Warnings Array Specification</a></li></ul>
 </div><div class="docs-side-group">
   <h3>Guides</h3>
-  <ul><li><a href="../guides/protocol-comparison.html">Protocol Comparison Guide</a></li><li><a href="../guides/README.html">Developer Guides</a></li></ul>
+  <ul><li><a href="../guides/cross-domain-implementation.html">Cross-Domain Implementation Guide</a></li><li><a href="../guides/protocol-comparison.html">Protocol Comparison Guide</a></li><li><a href="../guides/README.html">Developer Guides</a></li></ul>
 </div><div class="docs-side-group">
   <h3>Process</h3>
   <ul><li><a href="../process/breaking-changes.html">MCP-AQL Breaking Change Policy</a></li><li><a href="../process/preliminary-public-launch-checklist.html">Preliminary Public Launch Checklist</a></li><li><a href="../process/rfc-process.html">RFC Process for MCP-AQL Specification</a></li><li><a href="../process/versioning.html">Versioning Strategy</a></li><li><a href="../repo/CHANGELOG.html">Changelog</a></li></ul>
@@ -175,29 +175,29 @@
 <h3 id="22-parameter-combinations">2.2 Parameter Combinations</h3>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Parameters</th>
 <th>Behavior</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><code>first</code></td>
 <td>First N items from start</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>first</code> + <code>after</code></td>
 <td>First N items after cursor</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>last</code></td>
 <td>Last N items from end</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>last</code> + <code>before</code></td>
 <td>Last N items before cursor</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>None</td>
 <td>Default page size from start</td>
 </tr>
@@ -295,34 +295,34 @@
 <h3 id="32-pageinfo-requirements">3.2 PageInfo Requirements</h3>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Field</th>
 <th>Required</th>
 <th>Notes</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><code>hasNextPage</code></td>
 <td>Yes</td>
 <td>Always include, even if false</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>hasPreviousPage</code></td>
 <td>Yes</td>
 <td>Always include, even if false</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>startCursor</code></td>
 <td>Conditional</td>
 <td>Required when results are returned (<code>items.length &gt; 0</code> or <code>edges.length &gt; 0</code>)</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>endCursor</code></td>
 <td>Conditional</td>
 <td>Required when results are returned (<code>items.length &gt; 0</code> or <code>edges.length &gt; 0</code>)</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>totalCount</code></td>
 <td>No</td>
 <td>Include when available without performance impact</td>
@@ -439,25 +439,25 @@
 <h3 id="44-choosing-response-format">4.4 Choosing Response Format</h3>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Use Case</th>
 <th>Recommended Format</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td>Simple listing</td>
 <td><code>items</code> array</td>
 </tr>
-<tr>
+<tr class="even">
 <td>Modify during iteration</td>
 <td><code>edges</code> with cursors</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>LLM context (minimize tokens)</td>
 <td><code>items</code> array</td>
 </tr>
-<tr>
+<tr class="even">
 <td>Resume from specific item</td>
 <td><code>edges</code> with cursors</td>
 </tr>
@@ -507,34 +507,34 @@
 <p>The following operation types SHOULD support pagination:</p>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Operation</th>
 <th>Required</th>
 <th>Notes</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><code>list_elements</code></td>
 <td>Yes</td>
 <td>Core element listing</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>search_elements</code></td>
 <td>Yes</td>
 <td>Search results</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>query_elements</code></td>
 <td>Yes</td>
 <td>Complex queries</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>list_*</code></td>
 <td>Yes</td>
 <td>Any list operation</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>search_*</code></td>
 <td>Yes</td>
 <td>Any search operation</td>
@@ -545,21 +545,21 @@
 <p>When pagination parameters are omitted:</p>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Aspect</th>
 <th>Default</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td>Page size</td>
 <td>Implementation-defined (RECOMMENDED: 20)</td>
 </tr>
-<tr>
+<tr class="even">
 <td>Direction</td>
 <td>Forward (from start)</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>Cursor</td>
 <td>None (first page)</td>
 </tr>
@@ -711,9 +711,9 @@
     <span class="page-nav-eyebrow">Previous page</span>
     <strong class="page-nav-label">Field Selection Specification</strong>
   </a>
-  <a class="page-nav-link next" href="warnings.html">
+  <a class="page-nav-link next" href="relationship-queries.html">
     <span class="page-nav-eyebrow">Next page</span>
-    <strong class="page-nav-label">Warnings Array Specification</strong>
+    <strong class="page-nav-label">MCP-AQL Relationship Queries</strong>
   </a>
 </nav>
       </article>

@@ -163,19 +163,19 @@ Client Retry (with token)
 <p>Tokens are opaque strings with a prefix indicating their purpose:</p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Prefix</th>
 <th>Purpose</th>
 <th>Example</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><code>conf_</code></td>
 <td>Dangerous operation confirmation</td>
 <td><code>conf_a1b2c3d4e5f6g7h8</code></td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>quota_continue_</code></td>
 <td>Quota pause continuation</td>
 <td><code>quota_continue_def456</code></td>
@@ -232,21 +232,21 @@ identifier = 1*64(ALPHA / DIGIT / &quot;_&quot; / &quot;-&quot;)</code></pre>
 <p>Token identifiers MUST be generated with sufficient entropy to prevent guessing:</p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Requirement</th>
 <th>Specification</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>Minimum entropy</td>
 <td>128 bits</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Recommended</td>
 <td>256 bits</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Source</td>
 <td>Cryptographically secure random number generator (CSPRNG)</td>
 </tr>
@@ -313,39 +313,39 @@ identifier = 1*64(ALPHA / DIGIT / &quot;_&quot; / &quot;-&quot;)</code></pre>
 <p>Token validation MUST perform all of the following checks:</p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Check</th>
 <th>Error Code</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>Token exists</td>
 <td><code>TOKEN_INVALID</code></td>
 <td>Token ID not found in store</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Not expired</td>
 <td><code>TOKEN_EXPIRED</code></td>
 <td>Current time &gt; expires_at</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Not consumed</td>
 <td><code>TOKEN_ALREADY_USED</code></td>
 <td>Token already redeemed</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Operation matches</td>
 <td><code>TOKEN_SCOPE_MISMATCH</code></td>
 <td>Token issued for different operation</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Parameters match</td>
 <td><code>TOKEN_SCOPE_MISMATCH</code></td>
 <td>Critical parameters changed</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Adapter matches</td>
 <td><code>TOKEN_SCOPE_MISMATCH</code></td>
 <td>Token issued by different adapter</td>
@@ -401,24 +401,24 @@ identifier = 1*64(ALPHA / DIGIT / &quot;_&quot; / &quot;-&quot;)</code></pre>
 <p>Token expiration MUST be enforced:</p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Context</th>
 <th>Default TTL</th>
 <th>Maximum TTL</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>Dangerous operation (destructive/dangerous - levels 2-3)</td>
 <td>5 minutes</td>
 <td>15 minutes</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Dangerous operation (forbidden - level 4)</td>
 <td>2 minutes</td>
 <td>5 minutes</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Quota continuation</td>
 <td>5 minutes</td>
 <td>10 minutes</td>
@@ -436,7 +436,7 @@ identifier = 1*64(ALPHA / DIGIT / &quot;_&quot; / &quot;-&quot;)</code></pre>
 <p>Implementations SHOULD allow operators to configure the clock skew tolerance value:</p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Setting</th>
 <th>Default</th>
 <th>Range</th>
@@ -444,7 +444,7 @@ identifier = 1*64(ALPHA / DIGIT / &quot;_&quot; / &quot;-&quot;)</code></pre>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><code>clock_skew_tolerance_seconds</code></td>
 <td>30</td>
 <td>0-300</td>
@@ -462,34 +462,34 @@ identifier = 1*64(ALPHA / DIGIT / &quot;_&quot; / &quot;-&quot;)</code></pre>
 <p><strong>Deployment environment recommendations:</strong></p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Environment</th>
 <th>Recommended Value</th>
 <th>Rationale</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>Typical (NTP-synced)</td>
 <td>30s (default)</td>
 <td>Accommodates normal clock drift</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Air-gapped systems</td>
 <td>60-120s</td>
 <td>May have significant clock sync drift</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>IoT / embedded</td>
 <td>60-120s</td>
 <td>Often lack reliable NTP access</td>
 </tr>
-<tr class="even">
+<tr>
 <td>High-security</td>
 <td>0-5s</td>
 <td>Minimize replay attack window</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Zero-trust</td>
 <td>0s</td>
 <td>Strict timing, requires synchronized clocks</td>
@@ -582,21 +582,21 @@ identifier = 1*64(ALPHA / DIGIT / &quot;_&quot; / &quot;-&quot;)</code></pre>
 <h3 id="55-storage-requirements">5.5 Storage Requirements</h3>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Requirement</th>
 <th>Specification</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>Persistence</td>
 <td>At minimum, in-memory with TTL eviction</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Cleanup</td>
 <td>Expired tokens SHOULD be purged within 1 hour</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Capacity</td>
 <td>SHOULD support at least 1000 active tokens per adapter</td>
 </tr>

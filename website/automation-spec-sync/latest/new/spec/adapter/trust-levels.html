@@ -148,34 +148,34 @@
 <h3 id="21-trust-level-values">2.1 Trust Level Values</h3>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Level</th>
 <th>Value</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>Untested</td>
 <td><code>untested</code></td>
 <td>Newly created, no validation performed</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Generated</td>
 <td><code>generated</code></td>
 <td>Programmatically generated, basic schema validation passed</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Validated</td>
 <td><code>validated</code></td>
 <td>Passed programmatic test harness</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Community Reviewed</td>
 <td><code>community_reviewed</code></td>
 <td>Validated plus community vetting process</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Certified</td>
 <td><code>certified</code></td>
 <td>Official verification by vendor or trusted authority</td>
@@ -319,34 +319,34 @@
 <p><strong>Fields:</strong></p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Field</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><code>tests_passed</code></td>
 <td>integer</td>
 <td>Number of tests that passed</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>tests_total</code></td>
 <td>integer</td>
 <td>Total number of tests executed</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>endpoints_verified</code></td>
 <td>integer</td>
 <td>Number of API endpoints tested</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>coverage_percent</code></td>
 <td>number</td>
 <td>Percentage of operations covered by tests</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>last_api_response</code></td>
 <td>string</td>
 <td>Timestamp of last successful API response</td>
@@ -369,34 +369,34 @@
 <p><strong>Promotion record fields:</strong></p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Field</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><code>from</code></td>
 <td>string</td>
 <td>Previous trust level</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>to</code></td>
 <td>string</td>
 <td>New trust level</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>at</code></td>
 <td>string</td>
 <td>ISO 8601 timestamp</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>by</code></td>
 <td>string</td>
 <td>Tool or person identifier</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>reason</code></td>
 <td>string</td>
 <td>Optional explanation</td>
@@ -417,39 +417,39 @@
 <p><strong>Certification fields:</strong></p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Field</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><code>authority</code></td>
 <td>string</td>
 <td>Certifying organization name</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>signature</code></td>
 <td>string</td>
 <td>Cryptographic signature (base64)</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>certificate_id</code></td>
 <td>string</td>
 <td>Unique certificate identifier</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>issued_at</code></td>
 <td>string</td>
 <td>When certification was granted</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>expires_at</code></td>
 <td>string</td>
 <td>When certification expires</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>scope</code></td>
 <td>array</td>
 <td>What the certification covers</td>
@@ -465,29 +465,29 @@
 <h3 id="42-promotion-triggers">4.2 Promotion Triggers</h3>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Transition</th>
 <th>Trigger</th>
 <th>Requirements</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>untested → generated</td>
 <td>Schema validation</td>
 <td>YAML parses, required fields present, valid structure</td>
 </tr>
-<tr class="even">
+<tr>
 <td>generated → validated</td>
 <td>Test harness pass</td>
 <td>All read ops succeed, representative create/update tested</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>validated → community_reviewed</td>
 <td>Community review</td>
 <td>N reviewers approve, no security flags</td>
 </tr>
-<tr class="even">
+<tr>
 <td>community_reviewed → certified</td>
 <td>Vendor attestation</td>
 <td>Signed certificate from recognized authority</td>
@@ -518,25 +518,25 @@
 <p>Adapters SHOULD be periodically re-validated to maintain trust level:</p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Trust Level</th>
 <th>Recommended Re-validation</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>generated</td>
 <td>On each use (schema check)</td>
 </tr>
-<tr class="even">
+<tr>
 <td>validated</td>
 <td>Weekly or on API version change</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>community_reviewed</td>
 <td>Monthly</td>
 </tr>
-<tr class="even">
+<tr>
 <td>certified</td>
 <td>Per certification terms</td>
 </tr>
@@ -548,33 +548,33 @@
 <p>Systems SHOULD enforce minimum trust levels for operations based on risk:</p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Operation Category</th>
 <th>Minimum Trust Level</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>Introspection</td>
 <td><code>untested</code></td>
 </tr>
-<tr class="even">
+<tr>
 <td>Read operations</td>
 <td><code>generated</code></td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Safe create operations</td>
 <td><code>validated</code></td>
 </tr>
-<tr class="even">
+<tr>
 <td>Update operations</td>
 <td><code>validated</code></td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Delete operations</td>
 <td><code>community_reviewed</code></td>
 </tr>
-<tr class="even">
+<tr>
 <td>Dangerous operations</td>
 <td><code>certified</code></td>
 </tr>

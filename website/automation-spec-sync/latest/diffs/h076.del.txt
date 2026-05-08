@@ -1,8 +1,0 @@
-The CRUDE Pattern
-MCP-AQL is a protocol specification that consolidates multiple MCP (Model Context Protocol) tools into semantic endpoints, providing approximately 96% token reduction while maintaining full functionality. It enables structured communication between AI models and context-providing services through a unified query language.
-This draft is not yet a final certification baseline. Some conformance automation and ecosystem hardening work is still in progress.
-MCP-AQL extends traditional CRUD with an Execute endpoint, creating the CRUDE pattern:
-CRUDE Mode
-Detailed endpoint semantics
-Use the CRUDE endpoint pattern (or single endpoint mode)
-Status Note: Schema/example validation is implemented in this repository. The full cross-implementation conformance runner described in docs/conformance-testing.md is still being finalized.

@@ -50,10 +50,10 @@
   <ul><li><a href="../security/confirmation-tokens.html">Confirmation Token Specification</a></li><li><a href="../security/execution-safety-loop.html">Execution Safety Loop Specification</a></li><li><a href="../security/gatekeeper.html">Security Model: Gatekeeper Specification</a></li></ul>
 </div><div class="docs-side-group">
   <h3>Features</h3>
-  <ul><li><a href="../features/collection-querying.html">MCP-AQL Collection Querying</a></li><li><a href="../features/field-selection.html">Field Selection Specification</a></li><li><a href="../features/pagination.html">Cursor-Based Pagination Specification</a></li><li><a href="../features/warnings.html">Warnings Array Specification</a></li></ul>
+  <ul><li><a href="../features/aggregations.html">MCP-AQL Aggregations</a></li><li><a href="../features/collection-querying.html">MCP-AQL Collection Querying</a></li><li><a href="../features/computed-fields.html">MCP-AQL Computed Fields</a></li><li><a href="../features/field-selection.html">Field Selection Specification</a></li><li><a href="../features/pagination.html">Cursor-Based Pagination Specification</a></li><li><a href="../features/relationship-queries.html">MCP-AQL Relationship Queries</a></li><li><a href="../features/warnings.html">Warnings Array Specification</a></li></ul>
 </div><div class="docs-side-group">
   <h3>Guides</h3>
-  <ul><li><a class="current" aria-current="page" href="protocol-comparison.html">Protocol Comparison Guide</a></li><li><a href="README.html">Developer Guides</a></li></ul>
+  <ul><li><a href="cross-domain-implementation.html">Cross-Domain Implementation Guide</a></li><li><a class="current" aria-current="page" href="protocol-comparison.html">Protocol Comparison Guide</a></li><li><a href="README.html">Developer Guides</a></li></ul>
 </div><div class="docs-side-group">
   <h3>Process</h3>
   <ul><li><a href="../process/breaking-changes.html">MCP-AQL Breaking Change Policy</a></li><li><a href="../process/preliminary-public-launch-checklist.html">Preliminary Public Launch Checklist</a></li><li><a href="../process/rfc-process.html">RFC Process for MCP-AQL Specification</a></li><li><a href="../process/versioning.html">Versioning Strategy</a></li><li><a href="../repo/CHANGELOG.html">Changelog</a></li></ul>
@@ -124,7 +124,7 @@
 <p>MCP-AQL supports multiple endpoint modes with different token trade-offs:</p>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Mode</th>
 <th>Endpoints</th>
 <th>Token Cost</th>
@@ -133,21 +133,21 @@
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><strong>Discrete</strong></td>
 <td>Many individual tools</td>
 <td>~30,000</td>
 <td>Baseline</td>
 <td>Traditional MCP</td>
 </tr>
-<tr>
+<tr class="even">
 <td><strong>CRUDE</strong></td>
 <td>5 semantic endpoints</td>
 <td>~4,300</td>
 <td>~85%</td>
 <td>Host-level permission control</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><strong>Single</strong></td>
 <td>1 unified endpoint</td>
 <td>~1,100</td>
@@ -161,29 +161,29 @@
 <p>Developers often approach new protocols through the lens of what they already know. This guide provides mental models for understanding MCP-AQL by drawing parallels to:</p>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Protocol</th>
 <th>Similarity to MCP-AQL</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><strong>GraphQL</strong></td>
 <td>Introspection, typed operations, nested input objects</td>
 </tr>
-<tr>
+<tr class="even">
 <td><strong>MongoDB</strong></td>
 <td>Document-based operations, flexible queries</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><strong>REST</strong></td>
 <td>Resource-oriented endpoints, HTTP-like semantics</td>
 </tr>
-<tr>
+<tr class="even">
 <td><strong>SQL</strong></td>
 <td>Structured queries, CRUD operations</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><strong>Classic MCP</strong></td>
 <td>Tool-based interface (what MCP-AQL can replace)</td>
 </tr>
@@ -202,7 +202,7 @@
 <h2 id="quick-reference-table">Quick Reference Table</h2>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Concept</th>
 <th>GraphQL</th>
 <th>MongoDB</th>
@@ -212,7 +212,7 @@
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><strong>Define Operation</strong></td>
 <td><code>mutation createUser</code></td>
 <td><code>db.users.insertOne()</code></td>
@@ -220,7 +220,7 @@
 <td><code>INSERT INTO users</code></td>
 <td><code>{ operation: "..." }</code></td>
 </tr>
-<tr>
+<tr class="even">
 <td><strong>Specify Parameters</strong></td>
 <td><code>variables: { ... }</code></td>
 <td><code>{ filter: { ... } }</code></td>
@@ -228,7 +228,7 @@
 <td><code>WHERE clause</code></td>
 <td><code>params: { ... }</code></td>
 </tr>
-<tr>
+<tr class="odd">
 <td><strong>Target Type</strong></td>
 <td>Type in schema</td>
 <td>Collection name</td>
@@ -236,7 +236,7 @@
 <td>Table name</td>
 <td>Implementation-defined</td>
 </tr>
-<tr>
+<tr class="even">
 <td><strong>Read One</strong></td>
 <td><code>query { user(id) }</code></td>
 <td><code>findOne({ _id })</code></td>
@@ -244,7 +244,7 @@
 <td><code>SELECT ... WHERE id=</code></td>
 <td>Read operation</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><strong>Read Many</strong></td>
 <td><code>query { users }</code></td>
 <td><code>find({})</code></td>
@@ -252,7 +252,7 @@
 <td><code>SELECT * FROM</code></td>
 <td>List operation</td>
 </tr>
-<tr>
+<tr class="even">
 <td><strong>Create</strong></td>
 <td><code>mutation { createUser }</code></td>
 <td><code>insertOne()</code></td>
@@ -260,7 +260,7 @@
 <td><code>INSERT INTO</code></td>
 <td>Create operation</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><strong>Update</strong></td>
 <td><code>mutation { updateUser }</code></td>
 <td><code>updateOne()</code></td>
@@ -268,7 +268,7 @@
 <td><code>UPDATE ... SET</code></td>
 <td>Update operation</td>
 </tr>
-<tr>
+<tr class="even">
 <td><strong>Delete</strong></td>
 <td><code>mutation { deleteUser }</code></td>
 <td><code>deleteOne()</code></td>
@@ -276,7 +276,7 @@
 <td><code>DELETE FROM</code></td>
 <td>Delete operation</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><strong>Search</strong></td>
 <td><code>query { search(q) }</code></td>
 <td><code>find({ $text })</code></td>
@@ -284,7 +284,7 @@
 <td><code>LIKE '%term%'</code></td>
 <td>Search operation</td>
 </tr>
-<tr>
+<tr class="even">
 <td><strong>Discover Schema</strong></td>
 <td><code>__schema</code> introspection</td>
 <td><code>db.getCollectionInfos()</code></td>
@@ -292,7 +292,7 @@
 <td><code>DESCRIBE table</code></td>
 <td><code>introspect</code></td>
 </tr>
-<tr>
+<tr class="odd">
 <td><strong>Field Selection</strong></td>
 <td>Field list in query</td>
 <td>Projection <code>{ field: 1 }</code></td>
@@ -300,7 +300,7 @@
 <td><code>SELECT a, b</code></td>
 <td><code>fields</code> param or preset</td>
 </tr>
-<tr>
+<tr class="even">
 <td><strong>Response Format</strong></td>
 <td><code>{ data, errors }</code></td>
 <td>Document / cursor</td>
@@ -308,7 +308,7 @@
 <td>Result set</td>
 <td><code>{ success, data/error }</code></td>
 </tr>
-<tr>
+<tr class="odd">
 <td><strong>Error Handling</strong></td>
 <td><code>errors</code> array</td>
 <td>Exception</td>
@@ -325,34 +325,34 @@
 <p>GraphQL separates read operations (queries) from write operations (mutations). MCP-AQL takes this further with the <strong>CRUDE pattern</strong> (5 semantic categories):</p>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>GraphQL</th>
 <th>MCP-AQL Endpoint</th>
 <th>Purpose</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><code>query</code></td>
 <td><code>mcp_aql_read</code></td>
 <td>Read-only operations</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>mutation</code> (create)</td>
 <td><code>mcp_aql_create</code></td>
 <td>Additive operations</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>mutation</code> (update)</td>
 <td><code>mcp_aql_update</code></td>
 <td>Modifying operations</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>mutation</code> (delete)</td>
 <td><code>mcp_aql_delete</code></td>
 <td>Destructive operations</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>subscription</code></td>
 <td><code>mcp_aql_execute</code></td>
 <td>Runtime/stateful operations</td>
@@ -380,21 +380,21 @@
 <p>In GraphQL, you query specific types (<code>User</code>, <code>Post</code>). In MCP-AQL, implementations define their own resource type parameter:</p>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>GraphQL</th>
 <th>MCP-AQL Pattern</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><code>type User</code></td>
 <td><code>resource_type: "user"</code></td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>type Post</code></td>
 <td><code>resource_type: "post"</code></td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>type Comment</code></td>
 <td><code>resource_type: "comment"</code></td>
 </tr>
@@ -459,24 +459,24 @@
 <span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Preset</th>
 <th>Description</th>
 <th>Typical Token Savings</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><code>minimal</code></td>
 <td>Only identifier and description</td>
 <td>~86%</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>standard</code></td>
 <td>Common fields for most use cases</td>
 <td>~73%</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>full</code></td>
 <td>All fields (default)</td>
 <td>0%</td>
@@ -486,34 +486,34 @@
 <h3 id="key-differences-from-graphql">Key Differences from GraphQL</h3>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Aspect</th>
 <th>GraphQL</th>
 <th>MCP-AQL</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><strong>Field Selection</strong></td>
 <td>Client selects specific fields</td>
 <td><code>fields</code> param or presets</td>
 </tr>
-<tr>
+<tr class="even">
 <td><strong>Subscriptions</strong></td>
 <td>Real-time WebSocket streams</td>
 <td>EXECUTE for stateful lifecycle</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><strong>Schema Definition</strong></td>
 <td>SDL files</td>
 <td>Declarative operation schemas</td>
 </tr>
-<tr>
+<tr class="even">
 <td><strong>Fragments/Aliases</strong></td>
 <td>Supported</td>
 <td>Not applicable</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><strong>Batching</strong></td>
 <td>DataLoader pattern</td>
 <td>Built-in batch operations</td>
@@ -527,25 +527,25 @@
 <p>MongoDB organizes documents into collections. MCP-AQL implementations define resource type parameters:</p>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>MongoDB</th>
 <th>MCP-AQL Pattern</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><code>db.users</code></td>
 <td><code>resource_type: "user"</code></td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>db.posts</code></td>
 <td><code>resource_type: "post"</code></td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>db.comments</code></td>
 <td><code>resource_type: "comment"</code></td>
 </tr>
-<tr>
+<tr class="even">
 <td>Collection name in method</td>
 <td>Passed as parameter</td>
 </tr>
@@ -554,33 +554,33 @@
 <h3 id="crud-method-mapping">CRUD Method Mapping</h3>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>MongoDB</th>
 <th>MCP-AQL</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><code>insertOne()</code></td>
 <td><code>create_resource</code></td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>find()</code></td>
 <td><code>list_resources</code></td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>findOne()</code></td>
 <td><code>get_resource</code></td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>updateOne()</code></td>
 <td><code>update_resource</code></td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>deleteOne()</code></td>
 <td><code>delete_resource</code></td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>aggregate()</code></td>
 <td><code>search</code> or <code>query_resources</code></td>
 </tr>
@@ -642,34 +642,34 @@
 <h3 id="key-differences-from-mongodb">Key Differences from MongoDB</h3>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Aspect</th>
 <th>MongoDB</th>
 <th>MCP-AQL</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><strong>Query Operators</strong></td>
 <td>Rich ($gt, $in, $regex)</td>
 <td>Simplified search/filter</td>
 </tr>
-<tr>
+<tr class="even">
 <td><strong>Aggregation</strong></td>
 <td>Complex pipelines</td>
 <td>Normalized via <code>search</code> operation</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><strong>Indexes</strong></td>
 <td>User-defined</td>
 <td>Managed by server</td>
 </tr>
-<tr>
+<tr class="even">
 <td><strong>Transactions</strong></td>
 <td>Multi-document ACID</td>
 <td>Per-operation atomicity</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><strong>Cursors</strong></td>
 <td>Iterable result sets</td>
 <td>Paginated responses</td>
@@ -683,34 +683,34 @@
 <p>REST uses HTTP methods for semantics. MCP-AQL uses 5 semantic endpoints:</p>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>HTTP Method</th>
 <th>MCP-AQL Endpoint</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><code>POST</code> (create)</td>
 <td><code>mcp_aql_create</code></td>
 <td>Create new resources</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>GET</code></td>
 <td><code>mcp_aql_read</code></td>
 <td>Read resources</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>PUT</code> / <code>PATCH</code></td>
 <td><code>mcp_aql_update</code></td>
 <td>Modify resources</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>DELETE</code></td>
 <td><code>mcp_aql_delete</code></td>
 <td>Remove resources</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>N/A</td>
 <td><code>mcp_aql_execute</code></td>
 <td>Runtime operations</td>
@@ -721,29 +721,29 @@
 <p>REST encodes resources in URLs. MCP-AQL uses <code>operation</code> plus implementation-defined parameters:</p>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>REST Pattern</th>
 <th>MCP-AQL Pattern</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><code>GET /resources</code></td>
 <td><code>{ operation: "list_resources" }</code></td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>GET /resources/:id</code></td>
 <td><code>{ operation: "get_resource", params: { id } }</code></td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>POST /resources</code></td>
 <td><code>{ operation: "create_resource", params: { ... } }</code></td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>PUT /resources/:id</code></td>
 <td><code>{ operation: "update_resource", params: { id, input } }</code></td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>DELETE /resources/:id</code></td>
 <td><code>{ operation: "delete_resource", params: { id } }</code></td>
 </tr>
@@ -791,25 +791,25 @@ Content-Type: application/json
 <h3 id="error-handling">Error Handling</h3>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>REST</th>
 <th>MCP-AQL</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td>HTTP 200 OK</td>
 <td><code>{ success: true, data: ... }</code></td>
 </tr>
-<tr>
+<tr class="even">
 <td>HTTP 400 Bad Request</td>
 <td><code>{ success: false, error: "Invalid parameter..." }</code></td>
 </tr>
-<tr>
+<tr class="odd">
 <td>HTTP 404 Not Found</td>
 <td><code>{ success: false, error: "Resource not found..." }</code></td>
 </tr>
-<tr>
+<tr class="even">
 <td>HTTP 500 Internal Error</td>
 <td><code>{ success: false, error: "..." }</code></td>
 </tr>
@@ -847,34 +847,34 @@ Content-Type: application/json
 <h3 id="key-differences-from-rest">Key Differences from REST</h3>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Aspect</th>
 <th>REST</th>
 <th>MCP-AQL</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><strong>Transport</strong></td>
 <td>HTTP</td>
 <td>MCP (stdio/SSE)</td>
 </tr>
-<tr>
+<tr class="even">
 <td><strong>Versioning</strong></td>
 <td>URL path (<code>/v1/...</code>)</td>
 <td>Schema version in response</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><strong>HATEOAS</strong></td>
 <td>Links in responses</td>
 <td>Introspection for discovery</td>
 </tr>
-<tr>
+<tr class="even">
 <td><strong>Caching</strong></td>
 <td>HTTP headers</td>
 <td>Server-managed</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><strong>Authentication</strong></td>
 <td>Headers (Bearer, API key)</td>
 <td>MCP session-based</td>
@@ -888,21 +888,21 @@ Content-Type: application/json
 <p>SQL organizes data into tables. MCP-AQL implementations define resource type parameters:</p>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>SQL</th>
 <th>MCP-AQL Pattern</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><code>users</code> table</td>
 <td><code>resource_type: "user"</code></td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>posts</code> table</td>
 <td><code>resource_type: "post"</code></td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>SELECT * FROM users</code></td>
 <td><code>list_resources</code> with <code>resource_type</code></td>
 </tr>
@@ -911,33 +911,33 @@ Content-Type: application/json
 <h3 id="sql-statement-mapping">SQL Statement Mapping</h3>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>SQL</th>
 <th>MCP-AQL Pattern</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><code>INSERT INTO</code></td>
 <td>Create operation</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>SELECT * FROM</code></td>
 <td>List operation</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>SELECT ... WHERE id =</code></td>
 <td>Get operation</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>UPDATE ... SET</code></td>
 <td>Update operation</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>DELETE FROM</code></td>
 <td>Delete operation</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>SELECT ... WHERE ... LIKE</code></td>
 <td>Search operation</td>
 </tr>
@@ -997,17 +997,17 @@ Content-Type: application/json
 <h3 id="schema-discovery">Schema Discovery</h3>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>SQL</th>
 <th>MCP-AQL</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><code>DESCRIBE users</code></td>
 <td><code>introspect</code> with <code>query: "types"</code></td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>SHOW TABLES</code></td>
 <td><code>introspect</code> with <code>query: "operations"</code></td>
 </tr>
@@ -1016,34 +1016,34 @@ Content-Type: application/json
 <h3 id="key-differences-from-sql">Key Differences from SQL</h3>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Aspect</th>
 <th>SQL</th>
 <th>MCP-AQL</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><strong>Query Language</strong></td>
 <td>Declarative SQL</td>
 <td>Structured JSON</td>
 </tr>
-<tr>
+<tr class="even">
 <td><strong>Joins</strong></td>
 <td>Complex multi-table joins</td>
 <td>Resource relationships via handlers</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><strong>Transactions</strong></td>
 <td>BEGIN/COMMIT/ROLLBACK</td>
 <td>Per-operation atomicity</td>
 </tr>
-<tr>
+<tr class="even">
 <td><strong>Indexes</strong></td>
 <td>User-defined CREATE INDEX</td>
 <td>Managed by server</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><strong>Stored Procedures</strong></td>
 <td>User-defined functions</td>
 <td>Agent execution</td>
@@ -1104,44 +1104,44 @@ mcp_aql_execute - EXECUTE operations (execute workflows, update state)</code></p
 <h3 id="tool-to-operation-mapping">Tool to Operation Mapping</h3>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Classic Tool Pattern</th>
 <th>MCP-AQL Operation Pattern</th>
 <th>Endpoint</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><code>create_&lt;type&gt;</code></td>
 <td><code>create_resource</code> + <code>resource_type</code></td>
 <td>CREATE</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>list_&lt;type&gt;s</code></td>
 <td><code>list_resources</code> + <code>resource_type</code></td>
 <td>READ</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>get_&lt;type&gt;</code></td>
 <td><code>get_resource</code> + <code>resource_type</code></td>
 <td>READ</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>edit_&lt;type&gt;</code></td>
 <td><code>update_resource</code> + <code>resource_type</code></td>
 <td>UPDATE</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>delete_&lt;type&gt;</code></td>
 <td><code>delete_resource</code> + <code>resource_type</code></td>
 <td>DELETE</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>search_&lt;type&gt;s</code></td>
 <td><code>search</code></td>
 <td>READ</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>execute_&lt;workflow&gt;</code></td>
 <td><code>execute_workflow</code></td>
 <td>EXECUTE</td>
@@ -1153,7 +1153,7 @@ mcp_aql_execute - EXECUTE operations (execute workflows, update state)</code></p
 <p><strong>After:</strong> Explicit CRUDE endpoint permissions:</p>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Endpoint</th>
 <th>readOnly</th>
 <th>destructive</th>
@@ -1161,31 +1161,31 @@ mcp_aql_execute - EXECUTE operations (execute workflows, update state)</code></p
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td>CREATE</td>
 <td>false</td>
 <td>false</td>
 <td>Additive, non-destructive</td>
 </tr>
-<tr>
+<tr class="even">
 <td>READ</td>
 <td>true</td>
 <td>false</td>
 <td>Safe, read-only</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>UPDATE</td>
 <td>false</td>
 <td>true</td>
 <td>Modifying</td>
 </tr>
-<tr>
+<tr class="even">
 <td>DELETE</td>
 <td>false</td>
 <td>true</td>
 <td>Destructive</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>EXECUTE</td>
 <td>false</td>
 <td>true</td>
@@ -1209,7 +1209,7 @@ mcp_aql_execute - EXECUTE operations (execute workflows, update state)</code></p
 <p>This table maps concepts across all compared protocols.</p>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Concept</th>
 <th>GraphQL</th>
 <th>MongoDB</th>
@@ -1219,7 +1219,7 @@ mcp_aql_execute - EXECUTE operations (execute workflows, update state)</code></p
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><strong>Namespace</strong></td>
 <td>Schema</td>
 <td>Database</td>
@@ -1227,7 +1227,7 @@ mcp_aql_execute - EXECUTE operations (execute workflows, update state)</code></p
 <td>Schema</td>
 <td>Implementation-defined</td>
 </tr>
-<tr>
+<tr class="even">
 <td><strong>Type/Entity</strong></td>
 <td>Type</td>
 <td>Collection</td>
@@ -1235,7 +1235,7 @@ mcp_aql_execute - EXECUTE operations (execute workflows, update state)</code></p
 <td>Table</td>
 <td>Resource type param</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><strong>Instance</strong></td>
 <td>Object</td>
 <td>Document</td>
@@ -1243,7 +1243,7 @@ mcp_aql_execute - EXECUTE operations (execute workflows, update state)</code></p
 <td>Row</td>
 <td>Resource</td>
 </tr>
-<tr>
+<tr class="even">
 <td><strong>Identifier</strong></td>
 <td>ID field</td>
 <td><code>_id</code></td>
@@ -1251,7 +1251,7 @@ mcp_aql_execute - EXECUTE operations (execute workflows, update state)</code></p
 <td>Primary key</td>
 <td>Resource ID</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><strong>Create</strong></td>
 <td>Mutation</td>
 <td><code>insertOne</code></td>
@@ -1259,7 +1259,7 @@ mcp_aql_execute - EXECUTE operations (execute workflows, update state)</code></p
 <td>INSERT</td>
 <td><code>create_*</code> operation</td>
 </tr>
-<tr>
+<tr class="even">
 <td><strong>Read One</strong></td>
 <td>Query</td>
 <td><code>findOne</code></td>
@@ -1267,7 +1267,7 @@ mcp_aql_execute - EXECUTE operations (execute workflows, update state)</code></p
 <td>SELECT ... WHERE</td>
 <td><code>get_*</code> operation</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><strong>Read Many</strong></td>
 <td>Query</td>
 <td><code>find</code></td>
@@ -1275,7 +1275,7 @@ mcp_aql_execute - EXECUTE operations (execute workflows, update state)</code></p
 <td>SELECT *</td>
 <td><code>list_*</code> operation</td>
 </tr>
-<tr>
+<tr class="even">
 <td><strong>Update</strong></td>
 <td>Mutation</td>
 <td><code>updateOne</code></td>
@@ -1283,7 +1283,7 @@ mcp_aql_execute - EXECUTE operations (execute workflows, update state)</code></p
 <td>UPDATE</td>
 <td><code>update_*</code> operation</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><strong>Delete</strong></td>
 <td>Mutation</td>
 <td><code>deleteOne</code></td>
@@ -1291,7 +1291,7 @@ mcp_aql_execute - EXECUTE operations (execute workflows, update state)</code></p
 <td>DELETE</td>
 <td><code>delete_*</code> operation</td>
 </tr>
-<tr>
+<tr class="even">
 <td><strong>Search</strong></td>
 <td>Query</td>
 <td><code>find</code>+text</td>
@@ -1299,7 +1299,7 @@ mcp_aql_execute - EXECUTE operations (execute workflows, update state)</code></p
 <td>LIKE/FTS</td>
 <td><code>search</code> operation</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><strong>Schema Discovery</strong></td>
 <td><code>__schema</code></td>
 <td><code>getCollectionInfos</code></td>
@@ -1307,7 +1307,7 @@ mcp_aql_execute - EXECUTE operations (execute workflows, update state)</code></p
 <td>DESCRIBE</td>
 <td><code>introspect</code></td>
 </tr>
-<tr>
+<tr class="even">
 <td><strong>Parameters</strong></td>
 <td>Variables</td>
 <td>Filter/options</td>
@@ -1315,7 +1315,7 @@ mcp_aql_execute - EXECUTE operations (execute workflows, update state)</code></p
 <td>WHERE/VALUES</td>
 <td><code>params</code> object</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><strong>Response</strong></td>
 <td><code>{ data, errors }</code></td>
 <td>Document</td>
@@ -1323,7 +1323,7 @@ mcp_aql_execute - EXECUTE operations (execute workflows, update state)</code></p
 <td>Result set</td>
 <td><code>{ success, data/error }</code></td>
 </tr>
-<tr>
+<tr class="even">
 <td><strong>Error</strong></td>
 <td><code>errors</code> array</td>
 <td>Exception</td>
@@ -1331,7 +1331,7 @@ mcp_aql_execute - EXECUTE operations (execute workflows, update state)</code></p
 <td>SQLSTATE</td>
 <td><code>{ success: false, error }</code></td>
 </tr>
-<tr>
+<tr class="odd">
 <td><strong>Batch</strong></td>
 <td>N/A (single)</td>
 <td><code>insertMany</code></td>
@@ -1339,7 +1339,7 @@ mcp_aql_execute - EXECUTE operations (execute workflows, update state)</code></p
 <td>Transaction</td>
 <td><code>operations</code> array</td>
 </tr>
-<tr>
+<tr class="even">
 <td><strong>Pagination</strong></td>
 <td><code>first/after</code></td>
 <td><code>skip/limit</code></td>
@@ -1551,24 +1551,24 @@ GET /api/swagger.json HTTP/1.1</code></pre>
 <h3 id="token-efficiency-summary">Token Efficiency Summary</h3>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Feature</th>
 <th>Token Savings</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><strong>CRUDE Consolidation</strong></td>
 <td>~85-96%</td>
 <td>Semantic endpoints instead of discrete tools</td>
 </tr>
-<tr>
+<tr class="even">
 <td><strong>On-Demand Introspection</strong></td>
 <td>~95%</td>
 <td>Query schemas as needed vs. upfront parsing</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><strong>Field Selection</strong></td>
 <td>~70-90%</td>
 <td>Return only requested fields in responses</td>
@@ -1587,9 +1587,9 @@ GET /api/swagger.json HTTP/1.1</code></pre>
           </div>
         </section>
         <nav class="page-nav" aria-label="Page navigation">
-  <a class="page-nav-link prev" href="../features/warnings.html">
+  <a class="page-nav-link prev" href="cross-domain-implementation.html">
     <span class="page-nav-eyebrow">Previous page</span>
-    <strong class="page-nav-label">Warnings Array Specification</strong>
+    <strong class="page-nav-label">Cross-Domain Implementation Guide</strong>
   </a>
   <a class="page-nav-link next" href="README.html">
     <span class="page-nav-eyebrow">Next page</span>

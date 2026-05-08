@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Detailed specifications for schemas, formats, and protocol structures.">
+  <title>MCP-AQL Spec | Reference Documentation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <a class="logo" href="../../index.html"><span class="logo-mark"></span>MCP-AQL</a>
+        <ul class="nav-links">
+          <li><a href="../../index.html">Home</a></li>
+          <li><a href="../../docs/index.html">Docs</a></li>
+          <li><a href="../../launch-checklist.html">Launch Checklist</a></li>
+          <li><a href="../../apis/index.html">Adapter Patterns</a></li>
+        </ul>
+        <form class="site-search" data-search-form data-index-url="../../data/search-index.json" role="search">
+          <label class="sr-only" for="site-search-input">Search MCP-AQL docs</label>
+          <input id="site-search-input" data-search-input type="search" placeholder="Search MCP-AQL docs, spec pages, and adapter patterns...">
+          <span class="search-count" data-search-count></span>
+          <ul class="search-results" data-search-results hidden></ul>
+        </form>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container docs-shell">
+      <aside class="docs-side">
+        <h2>Repo-Synced Spec</h2>
+        <p class="docs-side-note">Generated from <code>MCPAQL/spec</code> so the website carries the deeper protocol material too.</p>
+        <div class="docs-side-group">
+  <h3>Core</h3>
+  <ul><li><a href="../conformance-testing.html">MCP-AQL Conformance Testing Specification</a></li><li><a href="../crude-pattern.html">MCP-AQL CRUDE Pattern Specification</a></li><li><a href="../endpoint-modes.html">MCP-AQL Endpoint Modes Specification</a></li><li><a href="../error-codes.html">Structured Error Codes Specification</a></li><li><a href="../introspection.html">MCP-AQL Introspection Specification</a></li><li><a href="../licensing-options.html">MCP-AQL Licensing Options (Working Notes)</a></li><li><a href="../mcp-integration.html">MCP Integration Specification</a></li><li><a href="../operations.html">MCP-AQL Operations Specification</a></li><li><a href="../overview.html">MCP-AQL Protocol Overview</a></li><li><a href="../plugin-contracts.html">Plugin Interface Contracts</a></li><li><a href="../README.html">MCP-AQL Specification Documentation</a></li><li><a href="../repo/README.html">MCP-AQL Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Versions</h3>
+  <ul><li><a href="../versions/v1.0.0-draft.html">MCP-AQL Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Adapter</h3>
+  <ul><li><a href="../adapter/danger-levels.html">Dangerous Operation Classification Specification</a></li><li><a href="../adapter/discovery-bundle.html">MCP Server Discovery Bundle</a></li><li><a href="../adapter/element-type.html">Adapter Element Type Specification</a></li><li><a href="../adapter/generator.html">Adapter Generator Specification</a></li><li><a href="../adapter/rate-limiting.html">Rate Limiting and Quota Management Specification</a></li><li><a href="../adapter/trust-levels.html">Trust Levels Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Security</h3>
+  <ul><li><a href="../security/confirmation-tokens.html">Confirmation Token Specification</a></li><li><a href="../security/execution-safety-loop.html">Execution Safety Loop Specification</a></li><li><a href="../security/gatekeeper.html">Security Model: Gatekeeper Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Features</h3>
+  <ul><li><a href="../features/aggregations.html">MCP-AQL Aggregations</a></li><li><a href="../features/collection-querying.html">MCP-AQL Collection Querying</a></li><li><a href="../features/computed-fields.html">MCP-AQL Computed Fields</a></li><li><a href="../features/field-selection.html">Field Selection Specification</a></li><li><a href="../features/pagination.html">Cursor-Based Pagination Specification</a></li><li><a href="../features/relationship-queries.html">MCP-AQL Relationship Queries</a></li><li><a href="../features/warnings.html">Warnings Array Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Guides</h3>
+  <ul><li><a href="../guides/cross-domain-implementation.html">Cross-Domain Implementation Guide</a></li><li><a href="../guides/protocol-comparison.html">Protocol Comparison Guide</a></li><li><a href="../guides/README.html">Developer Guides</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Process</h3>
+  <ul><li><a href="../process/breaking-changes.html">MCP-AQL Breaking Change Policy</a></li><li><a href="../process/preliminary-public-launch-checklist.html">Preliminary Public Launch Checklist</a></li><li><a href="../process/rfc-process.html">RFC Process for MCP-AQL Specification</a></li><li><a href="../process/versioning.html">Versioning Strategy</a></li><li><a href="../repo/CHANGELOG.html">Changelog</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Architecture</h3>
+  <ul><li><a href="../architecture/README.html">Architecture Documentation</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Research</h3>
+  <ul><li><a href="../research/mcp-vs-mcpaql-vs-a2a.html">Protocol Landscape: MCP vs MCP-AQL vs A2A</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Reference</h3>
+  <ul><li><a class="current" aria-current="page" href="README.html">Reference Documentation</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>ADRs</h3>
+  <ul><li><a href="../adr/ADR-001-crude-pattern.html">ADR-001: CRUDE Pattern (Extending CRUD with Execute)</a></li><li><a href="../adr/ADR-002-graphql-style-input.html">ADR-002: GraphQL-Style Input Objects for Updates</a></li><li><a href="../adr/ADR-003-snake-case-parameters.html">ADR-003: snake_case Parameter Convention</a></li><li><a href="../adr/ADR-004-schema-driven-operations.html">ADR-004: Schema-Driven Operation Definitions</a></li><li><a href="../adr/ADR-005-introspection-system.html">ADR-005: GraphQL-Style Introspection System</a></li><li><a href="../adr/ADR-006-discriminated-responses.html">ADR-006: Discriminated Response Format</a></li><li><a href="../adr/index.html">Architecture Decision Records</a></li><li><a href="../adr/README.html">Architecture Decision Records</a></li></ul>
+</div>
+      </aside>
+
+      <article class="docs-main">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+          <ol>
+            <li><a href="../../index.html">Home</a></li>
+            <li><a href="../index.html">Full Spec</a></li>
+            <li><span class="current">Reference Documentation</span></li>
+          </ol>
+        </nav>
+        <section class="hero docs-hero">
+          <div class="hero-inner">
+            <span class="status-pill">REPO-SYNCED SPEC DOC</span>
+            <h1>Reference Documentation</h1>
+            <p class="lede">Detailed specifications for schemas, formats, and protocol structures.</p>
+            <div class="spec-meta"><span class="state-chip live">Support document</span></div>
+            <p class="spec-source">Source: <a href="https://github.com/MCPAQL/spec/blob/main/docs/reference/README.md">spec/docs/reference/README.md</a></p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="https://github.com/MCPAQL/spec/blob/main/docs/reference/README.md">Open Source Markdown</a><a class="btn btn-secondary" href="../index.html">Browse Full Spec Reference</a>
+            </div>
+          </div>
+        </section>
+
+
+        <section>
+          <div class="card spec-prose">
+            <p>Detailed specifications for schemas, formats, and protocol structures.</p>
+
+          </div>
+        </section>
+        <nav class="page-nav" aria-label="Page navigation">
+  <a class="page-nav-link prev" href="../research/mcp-vs-mcpaql-vs-a2a.html">
+    <span class="page-nav-eyebrow">Previous page</span>
+    <strong class="page-nav-label">Protocol Landscape: MCP vs MCP-AQL vs A2A</strong>
+  </a>
+  <a class="page-nav-link next" href="../adr/ADR-001-crude-pattern.html">
+    <span class="page-nav-eyebrow">Next page</span>
+    <strong class="page-nav-label">ADR-001: CRUDE Pattern (Extending CRUD with Execute)</strong>
+  </a>
+</nav>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.</p>
+      <div class="footer-links">
+        <a href="../../docs/index.html">Docs Library</a><a href="../index.html">Repo-Synced Spec</a><a href="https://github.com/MCPAQL">MCPAQL Organization</a><a href="https://dollhouseresearch.com">Dollhouse Research</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../js/search.js"></script>
+</body>
+</html>

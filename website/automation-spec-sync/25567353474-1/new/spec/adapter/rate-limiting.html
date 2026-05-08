@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="This document defines the rate limiting and quota management system for MCP-AQL adapters. Rate limits enable systems to respect API constraints, prevent runaway costs, and provide graceful degradation under load.">
+  <title>MCP-AQL Spec | Rate Limiting and Quota Management Specification</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <a class="logo" href="../../index.html"><span class="logo-mark"></span>MCP-AQL</a>
+        <ul class="nav-links">
+          <li><a href="../../index.html">Home</a></li>
+          <li><a href="../../docs/index.html">Docs</a></li>
+          <li><a href="../../launch-checklist.html">Launch Checklist</a></li>
+          <li><a href="../../apis/index.html">Adapter Patterns</a></li>
+        </ul>
+        <form class="site-search" data-search-form data-index-url="../../data/search-index.json" role="search">
+          <label class="sr-only" for="site-search-input">Search MCP-AQL docs</label>
+          <input id="site-search-input" data-search-input type="search" placeholder="Search MCP-AQL docs, spec pages, and adapter patterns...">
+          <span class="search-count" data-search-count></span>
+          <ul class="search-results" data-search-results hidden></ul>
+        </form>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container docs-shell">
+      <aside class="docs-side">
+        <h2>Repo-Synced Spec</h2>
+        <p class="docs-side-note">Generated from <code>MCPAQL/spec</code> so the website carries the deeper protocol material too.</p>
+        <div class="docs-side-group">
+  <h3>Core</h3>
+  <ul><li><a href="../conformance-testing.html">MCP-AQL Conformance Testing Specification</a></li><li><a href="../crude-pattern.html">MCP-AQL CRUDE Pattern Specification</a></li><li><a href="../endpoint-modes.html">MCP-AQL Endpoint Modes Specification</a></li><li><a href="../error-codes.html">Structured Error Codes Specification</a></li><li><a href="../introspection.html">MCP-AQL Introspection Specification</a></li><li><a href="../licensing-options.html">MCP-AQL Licensing Options (Working Notes)</a></li><li><a href="../mcp-integration.html">MCP Integration Specification</a></li><li><a href="../operations.html">MCP-AQL Operations Specification</a></li><li><a href="../overview.html">MCP-AQL Protocol Overview</a></li><li><a href="../plugin-contracts.html">Plugin Interface Contracts</a></li><li><a href="../README.html">MCP-AQL Specification Documentation</a></li><li><a href="../repo/README.html">MCP-AQL Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Versions</h3>
+  <ul><li><a href="../versions/v1.0.0-draft.html">MCP-AQL Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Adapter</h3>
+  <ul><li><a href="danger-levels.html">Dangerous Operation Classification Specification</a></li><li><a href="discovery-bundle.html">MCP Server Discovery Bundle</a></li><li><a href="element-type.html">Adapter Element Type Specification</a></li><li><a href="generator.html">Adapter Generator Specification</a></li><li><a class="current" aria-current="page" href="rate-limiting.html">Rate Limiting and Quota Management Specification</a></li><li><a href="trust-levels.html">Trust Levels Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Security</h3>
+  <ul><li><a href="../security/confirmation-tokens.html">Confirmation Token Specification</a></li><li><a href="../security/execution-safety-loop.html">Execution Safety Loop Specification</a></li><li><a href="../security/gatekeeper.html">Security Model: Gatekeeper Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Features</h3>
+  <ul><li><a href="../features/aggregations.html">MCP-AQL Aggregations</a></li><li><a href="../features/collection-querying.html">MCP-AQL Collection Querying</a></li><li><a href="../features/computed-fields.html">MCP-AQL Computed Fields</a></li><li><a href="../features/field-selection.html">Field Selection Specification</a></li><li><a href="../features/pagination.html">Cursor-Based Pagination Specification</a></li><li><a href="../features/relationship-queries.html">MCP-AQL Relationship Queries</a></li><li><a href="../features/warnings.html">Warnings Array Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Guides</h3>
+  <ul><li><a href="../guides/cross-domain-implementation.html">Cross-Domain Implementation Guide</a></li><li><a href="../guides/protocol-comparison.html">Protocol Comparison Guide</a></li><li><a href="../guides/README.html">Developer Guides</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Process</h3>
+  <ul><li><a href="../process/breaking-changes.html">MCP-AQL Breaking Change Policy</a></li><li><a href="../process/preliminary-public-launch-checklist.html">Preliminary Public Launch Checklist</a></li><li><a href="../process/rfc-process.html">RFC Process for MCP-AQL Specification</a></li><li><a href="../process/versioning.html">Versioning Strategy</a></li><li><a href="../repo/CHANGELOG.html">Changelog</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Architecture</h3>
+  <ul><li><a href="../architecture/README.html">Architecture Documentation</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Research</h3>
+  <ul><li><a href="../research/mcp-vs-mcpaql-vs-a2a.html">Protocol Landscape: MCP vs MCP-AQL vs A2A</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Reference</h3>
+  <ul><li><a href="../reference/README.html">Reference Documentation</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>ADRs</h3>
+  <ul><li><a href="../adr/ADR-001-crude-pattern.html">ADR-001: CRUDE Pattern (Extending CRUD with Execute)</a></li><li><a href="../adr/ADR-002-graphql-style-input.html">ADR-002: GraphQL-Style Input Objects for Updates</a></li><li><a href="../adr/ADR-003-snake-case-parameters.html">ADR-003: snake_case Parameter Convention</a></li><li><a href="../adr/ADR-004-schema-driven-operations.html">ADR-004: Schema-Driven Operation Definitions</a></li><li><a href="../adr/ADR-005-introspection-system.html">ADR-005: GraphQL-Style Introspection System</a></li><li><a href="../adr/ADR-006-discriminated-responses.html">ADR-006: Discriminated Response Format</a></li><li><a href="../adr/index.html">Architecture Decision Records</a></li><li><a href="../adr/README.html">Architecture Decision Records</a></li></ul>
+</div>
+      </aside>
+
+      <article class="docs-main">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+          <ol>
+            <li><a href="../../index.html">Home</a></li>
+            <li><a href="../index.html">Full Spec</a></li>
+            <li><span class="current">Rate Limiting and Quota Management Specification</span></li>
+          </ol>
+        </nav>
+        <section class="hero docs-hero">
+          <div class="hero-inner">
+            <span class="status-pill">REPO-SYNCED SPEC DOC</span>
+            <h1>Rate Limiting and Quota Management Specification</h1>
+            <p class="lede">This document defines the rate limiting and quota management system for MCP-AQL adapters. Rate limits enable systems to respect API constraints, prevent runaway costs, and provide graceful degradation under load.</p>
+            <div class="spec-meta"><span class="state-chip live">Support document</span><span class="state-chip pending">Draft</span><span class="state-chip">1.0.0-draft</span><span class="state-chip">2026-01-28</span></div>
+            <p class="spec-source">Source: <a href="https://github.com/MCPAQL/spec/blob/main/docs/adapter/rate-limiting.md">spec/docs/adapter/rate-limiting.md</a></p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="https://github.com/MCPAQL/spec/blob/main/docs/adapter/rate-limiting.md">Open Source Markdown</a><a class="btn btn-secondary" href="../index.html">Browse Full Spec Reference</a>
+            </div>
+          </div>
+        </section>
+
+        <section class="page-toc-shell" data-page-toc>
+          <div class="card page-toc-card">
+            <div class="page-toc-head">
+              <p class="page-toc-kicker">On this page</p>
+              <h2>Jump to a section</h2>
+              <p class="page-toc-intro">Use the outline to move through longer pages without losing your place.</p>
+            </div>
+            <ol class="page-toc-list" data-page-toc-list>
+              <li class="page-toc-item level-2"><a href="#abstract" data-toc-target="abstract">Abstract</a></li><li class="page-toc-item level-2"><a href="#1-overview" data-toc-target="1-overview">1. Overview</a></li><li class="page-toc-item level-2"><a href="#2-rate-limits-schema" data-toc-target="2-rate-limits-schema">2. Rate Limits Schema</a></li><li class="page-toc-item level-2"><a href="#3-quota-management" data-toc-target="3-quota-management">3. Quota Management</a></li><li class="page-toc-item level-2"><a href="#4-enforcement-behavior" data-toc-target="4-enforcement-behavior">4. Enforcement Behavior</a></li><li class="page-toc-item level-2"><a href="#5-error-codes" data-toc-target="5-error-codes">5. Error Codes</a></li><li class="page-toc-item level-2"><a href="#6-introspection" data-toc-target="6-introspection">6. Introspection</a></li><li class="page-toc-item level-2"><a href="#7-implementation-requirements" data-toc-target="7-implementation-requirements">7. Implementation Requirements</a></li><li class="page-toc-item level-2"><a href="#8-future-extensions" data-toc-target="8-future-extensions">8. Future Extensions</a></li><li class="page-toc-item level-2"><a href="#references" data-toc-target="references">References</a></li>
+            </ol>
+          </div>
+        </section>
+
+
+        <section>
+          <div class="card spec-prose">
+            <p><strong>Version:</strong> 1.0.0-draft <strong>Status:</strong> Draft <strong>Last Updated:</strong> 2026-01-28</p>
+<h2 id="abstract">Abstract</h2>
+<p>This document defines the rate limiting and quota management system for MCP-AQL adapters. Rate limits enable systems to respect API constraints, prevent runaway costs, and provide graceful degradation under load.</p>
+<hr />
+<h2 id="1-overview">1. Overview</h2>
+<h3 id="11-purpose">1.1 Purpose</h3>
+<p>When adapters wrap external APIs:</p>
+<ul>
+<li><strong>APIs have rate limits</strong> that must be respected to avoid blocking</li>
+<li><strong>Users want budgets</strong> to control costs and usage</li>
+<li><strong>Systems need protection</strong> against runaway API calls (especially in autonomous agent loops)</li>
+<li><strong>Graceful degradation</strong> is preferable to hard failures</li>
+</ul>
+<p>Rate limiting in MCP-AQL provides:</p>
+<ul>
+<li><strong>API limit awareness</strong> - Extract and respect target API constraints</li>
+<li><strong>User-configurable quotas</strong> - Budget controls at multiple thresholds</li>
+<li><strong>Progressive enforcement</strong> - Warn, pause, and hard stop behaviors</li>
+<li><strong>Cost tracking</strong> - Monitor usage for paid APIs</li>
+</ul>
+<h3 id="12-design-principles">1.2 Design Principles</h3>
+<ol type="1">
+<li><strong>Respect upstream limits</strong> - Never exceed API provider constraints</li>
+<li><strong>User control</strong> - Configurable quotas override defaults</li>
+<li><strong>Progressive response</strong> - Warn before blocking</li>
+<li><strong>Transparent status</strong> - Quota state always queryable</li>
+</ol>
+<h3 id="13-scope">1.3 Scope</h3>
+<p><strong>Included:</strong></p>
+<ul>
+<li>Rate limit schema for adapters</li>
+<li>Quota configuration</li>
+<li>Enforcement behaviors</li>
+<li>Error codes for rate limiting</li>
+<li>Introspection of quota status</li>
+</ul>
+<p><strong>Deferred:</strong></p>
+<ul>
+<li>Cross-adapter quota aggregation</li>
+<li>Token-based rate limiting for LLM APIs</li>
+<li>Distributed rate limiting coordination</li>
+</ul>
+<hr />
+<h2 id="2-rate-limits-schema">2. Rate Limits Schema</h2>
+<h3 id="21-schema-structure">2.1 Schema Structure</h3>
+<p>The <code>rate_limits</code> block in adapter front matter:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rate_limits</span><span class="kw">:</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co">  # API-defined limits (from target API documentation or headers)</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">api_limits</span><span class="kw">:</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">scope</span><span class="kw">:</span><span class="at"> global</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">limit</span><span class="kw">:</span><span class="at"> </span><span class="dv">5000</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">window</span><span class="kw">:</span><span class="at"> hour</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">scope</span><span class="kw">:</span><span class="at"> endpoint</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">endpoint</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;POST /search&quot;</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">limit</span><span class="kw">:</span><span class="at"> </span><span class="dv">30</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">window</span><span class="kw">:</span><span class="at"> minute</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co">  # User-configurable quotas</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">quotas</span><span class="kw">:</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">enabled</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">limits</span><span class="kw">:</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">metric</span><span class="kw">:</span><span class="at"> requests_per_hour</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">warn</span><span class="kw">:</span><span class="at"> </span><span class="dv">4000</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">pause</span><span class="kw">:</span><span class="at"> </span><span class="dv">4800</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">hard_stop</span><span class="kw">:</span><span class="at"> </span><span class="dv">5000</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">metric</span><span class="kw">:</span><span class="at"> cost_per_day</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">warn</span><span class="kw">:</span><span class="at"> </span><span class="fl">5.00</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">pause</span><span class="kw">:</span><span class="at"> </span><span class="fl">10.00</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">hard_stop</span><span class="kw">:</span><span class="at"> </span><span class="fl">50.00</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">currency</span><span class="kw">:</span><span class="at"> USD</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="co">  # Cost estimation for paid APIs</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">cost</span><span class="kw">:</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">model</span><span class="kw">:</span><span class="at"> per_call</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">currency</span><span class="kw">:</span><span class="at"> USD</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">pricing</span><span class="kw">:</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">endpoint</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;*&quot;</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">cost_per_call</span><span class="kw">:</span><span class="at"> </span><span class="fl">0.001</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">endpoint</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;POST /premium/*&quot;</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">cost_per_call</span><span class="kw">:</span><span class="at"> </span><span class="fl">0.01</span></span></code></pre></div>
+<h3 id="22-api_limits-block">2.2 api_limits Block</h3>
+<p>Declares rate limits imposed by the target API.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> ApiLimit {</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">/**</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">   * Scope of the limit</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">   * - global: Applies to all operations</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co">   * - endpoint: Applies to specific endpoint</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co">   * - category: Applies to CRUDE category</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">   */</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  scope<span class="op">:</span> <span class="st">&#39;global&#39;</span> <span class="op">|</span> <span class="st">&#39;endpoint&#39;</span> <span class="op">|</span> <span class="st">&#39;category&#39;</span><span class="op">;</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="co">/**</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co">   * Endpoint pattern (when scope is &#39;endpoint&#39;)</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co">   * Supports wildcards: &quot;GET /users/*&quot;</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co">   */</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  endpoint<span class="op">?:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  <span class="co">/**</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="co">   * CRUDE category (when scope is &#39;category&#39;)</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="co">   */</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  category<span class="op">?:</span> <span class="st">&#39;create&#39;</span> <span class="op">|</span> <span class="st">&#39;read&#39;</span> <span class="op">|</span> <span class="st">&#39;update&#39;</span> <span class="op">|</span> <span class="st">&#39;delete&#39;</span> <span class="op">|</span> <span class="st">&#39;execute&#39;</span><span class="op">;</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>  <span class="co">/**</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="co">   * Maximum number of requests in the window</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="co">   */</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>  limit<span class="op">:</span> <span class="dt">number</span><span class="op">;</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>  <span class="co">/**</span></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="co">   * Time window for the limit</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="co">   */</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>  window<span class="op">:</span> <span class="st">&#39;second&#39;</span> <span class="op">|</span> <span class="st">&#39;minute&#39;</span> <span class="op">|</span> <span class="st">&#39;hour&#39;</span> <span class="op">|</span> <span class="st">&#39;day&#39;</span><span class="op">;</span></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>  <span class="co">/**</span></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a><span class="co">   * Header name containing remaining requests (for runtime tracking)</span></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a><span class="co">   */</span></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>  remaining_header<span class="op">?:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>  <span class="co">/**</span></span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a><span class="co">   * Header name containing reset timestamp</span></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a><span class="co">   */</span></span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>  reset_header<span class="op">?:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="23-common-api-limit-patterns">2.3 Common API Limit Patterns</h3>
+<div class="sourceCode" id="cb3"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># GitHub API pattern</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">api_limits</span><span class="kw">:</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">scope</span><span class="kw">:</span><span class="at"> global</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">limit</span><span class="kw">:</span><span class="at"> </span><span class="dv">5000</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">window</span><span class="kw">:</span><span class="at"> hour</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">remaining_header</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;X-RateLimit-Remaining&quot;</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">reset_header</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;X-RateLimit-Reset&quot;</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co"># OpenAI pattern (tokens per minute)</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="fu">api_limits</span><span class="kw">:</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">scope</span><span class="kw">:</span><span class="at"> global</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">limit</span><span class="kw">:</span><span class="at"> </span><span class="dv">90000</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">window</span><span class="kw">:</span><span class="at"> minute</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">metric</span><span class="kw">:</span><span class="at"> tokens_per_minute</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Stripe pattern (different limits by CRUDE category)</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="fu">api_limits</span><span class="kw">:</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">scope</span><span class="kw">:</span><span class="at"> category</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">category</span><span class="kw">:</span><span class="at"> read</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">limit</span><span class="kw">:</span><span class="at"> </span><span class="dv">100</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">window</span><span class="kw">:</span><span class="at"> second</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">scope</span><span class="kw">:</span><span class="at"> category</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">category</span><span class="kw">:</span><span class="at"> create</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">limit</span><span class="kw">:</span><span class="at"> </span><span class="dv">25</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">window</span><span class="kw">:</span><span class="at"> second</span></span></code></pre></div>
+<hr />
+<h2 id="3-quota-management">3. Quota Management</h2>
+<h3 id="31-quotas-block">3.1 Quotas Block</h3>
+<p>User-configurable limits that can be stricter than API limits.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> QuotaConfig {</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">/**</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">   * Whether quota enforcement is enabled</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">   */</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  enabled<span class="op">:</span> <span class="dt">boolean</span><span class="op">;</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="co">/**</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co">   * Individual quota limits</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co">   */</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  limits<span class="op">:</span> QuotaLimit[]<span class="op">;</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  <span class="co">/**</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co">   * How to persist quota tracking</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="co">   */</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  persistence<span class="op">?:</span> <span class="st">&#39;memory&#39;</span> <span class="op">|</span> <span class="st">&#39;file&#39;</span> <span class="op">|</span> <span class="st">&#39;database&#39;</span><span class="op">;</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>  <span class="co">/**</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="co">   * When to reset counters</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="co">   */</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>  reset_schedule<span class="op">?:</span> <span class="dt">string</span><span class="op">;</span>  <span class="co">// Cron expression</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> QuotaLimit {</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>  <span class="co">/**</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="co">   * What is being measured</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a><span class="co">   */</span></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>  metric<span class="op">:</span> QuotaMetric<span class="op">;</span></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>  <span class="co">/**</span></span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a><span class="co">   * Threshold for warning notification</span></span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a><span class="co">   */</span></span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>  warn<span class="op">:</span> <span class="dt">number</span><span class="op">;</span></span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>  <span class="co">/**</span></span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a><span class="co">   * Threshold for pause (require confirmation to continue)</span></span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a><span class="co">   */</span></span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>  pause<span class="op">:</span> <span class="dt">number</span><span class="op">;</span></span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>  <span class="co">/**</span></span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a><span class="co">   * Threshold for hard stop (block all requests)</span></span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a><span class="co">   */</span></span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>  hard_stop<span class="op">?:</span> <span class="dt">number</span><span class="op">;</span></span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>  <span class="co">/**</span></span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a><span class="co">   * Currency for cost metrics</span></span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a><span class="co">   */</span></span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a>  currency<span class="op">?:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> QuotaMetric <span class="op">=</span></span>
+<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="st">&#39;requests_per_minute&#39;</span></span>
+<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="st">&#39;requests_per_hour&#39;</span></span>
+<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="st">&#39;requests_per_day&#39;</span></span>
+<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="st">&#39;tokens_per_minute&#39;</span></span>
+<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="st">&#39;tokens_per_hour&#39;</span></span>
+<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="st">&#39;tokens_per_day&#39;</span></span>
+<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="st">&#39;cost_per_hour&#39;</span></span>
+<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="st">&#39;cost_per_day&#39;</span></span>
+<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="st">&#39;cost_per_month&#39;</span><span class="op">;</span></span></code></pre></div>
+<h3 id="32-threshold-behaviors">3.2 Threshold Behaviors</h3>
+<table>
+<thead>
+<tr>
+<th>Threshold</th>
+<th>Behavior</th>
+<th>User Experience</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>warn</code></td>
+<td>Log warning, continue</td>
+<td>Notification displayed</td>
+</tr>
+<tr>
+<td><code>pause</code></td>
+<td>Require confirmation</td>
+<td>"Continue?" prompt</td>
+</tr>
+<tr>
+<td><code>hard_stop</code></td>
+<td>Block all requests</td>
+<td>Error response</td>
+</tr>
+</tbody>
+</table>
+<h3 id="33-example-quota-configurations">3.3 Example Quota Configurations</h3>
+<p><strong>Conservative (cost-conscious):</strong></p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">quotas</span><span class="kw">:</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">enabled</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">limits</span><span class="kw">:</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">metric</span><span class="kw">:</span><span class="at"> cost_per_day</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">warn</span><span class="kw">:</span><span class="at"> </span><span class="fl">1.00</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">pause</span><span class="kw">:</span><span class="at"> </span><span class="fl">5.00</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">hard_stop</span><span class="kw">:</span><span class="at"> </span><span class="fl">10.00</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">currency</span><span class="kw">:</span><span class="at"> USD</span></span></code></pre></div>
+<p><strong>Development (permissive):</strong></p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">quotas</span><span class="kw">:</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">enabled</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">limits</span><span class="kw">:</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">metric</span><span class="kw">:</span><span class="at"> requests_per_hour</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">warn</span><span class="kw">:</span><span class="at"> </span><span class="dv">1000</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">pause</span><span class="kw">:</span><span class="at"> </span><span class="dv">5000</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">      # No hard_stop - never fully block</span></span></code></pre></div>
+<p><strong>Production (strict):</strong></p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">quotas</span><span class="kw">:</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">enabled</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">limits</span><span class="kw">:</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">metric</span><span class="kw">:</span><span class="at"> requests_per_minute</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">warn</span><span class="kw">:</span><span class="at"> </span><span class="dv">50</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">pause</span><span class="kw">:</span><span class="at"> </span><span class="dv">80</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">hard_stop</span><span class="kw">:</span><span class="at"> </span><span class="dv">100</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">metric</span><span class="kw">:</span><span class="at"> cost_per_day</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">warn</span><span class="kw">:</span><span class="at"> </span><span class="fl">100.00</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">pause</span><span class="kw">:</span><span class="at"> </span><span class="fl">200.00</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">hard_stop</span><span class="kw">:</span><span class="at"> </span><span class="fl">500.00</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">currency</span><span class="kw">:</span><span class="at"> USD</span></span></code></pre></div>
+<hr />
+<h2 id="4-enforcement-behavior">4. Enforcement Behavior</h2>
+<h3 id="41-enforcement-flow">4.1 Enforcement Flow</h3>
+<pre><code>Request → Check API Limits → Check Quotas → Execute or Block
+              │                    │
+              ▼                    ▼
+         API blocked?        Quota exceeded?
+              │                    │
+              ▼                    ▼
+         Wait/Retry         Warn/Pause/Stop</code></pre>
+<h3 id="42-api-limit-enforcement">4.2 API Limit Enforcement</h3>
+<p>When API rate limit is reached:</p>
+<ol type="1">
+<li><strong>Check remaining</strong> - Read from response headers if available</li>
+<li><strong>Predict limit</strong> - Track request counts if no headers</li>
+<li><strong>Pre-flight block</strong> - Block request before sending if limit would be exceeded</li>
+<li><strong>Retry-After</strong> - Respect <code>Retry-After</code> header from API responses</li>
+</ol>
+<p><strong>Pre-flight block response:</strong></p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;error&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;code&quot;</span><span class="fu">:</span> <span class="st">&quot;RATE_LIMIT_EXCEEDED&quot;</span><span class="fu">,</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;API rate limit would be exceeded&quot;</span><span class="fu">,</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;details&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;limit&quot;</span><span class="fu">:</span> <span class="dv">5000</span><span class="fu">,</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;remaining&quot;</span><span class="fu">:</span> <span class="dv">0</span><span class="fu">,</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;window&quot;</span><span class="fu">:</span> <span class="st">&quot;hour&quot;</span><span class="fu">,</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;resets_at&quot;</span><span class="fu">:</span> <span class="st">&quot;2026-01-28T13:00:00Z&quot;</span><span class="fu">,</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;retry_after_seconds&quot;</span><span class="fu">:</span> <span class="dv">1847</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h3 id="43-quota-enforcement">4.3 Quota Enforcement</h3>
+<p>Warnings are included in successful responses via the <code>warnings</code> array. See <a href="../features/warnings.html">Warnings Specification</a> for the complete schema and client handling requirements.</p>
+<p><strong>Warning (warn threshold):</strong></p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;data&quot;</span><span class="fu">:</span> <span class="fu">{</span> <span class="er">...</span> <span class="fu">},</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;warnings&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;code&quot;</span><span class="fu">:</span> <span class="st">&quot;RATE_LIMIT_QUOTA_WARNING&quot;</span><span class="fu">,</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;Approaching quota limit&quot;</span><span class="fu">,</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;details&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;metric&quot;</span><span class="fu">:</span> <span class="st">&quot;requests_per_hour&quot;</span><span class="fu">,</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;current&quot;</span><span class="fu">:</span> <span class="dv">4100</span><span class="fu">,</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;warn_threshold&quot;</span><span class="fu">:</span> <span class="dv">4000</span><span class="fu">,</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;pause_threshold&quot;</span><span class="fu">:</span> <span class="dv">4800</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>      <span class="fu">}</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><strong>Pause (pause threshold):</strong></p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;error&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;code&quot;</span><span class="fu">:</span> <span class="st">&quot;RATE_LIMIT_QUOTA_PAUSE&quot;</span><span class="fu">,</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;Quota pause threshold reached&quot;</span><span class="fu">,</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;details&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;metric&quot;</span><span class="fu">:</span> <span class="st">&quot;requests_per_hour&quot;</span><span class="fu">,</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;current&quot;</span><span class="fu">:</span> <span class="dv">4850</span><span class="fu">,</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;pause_threshold&quot;</span><span class="fu">:</span> <span class="dv">4800</span><span class="fu">,</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;hard_stop_threshold&quot;</span><span class="fu">:</span> <span class="dv">5000</span><span class="fu">,</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;confirmation_token&quot;</span><span class="fu">:</span> <span class="st">&quot;quota_continue_abc123&quot;</span><span class="fu">,</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;expires_at&quot;</span><span class="fu">:</span> <span class="st">&quot;2026-01-28T12:05:00Z&quot;</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><strong>Hard stop (hard_stop threshold):</strong></p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;error&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;code&quot;</span><span class="fu">:</span> <span class="st">&quot;RATE_LIMIT_QUOTA_EXHAUSTED&quot;</span><span class="fu">,</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;Quota exhausted&quot;</span><span class="fu">,</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;details&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;metric&quot;</span><span class="fu">:</span> <span class="st">&quot;requests_per_hour&quot;</span><span class="fu">,</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;current&quot;</span><span class="fu">:</span> <span class="dv">5000</span><span class="fu">,</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;hard_stop_threshold&quot;</span><span class="fu">:</span> <span class="dv">5000</span><span class="fu">,</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;resets_at&quot;</span><span class="fu">:</span> <span class="st">&quot;2026-01-28T13:00:00Z&quot;</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h3 id="44-continuing-after-pause">4.4 Continuing After Pause</h3>
+<p>To continue after pause threshold, include the confirmation token from the <code>RATE_LIMIT_QUOTA_PAUSE</code> response. See <a href="../security/confirmation-tokens.html">Confirmation Token Specification</a> for token validation and lifecycle details.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;get_user&quot;</span><span class="op">,</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">params</span><span class="op">:</span> {</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">user_id</span><span class="op">:</span> <span class="st">&quot;alice&quot;</span><span class="op">,</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">_quota_continue</span><span class="op">:</span> <span class="st">&quot;quota_continue_abc123&quot;</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<hr />
+<h2 id="5-error-codes">5. Error Codes</h2>
+<h3 id="51-rate-limit-error-codes">5.1 Rate Limit Error Codes</h3>
+<table>
+<thead>
+<tr>
+<th>Code</th>
+<th>Description</th>
+<th>Recovery</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>RATE_LIMIT_EXCEEDED</code></td>
+<td>Target API rate limit reached</td>
+<td>Wait for reset</td>
+</tr>
+<tr>
+<td><code>RATE_LIMIT_QUOTA_PAUSE</code></td>
+<td>User quota pause threshold</td>
+<td>Confirm to continue</td>
+</tr>
+<tr>
+<td><code>RATE_LIMIT_QUOTA_EXHAUSTED</code></td>
+<td>User quota hard stop</td>
+<td>Wait for reset</td>
+</tr>
+<tr>
+<td><code>RATE_LIMIT_QUOTA_WARNING</code></td>
+<td>Approaching limit (in warnings)</td>
+<td>Consider slowing</td>
+</tr>
+</tbody>
+</table>
+<h3 id="52-error-response-schema">5.2 Error Response Schema</h3>
+<div class="sourceCode" id="cb14"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> RateLimitError {</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  code<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  message<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  details<span class="op">:</span> {</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">/** What metric triggered the limit */</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    metric<span class="op">?:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">/** Current usage count/amount */</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    current<span class="op">?:</span> <span class="dt">number</span><span class="op">;</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    <span class="co">/** The limit that was exceeded */</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    limit<span class="op">?:</span> <span class="dt">number</span><span class="op">;</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>    <span class="co">/** Time window of the limit */</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>    window<span class="op">?:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>    <span class="co">/** When the limit resets */</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>    resets_at<span class="op">?:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>    <span class="co">/** Seconds until retry is allowed */</span></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>    retry_after_seconds<span class="op">?:</span> <span class="dt">number</span><span class="op">;</span></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>    <span class="co">/** Token to continue after pause */</span></span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>    confirmation_token<span class="op">?:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>    <span class="co">/** When confirmation expires */</span></span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>    expires_at<span class="op">?:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>  }<span class="op">;</span></span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<hr />
+<h2 id="6-introspection">6. Introspection</h2>
+<h3 id="61-quota-status-query">6.1 Quota Status Query</h3>
+<div class="sourceCode" id="cb15"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;introspect&quot;</span><span class="op">,</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">params</span><span class="op">:</span> {</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">query</span><span class="op">:</span> <span class="st">&quot;quota_status&quot;</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="62-quota-status-response">6.2 Quota Status Response</h3>
+<div class="sourceCode" id="cb16"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;data&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;adapter&quot;</span><span class="fu">:</span> <span class="st">&quot;github-api&quot;</span><span class="fu">,</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;api_limits&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;global&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;limit&quot;</span><span class="fu">:</span> <span class="dv">5000</span><span class="fu">,</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;remaining&quot;</span><span class="fu">:</span> <span class="dv">3500</span><span class="fu">,</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;window&quot;</span><span class="fu">:</span> <span class="st">&quot;hour&quot;</span><span class="fu">,</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;resets_at&quot;</span><span class="fu">:</span> <span class="st">&quot;2026-01-28T13:00:00Z&quot;</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>      <span class="fu">}</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">},</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;quotas&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>      <span class="fu">{</span></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;metric&quot;</span><span class="fu">:</span> <span class="st">&quot;requests_per_hour&quot;</span><span class="fu">,</span></span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;current&quot;</span><span class="fu">:</span> <span class="dv">1500</span><span class="fu">,</span></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;warn&quot;</span><span class="fu">:</span> <span class="dv">4000</span><span class="fu">,</span></span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;pause&quot;</span><span class="fu">:</span> <span class="dv">4800</span><span class="fu">,</span></span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;hard_stop&quot;</span><span class="fu">:</span> <span class="dv">5000</span><span class="fu">,</span></span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;status&quot;</span><span class="fu">:</span> <span class="st">&quot;ok&quot;</span></span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>      <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>      <span class="fu">{</span></span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;metric&quot;</span><span class="fu">:</span> <span class="st">&quot;cost_per_day&quot;</span><span class="fu">,</span></span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;current&quot;</span><span class="fu">:</span> <span class="fl">4.50</span><span class="fu">,</span></span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;warn&quot;</span><span class="fu">:</span> <span class="fl">5.00</span><span class="fu">,</span></span>
+<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;pause&quot;</span><span class="fu">:</span> <span class="fl">10.00</span><span class="fu">,</span></span>
+<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;hard_stop&quot;</span><span class="fu">:</span> <span class="fl">50.00</span><span class="fu">,</span></span>
+<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;status&quot;</span><span class="fu">:</span> <span class="st">&quot;warn&quot;</span><span class="fu">,</span></span>
+<span id="cb16-29"><a href="#cb16-29" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;currency&quot;</span><span class="fu">:</span> <span class="st">&quot;USD&quot;</span></span>
+<span id="cb16-30"><a href="#cb16-30" aria-hidden="true" tabindex="-1"></a>      <span class="fu">}</span></span>
+<span id="cb16-31"><a href="#cb16-31" aria-hidden="true" tabindex="-1"></a>    <span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb16-32"><a href="#cb16-32" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;next_reset&quot;</span><span class="fu">:</span> <span class="st">&quot;2026-01-28T13:00:00Z&quot;</span></span>
+<span id="cb16-33"><a href="#cb16-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb16-34"><a href="#cb16-34" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h3 id="63-status-values">6.3 Status Values</h3>
+<table>
+<thead>
+<tr>
+<th>Status</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ok</code></td>
+<td>Below warn threshold</td>
+</tr>
+<tr>
+<td><code>warn</code></td>
+<td>Above warn, below pause</td>
+</tr>
+<tr>
+<td><code>paused</code></td>
+<td>At pause threshold, confirmation required</td>
+</tr>
+<tr>
+<td><code>exhausted</code></td>
+<td>At hard stop, requests blocked</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="7-implementation-requirements">7. Implementation Requirements</h2>
+<h3 id="71-must-requirements">7.1 MUST Requirements</h3>
+<p>Implementations supporting rate limiting MUST:</p>
+<ol type="1">
+<li>Respect <code>api_limits</code> and not exceed target API constraints</li>
+<li>Return proper error codes when limits are reached</li>
+<li>Include <code>retry_after_seconds</code> when blocking requests</li>
+<li>Support introspection of current quota status</li>
+</ol>
+<h3 id="72-should-requirements">7.2 SHOULD Requirements</h3>
+<p>Implementations supporting rate limiting SHOULD:</p>
+<ol type="1">
+<li>Track API response headers for remaining/reset info</li>
+<li>Implement the three-tier quota system (warn/pause/hard_stop)</li>
+<li>Persist quota counters across sessions</li>
+<li>Provide warnings in successful responses when approaching limits</li>
+</ol>
+<h3 id="73-may-requirements">7.3 MAY Requirements</h3>
+<p>Implementations supporting rate limiting MAY:</p>
+<ol type="1">
+<li>Support cost estimation and tracking</li>
+<li>Implement automatic request queuing and retry</li>
+<li>Support per-operation rate limits</li>
+<li>Integrate with external rate limit services</li>
+</ol>
+<h3 id="74-cost-tracking">7.4 Cost Tracking</h3>
+<p>For adapters with cost estimation:</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cost</span><span class="kw">:</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">model</span><span class="kw">:</span><span class="at"> per_call</span><span class="co">    # per_call | per_token | per_byte | tiered</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">currency</span><span class="kw">:</span><span class="at"> USD</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">pricing</span><span class="kw">:</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">endpoint</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;*&quot;</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">cost_per_call</span><span class="kw">:</span><span class="at"> </span><span class="fl">0.001</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">endpoint</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;POST /completions&quot;</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">cost_per_call</span><span class="kw">:</span><span class="at"> </span><span class="fl">0.002</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">cost_per_token</span><span class="kw">:</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">input</span><span class="kw">:</span><span class="at"> </span><span class="fl">0.00001</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">output</span><span class="kw">:</span><span class="at"> </span><span class="fl">0.00003</span></span></code></pre></div>
+<hr />
+<h2 id="8-future-extensions">8. Future Extensions</h2>
+<h3 id="81-cross-adapter-aggregation">8.1 Cross-Adapter Aggregation</h3>
+<p>For APIs with shared rate limits across endpoints:</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rate_limits</span><span class="kw">:</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">shared_pools</span><span class="kw">:</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;github_core&quot;</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">endpoints</span><span class="kw">:</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="kw">-</span><span class="at"> </span><span class="st">&quot;GET /repos/*&quot;</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="kw">-</span><span class="at"> </span><span class="st">&quot;GET /users/*&quot;</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="kw">-</span><span class="at"> </span><span class="st">&quot;GET /orgs/*&quot;</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">limit</span><span class="kw">:</span><span class="at"> </span><span class="dv">5000</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">window</span><span class="kw">:</span><span class="at"> hour</span></span></code></pre></div>
+<h3 id="82-intelligent-request-scheduling">8.2 Intelligent Request Scheduling</h3>
+<p>Automatic request queuing and batching:</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rate_limits</span><span class="kw">:</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">scheduling</span><span class="kw">:</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">enabled</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">max_queue_size</span><span class="kw">:</span><span class="at"> </span><span class="dv">100</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">batch_similar_requests</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">priority_by_danger_level</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span></code></pre></div>
+<h3 id="83-token-based-rate-limiting">8.3 Token-Based Rate Limiting</h3>
+<p>For LLM APIs with token-based limits:</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rate_limits</span><span class="kw">:</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">api_limits</span><span class="kw">:</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">scope</span><span class="kw">:</span><span class="at"> global</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">metric</span><span class="kw">:</span><span class="at"> tokens</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">limit</span><span class="kw">:</span><span class="at"> </span><span class="dv">90000</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">window</span><span class="kw">:</span><span class="at"> minute</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">count_method</span><span class="kw">:</span><span class="at"> tiktoken</span><span class="co">  # Token counting method</span></span></code></pre></div>
+<h3 id="84-budget-alerts">8.4 Budget Alerts</h3>
+<p>External notification integration:</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">quotas</span><span class="kw">:</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">alerts</span><span class="kw">:</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">trigger</span><span class="kw">:</span><span class="at"> warn</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">action</span><span class="kw">:</span><span class="at"> webhook</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">url</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;https://alerts.example.com/budget&quot;</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">trigger</span><span class="kw">:</span><span class="at"> pause</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">action</span><span class="kw">:</span><span class="at"> email</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">to</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;admin@example.com&quot;</span></span></code></pre></div>
+<h3 id="85-distributed-rate-limiting">8.5 Distributed Rate Limiting</h3>
+<p>For multi-instance deployments:</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rate_limits</span><span class="kw">:</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">coordination</span><span class="kw">:</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">backend</span><span class="kw">:</span><span class="at"> redis</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">connection</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;${REDIS_URL}&quot;</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">key_prefix</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;mcpaql:ratelimit:&quot;</span></span></code></pre></div>
+<hr />
+<h2 id="references">References</h2>
+<ul>
+<li><a href="element-type.html">Adapter Element Type Specification</a></li>
+<li><a href="danger-levels.html">Dangerous Operation Classification</a></li>
+<li><a href="../security/confirmation-tokens.html">Confirmation Token Specification</a></li>
+<li><a href="../error-codes.html">Error Codes Specification</a></li>
+<li><a href="trust-levels.html">Trust Levels Specification</a></li>
+<li><a href="../features/warnings.html">Warnings Specification</a></li>
+<li>GitHub Issue: <a href="https://github.com/MCPAQL/spec/issues/60">#60</a></li>
+</ul>
+
+          </div>
+        </section>
+        <nav class="page-nav" aria-label="Page navigation">
+  <a class="page-nav-link prev" href="generator.html">
+    <span class="page-nav-eyebrow">Previous page</span>
+    <strong class="page-nav-label">Adapter Generator Specification</strong>
+  </a>
+  <a class="page-nav-link next" href="trust-levels.html">
+    <span class="page-nav-eyebrow">Next page</span>
+    <strong class="page-nav-label">Trust Levels Specification</strong>
+  </a>
+</nav>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.</p>
+      <div class="footer-links">
+        <a href="../../docs/index.html">Docs Library</a><a href="../index.html">Repo-Synced Spec</a><a href="https://github.com/MCPAQL">MCPAQL Organization</a><a href="https://dollhouseresearch.com">Dollhouse Research</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../js/search.js"></script>
+</body>
+</html>

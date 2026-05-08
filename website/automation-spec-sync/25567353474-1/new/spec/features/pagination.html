@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="This document defines the preferred cursor-based pagination semantics for MCP-AQL operations that return collections. Cursor pagination enables efficient iteration through large datasets while minimizing token usage in L">
+  <title>MCP-AQL Spec | Cursor-Based Pagination Specification</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <a class="logo" href="../../index.html"><span class="logo-mark"></span>MCP-AQL</a>
+        <ul class="nav-links">
+          <li><a href="../../index.html">Home</a></li>
+          <li><a href="../../docs/index.html">Docs</a></li>
+          <li><a href="../../launch-checklist.html">Launch Checklist</a></li>
+          <li><a href="../../apis/index.html">Adapter Patterns</a></li>
+        </ul>
+        <form class="site-search" data-search-form data-index-url="../../data/search-index.json" role="search">
+          <label class="sr-only" for="site-search-input">Search MCP-AQL docs</label>
+          <input id="site-search-input" data-search-input type="search" placeholder="Search MCP-AQL docs, spec pages, and adapter patterns...">
+          <span class="search-count" data-search-count></span>
+          <ul class="search-results" data-search-results hidden></ul>
+        </form>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container docs-shell">
+      <aside class="docs-side">
+        <h2>Repo-Synced Spec</h2>
+        <p class="docs-side-note">Generated from <code>MCPAQL/spec</code> so the website carries the deeper protocol material too.</p>
+        <div class="docs-side-group">
+  <h3>Core</h3>
+  <ul><li><a href="../conformance-testing.html">MCP-AQL Conformance Testing Specification</a></li><li><a href="../crude-pattern.html">MCP-AQL CRUDE Pattern Specification</a></li><li><a href="../endpoint-modes.html">MCP-AQL Endpoint Modes Specification</a></li><li><a href="../error-codes.html">Structured Error Codes Specification</a></li><li><a href="../introspection.html">MCP-AQL Introspection Specification</a></li><li><a href="../licensing-options.html">MCP-AQL Licensing Options (Working Notes)</a></li><li><a href="../mcp-integration.html">MCP Integration Specification</a></li><li><a href="../operations.html">MCP-AQL Operations Specification</a></li><li><a href="../overview.html">MCP-AQL Protocol Overview</a></li><li><a href="../plugin-contracts.html">Plugin Interface Contracts</a></li><li><a href="../README.html">MCP-AQL Specification Documentation</a></li><li><a href="../repo/README.html">MCP-AQL Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Versions</h3>
+  <ul><li><a href="../versions/v1.0.0-draft.html">MCP-AQL Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Adapter</h3>
+  <ul><li><a href="../adapter/danger-levels.html">Dangerous Operation Classification Specification</a></li><li><a href="../adapter/discovery-bundle.html">MCP Server Discovery Bundle</a></li><li><a href="../adapter/element-type.html">Adapter Element Type Specification</a></li><li><a href="../adapter/generator.html">Adapter Generator Specification</a></li><li><a href="../adapter/rate-limiting.html">Rate Limiting and Quota Management Specification</a></li><li><a href="../adapter/trust-levels.html">Trust Levels Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Security</h3>
+  <ul><li><a href="../security/confirmation-tokens.html">Confirmation Token Specification</a></li><li><a href="../security/execution-safety-loop.html">Execution Safety Loop Specification</a></li><li><a href="../security/gatekeeper.html">Security Model: Gatekeeper Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Features</h3>
+  <ul><li><a href="aggregations.html">MCP-AQL Aggregations</a></li><li><a href="collection-querying.html">MCP-AQL Collection Querying</a></li><li><a href="computed-fields.html">MCP-AQL Computed Fields</a></li><li><a href="field-selection.html">Field Selection Specification</a></li><li><a class="current" aria-current="page" href="pagination.html">Cursor-Based Pagination Specification</a></li><li><a href="relationship-queries.html">MCP-AQL Relationship Queries</a></li><li><a href="warnings.html">Warnings Array Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Guides</h3>
+  <ul><li><a href="../guides/cross-domain-implementation.html">Cross-Domain Implementation Guide</a></li><li><a href="../guides/protocol-comparison.html">Protocol Comparison Guide</a></li><li><a href="../guides/README.html">Developer Guides</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Process</h3>
+  <ul><li><a href="../process/breaking-changes.html">MCP-AQL Breaking Change Policy</a></li><li><a href="../process/preliminary-public-launch-checklist.html">Preliminary Public Launch Checklist</a></li><li><a href="../process/rfc-process.html">RFC Process for MCP-AQL Specification</a></li><li><a href="../process/versioning.html">Versioning Strategy</a></li><li><a href="../repo/CHANGELOG.html">Changelog</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Architecture</h3>
+  <ul><li><a href="../architecture/README.html">Architecture Documentation</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Research</h3>
+  <ul><li><a href="../research/mcp-vs-mcpaql-vs-a2a.html">Protocol Landscape: MCP vs MCP-AQL vs A2A</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Reference</h3>
+  <ul><li><a href="../reference/README.html">Reference Documentation</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>ADRs</h3>
+  <ul><li><a href="../adr/ADR-001-crude-pattern.html">ADR-001: CRUDE Pattern (Extending CRUD with Execute)</a></li><li><a href="../adr/ADR-002-graphql-style-input.html">ADR-002: GraphQL-Style Input Objects for Updates</a></li><li><a href="../adr/ADR-003-snake-case-parameters.html">ADR-003: snake_case Parameter Convention</a></li><li><a href="../adr/ADR-004-schema-driven-operations.html">ADR-004: Schema-Driven Operation Definitions</a></li><li><a href="../adr/ADR-005-introspection-system.html">ADR-005: GraphQL-Style Introspection System</a></li><li><a href="../adr/ADR-006-discriminated-responses.html">ADR-006: Discriminated Response Format</a></li><li><a href="../adr/index.html">Architecture Decision Records</a></li><li><a href="../adr/README.html">Architecture Decision Records</a></li></ul>
+</div>
+      </aside>
+
+      <article class="docs-main">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+          <ol>
+            <li><a href="../../index.html">Home</a></li>
+            <li><a href="../index.html">Full Spec</a></li>
+            <li><span class="current">Cursor-Based Pagination Specification</span></li>
+          </ol>
+        </nav>
+        <section class="hero docs-hero">
+          <div class="hero-inner">
+            <span class="status-pill">REPO-SYNCED SPEC DOC</span>
+            <h1>Cursor-Based Pagination Specification</h1>
+            <p class="lede">This document defines the preferred cursor-based pagination semantics for MCP-AQL operations that return collections. Cursor pagination enables efficient iteration through large datasets while minimizing token usage in L</p>
+            <div class="spec-meta"><span class="state-chip live">Support document</span><span class="state-chip pending">Draft</span><span class="state-chip">1.0.0-draft</span><span class="state-chip">2026-04-15</span></div>
+            <p class="spec-source">Source: <a href="https://github.com/MCPAQL/spec/blob/main/docs/features/pagination.md">spec/docs/features/pagination.md</a></p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="https://github.com/MCPAQL/spec/blob/main/docs/features/pagination.md">Open Source Markdown</a><a class="btn btn-secondary" href="../index.html">Browse Full Spec Reference</a>
+            </div>
+          </div>
+        </section>
+
+        <section class="page-toc-shell" data-page-toc>
+          <div class="card page-toc-card">
+            <div class="page-toc-head">
+              <p class="page-toc-kicker">On this page</p>
+              <h2>Jump to a section</h2>
+              <p class="page-toc-intro">Use the outline to move through longer pages without losing your place.</p>
+            </div>
+            <ol class="page-toc-list" data-page-toc-list>
+              <li class="page-toc-item level-2"><a href="#abstract" data-toc-target="abstract">Abstract</a></li><li class="page-toc-item level-2"><a href="#1-overview" data-toc-target="1-overview">1. Overview</a></li><li class="page-toc-item level-2"><a href="#2-pagination-parameters" data-toc-target="2-pagination-parameters">2. Pagination Parameters</a></li><li class="page-toc-item level-2"><a href="#3-pageinfo-response" data-toc-target="3-pageinfo-response">3. PageInfo Response</a></li><li class="page-toc-item level-2"><a href="#4-connection-style-response" data-toc-target="4-connection-style-response">4. Connection-Style Response</a></li><li class="page-toc-item level-2"><a href="#5-applicable-operations" data-toc-target="5-applicable-operations">5. Applicable Operations</a></li><li class="page-toc-item level-2"><a href="#6-implementation-requirements" data-toc-target="6-implementation-requirements">6. Implementation Requirements</a></li><li class="page-toc-item level-2"><a href="#7-future-extensions" data-toc-target="7-future-extensions">7. Future Extensions</a></li><li class="page-toc-item level-2"><a href="#references" data-toc-target="references">References</a></li>
+            </ol>
+          </div>
+        </section>
+
+
+        <section>
+          <div class="card spec-prose">
+            <p><strong>Version:</strong> 1.0.0-draft <strong>Status:</strong> Draft <strong>Last Updated:</strong> 2026-04-15</p>
+<h2 id="abstract">Abstract</h2>
+<p>This document defines the preferred cursor-based pagination semantics for MCP-AQL operations that return collections. Cursor pagination enables efficient iteration through large datasets while minimizing token usage in LLM context windows.</p>
+<hr />
+<h2 id="1-overview">1. Overview</h2>
+<h3 id="11-purpose">1.1 Purpose</h3>
+<p>Operations returning complete result sets create several problems:</p>
+<ul>
+<li><strong>Token bloat</strong> - Large collections consume LLM context windows</li>
+<li><strong>Memory pressure</strong> - Servers and clients may struggle with large datasets</li>
+<li><strong>Inefficient re-fetching</strong> - No way to resume interrupted queries</li>
+<li><strong>Poor user experience</strong> - Long wait times for initial results</li>
+</ul>
+<p>Cursor-based pagination addresses these by:</p>
+<ul>
+<li><strong>Bounded responses</strong> - Control result set size per request</li>
+<li><strong>Stable iteration</strong> - Cursors maintain position across requests</li>
+<li><strong>Efficient forward/backward</strong> - Navigate in either direction</li>
+<li><strong>Resumable queries</strong> - Continue from any cursor position</li>
+</ul>
+<h3 id="12-design-principles">1.2 Design Principles</h3>
+<ol type="1">
+<li><strong>Opaque cursors</strong> - Cursor format is implementation-defined</li>
+<li><strong>Stable ordering</strong> - Results maintain consistent order across pages</li>
+<li><strong>Bidirectional</strong> - Support both forward and backward navigation</li>
+<li><strong>Optional totals</strong> - Total count is optional (expensive for some backends)</li>
+</ol>
+<h3 id="13-alignment-with-standards">1.3 Alignment with Standards</h3>
+<p>This specification aligns with:</p>
+<ul>
+<li><strong>GraphQL Relay Cursor Connections</strong> - Primary inspiration for the connection model</li>
+<li><strong>OData pagination</strong> - Parameter naming conventions</li>
+<li><strong>JSON:API pagination</strong> - Link-based navigation patterns</li>
+</ul>
+<hr />
+<h2 id="2-pagination-parameters">2. Pagination Parameters</h2>
+<h3 id="21-parameter-schema">2.1 Parameter Schema</h3>
+<p>Operations supporting pagination accept these parameters:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> PaginationParams {</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">/**</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">   * Number of items to return from the start</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">   * Mutually exclusive with &#39;last&#39;</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">   */</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  first<span class="op">?:</span> <span class="dt">number</span><span class="op">;</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="co">/**</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">   * Cursor to start after (forward pagination)</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co">   * Used with &#39;first&#39;</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co">   */</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  after<span class="op">?:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  <span class="co">/**</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co">   * Number of items to return from the end</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co">   * Mutually exclusive with &#39;first&#39;</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co">   */</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  last<span class="op">?:</span> <span class="dt">number</span><span class="op">;</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  <span class="co">/**</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co">   * Cursor to start before (backward pagination)</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="co">   * Used with &#39;last&#39;</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="co">   */</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  before<span class="op">?:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="22-parameter-combinations">2.2 Parameter Combinations</h3>
+<table>
+<thead>
+<tr>
+<th>Parameters</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>first</code></td>
+<td>First N items from start</td>
+</tr>
+<tr>
+<td><code>first</code> + <code>after</code></td>
+<td>First N items after cursor</td>
+</tr>
+<tr>
+<td><code>last</code></td>
+<td>Last N items from end</td>
+</tr>
+<tr>
+<td><code>last</code> + <code>before</code></td>
+<td>Last N items before cursor</td>
+</tr>
+<tr>
+<td>None</td>
+<td>Default page size from start</td>
+</tr>
+</tbody>
+</table>
+<h3 id="23-invalid-combinations">2.3 Invalid Combinations</h3>
+<p>The following combinations MUST return a validation error:</p>
+<ul>
+<li><code>first</code> + <code>last</code> (ambiguous direction)</li>
+<li><code>after</code> without <code>first</code> (missing page size)</li>
+<li><code>before</code> without <code>last</code> (missing page size)</li>
+<li><code>first</code> + <code>before</code> (mismatched direction)</li>
+<li><code>last</code> + <code>after</code> (mismatched direction)</li>
+</ul>
+<p><strong>Error response:</strong></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;error&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;code&quot;</span><span class="fu">:</span> <span class="st">&quot;VALIDATION_INVALID_TYPE&quot;</span><span class="fu">,</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;Cannot use &#39;first&#39; and &#39;last&#39; together&quot;</span><span class="fu">,</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;details&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;param_name&quot;</span><span class="fu">:</span> <span class="st">&quot;pagination&quot;</span><span class="fu">,</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;expected_type&quot;</span><span class="fu">:</span> <span class="st">&quot;valid pagination combination&quot;</span><span class="fu">,</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;actual_type&quot;</span><span class="fu">:</span> <span class="st">&quot;conflicting parameters&quot;</span><span class="fu">,</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;provided&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;first&quot;</span><span class="ot">,</span> <span class="st">&quot;last&quot;</span><span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;hint&quot;</span><span class="fu">:</span> <span class="st">&quot;Use &#39;first&#39; for forward pagination or &#39;last&#39; for backward pagination&quot;</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<blockquote>
+<p><strong>Note:</strong> This uses the existing <code>VALIDATION_INVALID_TYPE</code> error code with pagination-specific context in the <code>details</code> object, following the error-codes.md specification pattern.</p>
+</blockquote>
+<h3 id="24-example-requests">2.4 Example Requests</h3>
+<p><strong>First page:</strong></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;list_elements&quot;</span><span class="op">,</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">element_type</span><span class="op">:</span> <span class="st">&quot;persona&quot;</span><span class="op">,</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">params</span><span class="op">:</span> {</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">first</span><span class="op">:</span> <span class="dv">10</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><strong>Next page:</strong></p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;list_elements&quot;</span><span class="op">,</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">element_type</span><span class="op">:</span> <span class="st">&quot;persona&quot;</span><span class="op">,</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">params</span><span class="op">:</span> {</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">first</span><span class="op">:</span> <span class="dv">10</span><span class="op">,</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">after</span><span class="op">:</span> <span class="st">&quot;cursor_xyz789&quot;</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><strong>Previous page:</strong></p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;list_elements&quot;</span><span class="op">,</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">element_type</span><span class="op">:</span> <span class="st">&quot;persona&quot;</span><span class="op">,</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">params</span><span class="op">:</span> {</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">last</span><span class="op">:</span> <span class="dv">10</span><span class="op">,</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">before</span><span class="op">:</span> <span class="st">&quot;cursor_abc123&quot;</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<hr />
+<h2 id="3-pageinfo-response">3. PageInfo Response</h2>
+<h3 id="31-pageinfo-schema">3.1 PageInfo Schema</h3>
+<p>All cursor-paginated responses MUST include a <code>pageInfo</code> object:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> PageInfo {</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">/**</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">   * Whether more items exist after the last item</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">   * Required</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">   */</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  hasNextPage<span class="op">:</span> <span class="dt">boolean</span><span class="op">;</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="co">/**</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co">   * Whether more items exist before the first item</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co">   * Required</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co">   */</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  hasPreviousPage<span class="op">:</span> <span class="dt">boolean</span><span class="op">;</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>  <span class="co">/**</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="co">   * Cursor of the first item in the result set</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="co">   * Required when items are returned</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="co">   */</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>  startCursor<span class="op">?:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>  <span class="co">/**</span></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a><span class="co">   * Cursor of the last item in the result set</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a><span class="co">   * Required when items are returned</span></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a><span class="co">   */</span></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>  endCursor<span class="op">?:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>  <span class="co">/**</span></span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a><span class="co">   * Total count of items matching the query</span></span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a><span class="co">   * Optional - may be omitted if expensive to compute</span></span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a><span class="co">   */</span></span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>  totalCount<span class="op">?:</span> <span class="dt">number</span><span class="op">;</span></span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="32-pageinfo-requirements">3.2 PageInfo Requirements</h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Required</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>hasNextPage</code></td>
+<td>Yes</td>
+<td>Always include, even if false</td>
+</tr>
+<tr>
+<td><code>hasPreviousPage</code></td>
+<td>Yes</td>
+<td>Always include, even if false</td>
+</tr>
+<tr>
+<td><code>startCursor</code></td>
+<td>Conditional</td>
+<td>Required when results are returned (<code>items.length &gt; 0</code> or <code>edges.length &gt; 0</code>)</td>
+</tr>
+<tr>
+<td><code>endCursor</code></td>
+<td>Conditional</td>
+<td>Required when results are returned (<code>items.length &gt; 0</code> or <code>edges.length &gt; 0</code>)</td>
+</tr>
+<tr>
+<td><code>totalCount</code></td>
+<td>No</td>
+<td>Include when available without performance impact</td>
+</tr>
+</tbody>
+</table>
+<h3 id="33-example-pageinfo">3.3 Example PageInfo</h3>
+<p><strong>First page of results:</strong></p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;pageInfo&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;hasNextPage&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;hasPreviousPage&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;startCursor&quot;</span><span class="fu">:</span> <span class="st">&quot;cursor_001&quot;</span><span class="fu">,</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;endCursor&quot;</span><span class="fu">:</span> <span class="st">&quot;cursor_010&quot;</span><span class="fu">,</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;totalCount&quot;</span><span class="fu">:</span> <span class="dv">150</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><strong>Last page of results:</strong></p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;pageInfo&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;hasNextPage&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;hasPreviousPage&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;startCursor&quot;</span><span class="fu">:</span> <span class="st">&quot;cursor_141&quot;</span><span class="fu">,</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;endCursor&quot;</span><span class="fu">:</span> <span class="st">&quot;cursor_150&quot;</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><strong>Empty results:</strong></p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;pageInfo&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;hasNextPage&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;hasPreviousPage&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;totalCount&quot;</span><span class="fu">:</span> <span class="dv">0</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<hr />
+<h2 id="4-connection-style-response">4. Connection-Style Response</h2>
+<h3 id="41-response-structure">4.1 Response Structure</h3>
+<p>Cursor-paginated operations SHOULD return a connection-style response:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> Connection<span class="op">&lt;</span>T<span class="op">&gt;</span> {</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">/**</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co">   * The items in this page (mutually exclusive with edges)</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co">   */</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  items<span class="op">?:</span> T[]<span class="op">;</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="co">/**</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="co">   * Pagination metadata</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="co">   */</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  pageInfo<span class="op">:</span> PageInfo<span class="op">;</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  <span class="co">/**</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="co">   * Edges with per-item cursors (mutually exclusive with items)</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="co">   * When present, items should be omitted</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="co">   */</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>  edges<span class="op">?:</span> Edge<span class="op">&lt;</span>T<span class="op">&gt;</span>[]<span class="op">;</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> Edge<span class="op">&lt;</span>T<span class="op">&gt;</span> {</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>  <span class="co">/**</span></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a><span class="co">   * The item</span></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a><span class="co">   */</span></span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>  node<span class="op">:</span> T<span class="op">;</span></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>  <span class="co">/**</span></span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a><span class="co">   * Cursor for this specific item</span></span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a><span class="co">   */</span></span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>  cursor<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="42-simple-response-format">4.2 Simple Response Format</h3>
+<p>For most use cases, the simple format is sufficient:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;data&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;items&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">{</span> <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;alice&quot;</span><span class="fu">,</span> <span class="dt">&quot;status&quot;</span><span class="fu">:</span> <span class="st">&quot;active&quot;</span> <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">{</span> <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;bob&quot;</span><span class="fu">,</span> <span class="dt">&quot;status&quot;</span><span class="fu">:</span> <span class="st">&quot;active&quot;</span> <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>      <span class="fu">{</span> <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;charlie&quot;</span><span class="fu">,</span> <span class="dt">&quot;status&quot;</span><span class="fu">:</span> <span class="st">&quot;inactive&quot;</span> <span class="fu">}</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    <span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;pageInfo&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;hasNextPage&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;hasPreviousPage&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;startCursor&quot;</span><span class="fu">:</span> <span class="st">&quot;cursor_001&quot;</span><span class="fu">,</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;endCursor&quot;</span><span class="fu">:</span> <span class="st">&quot;cursor_003&quot;</span><span class="fu">,</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;totalCount&quot;</span><span class="fu">:</span> <span class="dv">25</span></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h3 id="43-edge-response-format">4.3 Edge Response Format</h3>
+<p>When per-item cursors are needed (e.g., for deletion during iteration):</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;data&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;edges&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">{</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;node&quot;</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;alice&quot;</span><span class="fu">,</span> <span class="dt">&quot;status&quot;</span><span class="fu">:</span> <span class="st">&quot;active&quot;</span> <span class="fu">},</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;cursor&quot;</span><span class="fu">:</span> <span class="st">&quot;cursor_001&quot;</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>      <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>      <span class="fu">{</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;node&quot;</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;bob&quot;</span><span class="fu">,</span> <span class="dt">&quot;status&quot;</span><span class="fu">:</span> <span class="st">&quot;active&quot;</span> <span class="fu">},</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;cursor&quot;</span><span class="fu">:</span> <span class="st">&quot;cursor_002&quot;</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>      <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>      <span class="fu">{</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;node&quot;</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;charlie&quot;</span><span class="fu">,</span> <span class="dt">&quot;status&quot;</span><span class="fu">:</span> <span class="st">&quot;inactive&quot;</span> <span class="fu">},</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;cursor&quot;</span><span class="fu">:</span> <span class="st">&quot;cursor_003&quot;</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>      <span class="fu">}</span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>    <span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;pageInfo&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;hasNextPage&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;hasPreviousPage&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;startCursor&quot;</span><span class="fu">:</span> <span class="st">&quot;cursor_001&quot;</span><span class="fu">,</span></span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;endCursor&quot;</span><span class="fu">:</span> <span class="st">&quot;cursor_003&quot;</span></span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h3 id="44-choosing-response-format">4.4 Choosing Response Format</h3>
+<table>
+<thead>
+<tr>
+<th>Use Case</th>
+<th>Recommended Format</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Simple listing</td>
+<td><code>items</code> array</td>
+</tr>
+<tr>
+<td>Modify during iteration</td>
+<td><code>edges</code> with cursors</td>
+</tr>
+<tr>
+<td>LLM context (minimize tokens)</td>
+<td><code>items</code> array</td>
+</tr>
+<tr>
+<td>Resume from specific item</td>
+<td><code>edges</code> with cursors</td>
+</tr>
+</tbody>
+</table>
+<h3 id="45-compatibility-response-metadata">4.5 Compatibility Response Metadata</h3>
+<p>Adapters using page- or offset-based compatibility parameters MAY return pagination metadata in a <code>pagination</code> object instead of <code>pageInfo</code>.</p>
+<p>These compatibility metadata examples use snake_case field names to align with MCP-AQL's public naming convention for adapter-facing request and response fields.</p>
+<p><strong>Page-based compatibility response:</strong></p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;data&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;items&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">{</span> <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;alice&quot;</span><span class="fu">,</span> <span class="dt">&quot;status&quot;</span><span class="fu">:</span> <span class="st">&quot;active&quot;</span> <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">{</span> <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;bob&quot;</span><span class="fu">,</span> <span class="dt">&quot;status&quot;</span><span class="fu">:</span> <span class="st">&quot;active&quot;</span> <span class="fu">}</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    <span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;pagination&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;page&quot;</span><span class="fu">:</span> <span class="dv">2</span><span class="fu">,</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;page_size&quot;</span><span class="fu">:</span> <span class="dv">25</span><span class="fu">,</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;total_items&quot;</span><span class="fu">:</span> <span class="dv">142</span><span class="fu">,</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;total_pages&quot;</span><span class="fu">:</span> <span class="dv">6</span><span class="fu">,</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;has_more&quot;</span><span class="fu">:</span> <span class="kw">true</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><strong>Offset-based compatibility response:</strong></p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;data&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;items&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">{</span> <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;alice&quot;</span><span class="fu">,</span> <span class="dt">&quot;status&quot;</span><span class="fu">:</span> <span class="st">&quot;active&quot;</span> <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">{</span> <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;bob&quot;</span><span class="fu">,</span> <span class="dt">&quot;status&quot;</span><span class="fu">:</span> <span class="st">&quot;active&quot;</span> <span class="fu">}</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    <span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;pagination&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;limit&quot;</span><span class="fu">:</span> <span class="dv">25</span><span class="fu">,</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;offset&quot;</span><span class="fu">:</span> <span class="dv">50</span><span class="fu">,</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;returned&quot;</span><span class="fu">:</span> <span class="dv">25</span><span class="fu">,</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;total_items&quot;</span><span class="fu">:</span> <span class="dv">142</span><span class="fu">,</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;has_more&quot;</span><span class="fu">:</span> <span class="kw">true</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p>For MCP-AQL-native cursor pagination, <code>pageInfo</code> remains the preferred response shape. For general guidance across cursor, page, and offset styles, see <a href="../operations.html#443-pagination-response-structure">Operations</a>.</p>
+<hr />
+<h2 id="5-applicable-operations">5. Applicable Operations</h2>
+<h3 id="51-operations-supporting-pagination">5.1 Operations Supporting Pagination</h3>
+<p>The following operation types SHOULD support pagination:</p>
+<table>
+<thead>
+<tr>
+<th>Operation</th>
+<th>Required</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>list_elements</code></td>
+<td>Yes</td>
+<td>Core element listing</td>
+</tr>
+<tr>
+<td><code>search_elements</code></td>
+<td>Yes</td>
+<td>Search results</td>
+</tr>
+<tr>
+<td><code>query_elements</code></td>
+<td>Yes</td>
+<td>Complex queries</td>
+</tr>
+<tr>
+<td><code>list_*</code></td>
+<td>Yes</td>
+<td>Any list operation</td>
+</tr>
+<tr>
+<td><code>search_*</code></td>
+<td>Yes</td>
+<td>Any search operation</td>
+</tr>
+</tbody>
+</table>
+<h3 id="52-default-behavior">5.2 Default Behavior</h3>
+<p>When pagination parameters are omitted:</p>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Page size</td>
+<td>Implementation-defined (RECOMMENDED: 20)</td>
+</tr>
+<tr>
+<td>Direction</td>
+<td>Forward (from start)</td>
+</tr>
+<tr>
+<td>Cursor</td>
+<td>None (first page)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="53-maximum-page-size">5.3 Maximum Page Size</h3>
+<p>Implementations SHOULD enforce a maximum page size:</p>
+<ul>
+<li><strong>RECOMMENDED maximum:</strong> 100 items</li>
+<li><strong>Hard limit:</strong> 1000 items</li>
+</ul>
+<p>Requests exceeding the maximum SHOULD be clamped to the maximum (not rejected).</p>
+<h3 id="54-introspection-of-pagination-support">5.4 Introspection of Pagination Support</h3>
+<p>Operations indicate pagination support in introspection:</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;list_elements&quot;</span><span class="fu">,</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;supports_pagination&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;pagination&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;default_page_size&quot;</span><span class="fu">:</span> <span class="dv">20</span><span class="fu">,</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;max_page_size&quot;</span><span class="fu">:</span> <span class="dv">100</span><span class="fu">,</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;supports_total_count&quot;</span><span class="fu">:</span> <span class="kw">true</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<hr />
+<h2 id="6-implementation-requirements">6. Implementation Requirements</h2>
+<h3 id="61-must-requirements">6.1 MUST Requirements</h3>
+<p>Implementations supporting pagination MUST:</p>
+<ol type="1">
+<li>Accept <code>first</code>, <code>after</code>, <code>last</code>, <code>before</code> parameters</li>
+<li>Return <code>pageInfo</code> with <code>hasNextPage</code> and <code>hasPreviousPage</code> for cursor-paginated responses</li>
+<li>Return <code>startCursor</code> and <code>endCursor</code> when items are present</li>
+<li>Reject invalid parameter combinations with error code</li>
+<li>Maintain stable ordering within a pagination session</li>
+</ol>
+<h3 id="62-should-requirements">6.2 SHOULD Requirements</h3>
+<p>Implementations supporting pagination SHOULD:</p>
+<ol type="1">
+<li>Return <code>totalCount</code> when available without performance impact</li>
+<li>Enforce maximum page size limits</li>
+<li>Support both forward and backward pagination</li>
+<li>Use opaque, URL-safe cursor format</li>
+<li>Include pagination support in introspection</li>
+</ol>
+<h3 id="63-may-requirements">6.3 MAY Requirements</h3>
+<p>Implementations supporting pagination MAY:</p>
+<ol type="1">
+<li>Include <code>edges</code> with per-item cursors</li>
+<li>Support cursor expiration/TTL</li>
+<li>Implement cursor resumption across sessions</li>
+<li>Support sorting parameters alongside pagination</li>
+<li>Include compatibility metadata such as <code>returned</code> for offset-based responses when that helps clients understand the applied page window</li>
+</ol>
+<h3 id="64-cursor-format">6.4 Cursor Format</h3>
+<p>Cursors MUST be:</p>
+<ul>
+<li><strong>Opaque</strong> - Clients treat as black box</li>
+<li><strong>URL-safe</strong> - Base64url encoding recommended</li>
+<li><strong>Stable</strong> - Same cursor returns same position</li>
+</ul>
+<p>Cursors SHOULD be:</p>
+<ul>
+<li><strong>Tamper-resistant</strong> - Include validation/signature</li>
+<li><strong>Compact</strong> - Minimize size for LLM context</li>
+<li><strong>Self-contained</strong> - No server-side session state required</li>
+</ul>
+<p><strong>Example cursor encoding:</strong></p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Encoding</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> cursor <span class="op">=</span> <span class="fu">btoa</span>(<span class="bu">JSON</span><span class="op">.</span><span class="fu">stringify</span>({</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  id<span class="op">:</span> <span class="st">&quot;item_123&quot;</span><span class="op">,</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  sort_key<span class="op">:</span> <span class="st">&quot;2026-01-28T12:00:00Z&quot;</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>}))<span class="op">;</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="co">// Result: &quot;eyJpZCI6Iml0ZW1fMTIzIiwic29ydF9rZXkiOiIyMDI2LTAxLTI4VDEyOjAwOjAwWiJ9&quot;</span></span></code></pre></div>
+<hr />
+<h2 id="7-future-extensions">7. Future Extensions</h2>
+<h3 id="71-sorting-with-pagination">7.1 Sorting with Pagination</h3>
+<p>Combine sorting and pagination:</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;list_elements&quot;</span><span class="op">,</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">element_type</span><span class="op">:</span> <span class="st">&quot;persona&quot;</span><span class="op">,</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">params</span><span class="op">:</span> {</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">first</span><span class="op">:</span> <span class="dv">10</span><span class="op">,</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">sort</span><span class="op">:</span> {</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">field</span><span class="op">:</span> <span class="st">&quot;created_at&quot;</span><span class="op">,</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">order</span><span class="op">:</span> <span class="st">&quot;desc&quot;</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="72-filtered-pagination">7.2 Filtered Pagination</h3>
+<p>Pagination with filters:</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;list_elements&quot;</span><span class="op">,</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">element_type</span><span class="op">:</span> <span class="st">&quot;persona&quot;</span><span class="op">,</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">params</span><span class="op">:</span> {</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">first</span><span class="op">:</span> <span class="dv">10</span><span class="op">,</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">filter</span><span class="op">:</span> {</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">status</span><span class="op">:</span> <span class="st">&quot;active&quot;</span><span class="op">,</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">tags</span><span class="op">:</span> { <span class="dt">contains</span><span class="op">:</span> <span class="st">&quot;admin&quot;</span> }</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="73-offset-based-pagination">7.3 Offset-Based Pagination</h3>
+<p>For backends requiring offset:</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;list_elements&quot;</span><span class="op">,</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">element_type</span><span class="op">:</span> <span class="st">&quot;persona&quot;</span><span class="op">,</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">params</span><span class="op">:</span> {</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">offset</span><span class="op">:</span> <span class="dv">20</span><span class="op">,</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">limit</span><span class="op">:</span> <span class="dv">10</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="74-streaming-pagination">7.4 Streaming Pagination</h3>
+<p>For real-time data:</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;list_elements&quot;</span><span class="op">,</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">element_type</span><span class="op">:</span> <span class="st">&quot;persona&quot;</span><span class="op">,</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">params</span><span class="op">:</span> {</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">first</span><span class="op">:</span> <span class="dv">10</span><span class="op">,</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">stream</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">poll_interval_ms</span><span class="op">:</span> <span class="dv">5000</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="75-pagination-presets">7.5 Pagination Presets</h3>
+<p>Named pagination configurations:</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># In adapter schema</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">pagination_presets</span><span class="kw">:</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">compact</span><span class="kw">:</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">page_size</span><span class="kw">:</span><span class="at"> </span><span class="dv">5</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">include_total</span><span class="kw">:</span><span class="at"> </span><span class="ch">false</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">detailed</span><span class="kw">:</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">page_size</span><span class="kw">:</span><span class="at"> </span><span class="dv">20</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">include_total</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">include_edges</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span></code></pre></div>
+<hr />
+<h2 id="references">References</h2>
+<ul>
+<li><a href="../versions/v1.0.0-draft.html">MCP-AQL Specification</a></li>
+<li><a href="https://relay.dev/graphql/connections.htm">GraphQL Relay Cursor Connections</a></li>
+<li><a href="field-selection.html">Field Selection Specification</a></li>
+<li><a href="../operations.html">Operations Reference</a></li>
+<li>GitHub Issue: <a href="https://github.com/MCPAQL/spec/issues/37">#37</a></li>
+<li>DollhouseMCP Implementation: <a href="https://github.com/DollhouseMCP/mcp-server-v2-refactor/issues/299">#299</a></li>
+</ul>
+
+          </div>
+        </section>
+        <nav class="page-nav" aria-label="Page navigation">
+  <a class="page-nav-link prev" href="field-selection.html">
+    <span class="page-nav-eyebrow">Previous page</span>
+    <strong class="page-nav-label">Field Selection Specification</strong>
+  </a>
+  <a class="page-nav-link next" href="relationship-queries.html">
+    <span class="page-nav-eyebrow">Next page</span>
+    <strong class="page-nav-label">MCP-AQL Relationship Queries</strong>
+  </a>
+</nav>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.</p>
+      <div class="footer-links">
+        <a href="../../docs/index.html">Docs Library</a><a href="../index.html">Repo-Synced Spec</a><a href="https://github.com/MCPAQL">MCPAQL Organization</a><a href="https://dollhouseresearch.com">Dollhouse Research</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../js/search.js"></script>
+</body>
+</html>

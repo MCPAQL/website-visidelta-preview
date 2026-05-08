@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="MCP-AQL security model: trust levels, gatekeeper controls, confirmation tokens, and execution safety.">
+  <title>MCP-AQL Docs | Security Model</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <a class="logo" href="../index.html"><span class="logo-mark"></span>MCP-AQL</a>
+        <ul class="nav-links">
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="index.html">Docs</a></li>
+          <li><a href="../launch-checklist.html">Launch Checklist</a></li>
+          <li><a href="../apis/index.html">Adapter Patterns</a></li>
+        </ul>
+        <form class="site-search" data-search-form data-index-url="../data/search-index.json" role="search">
+          <label class="sr-only" for="site-search-input">Search MCP-AQL docs</label>
+          <input id="site-search-input" data-search-input type="search" placeholder="Search MCP-AQL docs, spec pages, and adapter patterns...">
+          <span class="search-count" data-search-count></span>
+          <ul class="search-results" data-search-results hidden></ul>
+        </form>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container docs-shell">
+      <aside class="docs-side">
+        <h2>In This Library</h2>
+        <ul>
+          <li><a href="getting-started.html">Getting Started</a></li>
+          <li><a href="protocol-core.html">Protocol Core</a></li>
+          <li><a href="error-model.html">Error Model</a></li>
+          <li><a class="current" href="security-model.html">Security Model</a></li>
+          <li><a href="conformance.html">Conformance</a></li>
+          <li><a href="adapter-contracts.html">Adapter Contracts</a></li>
+          <li><a href="implementation-profiles.html">Implementation Profiles</a></li>
+          <li><a href="roadmap.html">Roadmap</a></li>
+          <li><a href="release-notes.html">Release Notes</a></li>
+        </ul>
+      </aside>
+
+      <article class="docs-main">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+          <ol>
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="index.html">Docs</a></li>
+            <li><span class="current">Security Model</span></li>
+          </ol>
+        </nav>
+        <section class="hero docs-hero">
+          <div class="hero-inner">
+            <span class="status-pill">SECURITY MODEL</span>
+            <h1>Trust And Safety Controls</h1>
+            <p class="lede">
+              MCP-AQL security is designed around operation risk, trust-level mediation, and explicit confirmation for dangerous actions.
+              This page explains how the draft protocol handles approval paths, danger tiers, and safe execution behavior.
+            </p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="../spec/security/gatekeeper.html">Gatekeeper Spec</a>
+              <a class="btn btn-secondary" href="../spec/security/confirmation-tokens.html">Confirmation Tokens</a>
+              <a class="btn btn-secondary" href="../spec/security/execution-safety-loop.html">Execution Safety Loop</a>
+            </div>
+          </div>
+        </section>
+
+        <nav class="page-nav" aria-label="Page navigation">
+          <a class="page-nav-link prev" href="error-model.html">
+            <span class="page-nav-eyebrow">Previous page</span>
+            <strong class="page-nav-label">Error Model</strong>
+          </a>
+          <a class="page-nav-link next" href="conformance.html">
+            <span class="page-nav-eyebrow">Next page</span>
+            <strong class="page-nav-label">Conformance</strong>
+          </a>
+        </nav>
+
+        <section class="page-toc-shell" data-page-toc>
+          <div class="card page-toc-card">
+            <div class="page-toc-head">
+              <p class="page-toc-kicker">On this page</p>
+              <h2>Jump to a section</h2>
+              <p class="page-toc-intro">Use the outline to move through longer pages without losing your place.</p>
+            </div>
+            <ol class="page-toc-list" data-page-toc-list>
+              <li class="page-toc-item level-2"><a href="#trust-level-mediation" data-toc-target="trust-level-mediation">Trust-Level Mediation</a></li><li class="page-toc-item level-2"><a href="#danger-classification" data-toc-target="danger-classification">Danger Classification</a></li><li class="page-toc-item level-2"><a href="#confirmation-token-flow" data-toc-target="confirmation-token-flow">Confirmation token flow</a></li><li class="page-toc-item level-2"><a href="#execution-safety-loop" data-toc-target="execution-safety-loop">Execution Safety Loop</a></li><li class="page-toc-item level-2"><a href="#open-security-hardening-tracks" data-toc-target="open-security-hardening-tracks">Open Security Hardening Tracks</a></li><li class="page-toc-item level-2"><a href="#source-documents-behind-this-summary" data-toc-target="source-documents-behind-this-summary">Source documents behind this summary</a></li>
+            </ol>
+          </div>
+        </section>
+
+        <section class="topic-bridge">
+          <h2 class="sr-only">Related reading</h2>
+          <div class="grid cols-2">
+            <article class="card">
+              <h3>Go Deeper In The Full Spec</h3>
+              <p>The full safety model is split across several dedicated spec documents hosted here on the website.</p>
+              <ul>
+                <li><a href="../spec/security/gatekeeper.html">Gatekeeper Specification</a></li>
+                <li><a href="../spec/security/confirmation-tokens.html">Confirmation Tokens</a></li>
+                <li><a href="../spec/security/execution-safety-loop.html">Execution Safety Loop</a></li>
+                <li><a href="../spec/index.html">Browse the full spec reference</a></li>
+              </ul>
+            </article>
+            <article class="card">
+              <h3>Related Summary Pages</h3>
+              <p>Security decisions sit next to routing, error handling, and launch-readiness claims.</p>
+              <ul>
+                <li><a href="protocol-core.html">Protocol Core</a></li>
+                <li><a href="error-model.html">Error Model</a></li>
+                <li><a href="conformance.html">Conformance</a></li>
+                <li><a href="index.html">Back to the docs library</a></li>
+              </ul>
+            </article>
+          </div>
+        </section>
+
+        <section>
+          <h2 class="section-title" id="trust-level-mediation">Trust-Level Mediation</h2>
+          <div class="grid cols-2">
+            <article class="card">
+              <h3>What it means in practice</h3>
+              <p>
+                Implementations classify requester trust and apply policy gates before operation dispatch. The exact trust taxonomy is
+                adapter-defined, but the enforcement pattern is consistent: low-trust contexts default toward safe reads, while higher-trust
+                contexts can unlock mutations or execution flows.
+              </p>
+              <ul>
+                <li>Trust-level checks happen before execution</li>
+                <li>Dangerous operations require stronger policy context</li>
+                <li>Policies should be introspectable where feasible</li>
+              </ul>
+            </article>
+            <article class="card">
+              <h3>Typical mediation outcome</h3>
+              <p>
+                A validated user might be allowed to call <code>list_files</code> and <code>update_profile</code>, but blocked from
+                <code>bulk_delete</code> until stronger review, confirmation, or out-of-band verification is available.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <section>
+          <h2 class="section-title" id="danger-classification">Danger Classification</h2>
+          <div class="grid cols-2">
+            <article class="card">
+              <h3>Operation risk labels</h3>
+              <p>
+                Operations can be tagged by danger class to support UI and agent policy decisions. Draft specification work tracks stronger
+                requirements for danger metadata alignment with runtime surfaces.
+              </p>
+            </article>
+            <article class="card">
+              <h3>Why the labels matter</h3>
+              <p>
+                Danger labels are the bridge between semantics and policy. They help an agent distinguish advisory actions from ones that must
+                pause for approval or trigger hard-stop verification.
+              </p>
+            </article>
+          </div>
+          <div class="card table-card">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Danger level</th>
+                  <th>Example operation</th>
+                  <th>Likely safety tier</th>
+                  <th>Expected behavior</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>safe</code></td>
+                  <td><code>list_files</code></td>
+                  <td><code>advisory</code></td>
+                  <td>No intervention beyond normal logging</td>
+                </tr>
+                <tr>
+                  <td><code>destructive</code></td>
+                  <td><code>delete_account</code></td>
+                  <td><code>confirm</code></td>
+                  <td>Pause and require an approval path</td>
+                </tr>
+                <tr>
+                  <td><code>dangerous</code></td>
+                  <td><code>bulk_delete</code></td>
+                  <td><code>verify</code></td>
+                  <td>Mandatory pause plus stronger verification</td>
+                </tr>
+                <tr>
+                  <td><code>forbidden</code></td>
+                  <td><code>drop_database</code></td>
+                  <td><code>danger_zone</code></td>
+                  <td>Hard stop with out-of-band verification</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section>
+          <h2 class="section-title" id="confirmation-token-flow">Confirmation token flow</h2>
+          <div class="grid code-example-stack">
+            <article class="card">
+              <h3>Request and required confirmation response</h3>
+              <pre class="code-box" data-code-language="json">{
+  "operation": "delete_repo",
+  "params": {
+    "owner": "acme",
+    "repo": "widgets"
+  }
+}
+
+{
+  "success": false,
+  "error": {
+    "code": "CONFIRMATION_REQUIRED",
+    "message": "This operation requires confirmation",
+    "details": {
+      "danger_level": "destructive",
+      "confirmation_message": "Delete repository 'acme/widgets'?",
+      "confirmation_token": "conf_abc123xyz"
+    }
+  }
+}</pre>
+            </article>
+            <article class="card">
+              <h3>Confirmed retry</h3>
+              <p>
+                The client retries the same operation with the issued token. That keeps the first denial machine-readable and makes the second
+                request an explicit act of confirmation.
+              </p>
+              <pre class="code-box" data-code-language="json">{
+  "operation": "delete_repo",
+  "params": {
+    "owner": "acme",
+    "repo": "widgets",
+    "_confirmation": "conf_abc123xyz"
+  }
+}</pre>
+            </article>
+          </div>
+        </section>
+
+        <section>
+          <h2 class="section-title" id="execution-safety-loop">Execution Safety Loop</h2>
+          <div class="grid code-example-stack">
+            <article class="card">
+              <h3>What it means for agents</h3>
+              <p>
+                The execution safety loop means actions are evaluated before they happen, not merely logged afterward. An agent reports intent,
+                receives an autonomy decision, and only proceeds when the current step is allowed.
+              </p>
+            </article>
+            <article class="card">
+              <h3>Lifecycle shape</h3>
+              <pre class="code-box" data-code-language="text">execute_agent -> record_execution_step -> continue_execution
+                 \-> pause/confirm -> complete_execution or abort_execution</pre>
+              <p>
+                Session-bound controls prevent stale confirmation tokens, unexpected operation drift, and hidden escalation during long-running execution.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <section>
+          <h2 class="section-title" id="open-security-hardening-tracks">Open Security Hardening Tracks</h2>
+          <div class="card">
+            <p>
+              Public launch posture should explicitly label in-progress hardening work. Current priority categories include batch safeguards,
+              structured error alignment, and conformance validation depth for policy-sensitive operations.
+            </p>
+            <ul>
+              <li>Batch/resource exhaustion protections</li>
+              <li>Structured error surface consistency</li>
+              <li>Conformance coverage for security and safety behaviors</li>
+            </ul>
+          </div>
+        </section>
+
+        <section>
+          <h2 class="section-title" id="source-documents-behind-this-summary">Source documents behind this summary</h2>
+          <div class="card">
+            <ul>
+              <li><a href="../spec/security/gatekeeper.html">Gatekeeper</a></li>
+              <li><a href="../spec/security/confirmation-tokens.html">Confirmation Tokens</a></li>
+              <li><a href="../spec/security/execution-safety-loop.html">Execution Safety Loop</a></li>
+              <li><a href="https://github.com/MCPAQL/spec/issues/216">Issue #216 safety checklist alignment audit</a></li>
+            </ul>
+          </div>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.</p>
+      <div class="footer-links">
+        <a href="index.html">Docs Library</a>
+        <a href="../index.html">Portal Home</a>
+        <a href="https://github.com/MCPAQL">MCPAQL Organization</a>
+        <a href="https://dollhouseresearch.com">Dollhouse Research</a>
+        <a href="https://github.com/DollhouseMCP/mcp-server">DollhouseMCP Production Profile</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../js/search.js"></script>
+</body>
+</html>

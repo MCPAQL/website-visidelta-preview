@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Quick-start guide to MCP-AQL: what it is, why it exists, and what to read first.">
+  <title>MCP-AQL Docs | Getting Started</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" media="print" onload="this.onload=null;this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <a class="logo" href="../index.html"><span class="logo-mark"></span>MCP-AQL</a>
+        <ul class="nav-links">
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="index.html">Docs</a></li>
+          <li><a href="../launch-checklist.html">Launch Checklist</a></li>
+          <li><a href="../apis/index.html">Adapter Patterns</a></li>
+        </ul>
+        <form class="site-search" data-search-form data-index-url="../data/search-index.json" role="search">
+          <label class="sr-only" for="site-search-input">Search MCP-AQL docs</label>
+          <input id="site-search-input" data-search-input type="search" placeholder="Search MCP-AQL docs, spec pages, and adapter patterns...">
+          <span class="search-count" data-search-count></span>
+          <ul class="search-results" data-search-results hidden></ul>
+        </form>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container docs-shell">
+      <aside class="docs-side">
+        <h2>In This Library</h2>
+        <ul>
+          <li><a class="current" href="getting-started.html">Getting Started</a></li>
+          <li><a href="protocol-core.html">Protocol Core</a></li>
+          <li><a href="error-model.html">Error Model</a></li>
+          <li><a href="security-model.html">Security Model</a></li>
+          <li><a href="conformance.html">Conformance</a></li>
+          <li><a href="adapter-contracts.html">Adapter Contracts</a></li>
+          <li><a href="implementation-profiles.html">Implementation Profiles</a></li>
+          <li><a href="roadmap.html">Roadmap</a></li>
+          <li><a href="release-notes.html">Release Notes</a></li>
+        </ul>
+      </aside>
+
+      <article class="docs-main">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+          <ol>
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="index.html">Docs</a></li>
+            <li><span class="current">Getting Started</span></li>
+          </ol>
+        </nav>
+        <section class="hero docs-hero">
+          <div class="hero-inner">
+            <span class="status-pill">GETTING STARTED</span>
+            <h1>What MCP-AQL is, why it exists, and what to read first</h1>
+            <p class="lede">
+              MCP-AQL keeps MCP transport but adds something MCP itself does not provide: built-in semantic classification. Clients can tell
+              whether they are looking at a read, mutation, deletion, or execution flow from the endpoint itself instead of guessing from prose.
+            </p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="../spec/repo/README.html">Spec README</a>
+              <a class="btn btn-secondary" href="../spec/versions/v1.0.0-draft.html">Normative Draft</a>
+            </div>
+          </div>
+        </section>
+
+        <nav class="page-nav" aria-label="Page navigation">
+          <a class="page-nav-link prev" href="index.html">
+            <span class="page-nav-eyebrow">Previous page</span>
+            <strong class="page-nav-label">Docs Library</strong>
+          </a>
+          <a class="page-nav-link next" href="protocol-core.html">
+            <span class="page-nav-eyebrow">Next page</span>
+            <strong class="page-nav-label">Protocol Core</strong>
+          </a>
+        </nav>
+
+        <section class="page-toc-shell" data-page-toc>
+          <div class="card page-toc-card">
+            <div class="page-toc-head">
+              <p class="page-toc-kicker">On this page</p>
+              <h2>Jump to a section</h2>
+              <p class="page-toc-intro">Use the outline to move through longer pages without losing your place.</p>
+            </div>
+            <ol class="page-toc-list" data-page-toc-list>
+              <li class="page-toc-item level-2"><a href="#the-one-paragraph-version" data-toc-target="the-one-paragraph-version">The one-paragraph version</a></li><li class="page-toc-item level-2"><a href="#why-teams-look-at-it" data-toc-target="why-teams-look-at-it">The semantics gap MCP-AQL closes</a></li><li class="page-toc-item level-2"><a href="#token-efficiency-story" data-toc-target="token-efficiency-story">Token efficiency story</a></li><li class="page-toc-item level-2"><a href="#why-introspection-matters" data-toc-target="why-introspection-matters">Why introspection matters</a></li><li class="page-toc-item level-2"><a href="#quick-start-request-shape" data-toc-target="quick-start-request-shape">Quick-start request shape</a></li><li class="page-toc-item level-2"><a href="#end-to-end-walkthrough" data-toc-target="end-to-end-walkthrough">End-to-end walkthrough</a></li><li class="page-toc-item level-2"><a href="#how-this-differs" data-toc-target="how-this-differs">How this differs from familiar systems</a></li><li class="page-toc-item level-2"><a href="#suggested-reading-order" data-toc-target="suggested-reading-order">Suggested reading order</a></li>
+            </ol>
+          </div>
+        </section>
+
+        <section class="topic-bridge">
+          <h2 class="sr-only">Related reading</h2>
+          <div class="grid cols-2">
+            <article class="card">
+              <h3>Go Deeper In The Full Spec</h3>
+              <p>Read the canonical protocol text here on the site when you want the full normative detail behind this overview.</p>
+              <ul>
+                <li><a href="../spec/repo/README.html">Spec README</a></li>
+                <li><a href="../spec/overview.html">Protocol Overview</a></li>
+                <li><a href="../spec/versions/v1.0.0-draft.html">Normative Draft</a></li>
+                <li><a href="../spec/index.html">Browse the full spec reference</a></li>
+              </ul>
+            </article>
+            <article class="card">
+              <h3>Keep Moving Through The Library</h3>
+              <p>Continue into the core rules, structured response model, and security controls that shape real implementations.</p>
+              <ul>
+                <li><a href="protocol-core.html">Protocol Core</a></li>
+                <li><a href="error-model.html">Error Model</a></li>
+                <li><a href="security-model.html">Security Model</a></li>
+                <li><a href="index.html">Back to the docs library</a></li>
+              </ul>
+            </article>
+          </div>
+        </section>
+
+        <section>
+          <h2 class="section-title" id="the-one-paragraph-version">The one-paragraph version</h2>
+          <div class="card">
+            <p>
+              MCP-AQL is a protocol specification and implementation toolkit for exposing adapter operations through either five CRUDE endpoints
+              or a single routed endpoint. It keeps <code>introspect</code> mandatory, makes operation intent structural at the endpoint layer,
+              treats the versioned spec as canonical, and positions production profiles like DollhouseMCP as practical references rather than the
+              definition of the protocol.
+            </p>
+          </div>
+        </section>
+
+        <section>
+          <h2 class="section-title" id="why-teams-look-at-it">The semantics gap MCP-AQL closes</h2>
+          <div class="grid code-example-stack">
+            <article class="card">
+              <h3>What plain MCP leaves open</h3>
+              <p>
+                MCP standardizes how tools register and how calls are made, but it does not encode what an operation means. A harmless query and
+                a destructive deletion share the same structural shape, so the only signal about intent is free-text description.
+              </p>
+              <pre class="code-box" data-code-language="json">{
+  "name": "get_user",
+  "description": "Return a user record"
+}
+
+{
+  "name": "drop_database",
+  "description": "Delete the production database"
+}</pre>
+            </article>
+            <article class="card">
+              <h3>What MCP-AQL adds</h3>
+              <p>
+                MCP-AQL makes intent structural. Routing an operation through <code>READ</code> declares it side-effect-free. Routing through
+                <code>DELETE</code> declares it destructive. That makes safety classification available to clients, LLMs, and policy systems
+                without parsing descriptions or guessing from naming conventions.
+              </p>
+              <ul>
+                <li><code>READ</code> means safe query semantics</li>
+                <li><code>DELETE</code> means destructive intent is explicit</li>
+                <li><code>EXECUTE</code> means lifecycle or side-effectful runtime flow</li>
+              </ul>
+            </article>
+          </div>
+        </section>
+
+        <section>
+          <h2 class="section-title" id="token-efficiency-story">Token efficiency story</h2>
+          <div class="card table-card">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Mode</th>
+                  <th>Tool definitions</th>
+                  <th>Approximate token cost</th>
+                  <th>Reduction</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Discrete tools (50+)</td>
+                  <td>Every tool definition loaded up front</td>
+                  <td>~30,000 tokens</td>
+                  <td>Baseline</td>
+                </tr>
+                <tr>
+                  <td>CRUDE mode (5 endpoints)</td>
+                  <td>Semantic endpoints plus runtime discovery</td>
+                  <td>~4,500 tokens</td>
+                  <td>~85%</td>
+                </tr>
+                <tr>
+                  <td>Single mode (1 endpoint)</td>
+                  <td>One routed endpoint plus runtime discovery</td>
+                  <td>~1,100 tokens</td>
+                  <td>~96%</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="callout">
+            The introspection spec models the on-demand path even more sharply: around <strong>29,600 upfront tokens</strong> for discrete tools
+            versus around <strong>2,600 total</strong> for MCP-AQL plus introspection across ten operations.
+          </p>
+        </section>
+
+        <section>
+          <h2 class="section-title" id="why-introspection-matters">Why introspection matters</h2>
+          <div class="grid cols-3">
+            <article class="card">
+              <h3>Discovery becomes demand-driven</h3>
+              <p>Instead of loading every tool schema at connection time, clients can ask only for the operations and parameter details they need right now.</p>
+            </article>
+            <article class="card">
+              <h3>Introspection is first-class</h3>
+              <p><code>introspect</code> is mandatory, so runtime discovery is part of protocol behavior rather than an optional convenience layer.</p>
+            </article>
+            <article class="card">
+              <h3>Token savings stay explainable</h3>
+              <p>The reduction is not magic. It comes from moving capability discovery from up-front schema bulk into small runtime lookups.</p>
+            </article>
+          </div>
+        </section>
+
+        <section>
+          <h2 class="section-title" id="quick-start-request-shape">Quick-start request shape</h2>
+          <div class="grid code-example-stack">
+            <article class="card">
+              <h3>Discover operations</h3>
+              <pre class="code-box" data-code-language="json">{
+  "operation": "introspect",
+  "params": { "query": "operations" }
+}</pre>
+            </article>
+            <article class="card">
+              <h3>Call a discovered operation</h3>
+              <pre class="code-box" data-code-language="json">{
+  "operation": "create_user",
+  "params": {
+    "email": "alice@example.com",
+    "name": "Alice"
+  }
+}</pre>
+            </article>
+          </div>
+          <p class="callout">
+            The second example is schematic. Real operation names and parameters are adapter-defined and should be discovered first.
+          </p>
+        </section>
+
+        <section>
+          <h2 class="section-title" id="end-to-end-walkthrough">End-to-end walkthrough</h2>
+          <div class="grid code-example-stack">
+            <article class="card">
+              <h3>1. Discover operations</h3>
+              <pre class="code-box" data-code-language="json">{
+  "operation": "introspect",
+  "params": { "query": "operations" }
+}
+
+{
+  "success": true,
+  "data": {
+    "operations": [
+      { "name": "get_user", "endpoint": "read" },
+      { "name": "create_user", "endpoint": "create" },
+      { "name": "delete_user", "endpoint": "delete" }
+    ]
+  }
+}</pre>
+            </article>
+            <article class="card">
+              <h3>2. Read safely</h3>
+              <pre class="code-box" data-code-language="json">{
+  "operation": "get_user",
+  "params": { "user_id": "user_123" }
+}
+
+{
+  "success": true,
+  "data": {
+    "id": "user_123",
+    "email": "alice@example.com",
+    "name": "Alice"
+  }
+}</pre>
+            </article>
+            <article class="card">
+              <h3>3. Create state</h3>
+              <pre class="code-box" data-code-language="json">{
+  "operation": "create_user",
+  "params": {
+    "email": "alice@example.com",
+    "name": "Alice"
+  }
+}
+
+{
+  "success": true,
+  "data": {
+    "id": "user_123",
+    "created": true
+  }
+}</pre>
+            </article>
+            <article class="card">
+              <h3>4. Handle malformed input</h3>
+              <pre class="code-box" data-code-language="json">{
+  "operation": "get_user",
+  "params": {}
+}
+
+{
+  "success": false,
+  "error": {
+    "code": "VALIDATION_MISSING_PARAM",
+    "message": "Missing required parameter 'user_id'",
+    "details": {
+      "param_name": "user_id"
+    }
+  }
+}</pre>
+            </article>
+            <article class="card">
+              <h3>5. Ask for confirmation before delete</h3>
+              <pre class="code-box" data-code-language="json">{
+  "operation": "delete_user",
+  "params": { "user_id": "user_123" }
+}
+
+{
+  "success": false,
+  "error": {
+    "code": "CONFIRMATION_REQUIRED",
+    "message": "This operation requires confirmation",
+    "details": {
+      "danger_level": "destructive",
+      "confirmation_token": "conf_abc123xyz"
+    }
+  }
+}</pre>
+            </article>
+            <article class="card">
+              <h3>6. Retry with the confirmation token</h3>
+              <pre class="code-box" data-code-language="json">{
+  "operation": "delete_user",
+  "params": {
+    "user_id": "user_123",
+    "_confirmation": "conf_abc123xyz"
+  }
+}
+
+{
+  "success": true,
+  "data": {
+    "deleted": true
+  }
+}</pre>
+            </article>
+          </div>
+          <p class="callout">
+            The same logical flow works in CRUDE mode or single-endpoint mode. What changes is the transport surface, not the operation contract,
+            introspection model, or structured response envelope.
+          </p>
+        </section>
+
+        <section>
+          <h2 class="section-title" id="how-this-differs">How this differs from familiar systems</h2>
+          <div class="grid cols-3">
+            <article class="card">
+              <h3>MCP</h3>
+              <p>MCP-AQL is layered on MCP transport. The difference is semantic endpoints, runtime discovery, and built-in safety classification.</p>
+            </article>
+            <article class="card">
+              <h3>GraphQL</h3>
+              <p>Both consolidate discovery behind a query layer, but GraphQL requires an SDL and type system while MCP-AQL reuses MCP transport.</p>
+            </article>
+            <article class="card">
+              <h3>REST</h3>
+              <p>REST uses HTTP verbs for semantics. MCP-AQL applies a similar principle to the MCP tool layer, where HTTP verbs do not exist.</p>
+            </article>
+          </div>
+        </section>
+
+        <section>
+          <h2 class="section-title" id="suggested-reading-order">Suggested reading order</h2>
+          <div class="card">
+            <ol>
+              <li>Read the <a href="../spec/versions/v1.0.0-draft.html">versioned draft</a> for the canonical rules.</li>
+              <li>Use <a href="protocol-core.html">Protocol Core</a> for routing, request shape, endpoint semantics, and the MCP-versus-MCP-AQL contrast.</li>
+              <li>Use <a href="error-model.html">Error Model</a> and <a href="security-model.html">Security Model</a> for operational expectations.</li>
+              <li>Use <a href="conformance.html">Conformance</a> and <a href="../launch-checklist.html">Launch Checklist</a> to understand current draft maturity.</li>
+            </ol>
+          </div>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.</p>
+      <div class="footer-links">
+        <a href="index.html">Docs Library</a>
+        <a href="../index.html">Portal Home</a>
+        <a href="https://github.com/MCPAQL">MCPAQL Organization</a>
+        <a href="https://dollhouseresearch.com">Dollhouse Research</a>
+        <a href="https://github.com/DollhouseMCP/mcp-server">DollhouseMCP Production Profile</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../js/search.js" defer></script>
+</body>
+</html>

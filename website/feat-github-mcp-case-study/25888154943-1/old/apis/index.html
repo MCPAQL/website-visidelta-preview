@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Browse MCP-AQL adapter patterns across MCP servers, applications, cloud services, operating systems, and website-facing integrations.">
+  <title>Adapter Patterns | MCP-AQL</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" media="print" onload="this.onload=null;this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <a class="logo" href="../index.html"><span class="logo-mark"></span>MCP-AQL</a>
+        <ul class="nav-links">
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="../docs/index.html">Docs</a></li>
+          <li><a href="../launch-checklist.html">Launch Checklist</a></li>
+          <li><a href="index.html">Adapter Patterns</a></li>
+        </ul>
+        <form class="site-search" data-search-form data-index-url="../data/search-index.json" role="search">
+          <label class="sr-only" for="site-search-input">Search MCP-AQL docs</label>
+          <input id="site-search-input" data-search-input type="search" placeholder="Search MCP-AQL docs, spec pages, and adapter patterns...">
+          <span class="search-count" data-search-count></span>
+          <ul class="search-results" data-search-results hidden></ul>
+        </form>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container docs-shell">
+      <aside class="docs-side">
+        <h2>Adapter Patterns</h2>
+        <p class="docs-side-note">Choose the closest target-system shape first, then use the child pages to understand which contract and safety decisions matter most.</p>
+        <ul>
+          <li><a class="current" aria-current="page" href="index.html">Overview</a></li>
+          <li><a href="mcp-server.html">MCP Server</a></li>
+          <li><a href="application.html">Application</a></li>
+          <li><a href="cloud-service.html">Cloud Service</a></li>
+          <li><a href="operating-system.html">Operating System</a></li>
+          <li><a href="website.html">Website / Web API</a></li>
+        </ul>
+      </aside>
+
+      <article class="docs-main">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+          <ol>
+            <li><a href="../index.html">Home</a></li>
+            <li><span class="current">Adapter Patterns</span></li>
+          </ol>
+        </nav>
+
+        <section class="hero docs-hero api-hero">
+          <div class="hero-inner">
+            <span class="status-pill">IMPLEMENTATION GUIDANCE</span>
+            <h1>Adapter patterns are where the protocol meets the target system</h1>
+            <p class="lede">
+              These pages are the browse-first guide to how MCP-AQL changes shape across different environments.
+              The formal rules still live in the spec and contract docs, but the pattern pages help implementers choose the right modeling, safety, and runtime posture before they drop into the details.
+            </p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="../docs/adapter-contracts.html">Adapter Contracts</a>
+              <a class="btn btn-secondary" href="../docs/implementation-profiles.html">Implementation Profiles</a>
+              <a class="btn btn-secondary" href="../adapter-reference/index.html">Reference Adapter Docs</a>
+              <a class="btn btn-secondary" href="../spec/mcp-integration.html">MCP Integration Spec</a>
+            </div>
+          </div>
+        </section>
+
+        <section class="page-toc-shell" data-page-toc>
+          <div class="card page-toc-card">
+            <div class="page-toc-head">
+              <p class="page-toc-kicker">On this page</p>
+              <h2>Jump to a section</h2>
+              <p class="page-toc-intro">Use the outline to move through longer pages without losing your place.</p>
+            </div>
+            <ol class="page-toc-list" data-page-toc-list>
+              <li class="page-toc-item level-2"><a href="#pattern-library" data-toc-target="pattern-library">Pattern Library</a></li><li class="page-toc-item level-2"><a href="#repo-synced-implementation-reference" data-toc-target="repo-synced-implementation-reference">Repo-Synced Implementation Reference</a></li><li class="page-toc-item level-2"><a href="#cross-cutting-questions" data-toc-target="cross-cutting-questions">Cross-Cutting Questions</a></li>
+            </ol>
+          </div>
+        </section>
+
+        <section class="topic-bridge">
+          <h2 class="sr-only">Related reading</h2>
+          <div class="grid cols-2">
+            <article class="card">
+              <h3>What this section is for</h3>
+              <p>Use this hub when you know you need adapter guidance, but you have not yet decided which target-system shape best matches the thing you are adapting.</p>
+              <ul>
+                <li>Start here to compare the major environment types quickly.</li>
+                <li>Use the child pages for environment-specific caveats and examples.</li>
+                <li>Cross-check each decision against the website-hosted spec pages instead of bouncing back to repo Markdown.</li>
+              </ul>
+            </article>
+            <article class="card">
+              <h3>How to read it alongside the spec</h3>
+              <p>The pattern pages are implementation-facing guidance, not normative rules. They narrow the problem and then route you to the correct spec material.</p>
+              <ul>
+                <li><a href="../docs/adapter-contracts.html">Adapter Contracts</a></li>
+                <li><a href="../docs/security-model.html">Security Model</a></li>
+                <li><a href="../adapter-reference/index.html">Reference Adapter Docs</a></li>
+                <li><a href="../adapter-reference/architecture/overview.html">Adapter Architecture Overview</a></li>
+                <li><a href="../spec/operations.html">Operations Specification</a></li>
+                <li><a href="../spec/adapter/element-type.html">Adapter Element Type Specification</a></li>
+              </ul>
+            </article>
+          </div>
+        </section>
+
+        <section>
+          <h2 class="section-title" id="pattern-library">Pattern Library</h2>
+          <p class="section-subtitle">Pick the closest environment first. The child pages are there to turn that choice into better contract and runtime decisions.</p>
+          <div class="grid cols-2">
+            <article class="card">
+              <h3><a class="card-title-link" href="mcp-server.html">MCP Server</a></h3>
+              <span class="state-chip live">Primary protocol fit</span>
+              <p>For native MCP tool surfaces that need introspection-preserving consolidation into CRUDE or single-mode MCP-AQL operations.</p>
+            </article>
+            <article class="card">
+              <h3><a class="card-title-link" href="application.html">Application</a></h3>
+              <span class="state-chip pending">Product API fit</span>
+              <p>For desktop, mobile, and product-function surfaces where user-facing actions need a clearer operation contract.</p>
+            </article>
+            <article class="card">
+              <h3><a class="card-title-link" href="cloud-service.html">Cloud Service</a></h3>
+              <span class="state-chip pending">External API fit</span>
+              <p>For remote APIs where quotas, retries, pagination, and provider failure semantics shape the adapter design.</p>
+            </article>
+            <article class="card">
+              <h3><a class="card-title-link" href="operating-system.html">Operating System</a></h3>
+              <span class="state-chip pending">Local execution fit</span>
+              <p>For file, process, and system-level operations where permission, confirmation, and policy controls must be explicit.</p>
+            </article>
+            <article class="card">
+              <h3><a class="card-title-link" href="website.html">Website / Web API</a></h3>
+              <span class="state-chip pending">Web workflow fit</span>
+              <p>For retrieval-heavy or action-heavy web flows where scraping, APIs, navigation, and side effects can overlap.</p>
+            </article>
+          </div>
+        </section>
+
+        <section>
+          <h2 class="section-title" id="repo-synced-implementation-reference">Repo-Synced Implementation Reference</h2>
+          <p class="section-subtitle">The implementation architecture is now mirrored onto the website too, so these pattern pages can point into real runtime docs instead of stopping at conceptual guidance.</p>
+          <div class="grid cols-3">
+            <article class="card">
+              <h3><a class="card-title-link" href="../adapter-reference/architecture/overview.html">Architecture Overview</a></h3>
+              <p>Read the internal adapter shape, request flow, and design principles from the reference adapter repo.</p>
+            </article>
+            <article class="card">
+              <h3><a class="card-title-link" href="../adapter-reference/architecture/runtime.html">Universal Runtime</a></h3>
+              <p>See how schema loading, dispatch, request building, response handling, and error mapping are expected to work.</p>
+            </article>
+            <article class="card">
+              <h3><a class="card-title-link" href="../adapter-reference/guides/development.html">Development Guide</a></h3>
+              <p>Use the practical build guidance when you move from choosing a pattern to implementing one.</p>
+            </article>
+            <article class="card">
+              <h3><a class="card-title-link" href="../adapter-reference/guides/testing.html">Testing Guide</a></h3>
+              <p>Cover handler tests, routing tests, introspection checks, and conformance workflow from the same website docs experience.</p>
+            </article>
+            <article class="card">
+              <h3><a class="card-title-link" href="../adapter-reference/guides/migration.html">Migration Guide</a></h3>
+              <p>Use the MCP server migration guide when you are consolidating an existing tool surface into MCP-AQL operations.</p>
+            </article>
+            <article class="card">
+              <h3><a class="card-title-link" href="../adapter-reference/adr/README.html">Implementation ADRs</a></h3>
+              <p>Browse the accepted implementation decisions behind the reference adapter architecture and plugin pipeline.</p>
+            </article>
+          </div>
+        </section>
+
+        <section>
+          <h2 class="section-title" id="cross-cutting-questions">Cross-Cutting Questions</h2>
+          <div class="grid cols-3">
+            <article class="card">
+              <h3>What is being adapted?</h3>
+              <p>Name the real upstream surface clearly: tools, app actions, cloud endpoints, local system operations, or website flows.</p>
+            </article>
+            <article class="card">
+              <h3>Where is the safety boundary?</h3>
+              <p>The right pattern often turns on where cost, permissions, confirmation, or destructive behavior actually lives.</p>
+            </article>
+            <article class="card">
+              <h3>Which spec pages matter most?</h3>
+              <p>The hub helps answer that question early so implementers can go deeper with less wandering and less duplication.</p>
+            </article>
+          </div>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.</p>
+      <div class="footer-links">
+        <a href="../docs/index.html">Documentation Library</a>
+        <a href="../index.html">Portal Home</a>
+        <a href="https://github.com/MCPAQL">MCPAQL Organization</a>
+        <a href="https://dollhouseresearch.com">Dollhouse Research</a>
+        <a href="https://github.com/DollhouseMCP/mcp-server">DollhouseMCP Production Profile</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../js/search.js" defer></script>
+</body>
+</html>

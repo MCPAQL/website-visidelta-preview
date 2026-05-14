@@ -1,0 +1,77 @@
+Case Study: GitHub MCP | MCP-AQL
+Launch Checklist
+Adapter Patterns
+Case Studies
+Search MCP-AQL docs
+CASE STUDY &middot; 2026-05-14
+GitHub MCP &mdash; Measuring the Cost of Doing It the Long Way
+98.3% less token-discovery overhead. 89 of 89 operations behaviorally equivalent.
+All measured, all reproducible, with public tools.
+The Headline Numbers
+Both adapters wrap the same upstream &mdash;
+https://api.githubcopilot.com/mcp/ &mdash; with all toolsets enabled.
+Numbers are direct measurements, not estimates.
+89 &rarr; 5 tools
+The official server registers 89 individual MCP tools. The MCP-AQL adapter exposes 5 generic CRUDE tools that dispatch to the same 89 underlying operations.
+271,152 &rarr; 4,591 bytes
+tools/list wire size, dropped by 98.3% . That is roughly 67,800 tokens vs 1,148 tokens at startup.
+~66,700 tokens / session
+Saved on every MCP session. Every byte the agent loads at startup is a byte it cannot spend on the user's actual task.
+Why The Adapter Footprint Stays Flat
+The MCP-AQL adapter exposes a fixed 5-tool surface regardless of how many operations route through it. Going from 44 default-toolset operations to 89 all-toolset operations grew the tools/list response by 25% &mdash; almost entirely in the prose descriptions enumerating operations per endpoint. The per-operation JSON-Schemas live in the adapter's internal operation map and are reachable via the introspect call: paid only when the agent actually needs them, and at most once per session for the full catalog.
+By contrast, the official server's tools/list is fully eager. Adding a toolset adds operations, adds bytes. Over six weeks of upstream development we measured the default-toolset payload growing from 130,728 to 132,173 bytes &mdash; ~1,445 bytes of context budget consumed by features most agents do not use. The MCP-AQL footprint stayed unchanged across the same window.
+The Parity Test &mdash; All 89 Operations
+For every operation the GitHub MCP server exposes, the harness connects to both the official server and the MCP-AQL adapter, exercises the operation against each, and diffs the responses byte-for-byte after normalizing volatile fields like timestamps and IDs. The classifier puts each result in one of seven buckets.
+43 IDENTICAL
+byte-equal
+Pure reads, public reads, scoped reads. The adapter passes through the same JSON the official server returns.
+14 STRUCTURAL_PARITY
+same shape
+Paired writes where each side mutates its own fixture. Same response shape after normalizing IDs, timestamps, and paired-variant tokens.
+12 BOTH_ERROR
+symmetric
+Both ends fail with the same upstream root cause &mdash; missing required parameter, fixture conflict, etc. Parity confirmed.
+17 SKIPPED
+documented
+Out of scope for this environment: token scope, pre-existing resource needed, destructive on real account. Each one explained.
+2 DIVERGENT
+explained
+Different Copilot Job IDs (two separate submissions, two distinct IDs); a null-content extraction edge case in the harness. Neither is adapter behavior.
+1 test-design edge case
+not adapter
+Paired write where both ends targeted the same PR; the second call hit "branch already up to date" because the first call's work was merged.
+0 cases where MCP-AQL failed and the official server succeeded.
+57 of 89 operations are verified equivalent in measured response content. The remaining classifications are symmetric errors, documented out-of-scope skips, expected fixture artifacts, and one paired-fixture timing edge case &mdash; not adapter behavior.
+What The First Pass Missed (And How We Caught It)
+This case study was originally written with the comparison reading "44 tools." That was incomplete. On the first capture pass the interrogator hit api.githubcopilot.com/mcp/ with no X-MCP-Toolsets header, and the server replied with its default toolset configuration: 44 tools.
+The remote endpoint also serves 45 additional tools across optional toolsets &mdash; code scanning, dependabot, secret scanning alerts, discussions, gists, notifications, actions, copilot spaces, security advisories, semantic search, projects, label management. They are enabled by sending X-MCP-Toolsets: all on the request. The capture missed those 45 because the interrogator did not ask for them. The generator faithfully produced an adapter wrapping only what the capture had seen.
+On the second pass, re-capturing with the toolsets header set, the same generator produced a 89-operation adapter. The same five MCP tools. The same flat ~4,500-byte tools/list .
+The lesson is the point of the case study. A discovery-driven adapter generator is only as complete as the discovery captures you feed it. The mistake was 100% reproducible with the public tools. So is the correction. Everything used to find and fix the gap is publicly available : github/github-mcp-server , api.githubcopilot.com/mcp/ , mcpaql-interrogate , mcpaql-generate-adapter , and now mcpaql-parity .
+A Generator Bug Surfaced By The Test Harness
+While extending the parity harness to the 89-op adapter, the test runner surfaced a real bug in the generator: custom discovery-time headers were not being propagated into the generated adapter's upstream client . The adapter's schema correctly listed all the operations the toolset header unlocked, but at call time those operations failed with "unknown tool" because the upstream client lacked the selector header.
+We patched the affected adapter for the case study run. The proper fix &mdash; lifting the captured headers into the generated AdapterSchemaDocument and emitting an upstream client that forwards them &mdash; landed in adapter-generator PR #32 with multi-reviewer feedback (Claude flagged structural cleanups and missing test scenarios; Codex caught a separate case-insensitivity hazard in HTTP header collisions). 24 unit tests now cover the propagation path.
+Surfacing exactly these kinds of issues is what end-to-end parity testing is for. Without the harness, the generator would still ship a quietly broken adapter for any MCP server that gates a portion of its surface behind a header &mdash; toolset selectors, region selectors, tenant selectors, feature flags.
+The Harness Is Now A Public Tool
+Generalized from this case study, the parity runner is now part of @mcpaql/tools as mcpaql-parity &mdash; alongside mcpaql-interrogate (discovery), mcpaql-generate-adapter (codegen), mcpaql-conformance (schema validation), and mcpaql-diff (structural diff).
+Anyone building an MCP-AQL adapter writes a small Suite describing their operations and fixtures, then runs:
+mcpaql-parity \
+--suite ./my-suite.js \
+--adapter ./my-adapter/dist/server.js \
+--report parity.json
+The runner reads the operation list from the adapter's bundled schema and matches each against the suite. Any operation the adapter exposes that the suite does not cover surfaces as SKIPPED: "no suite arg builder" &mdash; so the harness cannot silently hide gaps in coverage.
+Read The Receipts
+Full Case Study
+Per-operation results, classification breakdown, reproducibility commands, honest caveats.
+CASE-STUDY.md &rarr;
+Reference Suite
+The 89-operation GitHub suite that powered this study, ready to read or extend.
+parity-harness/ &rarr;
+The Tools
+The discovery, generation, conformance, diff, and parity tools that produced every measurement here.
+@mcpaql/tools &rarr;
+&larr; Back to Portal Home
+&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
+Documentation Library
+MCPAQL Organization
+Dollhouse Research
+DollhouseMCP Production Profile

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Date: 2026-01-26">
+  <title>MCP-AQL Adapter Reference | ADR-002: Schema-Driven Dispatch over Code Generation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" media="print" onload="this.onload=null;this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <a class="logo" href="../../index.html"><span class="logo-mark"></span>MCP-AQL</a>
+        <ul class="nav-links">
+          <li><a href="../../index.html">Home</a></li>
+          <li><a href="../../docs/index.html">Docs</a></li>
+          <li><a href="../../launch-checklist.html">Launch Checklist</a></li>
+          <li><a href="../../apis/index.html">Adapter Patterns</a></li>
+        </ul>
+        <form class="site-search" data-search-form data-index-url="../../data/search-index.json" role="search">
+          <label class="sr-only" for="site-search-input">Search MCP-AQL docs</label>
+          <input id="site-search-input" data-search-input type="search" placeholder="Search MCP-AQL docs, spec pages, and adapter patterns...">
+          <span class="search-count" data-search-count></span>
+          <ul class="search-results" data-search-results hidden></ul>
+        </form>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container docs-shell">
+      <aside class="docs-side">
+        <h2>Reference Adapter Docs</h2>
+        <p class="docs-side-note">Generated from <code>MCPAQL/mcpaql-adapter</code> so the website carries the implementation architecture, guides, and ADRs too.</p>
+        <div class="docs-side-group">
+  <h3>Overview</h3>
+  <ul><li><a href="../repo/README.html">MCP-AQL Reference Adapter</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Architecture</h3>
+  <ul><li><a href="../architecture/dispatch.html">Schema-Driven Dispatch</a></li><li><a href="../architecture/overview.html">MCP-AQL Architecture Overview</a></li><li><a href="../architecture/plugin-system.html">Plugin System Implementation</a></li><li><a href="../architecture/runtime.html">Universal Adapter Runtime Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Guides</h3>
+  <ul><li><a href="../guides/development.html">MCP-AQL Adapter Development Guide</a></li><li><a href="../guides/migration.html">Migration Guide: MCP Server to MCP-AQL Adapter</a></li><li><a href="../guides/testing.html">MCP-AQL Adapter Testing Guide</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>ADRs</h3>
+  <ul><li><a href="ADR-001-plugin-pipeline-order.html">ADR-001: Plugin Pipeline Order</a></li><li><a class="current" aria-current="page" href="ADR-002-schema-driven-dispatch.html">ADR-002: Schema-Driven Dispatch over Code Generation</a></li><li><a href="ADR-003-stateless-plugins.html">ADR-003: Stateless Singleton Plugins</a></li><li><a href="README.html">Architecture Decision Records</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Examples</h3>
+  <ul><li><a href="../examples/README.html">Examples</a></li></ul>
+</div>
+      </aside>
+
+      <article class="docs-main">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+          <ol>
+            <li><a href="../../index.html">Home</a></li>
+            <li><a href="../../apis/index.html">Adapter Patterns</a></li><li><a href="../index.html">Reference Adapter Docs</a></li>
+            <li><span class="current">ADR-002: Schema-Driven Dispatch over Code Generation</span></li>
+          </ol>
+        </nav>
+        <section class="hero docs-hero">
+          <div class="hero-inner">
+            <span class="status-pill">REPO-SYNCED ADAPTER DOC</span>
+            <h1>ADR-002: Schema-Driven Dispatch over Code Generation</h1>
+            <p class="lede">Date: 2026-01-26</p>
+            <div class="spec-meta"><span class="state-chip live">Support document</span><span class="state-chip pending">Accepted</span></div>
+            <p class="spec-source">Source: <a href="https://github.com/MCPAQL/mcpaql-adapter/blob/main/docs/adr/ADR-002-schema-driven-dispatch.md">mcpaql-adapter/docs/adr/ADR-002-schema-driven-dispatch.md</a></p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="https://github.com/MCPAQL/mcpaql-adapter/blob/main/docs/adr/ADR-002-schema-driven-dispatch.md">Open Source Markdown</a><a class="btn btn-secondary" href="../index.html">Browse Reference Adapter Docs</a><a class="btn btn-secondary" href="../../apis/index.html">Adapter Patterns Hub</a>
+            </div>
+          </div>
+        </section>
+
+        <section class="page-toc-shell" data-page-toc>
+          <div class="card page-toc-card">
+            <div class="page-toc-head">
+              <p class="page-toc-kicker">On this page</p>
+              <h2>Jump to a section</h2>
+              <p class="page-toc-intro">Use the outline to move through longer pages without losing your place.</p>
+            </div>
+            <ol class="page-toc-list" data-page-toc-list>
+              <li class="page-toc-item level-2"><a href="#context" data-toc-target="context">Context</a></li><li class="page-toc-item level-2"><a href="#decision" data-toc-target="decision">Decision</a></li><li class="page-toc-item level-2"><a href="#rationale" data-toc-target="rationale">Rationale</a></li><li class="page-toc-item level-2"><a href="#consequences" data-toc-target="consequences">Consequences</a></li><li class="page-toc-item level-2"><a href="#references" data-toc-target="references">References</a></li>
+            </ol>
+          </div>
+        </section>
+
+
+        <section>
+          <div class="card spec-prose">
+            <p><strong>Status:</strong> Accepted <strong>Date:</strong> 2026-01-26</p>
+<h2 id="context">Context</h2>
+<p>When an MCP-AQL operation is invoked, the runtime must translate it into a target API call. Two approaches were considered:</p>
+<ol type="1">
+<li><p><strong>Code generation</strong> — Generate TypeScript/JavaScript handler code from the adapter schema at build time. Each operation gets a concrete function.</p></li>
+<li><p><strong>Schema-driven dispatch</strong> — The runtime interprets the adapter schema at call time. No generated code; the schema itself drives request construction.</p></li>
+</ol>
+<h2 id="decision">Decision</h2>
+<p>Use schema-driven dispatch. The runtime reads the adapter schema (YAML front matter), resolves the operation definition, substitutes parameters into the URL template, and builds the HTTP request dynamically.</p>
+<h2 id="rationale">Rationale</h2>
+<table>
+<thead>
+<tr>
+<th>Factor</th>
+<th>Code Generation</th>
+<th>Schema-Driven</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Build step required</td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Hot reloadable</td>
+<td>No (rebuild required)</td>
+<td>Yes (re-read schema)</td>
+</tr>
+<tr>
+<td>Security auditability</td>
+<td>Must audit generated code</td>
+<td>Audit the schema directly</td>
+</tr>
+<tr>
+<td>Complexity</td>
+<td>Higher (codegen tooling)</td>
+<td>Lower (interpreter)</td>
+</tr>
+<tr>
+<td>Performance</td>
+<td>Slightly faster (static)</td>
+<td>Negligible overhead</td>
+</tr>
+<tr>
+<td>Debugging</td>
+<td>Generated code can be opaque</td>
+<td>Schema is the source of truth</td>
+</tr>
+</tbody>
+</table>
+<p>The security auditability benefit is particularly important: adapter schemas define what API calls an LLM can make, and a text-based schema that is directly interpreted is easier to review than generated code.</p>
+<h2 id="consequences">Consequences</h2>
+<p><strong>Positive:</strong></p>
+<ul>
+<li>No build step — change the schema, behavior changes immediately</li>
+<li>Schema IS the adapter — single source of truth</li>
+<li>Easier security auditing — review YAML, not generated code</li>
+<li>Simpler tooling — no code generator to maintain</li>
+</ul>
+<p><strong>Negative:</strong></p>
+<ul>
+<li>Cannot express complex logic (conditionals, loops) in schemas</li>
+<li>Slightly more runtime overhead per request (negligible for HTTP I/O)</li>
+<li>Advanced use cases may need escape hatches (deferred)</li>
+</ul>
+<h2 id="references">References</h2>
+<ul>
+<li><a href="../architecture/dispatch.html">Schema-Driven Dispatch</a></li>
+<li><a href="../../spec/adapter/element-type.html">Adapter Element Type Specification</a> (spec repo)</li>
+</ul>
+
+          </div>
+        </section>
+        <nav class="page-nav" aria-label="Page navigation">
+  <a class="page-nav-link prev" href="ADR-001-plugin-pipeline-order.html">
+    <span class="page-nav-eyebrow">Previous page</span>
+    <strong class="page-nav-label">ADR-001: Plugin Pipeline Order</strong>
+  </a>
+  <a class="page-nav-link next" href="ADR-003-stateless-plugins.html">
+    <span class="page-nav-eyebrow">Next page</span>
+    <strong class="page-nav-label">ADR-003: Stateless Singleton Plugins</strong>
+  </a>
+</nav>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.</p>
+      <div class="footer-links">
+        <a href="../../apis/index.html">Adapter Patterns</a><a href="../index.html">Reference Adapter Docs</a><a href="https://github.com/MCPAQL/mcpaql-adapter">Reference Adapter Repo</a><a href="https://dollhouseresearch.com">Dollhouse Research</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../js/search.js" defer></script>
+</body>
+</html>

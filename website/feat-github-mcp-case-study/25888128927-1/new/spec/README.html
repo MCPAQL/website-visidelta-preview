@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="This directory contains the MCP-AQL specification set:">
+  <title>MCP-AQL Spec | MCP-AQL Specification Documentation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" media="print" onload="this.onload=null;this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <a class="logo" href="../index.html"><span class="logo-mark"></span>MCP-AQL</a>
+        <ul class="nav-links">
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="../docs/index.html">Docs</a></li>
+          <li><a href="../launch-checklist.html">Launch Checklist</a></li>
+          <li><a href="../apis/index.html">Adapter Patterns</a></li>
+
+          <li><a href="../case-studies/github-mcp.html">Case Studies</a></li>
+        </ul>
+        <form class="site-search" data-search-form data-index-url="../data/search-index.json" role="search">
+          <label class="sr-only" for="site-search-input">Search MCP-AQL docs</label>
+          <input id="site-search-input" data-search-input type="search" placeholder="Search MCP-AQL docs, spec pages, and adapter patterns...">
+          <span class="search-count" data-search-count></span>
+          <ul class="search-results" data-search-results hidden></ul>
+        </form>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container docs-shell">
+      <aside class="docs-side">
+        <h2>Repo-Synced Spec</h2>
+        <p class="docs-side-note">Generated from <code>MCPAQL/spec</code> so the website carries the deeper protocol material too.</p>
+        <div class="docs-side-group">
+  <h3>Core</h3>
+  <ul><li><a href="conformance-testing.html">MCP-AQL Conformance Testing Specification</a></li><li><a href="crude-pattern.html">MCP-AQL CRUDE Pattern Specification</a></li><li><a href="endpoint-modes.html">MCP-AQL Endpoint Modes Specification</a></li><li><a href="error-codes.html">Structured Error Codes Specification</a></li><li><a href="introspection.html">MCP-AQL Introspection Specification</a></li><li><a href="licensing-options.html">MCP-AQL Licensing Options (Working Notes)</a></li><li><a href="mcp-integration.html">MCP Integration Specification</a></li><li><a href="operations.html">MCP-AQL Operations Specification</a></li><li><a href="overview.html">MCP-AQL Protocol Overview</a></li><li><a href="plugin-contracts.html">Plugin Interface Contracts</a></li><li><a class="current" aria-current="page" href="README.html">MCP-AQL Specification Documentation</a></li><li><a href="repo/README.html">MCP-AQL Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Versions</h3>
+  <ul><li><a href="versions/v1.0.0-draft.html">MCP-AQL Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Adapter</h3>
+  <ul><li><a href="adapter/danger-levels.html">Dangerous Operation Classification Specification</a></li><li><a href="adapter/discovery-bundle.html">MCP Server Discovery Bundle</a></li><li><a href="adapter/element-type.html">Adapter Element Type Specification</a></li><li><a href="adapter/generator.html">Adapter Generator Specification</a></li><li><a href="adapter/rate-limiting.html">Rate Limiting and Quota Management Specification</a></li><li><a href="adapter/trust-levels.html">Trust Levels Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Security</h3>
+  <ul><li><a href="security/confirmation-tokens.html">Confirmation Token Specification</a></li><li><a href="security/execution-safety-loop.html">Execution Safety Loop Specification</a></li><li><a href="security/gatekeeper.html">Security Model: Gatekeeper Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Features</h3>
+  <ul><li><a href="features/aggregations.html">MCP-AQL Aggregations</a></li><li><a href="features/collection-querying.html">MCP-AQL Collection Querying</a></li><li><a href="features/computed-fields.html">MCP-AQL Computed Fields</a></li><li><a href="features/field-selection.html">Field Selection Specification</a></li><li><a href="features/pagination.html">Cursor-Based Pagination Specification</a></li><li><a href="features/relationship-queries.html">MCP-AQL Relationship Queries</a></li><li><a href="features/warnings.html">Warnings Array Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Guides</h3>
+  <ul><li><a href="guides/cross-domain-implementation.html">Cross-Domain Implementation Guide</a></li><li><a href="guides/protocol-comparison.html">Protocol Comparison Guide</a></li><li><a href="guides/README.html">Developer Guides</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Process</h3>
+  <ul><li><a href="process/breaking-changes.html">MCP-AQL Breaking Change Policy</a></li><li><a href="process/preliminary-public-launch-checklist.html">Preliminary Public Launch Checklist</a></li><li><a href="process/rfc-process.html">RFC Process for MCP-AQL Specification</a></li><li><a href="process/versioning.html">Versioning Strategy</a></li><li><a href="repo/CHANGELOG.html">Changelog</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Architecture</h3>
+  <ul><li><a href="architecture/README.html">Architecture Documentation</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Research</h3>
+  <ul><li><a href="research/mcp-vs-mcpaql-vs-a2a.html">Protocol Landscape: MCP vs MCP-AQL vs A2A</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Reference</h3>
+  <ul><li><a href="reference/README.html">Reference Documentation</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>ADRs</h3>
+  <ul><li><a href="adr/ADR-001-crude-pattern.html">ADR-001: CRUDE Pattern (Extending CRUD with Execute)</a></li><li><a href="adr/ADR-002-graphql-style-input.html">ADR-002: GraphQL-Style Input Objects for Updates</a></li><li><a href="adr/ADR-003-snake-case-parameters.html">ADR-003: snake_case Parameter Convention</a></li><li><a href="adr/ADR-004-schema-driven-operations.html">ADR-004: Schema-Driven Operation Definitions</a></li><li><a href="adr/ADR-005-introspection-system.html">ADR-005: GraphQL-Style Introspection System</a></li><li><a href="adr/ADR-006-discriminated-responses.html">ADR-006: Discriminated Response Format</a></li><li><a href="adr/index.html">Architecture Decision Records</a></li><li><a href="adr/README.html">Architecture Decision Records</a></li></ul>
+</div>
+      </aside>
+
+      <article class="docs-main">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+          <ol>
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="index.html">Full Spec</a></li>
+            <li><span class="current">MCP-AQL Specification Documentation</span></li>
+          </ol>
+        </nav>
+        <section class="hero docs-hero">
+          <div class="hero-inner">
+            <span class="status-pill">REPO-SYNCED SPEC DOC</span>
+            <h1>MCP-AQL Specification Documentation</h1>
+            <p class="lede">This directory contains the MCP-AQL specification set:</p>
+            <div class="spec-meta"><span class="state-chip live">Support document</span></div>
+            <p class="spec-source">Source: <a href="https://github.com/MCPAQL/spec/blob/main/docs/README.md">spec/docs/README.md</a></p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="https://github.com/MCPAQL/spec/blob/main/docs/README.md">Open Source Markdown</a><a class="btn btn-secondary" href="index.html">Browse Full Spec Reference</a>
+            </div>
+          </div>
+        </section>
+
+        <section class="page-toc-shell" data-page-toc>
+          <div class="card page-toc-card">
+            <div class="page-toc-head">
+              <p class="page-toc-kicker">On this page</p>
+              <h2>Jump to a section</h2>
+              <p class="page-toc-intro">Use the outline to move through longer pages without losing your place.</p>
+            </div>
+            <ol class="page-toc-list" data-page-toc-list>
+              <li class="page-toc-item level-2"><a href="#document-organization" data-toc-target="document-organization">Document Organization</a></li><li class="page-toc-item level-3"><a href="#core-specification" data-toc-target="core-specification">Core Specification</a></li><li class="page-toc-item level-3"><a href="#plugin--adapter-contracts" data-toc-target="plugin--adapter-contracts">Plugin &amp; Adapter Contracts</a></li><li class="page-toc-item level-3"><a href="#features" data-toc-target="features">Features</a></li><li class="page-toc-item level-3"><a href="#security" data-toc-target="security">Security</a></li><li class="page-toc-item level-3"><a href="#process" data-toc-target="process">Process</a></li><li class="page-toc-item level-3"><a href="#guides" data-toc-target="guides">Guides</a></li><li class="page-toc-item level-3"><a href="#roadmap" data-toc-target="roadmap">Roadmap</a></li><li class="page-toc-item level-2"><a href="#reading-order" data-toc-target="reading-order">Reading Order</a></li><li class="page-toc-item level-2"><a href="#cross-repository-content" data-toc-target="cross-repository-content">Cross-Repository Content</a></li><li class="page-toc-item level-2"><a href="#reference-profile" data-toc-target="reference-profile">Reference Profile</a></li><li class="page-toc-item level-2"><a href="#contributing" data-toc-target="contributing">Contributing</a></li><li class="page-toc-item level-2"><a href="#license" data-toc-target="license">License</a></li>
+            </ol>
+          </div>
+        </section>
+
+
+        <section>
+          <div class="card spec-prose">
+            <p>This directory contains the MCP-AQL specification set:</p>
+<ul>
+<li><strong>Normative source:</strong> <a href="versions/v1.0.0-draft.html">versions/v1.0.0-draft.md</a></li>
+<li><strong>Informative support documents:</strong> all other files under <code>docs/</code></li>
+</ul>
+<p>In case of conflict, the versioned normative document takes precedence.</p>
+<p>Implementation architecture documentation is maintained in the <a href="https://github.com/MCPAQL/mcpaql-adapter">mcpaql-adapter</a> repository. Example adapters are in the <a href="https://github.com/MCPAQL/examples">examples</a> repository.</p>
+<h2 id="document-organization">Document Organization</h2>
+<h3 id="core-specification">Core Specification</h3>
+<table>
+<thead>
+<tr>
+<th>Document</th>
+<th>Description</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="versions/v1.0.0-draft.html">v1.0.0-draft</a></td>
+<td>Current specification version</td>
+<td>Draft</td>
+</tr>
+<tr>
+<td><a href="crude-pattern.html">CRUDE Pattern</a></td>
+<td>Standard semantic-endpoint profile and routing</td>
+<td>Draft</td>
+</tr>
+<tr>
+<td><a href="endpoint-modes.html">Endpoint Modes</a></td>
+<td>Semantic endpoint mode and Single mode configuration</td>
+<td>Draft</td>
+</tr>
+<tr>
+<td><a href="introspection.html">Introspection</a></td>
+<td>Runtime discovery system</td>
+<td>Draft</td>
+</tr>
+<tr>
+<td><a href="operations.html">Operations</a></td>
+<td>Operation design guide</td>
+<td>Draft</td>
+</tr>
+<tr>
+<td><a href="error-codes.html">Error Codes</a></td>
+<td>Structured error code system</td>
+<td>Draft (MVP)</td>
+</tr>
+<tr>
+<td><a href="conformance-testing.html">Conformance Testing</a></td>
+<td>Test requirements plus the fixture-driven runner model used in this repo</td>
+<td>Draft</td>
+</tr>
+</tbody>
+</table>
+<h3 id="plugin--adapter-contracts">Plugin &amp; Adapter Contracts</h3>
+<table>
+<thead>
+<tr>
+<th>Document</th>
+<th>Description</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="plugin-contracts.html">Plugin Interface Contracts</a></td>
+<td>What each plugin type MUST provide</td>
+<td>Draft (MVP)</td>
+</tr>
+<tr>
+<td><a href="adapter/element-type.html">Element Type Specification</a></td>
+<td>Declarative adapter schema format</td>
+<td>Draft (MVP)</td>
+</tr>
+<tr>
+<td><a href="adapter/discovery-bundle.html">MCP Server Discovery Bundle</a></td>
+<td>Raw capture + normalized bundle contract for generator pipelines</td>
+<td>Draft</td>
+</tr>
+</tbody>
+</table>
+<h3 id="features">Features</h3>
+<table>
+<thead>
+<tr>
+<th>Document</th>
+<th>Description</th>
+<th>Impl Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="features/field-selection.html">Field Selection</a></td>
+<td>GraphQL-style response filtering</td>
+<td>Implemented</td>
+</tr>
+<tr>
+<td><a href="features/collection-querying.html">Collection Querying</a></td>
+<td>Preferred query contract for list/search/query operations</td>
+<td>Draft</td>
+</tr>
+<tr>
+<td><a href="features/aggregations.html">Aggregations</a></td>
+<td>Server-side summaries for collection queries</td>
+<td>Draft</td>
+</tr>
+<tr>
+<td><a href="features/computed-fields.html">Computed Fields</a></td>
+<td>Adapter-declared derived values and <code>_computed.</code> paths</td>
+<td>Draft</td>
+</tr>
+<tr>
+<td><a href="features/pagination.html">Pagination</a></td>
+<td>Cursor-based pagination semantics and response shape</td>
+<td>Draft</td>
+</tr>
+<tr>
+<td><a href="features/relationship-queries.html">Relationship Queries</a></td>
+<td>Graph traversal and relationship query conventions</td>
+<td>Draft</td>
+</tr>
+</tbody>
+</table>
+<h3 id="security">Security</h3>
+<table>
+<thead>
+<tr>
+<th>Document</th>
+<th>Description</th>
+<th>Impl Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="security/gatekeeper.html">Gatekeeper</a></td>
+<td>Multi-layer access control</td>
+<td>Implemented</td>
+</tr>
+</tbody>
+</table>
+<h3 id="process">Process</h3>
+<table>
+<thead>
+<tr>
+<th>Document</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="process/rfc-process.html">RFC Process</a></td>
+<td>How to propose specification changes</td>
+</tr>
+<tr>
+<td><a href="process/breaking-changes.html">Breaking Changes</a></td>
+<td>Policy for handling breaking changes</td>
+</tr>
+<tr>
+<td><a href="process/versioning.html">Versioning</a></td>
+<td>Version numbering and release process</td>
+</tr>
+<tr>
+<td><a href="process/preliminary-public-launch-checklist.html">Preliminary Launch Checklist</a></td>
+<td>Coordinated draft-launch criteria</td>
+</tr>
+</tbody>
+</table>
+<h3 id="guides">Guides</h3>
+<table>
+<thead>
+<tr>
+<th>Document</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="guides/protocol-comparison.html">Protocol Comparison</a></td>
+<td>MCP-AQL vs other protocols</td>
+</tr>
+<tr>
+<td><a href="guides/cross-domain-implementation.html">Cross-Domain Implementation</a></td>
+<td>Step-by-step guide for adapting MCP-AQL to domains beyond Dollhouse-style element management</td>
+</tr>
+</tbody>
+</table>
+<h3 id="roadmap">Roadmap</h3>
+<p>Future features are tracked as GitHub issues. Key upcoming features:</p>
+<p><strong>Phase 0 - MVP Core:</strong></p>
+<ul>
+<li>Adapter Element Type (#61)</li>
+<li>Plugin Interface (#62)</li>
+<li>Universal Adapter Runtime (#63)</li>
+<li>Structured error codes (#35)</li>
+</ul>
+<p><strong>Phase 1 - Robustness:</strong></p>
+<ul>
+<li>Trust levels (#59)</li>
+<li>Dangerous operation classification (#49)</li>
+<li>Rate limiting (#60)</li>
+<li>Cursor-based pagination (#37)</li>
+</ul>
+<p><strong>Phase 2+ - Advanced:</strong></p>
+<ul>
+<li>Streaming responses (#43)</li>
+<li>Schema versioning (#48)</li>
+</ul>
+<h2 id="reading-order">Reading Order</h2>
+<p>For newcomers to MCP-AQL:</p>
+<ol type="1">
+<li><strong><a href="versions/v1.0.0-draft.html">v1.0.0-draft</a></strong> - Start with the main specification</li>
+<li><strong><a href="crude-pattern.html">CRUDE Pattern</a></strong> - Understand the standard semantic-endpoint profile</li>
+<li><strong><a href="operations.html">Operations</a></strong> - Learn operation design patterns</li>
+<li><strong><a href="introspection.html">Introspection</a></strong> - Learn the discovery system</li>
+<li><strong><a href="conformance-testing.html">Conformance Testing</a></strong> - Understand conformance requirements</li>
+</ol>
+<p>For adapter developers:</p>
+<ol type="1">
+<li><strong><a href="adapter/element-type.html">Element Type Specification</a></strong> - Declarative schema format</li>
+<li><strong><a href="plugin-contracts.html">Plugin Interface Contracts</a></strong> - Plugin system contracts</li>
+<li><strong><a href="https://github.com/MCPAQL/mcpaql-adapter/blob/develop/docs/architecture/overview.md">Architecture Overview</a></strong> - Understand adapter structure (in mcpaql-adapter repo)</li>
+<li><strong><a href="https://github.com/MCPAQL/mcpaql-adapter/blob/develop/docs/guides/development.md">Development Guide</a></strong> - Implementation walkthrough (in mcpaql-adapter repo)</li>
+<li><strong><a href="security/gatekeeper.html">Gatekeeper</a></strong> - Security implementation</li>
+</ol>
+<h2 id="cross-repository-content">Cross-Repository Content</h2>
+<p>MCP-AQL follows a four-level protocol model:</p>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>What</th>
+<th>Normative?</th>
+<th>Repository</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. Wire format</td>
+<td>Request/response JSON, error codes, introspection</td>
+<td>MUST</td>
+<td><strong>this repo</strong></td>
+</tr>
+<tr>
+<td>2. Schema semantics</td>
+<td>Operation declarations, params, auth, target</td>
+<td>MUST/SHOULD</td>
+<td><strong>this repo</strong></td>
+</tr>
+<tr>
+<td>3. Canonical format</td>
+<td>Markdown + YAML front matter interchange format</td>
+<td>SHOULD</td>
+<td><strong>this repo</strong></td>
+</tr>
+<tr>
+<td>4. Implementation guidance</td>
+<td>Runtime architecture, plugin pipeline, dispatch</td>
+<td>Non-normative</td>
+<td><a href="https://github.com/MCPAQL/mcpaql-adapter">mcpaql-adapter</a></td>
+</tr>
+</tbody>
+</table>
+<p>Example adapters: <a href="https://github.com/MCPAQL/examples">examples</a></p>
+<h2 id="reference-profile">Reference Profile</h2>
+<p><a href="https://github.com/DollhouseMCP/mcp-server">DollhouseMCP</a> is treated as a practical reference profile for MCP-AQL. It validates feasibility at scale, but protocol authority remains with the normative specification in this repository.</p>
+<h2 id="contributing">Contributing</h2>
+<p>See <a href="https://github.com/MCPAQL/spec/blob/main/CONTRIBUTING.md">CONTRIBUTING.md</a> for guidelines on contributing to the specification.</p>
+<h2 id="license">License</h2>
+<ul>
+<li><strong>Specification text</strong>: CC BY 4.0</li>
+<li><strong>Code/schemas/tests</strong>: AGPL-3.0</li>
+</ul>
+<p>See <a href="https://github.com/MCPAQL/spec/blob/main/LICENSING.md">LICENSING.md</a> for details.</p>
+
+          </div>
+        </section>
+        <nav class="page-nav" aria-label="Page navigation">
+  <a class="page-nav-link prev" href="plugin-contracts.html">
+    <span class="page-nav-eyebrow">Previous page</span>
+    <strong class="page-nav-label">Plugin Interface Contracts</strong>
+  </a>
+  <a class="page-nav-link next" href="repo/README.html">
+    <span class="page-nav-eyebrow">Next page</span>
+    <strong class="page-nav-label">MCP-AQL Specification</strong>
+  </a>
+</nav>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.</p>
+      <div class="footer-links">
+        <a href="../docs/index.html">Docs Library</a><a href="index.html">Repo-Synced Spec</a><a href="https://github.com/MCPAQL">MCPAQL Organization</a><a href="https://dollhouseresearch.com">Dollhouse Research</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../js/search.js" defer></script>
+</body>
+</html>

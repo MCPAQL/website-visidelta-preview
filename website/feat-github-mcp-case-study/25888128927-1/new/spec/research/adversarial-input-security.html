@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Related Issues: MCPAQL/spec240, DollhouseMCP/mcp-server1779">
+  <title>MCP-AQL Spec | Adversarial Input Security for MCP Adapters</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" media="print" onload="this.onload=null;this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <a class="logo" href="../../index.html"><span class="logo-mark"></span>MCP-AQL</a>
+        <ul class="nav-links">
+          <li><a href="../../index.html">Home</a></li>
+          <li><a href="../../docs/index.html">Docs</a></li>
+          <li><a href="../../launch-checklist.html">Launch Checklist</a></li>
+          <li><a href="../../apis/index.html">Adapter Patterns</a></li>
+          <li><a href="../../case-studies/github-mcp.html">Case Studies</a></li>
+        </ul>
+        <form class="site-search" data-search-form data-index-url="../../data/search-index.json" role="search">
+          <label class="sr-only" for="site-search-input">Search MCP-AQL docs</label>
+          <input id="site-search-input" data-search-input type="search" placeholder="Search MCP-AQL docs, spec pages, and adapter patterns...">
+          <span class="search-count" data-search-count></span>
+          <ul class="search-results" data-search-results hidden></ul>
+        </form>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container docs-shell">
+      <aside class="docs-side">
+        <h2>Repo-Synced Spec</h2>
+        <p class="docs-side-note">Generated from <code>MCPAQL/spec</code> so the website carries the deeper protocol material too.</p>
+        <div class="docs-side-group">
+  <h3>Core</h3>
+  <ul><li><a href="../conformance-testing.html">MCP-AQL Conformance Testing Specification</a></li><li><a href="../crude-pattern.html">MCP-AQL CRUDE Pattern Specification</a></li><li><a href="../endpoint-modes.html">MCP-AQL Endpoint Modes Specification</a></li><li><a href="../error-codes.html">Structured Error Codes Specification</a></li><li><a href="../introspection.html">MCP-AQL Introspection Specification</a></li><li><a href="../licensing-options.html">MCP-AQL Licensing Options (Working Notes)</a></li><li><a href="../mcp-integration.html">MCP Integration Specification</a></li><li><a href="../operations.html">MCP-AQL Operations Specification</a></li><li><a href="../overview.html">MCP-AQL Protocol Overview</a></li><li><a href="../plugin-contracts.html">Plugin Interface Contracts</a></li><li><a href="../README.html">MCP-AQL Specification Documentation</a></li><li><a href="../repo/README.html">MCP-AQL Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Versions</h3>
+  <ul><li><a href="../versions/v1.0.0-draft.html">MCP-AQL Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Adapter</h3>
+  <ul><li><a href="../adapter/danger-levels.html">Dangerous Operation Classification Specification</a></li><li><a href="../adapter/discovery-bundle.html">MCP Server Discovery Bundle</a></li><li><a href="../adapter/element-type.html">Adapter Element Type Specification</a></li><li><a href="../adapter/generator.html">Adapter Generator Specification</a></li><li><a href="../adapter/rate-limiting.html">Rate Limiting and Quota Management Specification</a></li><li><a href="../adapter/trust-levels.html">Trust Levels Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Security</h3>
+  <ul><li><a href="../security/confirmation-tokens.html">Confirmation Token Specification</a></li><li><a href="../security/execution-safety-loop.html">Execution Safety Loop Specification</a></li><li><a href="../security/gatekeeper.html">Security Model: Gatekeeper Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Features</h3>
+  <ul><li><a href="../features/collection-querying.html">MCP-AQL Collection Querying</a></li><li><a href="../features/field-selection.html">Field Selection Specification</a></li><li><a href="../features/pagination.html">Cursor-Based Pagination Specification</a></li><li><a href="../features/warnings.html">Warnings Array Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Guides</h3>
+  <ul><li><a href="../guides/protocol-comparison.html">Protocol Comparison Guide</a></li><li><a href="../guides/README.html">Developer Guides</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Process</h3>
+  <ul><li><a href="../process/breaking-changes.html">MCP-AQL Breaking Change Policy</a></li><li><a href="../process/preliminary-public-launch-checklist.html">Preliminary Public Launch Checklist</a></li><li><a href="../process/rfc-process.html">RFC Process for MCP-AQL Specification</a></li><li><a href="../process/versioning.html">Versioning Strategy</a></li><li><a href="../repo/CHANGELOG.html">Changelog</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Architecture</h3>
+  <ul><li><a href="../architecture/README.html">Architecture Documentation</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Research</h3>
+  <ul><li><a class="current" aria-current="page" href="adversarial-input-security.html">Adversarial Input Security for MCP Adapters</a></li><li><a href="mcp-vs-mcpaql-vs-a2a.html">Protocol Landscape: MCP vs MCP-AQL vs A2A</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Reference</h3>
+  <ul><li><a href="../reference/README.html">Reference Documentation</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>ADRs</h3>
+  <ul><li><a href="../adr/ADR-001-crude-pattern.html">ADR-001: CRUDE Pattern (Extending CRUD with Execute)</a></li><li><a href="../adr/ADR-002-graphql-style-input.html">ADR-002: GraphQL-Style Input Objects for Updates</a></li><li><a href="../adr/ADR-003-snake-case-parameters.html">ADR-003: snake_case Parameter Convention</a></li><li><a href="../adr/ADR-004-schema-driven-operations.html">ADR-004: Schema-Driven Operation Definitions</a></li><li><a href="../adr/ADR-005-introspection-system.html">ADR-005: GraphQL-Style Introspection System</a></li><li><a href="../adr/ADR-006-discriminated-responses.html">ADR-006: Discriminated Response Format</a></li><li><a href="../adr/index.html">Architecture Decision Records</a></li><li><a href="../adr/README.html">Architecture Decision Records</a></li></ul>
+</div>
+      </aside>
+
+      <article class="docs-main">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+          <ol>
+            <li><a href="../../index.html">Home</a></li>
+            <li><a href="../index.html">Full Spec</a></li>
+            <li><span class="current">Adversarial Input Security for MCP Adapters</span></li>
+          </ol>
+        </nav>
+        <section class="hero docs-hero">
+          <div class="hero-inner">
+            <span class="status-pill">REPO-SYNCED SPEC DOC</span>
+            <h1>Adversarial Input Security for MCP Adapters</h1>
+            <p class="lede">Related Issues: MCPAQL/spec240, DollhouseMCP/mcp-server1779</p>
+            <div class="spec-meta"><span class="state-chip live">Support document</span><span class="state-chip pending">Research</span><span class="state-chip">1.0.0-draft</span><span class="state-chip">2026-04-04</span></div>
+            <p class="spec-source">Source: <a href="https://github.com/MCPAQL/spec/blob/main/docs/research/adversarial-input-security.md">spec/docs/research/adversarial-input-security.md</a></p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="https://github.com/MCPAQL/spec/blob/main/docs/research/adversarial-input-security.md">Open Source Markdown</a><a class="btn btn-secondary" href="../index.html">Browse Full Spec Reference</a>
+            </div>
+          </div>
+        </section>
+
+        <section class="page-toc-shell" data-page-toc>
+          <div class="card page-toc-card">
+            <div class="page-toc-head">
+              <p class="page-toc-kicker">On this page</p>
+              <h2>Jump to a section</h2>
+              <p class="page-toc-intro">Use the outline to move through longer pages without losing your place.</p>
+            </div>
+            <ol class="page-toc-list" data-page-toc-list>
+              <li class="page-toc-item level-2"><a href="#abstract" data-toc-target="abstract">Abstract</a></li><li class="page-toc-item level-2"><a href="#1-the-threat-model" data-toc-target="1-the-threat-model">1. The Threat Model</a></li><li class="page-toc-item level-2"><a href="#2-existing-mcp-security-servers" data-toc-target="2-existing-mcp-security-servers">2. Existing MCP Security Servers</a></li><li class="page-toc-item level-2"><a href="#3-prompt-injection-defenses" data-toc-target="3-prompt-injection-defenses">3. Prompt Injection Defenses</a></li><li class="page-toc-item level-2"><a href="#4-email-specific-llm-security" data-toc-target="4-email-specific-llm-security">4. Email-Specific LLM Security</a></li><li class="page-toc-item level-2"><a href="#5-mcp-proxy-and-gateway-patterns" data-toc-target="5-mcp-proxy-and-gateway-patterns">5. MCP Proxy and Gateway Patterns</a></li><li class="page-toc-item level-2"><a href="#6-known-limitations-and-open-problems" data-toc-target="6-known-limitations-and-open-problems">6. Known Limitations and Open Problems</a></li><li class="page-toc-item level-2"><a href="#7-architecture-recommendations" data-toc-target="7-architecture-recommendations">7. Architecture Recommendations</a></li><li class="page-toc-item level-2"><a href="#8-references" data-toc-target="8-references">8. References</a></li>
+            </ol>
+          </div>
+        </section>
+
+
+        <section>
+          <div class="card spec-prose">
+            <p><strong>Version:</strong> 1.0.0-draft <strong>Status:</strong> Research <strong>Last Updated:</strong> 2026-04-04 <strong>Related Issues:</strong> MCPAQL/spec#240, DollhouseMCP/mcp-server#1779</p>
+<h2 id="abstract">Abstract</h2>
+<p>This document presents comprehensive research findings on securing MCP adapters that process adversarial input — content from untrusted external sources such as email, social media, messaging platforms, and forums. It surveys the existing MCP security ecosystem, documents known attack vectors and defenses, and establishes the technical foundation for the MCPAQL adversarial-input security proxy architecture.</p>
+<hr />
+<h2 id="1-the-threat-model">1. The Threat Model</h2>
+<h3 id="11-the-lethal-trifecta">1.1 The Lethal Trifecta</h3>
+<p>Simon Willison defines the core risk as any agent combining three capabilities:</p>
+<ol type="1">
+<li><strong>Access to private data</strong> (email content, contacts, files)</li>
+<li><strong>Exposure to untrusted content</strong> (emails from anyone on the internet)</li>
+<li><strong>Ability to externally communicate</strong> (send email, post to APIs, write files)</li>
+</ol>
+<p>An email processing agent inherently possesses all three. This combination creates an exploitable attack surface where an attacker crafts input that, when processed by the LLM, causes it to exfiltrate private data or take unauthorized actions.</p>
+<h3 id="12-indirect-prompt-injection">1.2 Indirect Prompt Injection</h3>
+<p>Unlike direct prompt injection (where the attacker controls the user prompt), indirect prompt injection embeds malicious instructions in data the LLM processes via tool calls. The LLM reads an email containing hidden instructions, and those instructions influence its subsequent behavior — potentially causing it to forward emails, reveal private data, or execute attacker-controlled commands.</p>
+<h3 id="13-why-email-is-uniquely-hostile">1.3 Why Email Is Uniquely Hostile</h3>
+<ul>
+<li><strong>Unsolicited delivery</strong>: Unlike web browsing (user chooses pages), emails arrive from anyone</li>
+<li><strong>Rich content</strong>: HTML, attachments, headers provide multiple injection surfaces</li>
+<li><strong>Expected actions</strong>: Email naturally involves replies, forwards, and file access — making malicious actions harder to distinguish from legitimate ones</li>
+<li><strong>Volume</strong>: High email volume normalizes automated processing, reducing human oversight</li>
+<li><strong>Authentication complexity</strong>: Display names, spoofed headers, and forwarding chains obscure true origin</li>
+</ul>
+<h3 id="14-attack-statistics">1.4 Attack Statistics</h3>
+<ul>
+<li><strong>340% year-over-year increase</strong> in documented prompt injection attempts against enterprise AI (Wiz Research, Q4 2025)</li>
+<li><strong>73% of production AI deployments</strong> encountered prompt injection in 2025 (Wiz Research)</li>
+<li><strong>Attack success rates exceed 85%</strong> when adaptive strategies are used (meta-analysis of 78 studies, arxiv:2601.17548)</li>
+<li><strong>60-72% attack success rates</strong> on MCPTox benchmark testing 20 LLM agents (arxiv:2508.14925)</li>
+</ul>
+<hr />
+<h2 id="2-existing-mcp-security-servers">2. Existing MCP Security Servers</h2>
+<h3 id="21-security-proxy-servers">2.1 Security Proxy Servers</h3>
+<p>The MCP security proxy pattern is well-established. Multiple implementations exist, each with different approaches:</p>
+<h4 id="trail-of-bits--mcp-context-protector">Trail of Bits — mcp-context-protector</h4>
+<p><strong>Repository:</strong> <a href="https://github.com/trailofbits/mcp-context-protector">https://github.com/trailofbits/mcp-context-protector</a> (217 stars)</p>
+<p>The most credible security wrapper in the ecosystem. Three defense mechanisms:</p>
+<ol type="1">
+<li><p><strong>Configuration pinning via trust-on-first-use</strong>: Captures server configuration on first connection, blocks any subsequent deviations. Detects "rug-pull" attacks where a server changes its tool definitions after initial trust is established.</p></li>
+<li><p><strong>Tool response guardrails</strong>: Integrates with Meta's LlamaFirewall to scan every tool response for prompt injection. Flagged responses are quarantined in a database for human review rather than silently blocked.</p></li>
+<li><p><strong>ANSI control character sanitization</strong>: Strips terminal escape sequences that could manipulate CLI display or logging.</p></li>
+</ol>
+<p>Operates by intercepting MCP protocol messages between clients and servers. Published with a detailed blog post (July 2025): "We built the security layer MCP always needed."</p>
+<h4 id="mcp-watchdog">MCP-Watchdog</h4>
+<p><strong>Repository:</strong> <a href="https://github.com/bountyyfi/mcp-watchdog">https://github.com/bountyyfi/mcp-watchdog</a> (22 stars)</p>
+<p>The most comprehensive content-level defense found. Implements a 10-layer defense proxy:</p>
+<ul>
+<li><strong>Layer 0 (SMAC-L3)</strong>: Pre-LLM sanitization that strips hidden instructions, zero-width characters (U+200B, U+FEFF, U+200C, U+200D), ANSI escapes, bidirectional text overrides, and redacts 30+ token/secret patterns BEFORE content reaches the AI.</li>
+<li>Detects 80+ specific threats including <code>&lt;IMPORTANT&gt;</code> instruction blocks, homoglyph variants, HTML-encoded injection, split-line evasion patterns.</li>
+<li>Includes email-specific detection: BCC exfiltration attempts, comma-injection in recipient fields.</li>
+<li>Monitors for behavioral drift and tool integrity (hashes tool definitions to catch rug pulls).</li>
+<li>Enforces filesystem restrictions (blocks writes to <code>.git/config</code>, <code>.ssh/</code>, etc.).</li>
+</ul>
+<h4 id="arbiter--mcp-proxy-firewall">Arbiter / mcp-proxy-firewall</h4>
+<p><strong>Repository:</strong> <a href="https://github.com/cyrenei/mcp-proxy-firewall">https://github.com/cyrenei/mcp-proxy-firewall</a> (new, Rust-based)</p>
+<p>12 specialized crates implementing deny-by-default authorization, session budgets (time + call count caps), and drift detection.</p>
+<p><strong>Critically honest about limitations</strong>: Documentation explicitly states it "does not reduce semantic risk" — it restricts what tools are available but cannot prevent deceptive prompting of allowed tools. This honesty is rare and valuable in the security tool space.</p>
+<h4 id="mcp-dandan">MCP-Dandan</h4>
+<p><strong>Repository:</strong> <a href="https://github.com/82ch/MCP-Dandan">https://github.com/82ch/MCP-Dandan</a> (61 stars)</p>
+<p>Desktop security framework with Python backend and Electron UI. Five detection engines: command injection, filesystem exposure, PII leak, data exfiltration, and tools poisoning (uses LLM-based semantic analysis). Provides human-in-the-loop blocking controls.</p>
+<h4 id="lasso-security-mcp-gateway">Lasso Security MCP Gateway</h4>
+<p><strong>Repository:</strong> <a href="https://github.com/lasso-security/mcp-gateway">https://github.com/lasso-security/mcp-gateway</a></p>
+<p>Plugin-based gateway that orchestrates other MCP servers. Security Scanner evaluates server reputation using marketplace and GitHub data, detects hidden instructions and malicious actions, auto-blocks risky servers. Supports guardrail plugins:</p>
+<ul>
+<li><strong>Basic</strong>: Token masking</li>
+<li><strong>Presidio</strong>: PII detection</li>
+<li><strong>Lasso</strong>: Comprehensive AI safety</li>
+</ul>
+<p>Intercepts requests and responses to sanitize sensitive information.</p>
+<h4 id="ibm-contextforge">IBM ContextForge</h4>
+<p><strong>Repository:</strong> <a href="https://github.com/IBM/mcp-context-forge">https://github.com/IBM/mcp-context-forge</a></p>
+<p>Enterprise-grade gateway, registry, and proxy. Federates MCP, A2A, and REST/gRPC APIs. Release 1.0.0-RC2 includes 40+ security controls:</p>
+<ul>
+<li>SSRF strict defaults</li>
+<li>OIDC verification</li>
+<li>OAuth secret at-rest protection</li>
+<li>Token scoping default-deny</li>
+<li>Session ownership enforcement</li>
+<li>Full SAST/DAST/SCA/IAST/fuzz/mutation testing pipeline</li>
+</ul>
+<h4 id="metamcp">MetaMCP</h4>
+<p><strong>Repository:</strong> <a href="https://github.com/metatool-ai/metamcp">https://github.com/metatool-ai/metamcp</a></p>
+<p>Aggregator, orchestrator, middleware, and gateway. Pluggable middleware for auth, logging, and security. Multi-tenancy support, OIDC auth, namespace-based server grouping. More of an infrastructure play than security-specific.</p>
+<h4 id="mcp-proxy-wrapper">MCP Proxy Wrapper</h4>
+<p><strong>Website:</strong> <a href="https://mcp-proxy.dev/">https://mcp-proxy.dev/</a></p>
+<p>Hook system with <code>beforeToolCall</code>/<code>afterToolCall</code> for validation and interception. Plugin architecture for analytics, AI enhancement, and security. 273 tests. Focused on extensibility rather than security-specific features.</p>
+<h3 id="22-scanning-and-auditing-tools">2.2 Scanning and Auditing Tools</h3>
+<h4 id="invariant-labs-mcp-scan-now-snyk-agent-scan">Invariant Labs mcp-scan (now Snyk agent-scan)</h4>
+<p><strong>Repository:</strong> <a href="https://github.com/snyk/agent-scan">https://github.com/snyk/agent-scan</a></p>
+<p>Acquired by Snyk. Scans MCP server configurations for tool poisoning, cross-origin escalation, rug pull attacks, and toxic flows. Uses Invariant Guardrails API to classify tool descriptions. Also has a proxy mode for real-time monitoring. Detects 15+ risk categories.</p>
+<h4 id="praetorian-mcphammer">Praetorian MCPHammer</h4>
+<p><strong>Repository:</strong> <a href="https://github.com/praetorian-inc/MCPHammer">https://github.com/praetorian-inc/MCPHammer</a> (26 stars)</p>
+<p>Security testing framework for evaluating MCP server vulnerabilities. Offensive testing rather than defense — useful for validating our own adapter security.</p>
+<h3 id="23-notable-non-security-projects">2.3 Notable Non-Security Projects</h3>
+<p><strong>Google mcp-security</strong> (457 stars): Despite the name, this is NOT a security tool. It provides MCP servers for accessing Google's security products (Chronicle, GTI, SCC). It is "security tools via MCP" not "MCP security."</p>
+<p><strong>Spring AI Community mcp-security</strong>: Spring Security configuration for MCP servers. Authentication and authorization framework, not content security.</p>
+<hr />
+<h2 id="3-prompt-injection-defenses">3. Prompt Injection Defenses</h2>
+<h3 id="31-major-vendor-approaches">3.1 Major Vendor Approaches</h3>
+<h4 id="anthropic--model-level-hardening">Anthropic — Model-Level Hardening</h4>
+<p>Uses reinforcement learning during training, exposing Claude to prompt injections in simulated environments and rewarding correct identification and refusal. Claude Opus 4.5 reduced attack success to approximately 1% in browser-based operations.</p>
+<p><strong>Key insight</strong>: This is model-level defense, not transferable to other models. External defenses (proxies, firewalls) work at inference time and are model-agnostic but weaker.</p>
+<h4 id="microsoft--spotlighting">Microsoft — Spotlighting</h4>
+<p>The most documented technical defense. Core technique: transforms untrusted input text with special markers so the model can distinguish instructions from data.</p>
+<ul>
+<li>Uses random delimiters (not disclosed to attackers)</li>
+<li>Combined with Prompt Shields (ML classifier)</li>
+<li>Hardened system prompts</li>
+<li>Deterministic blocking of known exfiltration methods</li>
+</ul>
+<p><strong>Key insight</strong>: Deterministic defenses (hard blocks) are more reliable than probabilistic ones (ML detection). Microsoft's experience shows that hard-blocking URL patterns and <code>mailto:</code> schemes in tool responses prevents exfiltration even when the model is successfully manipulated.</p>
+<h4 id="google--layered-defense">Google — Layered Defense</h4>
+<ul>
+<li>Proprietary ML classifiers for detecting malicious prompts across data formats</li>
+<li>"Security thought reinforcement" — targeted instructions around prompt content reminding the LLM to ignore adversarial instructions</li>
+<li>Markdown sanitization and suspicious URL redaction via Google Safe Browsing</li>
+</ul>
+<h4 id="openai--automated-red-teaming">OpenAI — Automated Red Teaming</h4>
+<p>Continuous RL-trained automated attacker discovers new injection classes. Updated agent models are then trained against the best attacks. An adversarial improvement loop.</p>
+<p>OpenAI has explicitly acknowledged (December 2025): "Prompt injection, much like scams and social engineering on the web, is unlikely to ever be fully 'solved'."</p>
+<h4 id="meta--llamafirewall">Meta — LlamaFirewall</h4>
+<p><strong>Repository:</strong> <a href="https://github.com/meta-llama/llama-firewall">https://github.com/meta-llama/llama-firewall</a></p>
+<p>Three components:</p>
+<ol type="1">
+<li><strong>PromptGuard 2</strong>: BERT-based injection detector</li>
+<li><strong>Agent Alignment Checks</strong>: Chain-of-thought auditor for goal misalignment</li>
+<li><strong>CodeShield</strong>: Static analysis for generated code</li>
+</ol>
+<p>Achieved 90%+ efficacy on AgentDojo benchmark.</p>
+<p><strong>Already bypassed</strong> using non-English prompts, leetspeak, and Unicode invisible characters. Documented bypass study: <a href="https://medium.com/trendyol-tech/bypassing-metas-llama-firewall">https://medium.com/trendyol-tech/bypassing-metas-llama-firewall</a></p>
+<h3 id="32-academic-research">3.2 Academic Research</h3>
+<h4 id="systematization-of-knowledge-mcp-security-arxiv251208290-december-2025">Systematization of Knowledge: MCP Security (arxiv:2512.08290, December 2025)</h4>
+<p>Comprehensive taxonomy of MCP risks. Categorizes threats across the MCP lifecycle: server discovery, connection, tool execution, and response handling.</p>
+<h4 id="mcptox-benchmark-arxiv250814925-august-2025">MCPTox Benchmark (arxiv:2508.14925, August 2025)</h4>
+<p>Tested 20 LLM agents against tool poisoning attacks. Attack success rates exceeded 60%, with the highest reaching 72%. Demonstrates that even well-configured agents are vulnerable to adversarial tool descriptions and responses.</p>
+<h4 id="prompt-injection-on-agentic-coding-assistants-arxiv260117548-january-2026">Prompt Injection on Agentic Coding Assistants (arxiv:2601.17548, January 2026)</h4>
+<p>Meta-analysis of 78 studies. Key finding: <strong>attack success rates exceed 85% when adaptive strategies are used</strong>. Single-strategy defenses are consistently bypassed; layered defenses show the most promise.</p>
+<h4 id="defense-via-tool-result-parsing-arxiv260104795-january-2026">Defense via Tool Result Parsing (arxiv:2601.04795, January 2026)</h4>
+<p>Novel approach: asks the LLM to parse tool results and remove segments that triggered malicious calls. Essentially a self-reflection defense where the model audits its own tool responses.</p>
+<h4 id="agentsentry-arxiv260222724-february-2026">AgentSentry (arxiv:2602.22724, February 2026)</h4>
+<p>Temporal causal diagnostics: performs controlled counterfactual re-executions at tool-return boundaries to detect if the next action is causally dominated by user goal versus injected context. Improved utility-under-attack by 20-33 percentage points. The most promising research-stage defense found.</p>
+<h4 id="llmail-inject-microsoft-arxiv250609956">LLMail-Inject (Microsoft, arxiv:2506.09956)</h4>
+<p>208,095 attack submissions against email agent defenses. State-of-the-art models achieve less than 5% success on existing benchmarks, but LLMail-Inject drove success to 32% under realistic adaptive attacks. Full defenses combined with GPT-4o blocked all attacks in Phase 2, but at the cost of significant false positives.</p>
+<hr />
+<h2 id="4-email-specific-llm-security">4. Email-Specific LLM Security</h2>
+<h3 id="41-documented-real-world-attacks">4.1 Documented Real-World Attacks</h3>
+<h4 id="echoleak-cve-2025-32711--cvss-93">EchoLeak (CVE-2025-32711) — CVSS 9.3</h4>
+<p>Zero-click prompt injection against Microsoft 365 Copilot via email. A single crafted email with hidden instructions triggered data exfiltration from OneDrive, SharePoint, and Teams through a trusted Microsoft domain.</p>
+<p><strong>Bypassed</strong>: Microsoft's XPIA classifier, link redaction, and Content Security Policy.</p>
+<p><strong>Patched</strong>: Server-side by Microsoft after responsible disclosure.</p>
+<p>This is the canonical example of the attack we are defending against.</p>
+<h4 id="cve-2026-26133-march-2026">CVE-2026-26133 (March 2026)</h4>
+<p>Cross-prompt injection in Copilot email summarization. Attacker-controlled text appended to email influenced Copilot output, producing fake "security alert" content inside trusted Copilot summary UI.</p>
+<h4 id="google-workspace-ai-attack">Google Workspace AI Attack</h4>
+<p>Independent demonstration of identical pattern against Google AI assistant: indirect prompt injection caused data search across Gmail, Calendar, and Drive and exfiltration via image URL requests.</p>
+<h4 id="supabasecursor-incident-mid-2025">Supabase/Cursor Incident (mid-2025)</h4>
+<p>Cursor agent with privileged service-role access processed support tickets containing embedded SQL injection instructions, exfiltrating integration tokens. Not email-specific, but demonstrates the same pattern: untrusted content processed by an LLM agent with privileged access.</p>
+<h3 id="42-email-specific-defenses">4.2 Email-Specific Defenses</h3>
+<h4 id="email-security-agent-skill-mcpdirectory-by-openclaw">email-security Agent Skill (mcp.directory, by OpenClaw)</h4>
+<p><strong>URL:</strong> <a href="https://mcp.directory/skills/email-security">https://mcp.directory/skills/email-security</a></p>
+<p>An MCP agent skill specifically for email processing security. Provides sender verification, content sanitization, threat detection for Gmail, AgentMail, Proton Mail, and IMAP. Extracts newest message only, checks for injection patterns, neutralizes threats, and alerts. This is a prompt/skill definition, not a running service — it instructs the LLM on how to behave, but does not perform pre-LLM sanitization.</p>
+<h4 id="apple-mail-mcp-server-privacy-first-approach">Apple Mail MCP Server (privacy-first approach)</h4>
+<p><strong>URL:</strong> <a href="https://lobehub.com/mcp/attilagyorffy-apple-mail-mcp">https://lobehub.com/mcp/attilagyorffy-apple-mail-mcp</a></p>
+<p>Query-based access where AI sees only explicitly requested emails. Operation logging for audit trail. Reduces attack surface by not granting OAuth access to cloud email APIs. Notable for its privacy-first architecture, though it does not perform content sanitization.</p>
+<h4 id="proofpoint-ai-security-march-2026">Proofpoint AI Security (March 2026)</h4>
+<p>Enterprise product: intent-based detection, "Agent Integrity Framework" that scans for threats before email arrives at inbox. Addresses zero-click prompt injection and agentic privilege escalation. Commercial, closed-source.</p>
+<h4 id="immersive-labs-research">Immersive Labs Research</h4>
+<p>Demonstrated that <strong>LLM-based email security products themselves can be bypassed via indirect prompt injection</strong>. Hidden instructions in email HTML manipulate AI assistants into reconstructing malicious links, bypassing traditional scanning. A meta-attack: injecting the security tool itself.</p>
+<hr />
+<h2 id="5-mcp-proxy-and-gateway-patterns">5. MCP Proxy and Gateway Patterns</h2>
+<h3 id="51-the-common-architecture">5.1 The Common Architecture</h3>
+<p>All MCP security proxies follow the same fundamental pattern:</p>
+<pre><code>Agent → Proxy/Gateway → MCP Server(s)</code></pre>
+<p>The proxy intercepts JSON-RPC traffic, applies security checks (varying from regex pattern matching to LLM-based semantic analysis), and either passes clean traffic through or blocks/quarantines suspicious content.</p>
+<h3 id="52-comparison-matrix">5.2 Comparison Matrix</h3>
+<table>
+<thead>
+<tr>
+<th>Project</th>
+<th>Type</th>
+<th>Content Sanitization</th>
+<th>Auth/Authz</th>
+<th>Config Security</th>
+<th>LLM-Based Analysis</th>
+<th>Human-in-Loop</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Trail of Bits</td>
+<td>Wrapper</td>
+<td>ANSI only</td>
+<td>No</td>
+<td>Config pinning</td>
+<td>LlamaFirewall</td>
+<td>Quarantine DB</td>
+</tr>
+<tr>
+<td>MCP-Watchdog</td>
+<td>Proxy</td>
+<td>80+ patterns</td>
+<td>No</td>
+<td>Tool hash</td>
+<td>No</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Arbiter</td>
+<td>Proxy</td>
+<td>No</td>
+<td>Deny-by-default</td>
+<td>No</td>
+<td>No</td>
+<td>No</td>
+</tr>
+<tr>
+<td>MCP-Dandan</td>
+<td>Gateway</td>
+<td>5 engines</td>
+<td>No</td>
+<td>No</td>
+<td>Yes (semantic)</td>
+<td>Yes (desktop UI)</td>
+</tr>
+<tr>
+<td>Lasso</td>
+<td>Gateway</td>
+<td>Plugin-based</td>
+<td>Yes</td>
+<td>Reputation</td>
+<td>Plugin-dependent</td>
+<td>No</td>
+</tr>
+<tr>
+<td>IBM ContextForge</td>
+<td>Enterprise</td>
+<td>40+ controls</td>
+<td>OIDC/OAuth</td>
+<td>Full lifecycle</td>
+<td>No</td>
+<td>No</td>
+</tr>
+<tr>
+<td>MetaMCP</td>
+<td>Middleware</td>
+<td>Plugin-dependent</td>
+<td>OIDC</td>
+<td>Namespace</td>
+<td>No</td>
+<td>No</td>
+</tr>
+</tbody>
+</table>
+<h3 id="53-industry-standards">5.3 Industry Standards</h3>
+<p><strong>CoSAI (Coalition for Secure AI)</strong> published a comprehensive MCP Security whitepaper (January 2026) identifying 12 threat categories and approximately 40 distinct threats. Organized around four pillars:</p>
+<ol type="1">
+<li>Agent Identity and Access Management</li>
+<li>Tool Supply Chain Security</li>
+<li>Execution Environment Isolation</li>
+<li>Observability and Incident Response</li>
+</ol>
+<p><strong>MCP Specification</strong> (2025-11-25 revision) added a security best practices page, OAuth 2.0 Resource Server classification, and Security Considerations for token theft, confused deputy, and session hijacking. However, the spec says servers MUST "sanitize tool outputs" and clients SHOULD "validate tool results before passing to LLM" but provides <strong>zero guidance on how to do this</strong>. The spec delegates the hardest problem to implementers.</p>
+<hr />
+<h2 id="6-known-limitations-and-open-problems">6. Known Limitations and Open Problems</h2>
+<h3 id="61-the-fundamental-unsolvable-tension">6.1 The Fundamental Unsolvable Tension</h3>
+<p><strong>You cannot fully sanitize adversarial content without potentially removing legitimate content.</strong> A regex that blocks "ignore previous instructions" also blocks a legitimate email discussing prompt injection research. An LLM-based classifier that flags imperative verbs in tool results would flag every email containing a request.</p>
+<h3 id="62-specific-defense-limitations">6.2 Specific Defense Limitations</h3>
+<h4 id="regex-and-pattern-matching">Regex and Pattern Matching</h4>
+<p>Trivially bypassed via:</p>
+<ul>
+<li>Rephrasing ("disregard" instead of "ignore")</li>
+<li>Encoding (Base64, URL encoding, Unicode normalization tricks)</li>
+<li>Multi-step instructions spread across multiple messages</li>
+<li>Homoglyphs (visually identical characters from different Unicode blocks)</li>
+<li>Zero-width characters and bidirectional text overrides</li>
+<li>Non-English languages</li>
+<li>Leetspeak and other obfuscation</li>
+</ul>
+<h4 id="llm-based-classifiers">LLM-Based Classifiers</h4>
+<ul>
+<li>LlamaFirewall already bypassed via non-English prompts and Unicode tricks</li>
+<li>Classifiers trained on known attacks miss novel phrasings</li>
+<li>The classifier itself can potentially be prompt-injected (the "meta-attack" demonstrated by Immersive Labs)</li>
+<li>Adds latency and cost to every operation</li>
+</ul>
+<h4 id="the-asymmetry-problem">The Asymmetry Problem</h4>
+<p>Defenders must catch ALL attacks with low false positives. Attackers need only ONE bypass. This asymmetry fundamentally favors attackers in any arms race.</p>
+<h4 id="semantic-risk-vs-authorization">Semantic Risk vs. Authorization</h4>
+<p>Arbiter's documentation articulates this clearly: restricting which tools are available does NOT prevent an agent from being manipulated into misusing allowed tools. An agent with only <code>send_email</code> permission can still be tricked into sending an email it shouldn't. Authorization is necessary but insufficient.</p>
+<h4 id="no-content-level-defense-in-the-mcp-specification">No Content-Level Defense in the MCP Specification</h4>
+<p>The MCP spec addresses authentication, authorization, and transport security. Its guidance on content sanitization amounts to two sentences ("sanitize tool outputs", "validate tool results") with no implementation guidance. The hardest problem is left entirely to implementers.</p>
+<h4 id="training-time-vs-inference-time-gap">Training-Time vs. Inference-Time Gap</h4>
+<p>Anthropic's approach (RL during training) achieves approximately 1% attack success, but this is model-specific and not transferable. External defenses (proxies, firewalls) work at inference time and are model-agnostic but achieve significantly higher attack success rates.</p>
+<h3 id="63-the-current-gap">6.3 The Current Gap</h3>
+<p><strong>No purpose-built MCP content sanitization server for email exists.</strong> The email-security skill on mcp.directory is a prompt definition. MCP-Watchdog has email injection detection but is general-purpose. Nobody has assembled the existing techniques (spotlighting, deterministic blocking, content sanitization, config pinning) into a turnkey email security proxy for MCP.</p>
+<hr />
+<h2 id="7-architecture-recommendations">7. Architecture Recommendations</h2>
+<p>Based on these findings, the MCPAQL adversarial-input security proxy should implement a defense-in-depth architecture combining the best techniques from existing tools and research.</p>
+<h3 id="71-three-layer-defense-model">7.1 Three-Layer Defense Model</h3>
+<pre><code>Layer 1: Security Proxy (pre-LLM)
+  → Content sanitization, spotlighting, deterministic blocking
+  → The LLM never sees raw adversarial content
+  → Deterministic, fast, cheap
+
+Layer 2: Agent Behavior (DollhouseMCP elements)
+  → Skeptical persona, structured triage skill
+  → Guides the LLM to evaluate content critically
+  → Probabilistic, model-dependent
+
+Layer 3: Action Gating (DollhouseMCP Gatekeeper + Autonomy Evaluator)
+  → Block outbound actions after reading untrusted content
+  → Detect goal drift (reading email → trying to visit attacker URL)
+  → Human-in-the-loop for high-risk actions
+  → The only guaranteed defense against successful injection</code></pre>
+<h3 id="72-techniques-to-incorporate">7.2 Techniques to Incorporate</h3>
+<table>
+<thead>
+<tr>
+<th>Technique</th>
+<th>Source</th>
+<th>Layer</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Zero-width character stripping</td>
+<td>MCP-Watchdog</td>
+<td>1</td>
+<td>Remove hidden text encoding</td>
+</tr>
+<tr>
+<td>Prompt injection pattern matching</td>
+<td>MCP-Watchdog (80+ patterns)</td>
+<td>1</td>
+<td>Detect known injection patterns</td>
+</tr>
+<tr>
+<td>Spotlighting with random delimiters</td>
+<td>Microsoft</td>
+<td>1</td>
+<td>Mark untrusted content as DATA</td>
+</tr>
+<tr>
+<td>Deterministic exfiltration blocking</td>
+<td>Microsoft</td>
+<td>1</td>
+<td>Hard-block URLs, mailto, data URIs</td>
+</tr>
+<tr>
+<td>Config pinning (trust-on-first-use)</td>
+<td>Trail of Bits</td>
+<td>1</td>
+<td>Detect tool definition changes</td>
+</tr>
+<tr>
+<td>Email auth validation (DKIM/SPF/DMARC)</td>
+<td>Standard</td>
+<td>1</td>
+<td>Trust scoring for sender</td>
+</tr>
+<tr>
+<td>Skeptical analysis persona</td>
+<td>DollhouseMCP</td>
+<td>2</td>
+<td>Guide LLM behavior</td>
+</tr>
+<tr>
+<td>Structured triage skill</td>
+<td>DollhouseMCP</td>
+<td>2</td>
+<td>Systematic evaluation process</td>
+</tr>
+<tr>
+<td>Outbound action blocking</td>
+<td>DollhouseMCP Gatekeeper</td>
+<td>3</td>
+<td>Prevent exfiltration</td>
+</tr>
+<tr>
+<td>Goal drift detection</td>
+<td>DollhouseMCP Autonomy Evaluator</td>
+<td>3</td>
+<td>Detect manipulation</td>
+</tr>
+<tr>
+<td>Human-in-the-loop</td>
+<td>DollhouseMCP confirm_operation</td>
+<td>3</td>
+<td>Final authority</td>
+</tr>
+</tbody>
+</table>
+<h3 id="73-design-principles">7.3 Design Principles</h3>
+<ol type="1">
+<li><strong>Assume breach</strong>: Layer 1 will eventually be bypassed. Layers 2 and 3 must catch what Layer 1 misses.</li>
+<li><strong>Deterministic over probabilistic</strong>: Hard rules that block exfiltration patterns are more reliable than ML classifiers.</li>
+<li><strong>Minimize LLM exposure</strong>: The proxy should strip or redact adversarial content before the LLM sees it. Everything else is mitigation after exposure.</li>
+<li><strong>Content blocking, not just flagging</strong>: When injection is detected, return a safe summary, not the raw content.</li>
+<li><strong>Continuous improvement</strong>: Log what gets through, update patterns, red-team regularly.</li>
+<li><strong>Model-agnostic</strong>: Defenses should work regardless of which LLM is used.</li>
+</ol>
+<h3 id="74-what-we-are-building-vs-what-exists">7.4 What We Are Building vs. What Exists</h3>
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>Exists in ecosystem?</th>
+<th>Our approach</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>General MCP proxy</td>
+<td>Yes (many)</td>
+<td>Build on proven proxy pattern</td>
+</tr>
+<tr>
+<td>Content sanitization</td>
+<td>Yes (MCP-Watchdog)</td>
+<td>Incorporate their 80+ patterns</td>
+</tr>
+<tr>
+<td>Config pinning</td>
+<td>Yes (Trail of Bits)</td>
+<td>Adopt trust-on-first-use</td>
+</tr>
+<tr>
+<td>Spotlighting</td>
+<td>Yes (Microsoft, research)</td>
+<td>Implement for all adversarial sources</td>
+</tr>
+<tr>
+<td>Email-specific security</td>
+<td><strong>No</strong> (gap)</td>
+<td>Purpose-built email proxy</td>
+</tr>
+<tr>
+<td>Integration with agent policy engine</td>
+<td><strong>No</strong> (gap)</td>
+<td>DollhouseMCP Gatekeeper integration</td>
+</tr>
+<tr>
+<td>Adapter-for-adapters pattern in MCPAQL</td>
+<td><strong>No</strong> (gap)</td>
+<td>New MCPAQL spec pattern</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="8-references">8. References</h2>
+<h3 id="mcp-security-tools">MCP Security Tools</h3>
+<ul>
+<li>Trail of Bits mcp-context-protector: <a href="https://github.com/trailofbits/mcp-context-protector">https://github.com/trailofbits/mcp-context-protector</a></li>
+<li>MCP-Watchdog: <a href="https://github.com/bountyyfi/mcp-watchdog">https://github.com/bountyyfi/mcp-watchdog</a></li>
+<li>Arbiter / mcp-proxy-firewall: <a href="https://github.com/cyrenei/mcp-proxy-firewall">https://github.com/cyrenei/mcp-proxy-firewall</a></li>
+<li>MCP-Dandan: <a href="https://github.com/82ch/MCP-Dandan">https://github.com/82ch/MCP-Dandan</a></li>
+<li>Lasso MCP Gateway: <a href="https://github.com/lasso-security/mcp-gateway">https://github.com/lasso-security/mcp-gateway</a></li>
+<li>IBM ContextForge: <a href="https://github.com/IBM/mcp-context-forge">https://github.com/IBM/mcp-context-forge</a></li>
+<li>MetaMCP: <a href="https://github.com/metatool-ai/metamcp">https://github.com/metatool-ai/metamcp</a></li>
+<li>MCP Proxy Wrapper: <a href="https://mcp-proxy.dev/">https://mcp-proxy.dev/</a></li>
+<li>Apache Casbin Gateway: <a href="https://github.com/apache/casbin-gateway">https://github.com/apache/casbin-gateway</a></li>
+<li>Snyk Agent Scan (formerly Invariant mcp-scan): <a href="https://github.com/snyk/agent-scan">https://github.com/snyk/agent-scan</a></li>
+<li>Praetorian MCPHammer: <a href="https://github.com/praetorian-inc/MCPHammer">https://github.com/praetorian-inc/MCPHammer</a></li>
+<li>Awesome MCP Security: <a href="https://github.com/Puliczek/awesome-mcp-security">https://github.com/Puliczek/awesome-mcp-security</a></li>
+</ul>
+<h3 id="vendor-security-documentation">Vendor Security Documentation</h3>
+<ul>
+<li>Anthropic: <a href="https://www.anthropic.com/research/prompt-injection-defenses">https://www.anthropic.com/research/prompt-injection-defenses</a></li>
+<li>Microsoft: <a href="https://www.microsoft.com/en-us/msrc/blog/2025/07/how-microsoft-defends-against-indirect-prompt-injection-attacks">https://www.microsoft.com/en-us/msrc/blog/2025/07/how-microsoft-defends-against-indirect-prompt-injection-attacks</a></li>
+<li>OpenAI: <a href="https://openai.com/index/hardening-atlas-against-prompt-injection/">https://openai.com/index/hardening-atlas-against-prompt-injection/</a></li>
+<li>OpenAI (understanding): <a href="https://openai.com/index/prompt-injections/">https://openai.com/index/prompt-injections/</a></li>
+<li>Google: <a href="https://knowledge.workspace.google.com/admin/security/indirect-prompt-injections-and-googles-layered-defense-strategy-for-gemini">https://knowledge.workspace.google.com/admin/security/indirect-prompt-injections-and-googles-layered-defense-strategy-for-gemini</a></li>
+<li>Meta LlamaFirewall: <a href="https://ai.meta.com/research/publications/llamafirewall-an-open-source-guardrail-system-for-building-secure-ai-agents/">https://ai.meta.com/research/publications/llamafirewall-an-open-source-guardrail-system-for-building-secure-ai-agents/</a></li>
+</ul>
+<h3 id="academic-papers">Academic Papers</h3>
+<ul>
+<li>Systematization of Knowledge — MCP Security (arxiv:2512.08290): <a href="https://arxiv.org/html/2512.08290v1">https://arxiv.org/html/2512.08290v1</a></li>
+<li>MCPTox Benchmark (arxiv:2508.14925): <a href="https://arxiv.org/html/2508.14925v1">https://arxiv.org/html/2508.14925v1</a></li>
+<li>Prompt Injection on Agentic Coding Assistants (arxiv:2601.17548): <a href="https://arxiv.org/abs/2601.17548">https://arxiv.org/abs/2601.17548</a></li>
+<li>Defense via Tool Result Parsing (arxiv:2601.04795): <a href="https://arxiv.org/abs/2601.04795">https://arxiv.org/abs/2601.04795</a></li>
+<li>AgentSentry (arxiv:2602.22724): <a href="https://arxiv.org/abs/2602.22724">https://arxiv.org/abs/2602.22724</a></li>
+<li>LLMail-Inject (arxiv:2506.09956): <a href="https://arxiv.org/abs/2506.09956">https://arxiv.org/abs/2506.09956</a></li>
+<li>Microsoft Spotlighting (arxiv:2403.14720): <a href="https://arxiv.org/html/2403.14720v1">https://arxiv.org/html/2403.14720v1</a></li>
+</ul>
+<h3 id="real-world-attacks">Real-World Attacks</h3>
+<ul>
+<li>EchoLeak (CVE-2025-32711): <a href="https://www.hackthebox.com/blog/cve-2025-32711-echoleak-copilot-vulnerability">https://www.hackthebox.com/blog/cve-2025-32711-echoleak-copilot-vulnerability</a></li>
+<li>Copilot email phishing surface: <a href="https://permiso.io/blog/copilot-prompt-injection-ai-email-phishing">https://permiso.io/blog/copilot-prompt-injection-ai-email-phishing</a></li>
+<li>LLM email security bypass (Immersive Labs): <a href="https://www.immersivelabs.com/resources/c7-blog/weaponizing-llms-bypassing-email-security-products-via-indirect-prompt-injection">https://www.immersivelabs.com/resources/c7-blog/weaponizing-llms-bypassing-email-security-products-via-indirect-prompt-injection</a></li>
+<li>Proofpoint AI Security: <a href="https://www.proofpoint.com/us/newsroom/press-releases/proofpoint-unveils-industrys-newest-intent-based-ai-security-solution">https://www.proofpoint.com/us/newsroom/press-releases/proofpoint-unveils-industrys-newest-intent-based-ai-security-solution</a></li>
+</ul>
+<h3 id="community-and-commentary">Community and Commentary</h3>
+<ul>
+<li>Simon Willison — MCP prompt injection: <a href="https://simonwillison.net/2025/Apr/9/mcp-prompt-injection/">https://simonwillison.net/2025/Apr/9/mcp-prompt-injection/</a></li>
+<li>Simon Willison — The lethal trifecta: <a href="https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/">https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/</a></li>
+<li>CoSAI MCP Security Guide: <a href="https://www.coalitionforsecureai.org/securing-the-ai-agent-revolution-a-practical-guide-to-mcp-security/">https://www.coalitionforsecureai.org/securing-the-ai-agent-revolution-a-practical-guide-to-mcp-security/</a></li>
+<li>MCP content sanitization best practices: <a href="https://vulnerablemcp.info/security.html">https://vulnerablemcp.info/security.html</a></li>
+<li>Securing MCP defense-first architecture: <a href="https://christian-schneider.net/blog/securing-mcp-defense-first-architecture/">https://christian-schneider.net/blog/securing-mcp-defense-first-architecture/</a></li>
+<li>The Agent Perimeter Fallacy: <a href="https://research.securityblueprints.io/p/blog/agent-perimeter-fallacy">https://research.securityblueprints.io/p/blog/agent-perimeter-fallacy</a></li>
+<li>Palo Alto Unit 42 — MCP Sampling Attack Vectors: <a href="https://unit42.paloaltonetworks.com/model-context-protocol-attack-vectors/">https://unit42.paloaltonetworks.com/model-context-protocol-attack-vectors/</a></li>
+<li>MCP Threat Modeling with Tool Poisoning: <a href="https://arxiv.org/html/2603.22489v1">https://arxiv.org/html/2603.22489v1</a></li>
+<li>LlamaFirewall bypass study: <a href="https://medium.com/trendyol-tech/bypassing-metas-llama-firewall">https://medium.com/trendyol-tech/bypassing-metas-llama-firewall</a></li>
+<li>email-security Agent Skill: <a href="https://mcp.directory/skills/email-security">https://mcp.directory/skills/email-security</a></li>
+</ul>
+<h3 id="industry-standards">Industry Standards</h3>
+<ul>
+<li>MCP Specification Security Best Practices: <a href="https://modelcontextprotocol.io/specification/2025-11-25">https://modelcontextprotocol.io/specification/2025-11-25</a></li>
+<li>CoSAI MCP Security Whitepaper (January 2026)</li>
+</ul>
+
+          </div>
+        </section>
+        <nav class="page-nav" aria-label="Page navigation">
+  <a class="page-nav-link prev" href="../architecture/README.html">
+    <span class="page-nav-eyebrow">Previous page</span>
+    <strong class="page-nav-label">Architecture Documentation</strong>
+  </a>
+  <a class="page-nav-link next" href="mcp-vs-mcpaql-vs-a2a.html">
+    <span class="page-nav-eyebrow">Next page</span>
+    <strong class="page-nav-label">Protocol Landscape: MCP vs MCP-AQL vs A2A</strong>
+  </a>
+</nav>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.</p>
+      <div class="footer-links">
+        <a href="../../docs/index.html">Docs Library</a><a href="../index.html">Repo-Synced Spec</a><a href="https://github.com/MCPAQL">MCPAQL Organization</a><a href="https://dollhouseresearch.com">Dollhouse Research</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../js/search.js" defer></script>
+</body>
+</html>

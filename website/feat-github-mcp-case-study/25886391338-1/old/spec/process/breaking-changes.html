@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="This document defines how breaking changes are handled in the MCP-AQL specification, including change classification, deprecation procedures, migration requirements, and communication standards.">
+  <title>MCP-AQL Spec | MCP-AQL Breaking Change Policy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" media="print" onload="this.onload=null;this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <a class="logo" href="../../index.html"><span class="logo-mark"></span>MCP-AQL</a>
+        <ul class="nav-links">
+          <li><a href="../../index.html">Home</a></li>
+          <li><a href="../../docs/index.html">Docs</a></li>
+          <li><a href="../../launch-checklist.html">Launch Checklist</a></li>
+          <li><a href="../../apis/index.html">Adapter Patterns</a></li>
+        </ul>
+        <form class="site-search" data-search-form data-index-url="../../data/search-index.json" role="search">
+          <label class="sr-only" for="site-search-input">Search MCP-AQL docs</label>
+          <input id="site-search-input" data-search-input type="search" placeholder="Search MCP-AQL docs, spec pages, and adapter patterns...">
+          <span class="search-count" data-search-count></span>
+          <ul class="search-results" data-search-results hidden></ul>
+        </form>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container docs-shell">
+      <aside class="docs-side">
+        <h2>Repo-Synced Spec</h2>
+        <p class="docs-side-note">Generated from <code>MCPAQL/spec</code> so the website carries the deeper protocol material too.</p>
+        <div class="docs-side-group">
+  <h3>Core</h3>
+  <ul><li><a href="../conformance-testing.html">MCP-AQL Conformance Testing Specification</a></li><li><a href="../crude-pattern.html">MCP-AQL CRUDE Pattern Specification</a></li><li><a href="../endpoint-modes.html">MCP-AQL Endpoint Modes Specification</a></li><li><a href="../error-codes.html">Structured Error Codes Specification</a></li><li><a href="../introspection.html">MCP-AQL Introspection Specification</a></li><li><a href="../licensing-options.html">MCP-AQL Licensing Options (Working Notes)</a></li><li><a href="../mcp-integration.html">MCP Integration Specification</a></li><li><a href="../operations.html">MCP-AQL Operations Specification</a></li><li><a href="../overview.html">MCP-AQL Protocol Overview</a></li><li><a href="../plugin-contracts.html">Plugin Interface Contracts</a></li><li><a href="../README.html">MCP-AQL Specification Documentation</a></li><li><a href="../repo/README.html">MCP-AQL Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Versions</h3>
+  <ul><li><a href="../versions/v1.0.0-draft.html">MCP-AQL Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Adapter</h3>
+  <ul><li><a href="../adapter/danger-levels.html">Dangerous Operation Classification Specification</a></li><li><a href="../adapter/discovery-bundle.html">MCP Server Discovery Bundle</a></li><li><a href="../adapter/element-type.html">Adapter Element Type Specification</a></li><li><a href="../adapter/generator.html">Adapter Generator Specification</a></li><li><a href="../adapter/rate-limiting.html">Rate Limiting and Quota Management Specification</a></li><li><a href="../adapter/trust-levels.html">Trust Levels Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Security</h3>
+  <ul><li><a href="../security/confirmation-tokens.html">Confirmation Token Specification</a></li><li><a href="../security/execution-safety-loop.html">Execution Safety Loop Specification</a></li><li><a href="../security/gatekeeper.html">Security Model: Gatekeeper Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Features</h3>
+  <ul><li><a href="../features/aggregations.html">MCP-AQL Aggregations</a></li><li><a href="../features/collection-querying.html">MCP-AQL Collection Querying</a></li><li><a href="../features/computed-fields.html">MCP-AQL Computed Fields</a></li><li><a href="../features/field-selection.html">Field Selection Specification</a></li><li><a href="../features/pagination.html">Cursor-Based Pagination Specification</a></li><li><a href="../features/relationship-queries.html">MCP-AQL Relationship Queries</a></li><li><a href="../features/warnings.html">Warnings Array Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Guides</h3>
+  <ul><li><a href="../guides/cross-domain-implementation.html">Cross-Domain Implementation Guide</a></li><li><a href="../guides/protocol-comparison.html">Protocol Comparison Guide</a></li><li><a href="../guides/README.html">Developer Guides</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Process</h3>
+  <ul><li><a class="current" aria-current="page" href="breaking-changes.html">MCP-AQL Breaking Change Policy</a></li><li><a href="preliminary-public-launch-checklist.html">Preliminary Public Launch Checklist</a></li><li><a href="rfc-process.html">RFC Process for MCP-AQL Specification</a></li><li><a href="versioning.html">Versioning Strategy</a></li><li><a href="../repo/CHANGELOG.html">Changelog</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Architecture</h3>
+  <ul><li><a href="../architecture/README.html">Architecture Documentation</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Research</h3>
+  <ul><li><a href="../research/mcp-vs-mcpaql-vs-a2a.html">Protocol Landscape: MCP vs MCP-AQL vs A2A</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Reference</h3>
+  <ul><li><a href="../reference/README.html">Reference Documentation</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>ADRs</h3>
+  <ul><li><a href="../adr/ADR-001-crude-pattern.html">ADR-001: CRUDE Pattern (Extending CRUD with Execute)</a></li><li><a href="../adr/ADR-002-graphql-style-input.html">ADR-002: GraphQL-Style Input Objects for Updates</a></li><li><a href="../adr/ADR-003-snake-case-parameters.html">ADR-003: snake_case Parameter Convention</a></li><li><a href="../adr/ADR-004-schema-driven-operations.html">ADR-004: Schema-Driven Operation Definitions</a></li><li><a href="../adr/ADR-005-introspection-system.html">ADR-005: GraphQL-Style Introspection System</a></li><li><a href="../adr/ADR-006-discriminated-responses.html">ADR-006: Discriminated Response Format</a></li><li><a href="../adr/index.html">Architecture Decision Records</a></li><li><a href="../adr/README.html">Architecture Decision Records</a></li></ul>
+</div>
+      </aside>
+
+      <article class="docs-main">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+          <ol>
+            <li><a href="../../index.html">Home</a></li>
+            <li><a href="../index.html">Full Spec</a></li>
+            <li><span class="current">MCP-AQL Breaking Change Policy</span></li>
+          </ol>
+        </nav>
+        <section class="hero docs-hero">
+          <div class="hero-inner">
+            <span class="status-pill">REPO-SYNCED SPEC DOC</span>
+            <h1>MCP-AQL Breaking Change Policy</h1>
+            <p class="lede">This document defines how breaking changes are handled in the MCP-AQL specification, including change classification, deprecation procedures, migration requirements, and communication standards.</p>
+            <div class="spec-meta"><span class="state-chip live">Support document</span><span class="state-chip pending">Draft</span><span class="state-chip">1.0.0-draft</span><span class="state-chip">2026-01-14</span></div>
+            <p class="spec-source">Source: <a href="https://github.com/MCPAQL/spec/blob/main/docs/process/breaking-changes.md">spec/docs/process/breaking-changes.md</a></p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="https://github.com/MCPAQL/spec/blob/main/docs/process/breaking-changes.md">Open Source Markdown</a><a class="btn btn-secondary" href="../index.html">Browse Full Spec Reference</a>
+            </div>
+          </div>
+        </section>
+
+        <section class="page-toc-shell" data-page-toc>
+          <div class="card page-toc-card">
+            <div class="page-toc-head">
+              <p class="page-toc-kicker">On this page</p>
+              <h2>Jump to a section</h2>
+              <p class="page-toc-intro">Use the outline to move through longer pages without losing your place.</p>
+            </div>
+            <ol class="page-toc-list" data-page-toc-list>
+              <li class="page-toc-item level-2"><a href="#abstract" data-toc-target="abstract">Abstract</a></li><li class="page-toc-item level-2"><a href="#1-introduction" data-toc-target="1-introduction">1. Introduction</a></li><li class="page-toc-item level-2"><a href="#2-change-classification" data-toc-target="2-change-classification">2. Change Classification</a></li><li class="page-toc-item level-2"><a href="#3-deprecation-policy" data-toc-target="3-deprecation-policy">3. Deprecation Policy</a></li><li class="page-toc-item level-2"><a href="#4-migration-guides" data-toc-target="4-migration-guides">4. Migration Guides</a></li><li class="page-toc-item level-2"><a href="#5-communication" data-toc-target="5-communication">5. Communication</a></li><li class="page-toc-item level-2"><a href="#references" data-toc-target="references">References</a></li>
+            </ol>
+          </div>
+        </section>
+
+
+        <section>
+          <div class="card spec-prose">
+            <p><strong>Version:</strong> 1.0.0-draft <strong>Status:</strong> Draft <strong>Last Updated:</strong> 2026-01-14</p>
+<h2 id="abstract">Abstract</h2>
+<p>This document defines how breaking changes are handled in the MCP-AQL specification, including change classification, deprecation procedures, migration requirements, and communication standards.</p>
+<h2 id="1-introduction">1. Introduction</h2>
+<h3 id="11-what-is-a-breaking-change">1.1 What is a Breaking Change?</h3>
+<p>A breaking change is any modification to the MCP-AQL specification that could cause existing conforming implementations to:</p>
+<ul>
+<li>Fail to compile or build</li>
+<li>Produce errors at runtime</li>
+<li>Behave differently than documented</li>
+<li>Become non-conformant with the specification</li>
+</ul>
+<h3 id="12-why-this-policy-exists">1.2 Why This Policy Exists</h3>
+<p>MCP-AQL serves as a foundation for interoperability between AI models and MCP servers. Stability is critical because:</p>
+<ul>
+<li><strong>Adapter Authors</strong> depend on stable interfaces to build reliable implementations</li>
+<li><strong>AI Models</strong> rely on consistent behavior for effective operation discovery</li>
+<li><strong>End Users</strong> expect existing integrations to continue working after updates</li>
+</ul>
+<p>This policy ensures that necessary evolution of the specification happens in a predictable, well-communicated manner that minimizes disruption to the ecosystem.</p>
+<h3 id="13-scope">1.3 Scope</h3>
+<p>This policy applies to:</p>
+<ul>
+<li>The core MCP-AQL specification</li>
+<li>Required operations (currently only <code>introspect</code>)</li>
+<li>CRUDE endpoint definitions</li>
+<li>Protocol types and response structures</li>
+<li>Introspection response formats</li>
+</ul>
+<hr />
+<h2 id="2-change-classification">2. Change Classification</h2>
+<h3 id="21-breaking-changes-major-version-bump">2.1 Breaking Changes (Major Version Bump)</h3>
+<p>Breaking changes require a major version increment (e.g., 1.x.x to 2.0.0) and trigger the full deprecation and migration process.</p>
+<p><strong>Examples of Breaking Changes:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Change Type</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Removing required operations</td>
+<td>Removing the <code>introspect</code> operation</td>
+</tr>
+<tr>
+<td>Incompatible request structure changes</td>
+<td>Changing <code>operation</code> field to <code>op</code></td>
+</tr>
+<tr>
+<td>Incompatible response structure changes</td>
+<td>Restructuring the success/error envelope</td>
+</tr>
+<tr>
+<td>Removing CRUDE endpoints</td>
+<td>Eliminating the EXECUTE endpoint</td>
+</tr>
+<tr>
+<td>Changing introspection response format</td>
+<td>Altering the structure of OperationDetails</td>
+</tr>
+<tr>
+<td>Removing required fields from protocol types</td>
+<td>Removing <code>endpoint</code> from OperationInfo</td>
+</tr>
+<tr>
+<td>Changing field types incompatibly</td>
+<td>Changing <code>required</code> from boolean to string</td>
+</tr>
+<tr>
+<td>Changing endpoint routing rules</td>
+<td>Requiring different operation-to-endpoint mappings</td>
+</tr>
+</tbody>
+</table>
+<h3 id="22-non-breaking-changes-minor-version-bump">2.2 Non-Breaking Changes (Minor Version Bump)</h3>
+<p>Non-breaking changes add new capabilities without affecting existing implementations. These require a minor version increment (e.g., 1.0.x to 1.1.0).</p>
+<p><strong>Examples of Non-Breaking Changes:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Change Type</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Adding new optional operations</td>
+<td>New <code>validate</code> operation on READ endpoint</td>
+</tr>
+<tr>
+<td>Adding new optional parameters</td>
+<td>Adding <code>timeout</code> parameter to existing operations</td>
+</tr>
+<tr>
+<td>Adding new fields to responses (additive)</td>
+<td>Adding <code>deprecated</code> flag to OperationInfo</td>
+</tr>
+<tr>
+<td>New optional features</td>
+<td>Field selection support</td>
+</tr>
+<tr>
+<td>Deprecating features (without removal)</td>
+<td>Marking an operation as deprecated</td>
+</tr>
+<tr>
+<td>Adding new optional protocol types</td>
+<td>New TypeInfo subtypes</td>
+</tr>
+<tr>
+<td>Extending enum values</td>
+<td>Adding new endpoint mode options</td>
+</tr>
+</tbody>
+</table>
+<h3 id="23-patch-changes-patch-version-bump">2.3 Patch Changes (Patch Version Bump)</h3>
+<p>Patch changes do not affect implementation behavior. These require a patch version increment (e.g., 1.0.0 to 1.0.1).</p>
+<p><strong>Examples of Patch Changes:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Change Type</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Clarifications that don't change behavior</td>
+<td>Explaining existing edge case handling</td>
+</tr>
+<tr>
+<td>Typo fixes</td>
+<td>Correcting spelling in specification text</td>
+</tr>
+<tr>
+<td>Example corrections</td>
+<td>Fixing incorrect JSON in examples</td>
+</tr>
+<tr>
+<td>Documentation improvements</td>
+<td>Adding diagrams or additional context</td>
+</tr>
+<tr>
+<td>Formatting changes</td>
+<td>Restructuring sections for clarity</td>
+</tr>
+<tr>
+<td>Non-normative additions</td>
+<td>Adding implementation notes</td>
+</tr>
+</tbody>
+</table>
+<h3 id="24-classification-decision-tree">2.4 Classification Decision Tree</h3>
+<pre><code>Is existing conforming code affected?
+    |
+    No --&gt; Is new functionality added?
+    |          |
+    |         Yes --&gt; MINOR version bump
+    |          |
+    |         No --&gt; PATCH version bump
+    |
+   Yes --&gt; MAJOR version bump (Breaking Change)</code></pre>
+<hr />
+<h2 id="3-deprecation-policy">3. Deprecation Policy</h2>
+<h3 id="31-deprecation-period">3.1 Deprecation Period</h3>
+<p>All breaking changes MUST go through a deprecation period before removal:</p>
+<ul>
+<li><strong>Minimum Duration:</strong> 1 minor version OR 3 months, whichever is longer</li>
+<li><strong>Maximum Duration:</strong> Until the next major version release</li>
+</ul>
+<p>For example, if a feature is deprecated in version 1.2.0, it:</p>
+<ul>
+<li>MUST remain available through at least version 1.3.0</li>
+<li>MUST remain available for at least 3 months after 1.2.0 release</li>
+<li>MAY be removed in version 2.0.0</li>
+</ul>
+<h3 id="32-deprecation-communication">3.2 Deprecation Communication</h3>
+<p>When a feature is deprecated, the following communication is required:</p>
+<p><strong>In Specification Documents:</strong></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; **DEPRECATED:** This feature is deprecated as of version X.Y.Z and will be</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; removed in version A.0.0. Use </span><span class="co">[</span><span class="ot">alternative</span><span class="co">]</span><span class="at"> instead.</span></span></code></pre></div>
+<p><strong>In Introspection Responses:</strong></p>
+<p>Implementations SHOULD include deprecation information in introspection:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;operation&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;legacy_operation&quot;</span><span class="fu">,</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;endpoint&quot;</span><span class="fu">:</span> <span class="st">&quot;READ&quot;</span><span class="fu">,</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;deprecated&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;deprecationMessage&quot;</span><span class="fu">:</span> <span class="st">&quot;Use &#39;new_operation&#39; instead. Will be removed in v2.0.0.&quot;</span><span class="fu">,</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;deprecatedSince&quot;</span><span class="fu">:</span> <span class="st">&quot;1.2.0&quot;</span><span class="fu">,</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;removalVersion&quot;</span><span class="fu">:</span> <span class="st">&quot;2.0.0&quot;</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h3 id="33-deprecation-warning-fields">3.3 Deprecation Warning Fields</h3>
+<p>When implementing deprecation warnings in introspection, include:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>deprecated</code></td>
+<td>boolean</td>
+<td>Yes</td>
+<td>Whether the item is deprecated</td>
+</tr>
+<tr>
+<td><code>deprecationMessage</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Human-readable explanation and alternative</td>
+</tr>
+<tr>
+<td><code>deprecatedSince</code></td>
+<td>string</td>
+<td>No</td>
+<td>Version when deprecation began</td>
+</tr>
+<tr>
+<td><code>removalVersion</code></td>
+<td>string</td>
+<td>No</td>
+<td>Version when item will be removed</td>
+</tr>
+</tbody>
+</table>
+<h3 id="34-deprecation-stages">3.4 Deprecation Stages</h3>
+<ol type="1">
+<li><strong>Announced:</strong> Feature marked deprecated in specification and changelog</li>
+<li><strong>Warning:</strong> Implementations begin returning deprecation warnings</li>
+<li><strong>Final Notice:</strong> Last minor version before removal</li>
+<li><strong>Removed:</strong> Feature removed in new major version</li>
+</ol>
+<hr />
+<h2 id="4-migration-guides">4. Migration Guides</h2>
+<h3 id="41-requirement">4.1 Requirement</h3>
+<p>Every breaking change MUST include a migration guide that enables implementers to update their code.</p>
+<h3 id="42-migration-guide-structure">4.2 Migration Guide Structure</h3>
+<p>Migration guides MUST follow this structure:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Migration Guide: [Brief Description]</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>**From:** Version X.Y.Z</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>**To:** Version A.B.C</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>**Breaking Change:** <span class="co">[</span><span class="ot">Category from Section 2.1</span><span class="co">]</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="fu">## Summary</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">One paragraph explaining what changed and why</span><span class="co">]</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="fu">## What&#39;s Changing</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">Detailed explanation of the change</span><span class="co">]</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="fu">### Before (Version X.Y.Z)</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">Code example showing old behavior</span><span class="co">]</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="fu">### After (Version A.B.C)</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">Code example showing new behavior</span><span class="co">]</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="fu">## Migration Steps</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span><span class="co">[</span><span class="ot">Step-by-step instructions</span><span class="co">]</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span><span class="co">[</span><span class="ot">Include code transformations where applicable</span><span class="co">]</span></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span><span class="co">[</span><span class="ot">Note any automated migration tools if available</span><span class="co">]</span></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a><span class="fu">## Timeline</span></span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Deprecated:** Version X.Y.Z (YYYY-MM-DD)</span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Removal:** Version A.0.0 (estimated YYYY-MM-DD)</span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a><span class="fu">## Questions</span></span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>For questions about this migration, <span class="co">[</span><span class="ot">contact information or issue tracker link</span><span class="co">]</span>.</span></code></pre></div>
+<h3 id="43-migration-guide-location">4.3 Migration Guide Location</h3>
+<p>Migration guides MUST be:</p>
+<ul>
+<li>Published in <code>docs/migrations/</code> directory</li>
+<li>Named with format: <code>vX-to-vY-[brief-description].md</code></li>
+<li>Linked from the changelog entry</li>
+<li>Referenced in deprecation warnings</li>
+</ul>
+<h3 id="44-example-migration-guide">4.4 Example Migration Guide</h3>
+<div class="sourceCode" id="cb5"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Migration Guide: Introspection Response Restructure</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>**From:** Version 1.x</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>**To:** Version 2.0.0</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>**Breaking Change:** Changing introspection response format</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="fu">## Summary</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>Version 2.0.0 restructures the introspection response to provide better</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>type safety and support for new features. The <span class="in">`data`</span> wrapper now includes</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>explicit type discriminators.</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="fu">## What&#39;s Changing</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="fu">### Before (Version 1.x)</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>  &quot;success&quot;: true,</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>  &quot;data&quot;: {</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>    &quot;operations&quot;: <span class="co">[</span><span class="ot">...</span><span class="co">]</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="fu">### After (Version 2.0.0)</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>  &quot;success&quot;: true,</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>  &quot;data&quot;: {</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>    &quot;type&quot;: &quot;operation_list&quot;,</span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>    &quot;items&quot;: <span class="co">[</span><span class="ot">...</span><span class="co">]</span></span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a><span class="fu">## Migration Steps</span></span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>Update response parsing to handle the new <span class="in">`type`</span> field</span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>Change array access from <span class="in">`data.operations`</span> to <span class="in">`data.items`</span></span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>Add type checking based on <span class="in">`data.type`</span> value</span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a><span class="fu">## Timeline</span></span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Deprecated:** Version 1.3.0 (2026-04-01)</span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Removal:** Version 2.0.0 (estimated 2026-07-01)</span></code></pre></div>
+<hr />
+<h2 id="5-communication">5. Communication</h2>
+<h3 id="51-changelog-format">5.1 Changelog Format</h3>
+<p>Breaking changes MUST be prominently documented in the changelog using this format:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">## [2.0.0] - YYYY-MM-DD</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">### BREAKING CHANGES</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**[Category]:** Brief description of breaking change</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span>Migration guide: <span class="co">[</span><span class="ot">link to migration guide</span><span class="co">]</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span>Deprecation notice: Deprecated in v1.X.0</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="fu">### Removed</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="co">[</span><span class="ot">List of removed features that were previously deprecated</span><span class="co">]</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="fu">### Changed</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="co">[</span><span class="ot">List of changed behaviors</span><span class="co">]</span></span></code></pre></div>
+<h3 id="52-announcement-requirements">5.2 Announcement Requirements</h3>
+<p><strong>For Major Versions (Breaking Changes):</strong></p>
+<ul>
+<li>Changelog entry with full details</li>
+<li>Migration guide(s) published</li>
+<li>Announcement in repository README or main documentation</li>
+<li>Minimum 30 days notice before release</li>
+<li>Release notes highlighting all breaking changes</li>
+</ul>
+<p><strong>For Minor Versions:</strong></p>
+<ul>
+<li>Changelog entry listing new features and deprecations</li>
+<li>Documentation updates for new features</li>
+<li>Deprecation warnings added to relevant sections</li>
+</ul>
+<p><strong>For Patch Versions:</strong></p>
+<ul>
+<li>Changelog entry listing fixes and clarifications</li>
+</ul>
+<h3 id="53-changelog-entry-examples">5.3 Changelog Entry Examples</h3>
+<p><strong>Breaking Change Entry:</strong></p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">## [2.0.0] - 2026-07-01</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">### BREAKING CHANGES</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Introspection Response:** The operation list response structure has changed.</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  The <span class="in">`operations`</span> array is now <span class="in">`items`</span> within a typed wrapper.</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span>Migration guide: <span class="co">[</span><span class="ot">v1-to-v2-introspection-response.md</span><span class="co">](migrations/v1-to-v2-introspection-response.md)</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span>Deprecation notice: Deprecated in v1.3.0 (2026-04-01)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Required Fields:** The <span class="in">`mcpTool`</span> field in OperationDetails is now required</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  rather than optional.</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span>Migration guide: <span class="co">[</span><span class="ot">v1-to-v2-required-fields.md</span><span class="co">](migrations/v1-to-v2-required-fields.md)</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span>Deprecation notice: Deprecated in v1.4.0 (2026-05-01)</span></code></pre></div>
+<p><strong>Deprecation Entry:</strong></p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">## [1.3.0] - 2026-04-01</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">### Deprecated</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Introspection Response Structure:** The current <span class="in">`data.operations`</span> array</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  format is deprecated. Version 2.0.0 will use a typed wrapper structure.</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  See <span class="co">[</span><span class="ot">v1-to-v2-introspection-response.md</span><span class="co">](migrations/v1-to-v2-introspection-response.md)</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  for migration guidance.</span></code></pre></div>
+<h3 id="54-pre-release-versions">5.4 Pre-Release Versions</h3>
+<p>Pre-release versions (alpha, beta, release candidates) MAY contain breaking changes without following the full deprecation process. However:</p>
+<ul>
+<li>Breaking changes between pre-releases SHOULD still be documented</li>
+<li>Migration guidance SHOULD still be provided</li>
+<li>Users of pre-release versions accept the risk of breaking changes</li>
+</ul>
+<hr />
+<h2 id="references">References</h2>
+<ul>
+<li><a href="../versions/v1.0.0-draft.html">MCP-AQL Specification v1.0.0-draft</a></li>
+<li><a href="../crude-pattern.html">CRUDE Pattern Specification</a></li>
+<li><a href="../introspection.html">Introspection Specification</a></li>
+</ul>
+
+          </div>
+        </section>
+        <nav class="page-nav" aria-label="Page navigation">
+  <a class="page-nav-link prev" href="../guides/README.html">
+    <span class="page-nav-eyebrow">Previous page</span>
+    <strong class="page-nav-label">Developer Guides</strong>
+  </a>
+  <a class="page-nav-link next" href="preliminary-public-launch-checklist.html">
+    <span class="page-nav-eyebrow">Next page</span>
+    <strong class="page-nav-label">Preliminary Public Launch Checklist</strong>
+  </a>
+</nav>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.</p>
+      <div class="footer-links">
+        <a href="../../docs/index.html">Docs Library</a><a href="../index.html">Repo-Synced Spec</a><a href="https://github.com/MCPAQL">MCPAQL Organization</a><a href="https://dollhouseresearch.com">Dollhouse Research</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../js/search.js" defer></script>
+</body>
+</html>

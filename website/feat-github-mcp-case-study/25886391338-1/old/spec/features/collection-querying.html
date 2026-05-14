@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Document Status: This document is informative. For normative requirements, see MCP-AQL Specification v1.0.0.">
+  <title>MCP-AQL Spec | MCP-AQL Collection Querying</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" media="print" onload="this.onload=null;this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <a class="logo" href="../../index.html"><span class="logo-mark"></span>MCP-AQL</a>
+        <ul class="nav-links">
+          <li><a href="../../index.html">Home</a></li>
+          <li><a href="../../docs/index.html">Docs</a></li>
+          <li><a href="../../launch-checklist.html">Launch Checklist</a></li>
+          <li><a href="../../apis/index.html">Adapter Patterns</a></li>
+        </ul>
+        <form class="site-search" data-search-form data-index-url="../../data/search-index.json" role="search">
+          <label class="sr-only" for="site-search-input">Search MCP-AQL docs</label>
+          <input id="site-search-input" data-search-input type="search" placeholder="Search MCP-AQL docs, spec pages, and adapter patterns...">
+          <span class="search-count" data-search-count></span>
+          <ul class="search-results" data-search-results hidden></ul>
+        </form>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container docs-shell">
+      <aside class="docs-side">
+        <h2>Repo-Synced Spec</h2>
+        <p class="docs-side-note">Generated from <code>MCPAQL/spec</code> so the website carries the deeper protocol material too.</p>
+        <div class="docs-side-group">
+  <h3>Core</h3>
+  <ul><li><a href="../conformance-testing.html">MCP-AQL Conformance Testing Specification</a></li><li><a href="../crude-pattern.html">MCP-AQL CRUDE Pattern Specification</a></li><li><a href="../endpoint-modes.html">MCP-AQL Endpoint Modes Specification</a></li><li><a href="../error-codes.html">Structured Error Codes Specification</a></li><li><a href="../introspection.html">MCP-AQL Introspection Specification</a></li><li><a href="../licensing-options.html">MCP-AQL Licensing Options (Working Notes)</a></li><li><a href="../mcp-integration.html">MCP Integration Specification</a></li><li><a href="../operations.html">MCP-AQL Operations Specification</a></li><li><a href="../overview.html">MCP-AQL Protocol Overview</a></li><li><a href="../plugin-contracts.html">Plugin Interface Contracts</a></li><li><a href="../README.html">MCP-AQL Specification Documentation</a></li><li><a href="../repo/README.html">MCP-AQL Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Versions</h3>
+  <ul><li><a href="../versions/v1.0.0-draft.html">MCP-AQL Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Adapter</h3>
+  <ul><li><a href="../adapter/danger-levels.html">Dangerous Operation Classification Specification</a></li><li><a href="../adapter/discovery-bundle.html">MCP Server Discovery Bundle</a></li><li><a href="../adapter/element-type.html">Adapter Element Type Specification</a></li><li><a href="../adapter/generator.html">Adapter Generator Specification</a></li><li><a href="../adapter/rate-limiting.html">Rate Limiting and Quota Management Specification</a></li><li><a href="../adapter/trust-levels.html">Trust Levels Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Security</h3>
+  <ul><li><a href="../security/confirmation-tokens.html">Confirmation Token Specification</a></li><li><a href="../security/execution-safety-loop.html">Execution Safety Loop Specification</a></li><li><a href="../security/gatekeeper.html">Security Model: Gatekeeper Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Features</h3>
+  <ul><li><a href="aggregations.html">MCP-AQL Aggregations</a></li><li><a class="current" aria-current="page" href="collection-querying.html">MCP-AQL Collection Querying</a></li><li><a href="computed-fields.html">MCP-AQL Computed Fields</a></li><li><a href="field-selection.html">Field Selection Specification</a></li><li><a href="pagination.html">Cursor-Based Pagination Specification</a></li><li><a href="relationship-queries.html">MCP-AQL Relationship Queries</a></li><li><a href="warnings.html">Warnings Array Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Guides</h3>
+  <ul><li><a href="../guides/cross-domain-implementation.html">Cross-Domain Implementation Guide</a></li><li><a href="../guides/protocol-comparison.html">Protocol Comparison Guide</a></li><li><a href="../guides/README.html">Developer Guides</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Process</h3>
+  <ul><li><a href="../process/breaking-changes.html">MCP-AQL Breaking Change Policy</a></li><li><a href="../process/preliminary-public-launch-checklist.html">Preliminary Public Launch Checklist</a></li><li><a href="../process/rfc-process.html">RFC Process for MCP-AQL Specification</a></li><li><a href="../process/versioning.html">Versioning Strategy</a></li><li><a href="../repo/CHANGELOG.html">Changelog</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Architecture</h3>
+  <ul><li><a href="../architecture/README.html">Architecture Documentation</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Research</h3>
+  <ul><li><a href="../research/mcp-vs-mcpaql-vs-a2a.html">Protocol Landscape: MCP vs MCP-AQL vs A2A</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Reference</h3>
+  <ul><li><a href="../reference/README.html">Reference Documentation</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>ADRs</h3>
+  <ul><li><a href="../adr/ADR-001-crude-pattern.html">ADR-001: CRUDE Pattern (Extending CRUD with Execute)</a></li><li><a href="../adr/ADR-002-graphql-style-input.html">ADR-002: GraphQL-Style Input Objects for Updates</a></li><li><a href="../adr/ADR-003-snake-case-parameters.html">ADR-003: snake_case Parameter Convention</a></li><li><a href="../adr/ADR-004-schema-driven-operations.html">ADR-004: Schema-Driven Operation Definitions</a></li><li><a href="../adr/ADR-005-introspection-system.html">ADR-005: GraphQL-Style Introspection System</a></li><li><a href="../adr/ADR-006-discriminated-responses.html">ADR-006: Discriminated Response Format</a></li><li><a href="../adr/index.html">Architecture Decision Records</a></li><li><a href="../adr/README.html">Architecture Decision Records</a></li></ul>
+</div>
+      </aside>
+
+      <article class="docs-main">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+          <ol>
+            <li><a href="../../index.html">Home</a></li>
+            <li><a href="../index.html">Full Spec</a></li>
+            <li><span class="current">MCP-AQL Collection Querying</span></li>
+          </ol>
+        </nav>
+        <section class="hero docs-hero">
+          <div class="hero-inner">
+            <span class="status-pill">REPO-SYNCED SPEC DOC</span>
+            <h1>MCP-AQL Collection Querying</h1>
+            <p class="lede">Document Status: This document is informative. For normative requirements, see MCP-AQL Specification v1.0.0.</p>
+            <div class="spec-meta"><span class="state-chip live">Support document</span><span class="state-chip pending">Draft</span><span class="state-chip">1.0.0-draft</span><span class="state-chip">2026-04-15</span></div>
+            <p class="spec-source">Source: <a href="https://github.com/MCPAQL/spec/blob/main/docs/features/collection-querying.md">spec/docs/features/collection-querying.md</a></p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="https://github.com/MCPAQL/spec/blob/main/docs/features/collection-querying.md">Open Source Markdown</a><a class="btn btn-secondary" href="../index.html">Browse Full Spec Reference</a>
+            </div>
+          </div>
+        </section>
+
+        <section class="page-toc-shell" data-page-toc>
+          <div class="card page-toc-card">
+            <div class="page-toc-head">
+              <p class="page-toc-kicker">On this page</p>
+              <h2>Jump to a section</h2>
+              <p class="page-toc-intro">Use the outline to move through longer pages without losing your place.</p>
+            </div>
+            <ol class="page-toc-list" data-page-toc-list>
+              <li class="page-toc-item level-2"><a href="#abstract" data-toc-target="abstract">Abstract</a></li><li class="page-toc-item level-2"><a href="#1-operation-families" data-toc-target="1-operation-families">1. Operation Families</a></li><li class="page-toc-item level-2"><a href="#2-preferred-request-shape" data-toc-target="2-preferred-request-shape">2. Preferred Request Shape</a></li><li class="page-toc-item level-3"><a href="#21-text-query" data-toc-target="21-text-query">2.1 Text Query</a></li><li class="page-toc-item level-3"><a href="#22-structured-filters" data-toc-target="22-structured-filters">2.2 Structured Filters</a></li><li class="page-toc-item level-3"><a href="#23-sorting" data-toc-target="23-sorting">2.3 Sorting</a></li><li class="page-toc-item level-3"><a href="#24-field-selection" data-toc-target="24-field-selection">2.4 Field Selection</a></li><li class="page-toc-item level-3"><a href="#25-aggregations" data-toc-target="25-aggregations">2.5 Aggregations</a></li><li class="page-toc-item level-3"><a href="#26-pagination" data-toc-target="26-pagination">2.6 Pagination</a></li><li class="page-toc-item level-2"><a href="#3-capability-matrix" data-toc-target="3-capability-matrix">3. Capability Matrix</a></li><li class="page-toc-item level-2"><a href="#4-search-semantics" data-toc-target="4-search-semantics">4. Search Semantics</a></li><li class="page-toc-item level-3"><a href="#41-multi-word-queries" data-toc-target="41-multi-word-queries">4.1 Multi-Word Queries</a></li><li class="page-toc-item level-3"><a href="#42-structured-query-grammars" data-toc-target="42-structured-query-grammars">4.2 Structured Query Grammars</a></li><li class="page-toc-item level-2"><a href="#5-validation-guidance" data-toc-target="5-validation-guidance">5. Validation Guidance</a></li><li class="page-toc-item level-2"><a href="#6-introspection-guidance" data-toc-target="6-introspection-guidance">6. Introspection Guidance</a></li><li class="page-toc-item level-2"><a href="#7-relationship-to-other-feature-docs" data-toc-target="7-relationship-to-other-feature-docs">7. Relationship to Other Feature Docs</a></li>
+            </ol>
+          </div>
+        </section>
+
+
+        <section>
+          <div class="card spec-prose">
+            <p><strong>Version:</strong> 1.0.0-draft <strong>Status:</strong> Draft <strong>Last Updated:</strong> 2026-04-15</p>
+<blockquote>
+<p><strong>Document Status:</strong> This document is <strong>informative</strong>. For normative requirements, see <a href="../versions/v1.0.0-draft.html">MCP-AQL Specification v1.0.0</a>.</p>
+</blockquote>
+<h2 id="abstract">Abstract</h2>
+<p>This document defines the preferred request contract for collection-returning READ operations in MCP-AQL. It aligns <code>list_*</code>, <code>search_*</code>, and <code>query_*</code> operations around a consistent shape for free-text search, structured filtering, sorting, field selection, aggregation, and pagination.</p>
+<p>The goal is not to force every adapter into the same backend implementation. The goal is to give clients, adapter authors, and future spec work a stable query-language surface to build on.</p>
+<hr />
+<h2 id="1-operation-families">1. Operation Families</h2>
+<p>MCP-AQL commonly exposes three collection-oriented READ patterns:</p>
+<table>
+<thead>
+<tr>
+<th>Pattern</th>
+<th>Purpose</th>
+<th>Typical Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>list_*</code></td>
+<td>Enumerate a collection without requiring text search</td>
+<td><code>list_elements</code></td>
+</tr>
+<tr>
+<td><code>search_*</code></td>
+<td>Free-text retrieval over a collection</td>
+<td><code>search_elements</code></td>
+</tr>
+<tr>
+<td><code>query_*</code></td>
+<td>Structured or adapter-defined query grammar</td>
+<td><code>query_elements</code></td>
+</tr>
+</tbody>
+</table>
+<p>These patterns MAY coexist in the same adapter. When they do, they SHOULD share the same cross-cutting parameter shapes whenever possible.</p>
+<hr />
+<h2 id="2-preferred-request-shape">2. Preferred Request Shape</h2>
+<p>The preferred collection-query shape is:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;search_items&quot;</span><span class="op">,</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">params</span><span class="op">:</span> {</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">query</span><span class="op">:</span> <span class="st">&quot;api reviewer&quot;</span><span class="op">,</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">filter</span><span class="op">:</span> {</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>      <span class="dt">category</span><span class="op">:</span> <span class="st">&quot;persona&quot;</span><span class="op">,</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">status</span><span class="op">:</span> <span class="st">&quot;active&quot;</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    }<span class="op">,</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">sort</span><span class="op">:</span> {</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>      <span class="dt">field</span><span class="op">:</span> <span class="st">&quot;updated_at&quot;</span><span class="op">,</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>      <span class="dt">order</span><span class="op">:</span> <span class="st">&quot;desc&quot;</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    }<span class="op">,</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="dt">fields</span><span class="op">:</span> <span class="st">&quot;minimal&quot;</span><span class="op">,</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    <span class="dt">first</span><span class="op">:</span> <span class="dv">10</span><span class="op">,</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    <span class="dt">after</span><span class="op">:</span> <span class="st">&quot;cursor_abc123&quot;</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="21-text-query">2.1 Text Query</h3>
+<ul>
+<li><code>query</code> is the preferred parameter for free-text search input.</li>
+<li><code>search_*</code> operations SHOULD use <code>query</code> as the canonical text-search parameter name.</li>
+<li><code>list_*</code> operations SHOULD NOT require <code>query</code>.</li>
+<li><code>query_*</code> operations MAY use <code>query</code> for a structured DSL or query object, but MUST document the grammar clearly in introspection and examples.</li>
+</ul>
+<h3 id="22-structured-filters">2.2 Structured Filters</h3>
+<ul>
+<li><code>filter</code> is the preferred parameter for structured filtering.</li>
+<li>The value SHOULD be an object whose keys are adapter-defined filter fields.</li>
+<li>Unsupported filter keys SHOULD produce a validation error rather than being silently ignored.</li>
+</ul>
+<h3 id="23-sorting">2.3 Sorting</h3>
+<ul>
+<li><code>sort</code> is the preferred parameter for sorting.</li>
+<li>The preferred shape is:</li>
+</ul>
+<div class="sourceCode" id="cb2"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">sort</span><span class="op">:</span> {</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">field</span><span class="op">:</span> <span class="st">&quot;created_at&quot;</span><span class="op">,</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">order</span><span class="op">:</span> <span class="st">&quot;desc&quot;</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<ul>
+<li>Adapters MAY accept shortcut forms such as <code>sort + order</code>, but SHOULD document them as compatibility behavior rather than the primary contract.</li>
+</ul>
+<h3 id="24-field-selection">2.4 Field Selection</h3>
+<ul>
+<li><code>fields</code> is the preferred field-selection control.</li>
+<li><code>fields</code> MAY be either:
+<ul>
+<li>A preset string such as <code>minimal</code>, <code>standard</code>, or <code>full</code></li>
+<li>An array of explicit field paths</li>
+</ul></li>
+<li>Computed fields SHOULD use the <code>_computed.</code> prefix when they are projected through <code>fields</code>, for example <code>_computed.age_days</code>.</li>
+<li>Separate <code>preset</code> parameters SHOULD be treated as compatibility aliases only.</li>
+</ul>
+<h3 id="25-aggregations">2.5 Aggregations</h3>
+<ul>
+<li><code>aggregate</code> is the preferred summary-computation control for collection operations.</li>
+<li>The preferred shape is a map of named aggregation expressions:</li>
+</ul>
+<div class="sourceCode" id="cb3"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">aggregate</span><span class="op">:</span> {</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">total</span><span class="op">:</span> { <span class="dt">count</span><span class="op">:</span> <span class="kw">true</span> }<span class="op">,</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">by_status</span><span class="op">:</span> { <span class="dt">group_by</span><span class="op">:</span> <span class="st">&quot;status&quot;</span><span class="op">,</span> <span class="dt">count</span><span class="op">:</span> <span class="kw">true</span> }</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<ul>
+<li>When <code>aggregate</code> is present, adapters SHOULD return summary data by default unless <code>include_items: true</code> is explicitly requested.</li>
+</ul>
+<h3 id="26-pagination">2.6 Pagination</h3>
+<p>Cursor pagination is the preferred collection-pagination shape:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">first</span><span class="op">:</span> <span class="dv">25</span><span class="op">,</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">after</span><span class="op">:</span> <span class="st">&quot;cursor_abc123&quot;</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>Preferred cursor parameters:</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>first</code></td>
+<td>number</td>
+<td>Number of items from the start</td>
+</tr>
+<tr>
+<td><code>after</code></td>
+<td>string</td>
+<td>Cursor to continue after</td>
+</tr>
+<tr>
+<td><code>last</code></td>
+<td>number</td>
+<td>Number of items from the end</td>
+</tr>
+<tr>
+<td><code>before</code></td>
+<td>string</td>
+<td>Cursor to continue before</td>
+</tr>
+</tbody>
+</table>
+<p>For response envelopes and cursor metadata, see <a href="pagination.html">Pagination</a>.</p>
+<p>Adapters MAY expose offset- or page-based variants such as <code>limit</code>, <code>offset</code>, <code>page</code>, or <code>page_size</code> when the backend or existing ecosystem strongly favors them. When they do:</p>
+<ul>
+<li>The supported style MUST be documented in introspection</li>
+<li>Mixed pagination styles in a single request SHOULD be rejected</li>
+<li>Cursor pagination SHOULD remain the preferred shape for new MCP-AQL-native collection operations</li>
+</ul>
+<hr />
+<h2 id="3-capability-matrix">3. Capability Matrix</h2>
+<p>The following matrix describes the preferred forward direction for collection-returning READ operations:</p>
+<table>
+<thead>
+<tr>
+<th>Operation Family</th>
+<th><code>query</code></th>
+<th><code>filter</code></th>
+<th><code>sort</code></th>
+<th><code>aggregate</code></th>
+<th>Pagination</th>
+<th><code>fields</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>list_*</code></td>
+<td>Not required</td>
+<td>SHOULD support</td>
+<td>SHOULD support</td>
+<td>MAY support</td>
+<td>SHOULD support</td>
+<td>SHOULD support</td>
+</tr>
+<tr>
+<td><code>search_*</code></td>
+<td>SHOULD support as the canonical text parameter</td>
+<td>SHOULD support</td>
+<td>SHOULD support</td>
+<td>SHOULD support for summary-style searches</td>
+<td>SHOULD support</td>
+<td>SHOULD support</td>
+</tr>
+<tr>
+<td><code>query_*</code></td>
+<td>MUST document grammar</td>
+<td>SHOULD document composition rules</td>
+<td>SHOULD support when meaningful</td>
+<td>SHOULD document support when meaningful</td>
+<td>SHOULD support</td>
+<td>SHOULD support</td>
+</tr>
+</tbody>
+</table>
+<p>This matrix is intentionally phrased in terms of interoperability rather than backend mechanics. An adapter MAY omit a capability, but it SHOULD make the omission explicit in introspection and operation descriptions.</p>
+<hr />
+<h2 id="4-search-semantics">4. Search Semantics</h2>
+<h3 id="41-multi-word-queries">4.1 Multi-Word Queries</h3>
+<p>For plain-text <code>query</code> strings:</p>
+<ul>
+<li>Multi-word queries SHOULD behave consistently with single-word queries</li>
+<li>The default interpretation SHOULD be OR semantics unless the adapter documents otherwise</li>
+<li>OR semantics are preferred here because they return broader, more forgiving results for exploratory and LLM-generated queries</li>
+<li>Adapters MAY support quoted phrases for exact match</li>
+</ul>
+<h3 id="42-structured-query-grammars">4.2 Structured Query Grammars</h3>
+<p><code>query_*</code> operations sometimes expose a domain-specific query grammar instead of free-text search. Examples include:</p>
+<ul>
+<li>Metadata filters</li>
+<li>Expression trees</li>
+<li>SQL-like or GraphQL-like clauses</li>
+<li>Adapter-specific selector objects</li>
+</ul>
+<p>When an adapter uses a structured grammar:</p>
+<ul>
+<li>The grammar MUST be summarized in the operation description</li>
+<li>The accepted input type MUST be reflected in introspection</li>
+<li>At least one example SHOULD show how the grammar composes with <code>fields</code>, sorting, and pagination</li>
+</ul>
+<hr />
+<h2 id="5-validation-guidance">5. Validation Guidance</h2>
+<p>Adapters implementing collection queries SHOULD:</p>
+<ol type="1">
+<li>Reject unsupported filter keys with a structured validation error</li>
+<li>Reject unsupported sort fields with a structured validation error</li>
+<li>Reject mixed or contradictory pagination styles in the same request</li>
+<li>Avoid silently ignoring collection-query controls that were advertised in introspection</li>
+<li>Return enough metadata for clients to understand what was actually applied</li>
+</ol>
+<p>If an adapter only partially implements the preferred query shape, it SHOULD make that limitation explicit rather than inferring behavior from omitted parameters.</p>
+<hr />
+<h2 id="6-introspection-guidance">6. Introspection Guidance</h2>
+<p>To keep collection querying discoverable for LLM clients, adapters SHOULD expose:</p>
+<ul>
+<li>Supported collection-query parameters in <code>OperationDetails.parameters</code></li>
+<li>Whether the operation supports field selection</li>
+<li>Whether the operation supports aggregation and which functions are available</li>
+<li>Which computed fields are available, if any</li>
+<li>Which pagination style is supported</li>
+<li>Which filter keys and sort fields are accepted</li>
+<li>Examples combining multiple controls in one request</li>
+</ul>
+<p>For <code>query_*</code> operations with richer grammars, the description SHOULD include a short grammar summary and at least one realistic example.</p>
+<hr />
+<h2 id="7-relationship-to-other-feature-docs">7. Relationship to Other Feature Docs</h2>
+<ul>
+<li><a href="field-selection.html">Field Selection</a> defines how <code>fields</code> works</li>
+<li><a href="aggregations.html">Aggregations</a> defines the preferred <code>aggregate</code> request and response shape</li>
+<li><a href="computed-fields.html">Computed Fields</a> defines the <code>_computed.</code> projection and metadata pattern</li>
+<li><a href="pagination.html">Pagination</a> defines cursor pagination response semantics</li>
+<li><a href="../operations.html">Operations</a> defines general parameter conventions and operation schema guidance</li>
+</ul>
+<p>Taken together, these documents provide the preferred MCP-AQL query-language surface for collection-returning READ operations.</p>
+
+          </div>
+        </section>
+        <nav class="page-nav" aria-label="Page navigation">
+  <a class="page-nav-link prev" href="aggregations.html">
+    <span class="page-nav-eyebrow">Previous page</span>
+    <strong class="page-nav-label">MCP-AQL Aggregations</strong>
+  </a>
+  <a class="page-nav-link next" href="computed-fields.html">
+    <span class="page-nav-eyebrow">Next page</span>
+    <strong class="page-nav-label">MCP-AQL Computed Fields</strong>
+  </a>
+</nav>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.</p>
+      <div class="footer-links">
+        <a href="../../docs/index.html">Docs Library</a><a href="../index.html">Repo-Synced Spec</a><a href="https://github.com/MCPAQL">MCPAQL Organization</a><a href="https://dollhouseresearch.com">Dollhouse Research</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../js/search.js" defer></script>
+</body>
+</html>

@@ -169,9 +169,10 @@
           <p>
             Anyone building an MCP-AQL adapter writes a small <strong>Suite</strong> describing their operations and fixtures, then runs:
           </p>
-          <pre><code>mcpaql-parity --suite ./my-suite.js \
-              --adapter ./my-adapter/dist/server.js \
-              --report parity.json</code></pre>
+<pre class="code-box" data-code-language="bash">mcpaql-parity \
+  --suite ./my-suite.js \
+  --adapter ./my-adapter/dist/server.js \
+  --report parity.json</pre>
           <p>
             The runner reads the operation list from the adapter's bundled schema and matches each against the suite. <strong>Any operation the adapter exposes that the suite does not cover surfaces as <code>SKIPPED: "no suite arg builder"</code></strong> &mdash; so the harness cannot silently hide gaps in coverage.
           </p>

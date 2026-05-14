@@ -54,7 +54,8 @@ Surfacing exactly these kinds of issues is what end-to-end parity testing is for
 The Harness Is Now A Public Tool
 Generalized from this case study, the parity runner is now part of @mcpaql/tools as mcpaql-parity &mdash; alongside mcpaql-interrogate (discovery), mcpaql-generate-adapter (codegen), mcpaql-conformance (schema validation), and mcpaql-diff (structural diff).
 Anyone building an MCP-AQL adapter writes a small Suite describing their operations and fixtures, then runs:
-mcpaql-parity --suite ./my-suite.js \
+mcpaql-parity \
+--suite ./my-suite.js \
 --adapter ./my-adapter/dist/server.js \
 --report parity.json
 The runner reads the operation list from the adapter's bundled schema and matches each against the suite. Any operation the adapter exposes that the suite does not cover surfaces as SKIPPED: "no suite arg builder" &mdash; so the harness cannot silently hide gaps in coverage.

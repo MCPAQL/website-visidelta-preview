@@ -391,31 +391,26 @@
   },
   {
     "id": "h078",
-    "file": "public/spec/research/adversarial-input-security.html",
-    "route": "/spec/research/adversarial-input-security.html"
-  },
-  {
-    "id": "h079",
     "file": "public/spec/research/mcp-vs-mcpaql-vs-a2a.html",
     "route": "/spec/research/mcp-vs-mcpaql-vs-a2a.html"
   },
   {
-    "id": "h080",
+    "id": "h079",
     "file": "public/spec/security/confirmation-tokens.html",
     "route": "/spec/security/confirmation-tokens.html"
   },
   {
-    "id": "h081",
+    "id": "h080",
     "file": "public/spec/security/execution-safety-loop.html",
     "route": "/spec/security/execution-safety-loop.html"
   },
   {
-    "id": "h082",
+    "id": "h081",
     "file": "public/spec/security/gatekeeper.html",
     "route": "/spec/security/gatekeeper.html"
   },
   {
-    "id": "h083",
+    "id": "h082",
     "file": "public/spec/versions/v1.0.0-draft.html",
     "route": "/spec/versions/v1.0.0-draft.html"
   }

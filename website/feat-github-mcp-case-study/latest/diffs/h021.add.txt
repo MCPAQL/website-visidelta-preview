@@ -141,7 +141,7 @@ The runner has one load-bearing property:
 It reads the operation list from the adapter's bundled schema.json , not from the suite.
 Any operation the adapter exposes that your suite has no arg builder for surfaces as SKIPPED with reason "no suite arg builder" in the report.
 Result: the harness physically cannot silently hide gaps in your coverage. Either you cover an operation, or it shows up missing in the audit.
-The reference suite for GitHub MCP &mdash; defining 89 arg builders and the throwaway-repo fixture lifecycle &mdash; lives at MCPAQL/examples/.../parity-harness and is the model for writing your own.
+The reference suite for GitHub MCP &mdash; defining 89 arg builders and the throwaway-repo fixture lifecycle &mdash; is published in MCPAQL/examples#41 at MCPAQL/examples/.../parity-harness and is the model for writing your own.
 Read The Receipts
 Full Case Study
 Per-operation results, classification breakdown, reproducibility commands, honest caveats.

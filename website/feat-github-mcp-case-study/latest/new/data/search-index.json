@@ -824,22 +824,6 @@
     ]
   },
   {
-    "title": "Spec: Adversarial Input Security for MCP Adapters",
-    "url": "/spec/research/adversarial-input-security.html",
-    "excerpt": "Related Issues: MCPAQL/spec240, DollhouseMCP/mcp-server1779",
-    "keywords": [
-      "spec",
-      "research",
-      "docs",
-      "adversarial",
-      "input",
-      "security",
-      "for",
-      "mcp",
-      "adapters"
-    ]
-  },
-  {
     "title": "Spec: Protocol Landscape: MCP vs MCP-AQL vs A2A",
     "url": "/spec/research/mcp-vs-mcpaql-vs-a2a.html",
     "excerpt": "A strategic comparison of three protocols shaping how AI agents interact with the world: where they overlap, where they diverge, and where the gaps are.",

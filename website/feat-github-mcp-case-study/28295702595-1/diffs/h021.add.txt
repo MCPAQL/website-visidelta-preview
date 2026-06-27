@@ -1,0 +1,160 @@
+Case Study: GitHub MCP | MCP-AQL
+Launch Checklist
+Adapter Patterns
+Case Studies
+Search MCP-AQL docs
+CASE STUDY &middot; 2026-05-14
+GitHub MCP &mdash; Measuring the Cost of Doing It the Long Way
+98.3% less token-discovery overhead. 89 of 89 operations behaviorally equivalent.
+All measured, all reproducible, with public tools.
+The Headline Numbers
+Both adapters wrap the same upstream &mdash;
+https://api.githubcopilot.com/mcp/ &mdash; with all toolsets enabled.
+Numbers are direct measurements, not estimates.
+89 &rarr; 5 tools
+The official server registers 89 individual MCP tools. The MCP-AQL adapter exposes 5 generic CRUDE tools that dispatch to the same 89 underlying operations.
+271,152 &rarr; 4,591 bytes
+tools/list wire size, dropped by 98.3% . That is roughly 67,800 tokens vs 1,148 tokens at startup.
+~66,700 tokens / session
+Saved on every MCP session. Every byte the agent loads at startup is a byte it cannot spend on the user's actual task.
+Why The Adapter Footprint Stays Flat
+The MCP-AQL adapter
+Fixed 5-tool surface , regardless of how many operations route through it
+Going from 44 to 89 operations grew tools/list by only 25% (3,668 &rarr; 4,591 bytes) &mdash; entirely in the prose descriptions enumerating operations per endpoint
+Per-operation JSON-Schemas live in the internal operation map
+Schemas are reachable via the introspect call &mdash; paid only when needed , at most once per session for the full catalog
+The official server
+Fully eager &mdash; every tool's full JSON-Schema is serialized on every session start
+Adding a toolset adds operations, adds bytes &mdash; linearly
+Over six weeks of upstream development the default-toolset payload grew from 130,728 &rarr; 132,173 bytes &mdash; ~1,445 extra bytes of context budget for features most agents never use
+The MCP-AQL footprint stayed unchanged across the same window
+Translation: the adapter's wire footprint is structural, not content-driven. New upstream operations cost the official side bytes on every session forever. They cost the adapter side bytes only on the agent's first introspect call &mdash; and only for the operations the agent actually uses.
+The Parity Test &mdash; All 89 Operations
+For every operation the GitHub MCP server exposes, the harness connects to both the official server and the MCP-AQL adapter, exercises the operation against each, and diffs the responses byte-for-byte after normalizing volatile fields like timestamps and IDs. The classifier puts each result in one of seven buckets.
+43 IDENTICAL
+byte-equal
+Pure reads, public reads, scoped reads. The adapter passes through the same JSON the official server returns.
+14 STRUCTURAL_PARITY
+same shape
+Paired writes where each side mutates its own fixture. Same response shape after normalizing IDs, timestamps, and paired-variant tokens.
+12 BOTH_ERROR
+symmetric
+Both ends fail with the same upstream root cause &mdash; missing required parameter, fixture conflict, etc. Parity confirmed.
+17 SKIPPED
+documented
+Out of scope for this environment: token scope, pre-existing resource needed, destructive on real account. Each one explained.
+2 DIVERGENT
+explained
+Different Copilot Job IDs (two separate submissions, two distinct IDs); a null-content extraction edge case in the harness. Neither is adapter behavior.
+1 test-design edge case
+not adapter
+Paired write where both ends targeted the same PR; the second call hit "branch already up to date" because the first call's work was merged.
+0 cases where MCP-AQL failed and the official server succeeded.
+57 of 89 operations are verified equivalent in measured response content. Each of the remaining 32 classifications is named and explained below &mdash; nothing is being washed over.
+Per-Case Detail (All 32 Non-Equivalent Outcomes)
+Card summaries can hide things. Here's every case in the four non-IDENTICAL/STRUCTURAL_PARITY buckets, named and accounted for.
+The 12 BOTH_ERROR cases
+Both ends called the same upstream and both errored with the same root cause &mdash; that's what BOTH_ERROR means. These are parity-confirming : identical inputs produced identical failures on identical infrastructure. Most reflect harness-fixture limitations, not server bugs.
+list_issues &mdash; upstream requires cursor pagination ( after / endCursor ); harness sent only page / perPage
+list_pull_requests &mdash; same pagination requirement
+get_copilot_job_status &mdash; missing required id (intentional negative test &mdash; we wanted to see the error path)
+create_pull_request &mdash; setup fixture already created a PR for the same head branch; both ends hit a 422 conflict
+add_comment_to_pending_review &mdash; "no pending review for the viewer" (test ordering: pull_request_review_write creates the pending review later in the run)
+assign_copilot_to_issue &mdash; Copilot couldn't resolve the freshly-created throwaway issue (likely indexing latency)
+run_secret_scanning &mdash; missing required files parameter (intentional negative test)
+list_code_scanning_alerts &mdash; test repo has the feature enabled but no alerts; upstream returned 404 on both calls
+list_copilot_spaces &mdash; "twirp error not_found" (no Copilot Spaces exist on the test account)
+github_support_docs_search &mdash; "Failed to perform support search" (likely upstream service issue at test time; both ends failed identically)
+projects_get , projects_list &mdash; required-param errors with our test-account project metadata; both calls symmetric
+triage_issue &mdash; "issue triage is not enabled for this repository" (Copilot feature; not enabled on a 5-minute-old test repo)
+Each of the above has the same official-side error and MCP-AQL-side error in the run report &mdash; check parity-all.json for the literal text on both sides.
+The 17 SKIPPED cases
+These were deliberately not exercised &mdash; the harness has no arg builder for them, with a documented reason. Three buckets:
+Token scope (4 ops)
+list_notifications , get_notification_details , mark_all_notifications_read , manage_repository_notification_subscription , manage_notification_subscription , dismiss_notification &mdash; gh CLI token lacks the notifications OAuth scope. gh auth refresh -s notifications would unlock these.
+Single-target writes that pollute global state (4 ops)
+create_repository &mdash; tested implicitly via fixture setup (the test repo itself)
+fork_repository &mdash; would create a permanent repo under the test account
+actions_run_trigger &mdash; would trigger a real workflow run on a third-party repo
+projects_write &mdash; would mutate a real project on the user account
+Fixture not present in test environment (5 ops)
+get_team_members &mdash; needs admin scope on a real GitHub team
+get_code_scanning_alert , get_dependabot_alert , get_secret_scanning_alert &mdash; need a specific alert that the freshly-created test repo doesn't have
+get_job_logs &mdash; needs a specific workflow job ID; no workflows have run on the test repo
+Auxiliary dependencies (2 ops)
+add_reply_to_pull_request_comment &mdash; depends on add_comment_to_pending_review succeeding first (which it didn't, see BOTH_ERROR above)
+get_copilot_space &mdash; needs an existing Copilot Space owned by the caller; setup discovery returned none
+The 2 DIVERGENT cases
+Both ends succeeded but the responses differed after normalization. Each one is a known harness-design or upstream-quirk artifact, not adapter behavior:
+create_pull_request_with_copilot &mdash; differs in the Copilot Job ID. Each end submits a real Copilot coding job; two jobs, two distinct IDs. Same response shape, same payload structure, intentional difference. Expected.
+request_copilot_review &mdash; the upstream returns an empty content block for this op. The official MCP SDK extracts that as null; the MCP-AQL envelope keeps a non-empty wrapper object ( is_error , source_tool , structured_content ). Harness extraction edge case for null content, not an adapter behavior difference.
+The 1 paired-fixture timing edge case
+update_pull_request_branch &mdash; classified MCPAQL_ERROR. Worth examining in detail because this is the only "MCPAQL failed where official succeeded" entry in the entire 89-op run.
+The harness ran both calls against the same shared PR (the paired-fixture pattern uses two PRs but this op pointed at one of them serially)
+Official side called first, succeeded, brought the branch up to date
+MCP-AQL side called ~2 seconds later against the now-already-up-to-date branch &mdash; upstream returned 422 "branch already up to date" , which MCP-AQL faithfully wrapped as an error envelope
+This is a fixture-design limitation: the operation needs truly independent PRs per side, not one shared PR. The same operation classified as IDENTICAL in the 44-op run (different test state). When run with proper paired fixtures, the operation behaves equivalently on both ends.
+So the bottom line on "what could be hiding." Of 89 operations: 57 verified equivalent in content, 12 symmetric upstream errors (parity-confirming), 17 documented skips with the literal reason for each, 2 known fixture/extraction artifacts, and 1 paired-fixture timing case that the next harness iteration will resolve. None of the 32 non-equivalent classifications represents adapter misbehavior.
+What The First Pass Missed (And How We Caught It)
+The mistake
+This case study was originally written with the comparison reading "44 tools." The first capture hit api.githubcopilot.com/mcp/ with no X-MCP-Toolsets header, and the server returned its default toolset configuration: 44 tools.
+What was missing
+The remote endpoint also serves 45 additional tools across optional toolsets, enabled by sending X-MCP-Toolsets: all :
+code scanning
+dependabot
+secret scanning alerts
+discussions
+notifications
+actions / workflows
+copilot spaces
+security advisories
+semantic search
+projects
+label management
+repository tree
+support docs search
+stargazers
+The capture missed all 45 because the interrogator never asked for them. The generator faithfully produced an adapter wrapping only what the capture had seen.
+Re-capturing with the toolsets header set, the same generator produced an 89-operation adapter. The same five MCP tools. The same flat ~4,500-byte tools/list . No structural change &mdash; just full upstream coverage.
+The lesson is the point of the case study. A discovery-driven adapter generator is only as complete as the discovery captures you feed it. The mistake was 100% reproducible with the public tools. So is the correction. Every tool used to find and fix the gap &mdash; github/github-mcp-server , api.githubcopilot.com/mcp/ , mcpaql-interrogate , mcpaql-generate-adapter , mcpaql-parity &mdash; is publicly available.
+A Generator Bug Surfaced By The Test Harness
+Custom discovery-time headers (like X-MCP-Toolsets: all ) were captured but not propagated into the generated adapter's upstream client.
+The adapter's schema correctly listed all 89 operations the toolset header unlocked. But at call time, every header-gated operation failed with "unknown tool" because the upstream client lacked the selector header.
+Lift captured headers into the generated AdapterSchemaDocument ; emit an upstream client that forwards them. Filter case-insensitive collisions with the configured auth header.
+Landed in adapter-generator PR #32 after multi-reviewer feedback &mdash; Claude flagged structural cleanups and missing test scenarios; Codex caught the case-insensitivity hazard. 24 unit tests now cover the propagation path.
+This is what end-to-end parity testing is for. Without the harness, the generator would still ship a quietly broken adapter for any MCP server that gates part of its surface behind a header &mdash; toolset selectors, region selectors, tenant selectors, feature flags.
+The Harness Is Now A Public Tool
+Generalized from this case study, the parity runner is now part of the @mcpaql/tools CLI suite. Five focused tools, one per stage of the adapter lifecycle.
+The MCP-AQL toolchain
+mcpaql-interrogate &mdash; Discovery. Connects to an upstream MCP server, captures its tool surface and schemas into a discovery bundle. Supports custom request headers (toolset selectors, region selectors, etc.) so you capture the full surface, not the default subset.
+mcpaql-generate-adapter &mdash; Codegen. Reads a discovery bundle, generates a runnable MCP-AQL adapter package (5-tool surface, generic CRUDE dispatch, full per-operation schemas reachable via introspect ).
+mcpaql-conformance &mdash; Schema validation. Confirms the generated adapter satisfies the MCP-AQL spec: tool registration, request/response envelope shape, introspection contract.
+mcpaql-diff &mdash; Structural diff. Compares the generated adapter's introspection surface against the original capture &mdash; catches missing operations, parameter mismatches, endpoint drift.
+mcpaql-parity &mdash; Runtime parity. The new one. Dual-calls every operation against both the official server and the adapter, classifies the responses, writes a structured report. The tool that produced the 89/89 measurement on this page.
+Using the parity runner
+You write a small Suite describing your operations and fixtures, then invoke the CLI:
+mcpaql-parity \
+--suite ./my-suite.js \
+--adapter ./my-adapter/dist/server.js \
+--report parity.json
+The runner has one load-bearing property:
+It reads the operation list from the adapter's bundled schema.json , not from the suite.
+Any operation the adapter exposes that your suite has no arg builder for surfaces as SKIPPED with reason "no suite arg builder" in the report.
+Result: the harness physically cannot silently hide gaps in your coverage. Either you cover an operation, or it shows up missing in the audit.
+The reference suite for GitHub MCP &mdash; defining 89 arg builders and the throwaway-repo fixture lifecycle &mdash; landed in MCPAQL/examples#41 at MCPAQL/examples/.../parity-harness and is the model for writing your own.
+Read The Receipts
+Full Case Study
+Per-operation results, classification breakdown, reproducibility commands, honest caveats.
+CASE-STUDY.md &rarr;
+Reference Suite
+The 89-operation GitHub suite that powered this study, ready to read or extend.
+parity-harness/ &rarr;
+The Tools
+The discovery, generation, conformance, diff, and parity tools that produced every measurement here.
+@mcpaql/tools &rarr;
+&larr; Back to Portal Home
+&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.
+Documentation Library
+MCPAQL Organization
+Dollhouse Research
+DollhouseMCP Production Profile

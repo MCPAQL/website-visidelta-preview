@@ -165,7 +165,7 @@
             <li><strong><code>list_code_scanning_alerts</code></strong> &mdash; test repo has the feature enabled but no alerts; upstream returned 404 on both calls</li>
             <li><strong><code>list_copilot_spaces</code></strong> &mdash; "twirp error not_found" (no Copilot Spaces exist on the test account)</li>
             <li><strong><code>github_support_docs_search</code></strong> &mdash; "Failed to perform support search" (likely upstream service issue at test time; both ends failed identically)</li>
-            <li><strong><code>projects_get</code></strong>, <strong><code>projects_list</code></strong> &mdash; required-param errors with our test-account project metadata; both calls symmetric</li>
+            <li><strong><code>projects_get</code></strong> &mdash; required project metadata unavailable in the test account; both calls symmetric</li>
             <li><strong><code>triage_issue</code></strong> &mdash; "issue triage is not enabled for this repository" (Copilot feature; not enabled on a 5-minute-old test repo)</li>
           </ul>
           <p>Each of the above has the same official-side error and MCP-AQL-side error in the run report &mdash; check <code>parity-all.json</code> for the literal text on both sides.</p>

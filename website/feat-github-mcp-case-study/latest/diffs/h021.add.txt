@@ -66,7 +66,7 @@ run_secret_scanning &mdash; missing required files parameter (intentional negati
 list_code_scanning_alerts &mdash; test repo has the feature enabled but no alerts; upstream returned 404 on both calls
 list_copilot_spaces &mdash; "twirp error not_found" (no Copilot Spaces exist on the test account)
 github_support_docs_search &mdash; "Failed to perform support search" (likely upstream service issue at test time; both ends failed identically)
-projects_get , projects_list &mdash; required-param errors with our test-account project metadata; both calls symmetric
+projects_get &mdash; required project metadata unavailable in the test account; both calls symmetric
 triage_issue &mdash; "issue triage is not enabled for this repository" (Copilot feature; not enabled on a 5-minute-old test repo)
 Each of the above has the same official-side error and MCP-AQL-side error in the run report &mdash; check parity-all.json for the literal text on both sides.
 The 17 SKIPPED cases

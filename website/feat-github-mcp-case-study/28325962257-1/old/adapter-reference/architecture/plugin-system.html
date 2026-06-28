@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="This document defines the plugin system implementation for the MCP-AQL adapter runtime, including plugin resolution, composition pipeline, execution order, and the behavior of MVP built-in plugins.">
+  <title>MCP-AQL Adapter Reference | Plugin System Implementation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" media="print" onload="this.onload=null;this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <a class="logo" href="../../index.html"><span class="logo-mark"></span>MCP-AQL</a>
+        <ul class="nav-links">
+          <li><a href="../../index.html">Home</a></li>
+          <li><a href="../../docs/index.html">Docs</a></li>
+          <li><a href="../../launch-checklist.html">Launch Checklist</a></li>
+          <li><a href="../../apis/index.html">Adapter Patterns</a></li>
+        </ul>
+        <form class="site-search" data-search-form data-index-url="../../data/search-index.json" role="search">
+          <label class="sr-only" for="site-search-input">Search MCP-AQL docs</label>
+          <input id="site-search-input" data-search-input type="search" placeholder="Search MCP-AQL docs, spec pages, and adapter patterns...">
+          <span class="search-count" data-search-count></span>
+          <ul class="search-results" data-search-results hidden></ul>
+        </form>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container docs-shell">
+      <aside class="docs-side">
+        <h2>Reference Adapter Docs</h2>
+        <p class="docs-side-note">Generated from <code>MCPAQL/mcpaql-adapter</code> so the website carries the implementation architecture, guides, and ADRs too.</p>
+        <div class="docs-side-group">
+  <h3>Overview</h3>
+  <ul><li><a href="../repo/README.html">MCP-AQL Reference Adapter</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Architecture</h3>
+  <ul><li><a href="dispatch.html">Schema-Driven Dispatch</a></li><li><a href="overview.html">MCP-AQL Architecture Overview</a></li><li><a class="current" aria-current="page" href="plugin-system.html">Plugin System Implementation</a></li><li><a href="runtime.html">Universal Adapter Runtime Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Guides</h3>
+  <ul><li><a href="../guides/development.html">MCP-AQL Adapter Development Guide</a></li><li><a href="../guides/migration.html">Migration Guide: MCP Server to MCP-AQL Adapter</a></li><li><a href="../guides/testing.html">MCP-AQL Adapter Testing Guide</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>ADRs</h3>
+  <ul><li><a href="../adr/ADR-001-plugin-pipeline-order.html">ADR-001: Plugin Pipeline Order</a></li><li><a href="../adr/ADR-002-schema-driven-dispatch.html">ADR-002: Schema-Driven Dispatch over Code Generation</a></li><li><a href="../adr/ADR-003-stateless-plugins.html">ADR-003: Stateless Singleton Plugins</a></li><li><a href="../adr/README.html">Architecture Decision Records</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Examples</h3>
+  <ul><li><a href="../examples/README.html">Examples</a></li></ul>
+</div>
+      </aside>
+
+      <article class="docs-main">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+          <ol>
+            <li><a href="../../index.html">Home</a></li>
+            <li><a href="../../apis/index.html">Adapter Patterns</a></li><li><a href="../index.html">Reference Adapter Docs</a></li>
+            <li><span class="current">Plugin System Implementation</span></li>
+          </ol>
+        </nav>
+        <section class="hero docs-hero">
+          <div class="hero-inner">
+            <span class="status-pill">REPO-SYNCED ADAPTER DOC</span>
+            <h1>Plugin System Implementation</h1>
+            <p class="lede">This document defines the plugin system implementation for the MCP-AQL adapter runtime, including plugin resolution, composition pipeline, execution order, and the behavior of MVP built-in plugins.</p>
+            <div class="spec-meta"><span class="state-chip live">Support document</span><span class="state-chip pending">Draft (MVP)</span><span class="state-chip">1.0.0-draft</span><span class="state-chip">2026-01-26</span></div>
+            <p class="spec-source">Source: <a href="https://github.com/MCPAQL/mcpaql-adapter/blob/main/docs/architecture/plugin-system.md">mcpaql-adapter/docs/architecture/plugin-system.md</a></p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="https://github.com/MCPAQL/mcpaql-adapter/blob/main/docs/architecture/plugin-system.md">Open Source Markdown</a><a class="btn btn-secondary" href="../index.html">Browse Reference Adapter Docs</a><a class="btn btn-secondary" href="../../apis/index.html">Adapter Patterns Hub</a>
+            </div>
+          </div>
+        </section>
+
+        <section class="page-toc-shell" data-page-toc>
+          <div class="card page-toc-card">
+            <div class="page-toc-head">
+              <p class="page-toc-kicker">On this page</p>
+              <h2>Jump to a section</h2>
+              <p class="page-toc-intro">Use the outline to move through longer pages without losing your place.</p>
+            </div>
+            <ol class="page-toc-list" data-page-toc-list>
+              <li class="page-toc-item level-2"><a href="#abstract" data-toc-target="abstract">Abstract</a></li><li class="page-toc-item level-2"><a href="#1-plugin-resolution" data-toc-target="1-plugin-resolution">1. Plugin Resolution</a></li><li class="page-toc-item level-2"><a href="#2-mvp-plugin-implementations" data-toc-target="2-mvp-plugin-implementations">2. MVP Plugin Implementations</a></li><li class="page-toc-item level-3"><a href="#21-http-transport-plugin" data-toc-target="21-http-transport-plugin">2.1 HTTP Transport Plugin</a></li><li class="page-toc-item level-3"><a href="#22-rest-protocol-plugin" data-toc-target="22-rest-protocol-plugin">2.2 REST Protocol Plugin</a></li><li class="page-toc-item level-3"><a href="#23-json-serialization-plugin" data-toc-target="23-json-serialization-plugin">2.3 JSON Serialization Plugin</a></li><li class="page-toc-item level-3"><a href="#24-none-auth-plugin" data-toc-target="24-none-auth-plugin">2.4 None Auth Plugin</a></li><li class="page-toc-item level-3"><a href="#25-api-key-auth-plugin" data-toc-target="25-api-key-auth-plugin">2.5 API Key Auth Plugin</a></li><li class="page-toc-item level-3"><a href="#26-bearer-auth-plugin" data-toc-target="26-bearer-auth-plugin">2.6 Bearer Auth Plugin</a></li><li class="page-toc-item level-2"><a href="#3-plugin-composition" data-toc-target="3-plugin-composition">3. Plugin Composition</a></li><li class="page-toc-item level-3"><a href="#31-request-pipeline" data-toc-target="31-request-pipeline">3.1 Request Pipeline</a></li><li class="page-toc-item level-3"><a href="#32-pipeline-execution" data-toc-target="32-pipeline-execution">3.2 Pipeline Execution</a></li><li class="page-toc-item level-2"><a href="#4-future-extensions" data-toc-target="4-future-extensions">4. Future Extensions</a></li><li class="page-toc-item level-3"><a href="#41-additional-transport-plugins" data-toc-target="41-additional-transport-plugins">4.1 Additional Transport Plugins</a></li><li class="page-toc-item level-3"><a href="#42-additional-protocol-plugins" data-toc-target="42-additional-protocol-plugins">4.2 Additional Protocol Plugins</a></li><li class="page-toc-item level-3"><a href="#43-additional-auth-plugins" data-toc-target="43-additional-auth-plugins">4.3 Additional Auth Plugins</a></li><li class="page-toc-item level-3"><a href="#44-pagination-plugins" data-toc-target="44-pagination-plugins">4.4 Pagination Plugins</a></li><li class="page-toc-item level-3"><a href="#45-user-extensible-plugins" data-toc-target="45-user-extensible-plugins">4.5 User-Extensible Plugins</a></li><li class="page-toc-item level-2"><a href="#references" data-toc-target="references">References</a></li>
+            </ol>
+          </div>
+        </section>
+
+
+        <section>
+          <div class="card spec-prose">
+            <p><strong>Version:</strong> 1.0.0-draft <strong>Status:</strong> Draft (MVP) <strong>Last Updated:</strong> 2026-01-26 <strong>Moved from:</strong> <a href="https://github.com/MCPAQL/spec">MCPAQL/spec</a> (implementation portions of <code>docs/architecture/plugin-interface.md</code>)</p>
+<blockquote>
+<p><strong>Note:</strong> This document describes the <strong>implementation architecture</strong> of the plugin system. For normative plugin interface contracts (what each plugin type MUST provide), see the <a href="../../spec/plugin-contracts.html">Plugin Interface Contracts</a> in the spec repository.</p>
+</blockquote>
+<h2 id="abstract">Abstract</h2>
+<p>This document defines the plugin system implementation for the MCP-AQL adapter runtime, including plugin resolution, composition pipeline, execution order, and the behavior of MVP built-in plugins.</p>
+<hr />
+<h2 id="1-plugin-resolution">1. Plugin Resolution</h2>
+<p>Plugins are resolved by name at runtime:</p>
+<ol type="1">
+<li>Check built-in plugins (shipped with runtime)</li>
+<li>Return plugin instance</li>
+<li>MUST fail with <code>PLUGIN_NOT_FOUND</code> error if unknown</li>
+</ol>
+<div class="sourceCode" id="cb1"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Pseudocode</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">resolvePlugin</span>(category<span class="op">:</span> <span class="dt">string</span><span class="op">,</span> name<span class="op">:</span> <span class="dt">string</span>)<span class="op">:</span> <span class="bu">Plugin</span> {</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> plugin <span class="op">=</span> BUILTIN_PLUGINS[category][name]<span class="op">;</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="op">!</span>plugin) {</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">throw</span> <span class="kw">new</span> <span class="fu">PluginNotFoundError</span>(category<span class="op">,</span> name)<span class="op">;</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> plugin<span class="op">;</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<hr />
+<h2 id="2-mvp-plugin-implementations">2. MVP Plugin Implementations</h2>
+<h3 id="21-http-transport-plugin">2.1 HTTP Transport Plugin</h3>
+<p><strong>Name:</strong> <code>http</code> <strong>Description:</strong> HTTP/HTTPS transport using standard fetch or HTTP client</p>
+<p><strong>Behavior:</strong></p>
+<ol type="1">
+<li>Constructs HTTP request from <code>TransportRequest</code></li>
+<li>Sends request using HTTPS (HTTP only for localhost)</li>
+<li>MUST handle connection errors with appropriate error codes</li>
+<li>MUST return raw response without interpretation</li>
+</ol>
+<p><strong>Options:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>timeout</code></td>
+<td>number</td>
+<td>30000</td>
+<td>Request timeout (ms)</td>
+</tr>
+<tr>
+<td><code>retries</code></td>
+<td>number</td>
+<td>0</td>
+<td>Retry attempts on network failure</td>
+</tr>
+<tr>
+<td><code>retryDelay</code></td>
+<td>number</td>
+<td>1000</td>
+<td>Base retry delay (ms)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Error Handling:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Condition</th>
+<th>Error Code</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DNS resolution failure</td>
+<td><code>TRANSPORT_DNS_ERROR</code></td>
+</tr>
+<tr>
+<td>Connection refused</td>
+<td><code>TRANSPORT_CONNECTION_REFUSED</code></td>
+</tr>
+<tr>
+<td>Connection timeout</td>
+<td><code>TRANSPORT_TIMEOUT</code></td>
+</tr>
+<tr>
+<td>TLS/SSL error</td>
+<td><code>TRANSPORT_TLS_ERROR</code></td>
+</tr>
+<tr>
+<td>Network error</td>
+<td><code>TRANSPORT_NETWORK_ERROR</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="22-rest-protocol-plugin">2.2 REST Protocol Plugin</h3>
+<p><strong>Name:</strong> <code>rest</code> <strong>Description:</strong> RESTful API conventions over HTTP</p>
+<p><strong>Request Building:</strong></p>
+<ol type="1">
+<li>Parse <code>maps_to</code> format: <code>METHOD /path/with/{placeholders}</code></li>
+<li>Extract HTTP method (GET, POST, PUT, PATCH, DELETE)</li>
+<li>Substitute path placeholders with parameter values</li>
+<li>Build query string for GET requests with remaining params</li>
+<li>Build request body for non-GET requests with remaining params</li>
+<li>Set appropriate Content-Type header</li>
+</ol>
+<p><strong>Path Parameter Substitution:</strong></p>
+<pre><code>maps_to: &quot;GET /repos/{owner}/{repo}/issues/{issue_number}&quot;
+params: { owner: &quot;octocat&quot;, repo: &quot;Hello-World&quot;, issue_number: 42 }
+result: &quot;GET /repos/octocat/Hello-World/issues/42&quot;</code></pre>
+<p><strong>Query vs Body Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Path Params</th>
+<th>Other Params</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td>In URL path</td>
+<td>Query string</td>
+</tr>
+<tr>
+<td>DELETE</td>
+<td>In URL path</td>
+<td>Query string</td>
+</tr>
+<tr>
+<td>POST</td>
+<td>In URL path</td>
+<td>Request body</td>
+</tr>
+<tr>
+<td>PUT</td>
+<td>In URL path</td>
+<td>Request body</td>
+</tr>
+<tr>
+<td>PATCH</td>
+<td>In URL path</td>
+<td>Request body</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Response Parsing:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Status Range</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2xx</td>
+<td><code>ok: true</code>, data from body</td>
+</tr>
+<tr>
+<td>4xx</td>
+<td><code>ok: false</code>, error from body or status</td>
+</tr>
+<tr>
+<td>5xx</td>
+<td><code>ok: false</code>, error from body or status</td>
+</tr>
+</tbody>
+</table>
+<h3 id="23-json-serialization-plugin">2.3 JSON Serialization Plugin</h3>
+<p><strong>Name:</strong> <code>json</code> <strong>Description:</strong> JSON encoding/decoding <strong>Content-Type:</strong> <code>application/json</code></p>
+<p><strong>Serialize:</strong></p>
+<ul>
+<li>MUST call <code>JSON.stringify(data)</code></li>
+<li>MUST handle circular references with error</li>
+</ul>
+<p><strong>Deserialize:</strong></p>
+<ul>
+<li>MUST call <code>JSON.parse(raw)</code></li>
+<li>MUST return <code>null</code> for empty responses</li>
+<li>MUST throw on malformed JSON</li>
+</ul>
+<p><strong>Error Handling:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Condition</th>
+<th>Error Code</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Circular reference</td>
+<td><code>SERIALIZATION_CIRCULAR_REF</code></td>
+</tr>
+<tr>
+<td>Invalid JSON in response</td>
+<td><code>SERIALIZATION_PARSE_ERROR</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="24-none-auth-plugin">2.4 None Auth Plugin</h3>
+<p><strong>Name:</strong> <code>none</code> <strong>Description:</strong> No authentication</p>
+<p><strong>Behavior:</strong> Returns request unchanged.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">authenticate</span>(request<span class="op">,</span> config<span class="op">,</span> context) {</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> request<span class="op">;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="25-api-key-auth-plugin">2.5 API Key Auth Plugin</h3>
+<p><strong>Name:</strong> <code>api_key</code> <strong>Description:</strong> API key in HTTP header</p>
+<p><strong>Configuration:</strong></p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">auth</span><span class="kw">:</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">type</span><span class="kw">:</span><span class="at"> api_key</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">header_name</span><span class="kw">:</span><span class="at"> X-API-Key</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">key_env</span><span class="kw">:</span><span class="at"> MY_API_KEY</span></span></code></pre></div>
+<p><strong>Behavior:</strong></p>
+<ol type="1">
+<li>Read key from <code>context.getEnv(config.key_env)</code></li>
+<li>Add header <code>config.header_name: {key}</code></li>
+<li>Fail if key not found in environment</li>
+</ol>
+<p><strong>Error Handling:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Condition</th>
+<th>Error Code</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Missing key_env in config</td>
+<td><code>AUTH_CONFIG_INVALID</code></td>
+</tr>
+<tr>
+<td>Missing header_name in config</td>
+<td><code>AUTH_CONFIG_INVALID</code></td>
+</tr>
+<tr>
+<td>Environment variable not set</td>
+<td><code>AUTH_CREDENTIAL_MISSING</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="26-bearer-auth-plugin">2.6 Bearer Auth Plugin</h3>
+<p><strong>Name:</strong> <code>bearer</code> <strong>Description:</strong> Bearer token in Authorization header</p>
+<p><strong>Configuration:</strong></p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">auth</span><span class="kw">:</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">type</span><span class="kw">:</span><span class="at"> bearer</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">token_env</span><span class="kw">:</span><span class="at"> GITHUB_TOKEN</span></span></code></pre></div>
+<p><strong>Behavior:</strong></p>
+<ol type="1">
+<li>Read token from <code>context.getEnv(config.token_env)</code></li>
+<li>Add header <code>Authorization: Bearer {token}</code></li>
+<li>Fail if token not found in environment</li>
+</ol>
+<p><strong>Error Handling:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Condition</th>
+<th>Error Code</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Missing token_env in config</td>
+<td><code>AUTH_CONFIG_INVALID</code></td>
+</tr>
+<tr>
+<td>Environment variable not set</td>
+<td><code>AUTH_CREDENTIAL_MISSING</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="3-plugin-composition">3. Plugin Composition</h2>
+<h3 id="31-request-pipeline">3.1 Request Pipeline</h3>
+<p>Plugins compose into a request pipeline:</p>
+<pre><code>┌──────────────────────────────────────────────────────────────┐
+│                    OPERATION REQUEST                          │
+│  { operation: &quot;get_repo&quot;, params: { owner, repo } }          │
+└──────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌──────────────────────────────────────────────────────────────┐
+│                    PROTOCOL PLUGIN                            │
+│  rest.buildRequest()                                          │
+│  Maps operation to HTTP request structure                     │
+│  Output: { url, method, headers, body? }                     │
+└──────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌──────────────────────────────────────────────────────────────┐
+│                 SERIALIZATION PLUGIN                          │
+│  json.serialize()                                             │
+│  Serializes body if present, sets Content-Type               │
+│  Output: { url, method, headers, body: string }              │
+└──────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌──────────────────────────────────────────────────────────────┐
+│                     AUTH PLUGIN                               │
+│  bearer.authenticate()                                        │
+│  Attaches Authorization header                                │
+│  Output: { url, method, headers + auth, body }               │
+└──────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌──────────────────────────────────────────────────────────────┐
+│                   TRANSPORT PLUGIN                            │
+│  http.send()                                                  │
+│  Sends HTTP request, receives response                        │
+│  Output: { status, statusText, headers, body }               │
+└──────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌──────────────────────────────────────────────────────────────┐
+│                 SERIALIZATION PLUGIN                          │
+│  json.deserialize()                                           │
+│  Parses response body                                         │
+│  Output: parsed data object                                   │
+└──────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌──────────────────────────────────────────────────────────────┐
+│                    PROTOCOL PLUGIN                            │
+│  rest.parseResponse()                                         │
+│  Interprets status, extracts data or error                   │
+│  Output: { ok, status, data, error? }                        │
+└──────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌──────────────────────────────────────────────────────────────┐
+│                   MCP-AQL RESPONSE                            │
+│  { success: true, data: {...} }                              │
+│  OR { success: false, error: &quot;...&quot; }                         │
+└──────────────────────────────────────────────────────────────┘</code></pre>
+<h3 id="32-pipeline-execution">3.2 Pipeline Execution</h3>
+<div class="sourceCode" id="cb7"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Pseudocode</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="kw">async</span> <span class="kw">function</span> <span class="fu">executePipeline</span>(</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  operation<span class="op">:</span> OperationDefinition<span class="op">,</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  params<span class="op">:</span> <span class="bu">Record</span><span class="op">&lt;</span><span class="dt">string</span><span class="op">,</span> <span class="dt">unknown</span><span class="op">&gt;,</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  adapter<span class="op">:</span> AdapterSchema</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>)<span class="op">:</span> <span class="bu">Promise</span><span class="op">&lt;</span>OperationResult<span class="op">&gt;</span> {</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> protocol <span class="op">=</span> <span class="fu">resolvePlugin</span>(<span class="st">&#39;protocol&#39;</span><span class="op">,</span> adapter<span class="op">.</span><span class="at">target</span><span class="op">.</span><span class="at">protocol</span>)<span class="op">;</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> serialization <span class="op">=</span> <span class="fu">resolvePlugin</span>(<span class="st">&#39;serialization&#39;</span><span class="op">,</span> adapter<span class="op">.</span><span class="at">target</span><span class="op">.</span><span class="at">serialization</span>)<span class="op">;</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> auth <span class="op">=</span> <span class="fu">resolvePlugin</span>(<span class="st">&#39;auth&#39;</span><span class="op">,</span> adapter<span class="op">.</span><span class="at">auth</span><span class="op">.</span><span class="at">type</span>)<span class="op">;</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> transport <span class="op">=</span> <span class="fu">resolvePlugin</span>(<span class="st">&#39;transport&#39;</span><span class="op">,</span> adapter<span class="op">.</span><span class="at">target</span><span class="op">.</span><span class="at">transport</span>)<span class="op">;</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Build request</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> request <span class="op">=</span> protocol<span class="op">.</span><span class="fu">buildRequest</span>(operation<span class="op">,</span> params<span class="op">,</span> adapter<span class="op">.</span><span class="at">target</span>)<span class="op">;</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Serialize body if present</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (request<span class="op">.</span><span class="at">body</span> <span class="op">!==</span> <span class="kw">undefined</span>) {</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>    request<span class="op">.</span><span class="at">body</span> <span class="op">=</span> serialization<span class="op">.</span><span class="fu">serialize</span>(request<span class="op">.</span><span class="at">body</span>)<span class="op">;</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>    request<span class="op">.</span><span class="at">headers</span>[<span class="st">&#39;Content-Type&#39;</span>] <span class="op">=</span> serialization<span class="op">.</span><span class="at">contentType</span><span class="op">;</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Attach authentication</span></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>  request <span class="op">=</span> auth<span class="op">.</span><span class="fu">authenticate</span>(request<span class="op">,</span> adapter<span class="op">.</span><span class="at">auth</span><span class="op">,</span> authContext)<span class="op">;</span></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Send request</span></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> response <span class="op">=</span> <span class="cf">await</span> transport<span class="op">.</span><span class="fu">send</span>(request<span class="op">,</span> {})<span class="op">;</span></span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Deserialize response</span></span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> body <span class="op">=</span> serialization<span class="op">.</span><span class="fu">deserialize</span>(response<span class="op">.</span><span class="at">body</span>)<span class="op">;</span></span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Parse into standard format</span></span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> parsed <span class="op">=</span> protocol<span class="op">.</span><span class="fu">parseResponse</span>({ <span class="op">...</span>response<span class="op">,</span> body }<span class="op">,</span> operation)<span class="op">;</span></span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Convert to MCP-AQL result</span></span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (parsed<span class="op">.</span><span class="at">ok</span>) {</span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> { success<span class="op">:</span> <span class="kw">true</span><span class="op">,</span> data<span class="op">:</span> parsed<span class="op">.</span><span class="at">data</span> }<span class="op">;</span></span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> { success<span class="op">:</span> <span class="kw">false</span><span class="op">,</span> error<span class="op">:</span> parsed<span class="op">.</span><span class="at">error</span><span class="op">.</span><span class="at">message</span> }<span class="op">;</span></span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<hr />
+<h2 id="4-future-extensions">4. Future Extensions</h2>
+<h3 id="41-additional-transport-plugins">4.1 Additional Transport Plugins</h3>
+<p><strong>WebSocket (<code>websocket</code>):</strong></p>
+<ul>
+<li>Persistent bidirectional connections</li>
+<li>Message framing and delivery</li>
+<li>Reconnection handling</li>
+</ul>
+<p><strong>Serial (<code>serial</code>):</strong></p>
+<ul>
+<li>Serial port communication</li>
+<li>Baud rate and flow control</li>
+<li>Platform-specific drivers</li>
+</ul>
+<p><strong>Native (<code>native-*</code>):</strong></p>
+<ul>
+<li>Platform-specific native APIs</li>
+<li>macOS, Windows, Linux variants</li>
+<li>Direct system calls without HTTP</li>
+</ul>
+<h3 id="42-additional-protocol-plugins">4.2 Additional Protocol Plugins</h3>
+<p><strong>GraphQL (<code>graphql</code>):</strong></p>
+<ul>
+<li>Query/mutation construction</li>
+<li>Variable substitution</li>
+<li>Error extraction from extensions</li>
+</ul>
+<p><strong>gRPC (<code>grpc</code>):</strong></p>
+<ul>
+<li>Protocol buffer serialization</li>
+<li>HTTP/2 framing</li>
+<li>Streaming support</li>
+</ul>
+<p><strong>JSON-RPC (<code>jsonrpc</code>):</strong></p>
+<ul>
+<li>Request ID management</li>
+<li>Batch requests</li>
+<li>Error code mapping</li>
+</ul>
+<h3 id="43-additional-auth-plugins">4.3 Additional Auth Plugins</h3>
+<p><strong>OAuth 2.0 (<code>oauth</code>):</strong></p>
+<ul>
+<li>Multiple flow types (authorization code, client credentials)</li>
+<li>Token refresh handling</li>
+<li>Scope management</li>
+</ul>
+<p><strong>Mutual TLS (<code>mtls</code>):</strong></p>
+<ul>
+<li>Client certificate management</li>
+<li>Certificate chain validation</li>
+<li>Key storage integration</li>
+</ul>
+<p><strong>AWS Signature V4 (<code>aws-sig4</code>):</strong></p>
+<ul>
+<li>Request signing</li>
+<li>Region and service scoping</li>
+<li>Credential resolution</li>
+</ul>
+<h3 id="44-pagination-plugins">4.4 Pagination Plugins</h3>
+<p>See #37 for cursor-based pagination specification.</p>
+<table>
+<thead>
+<tr>
+<th>Plugin</th>
+<th>Style</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cursor</code></td>
+<td>Opaque cursor</td>
+<td>Next cursor in response</td>
+</tr>
+<tr>
+<td><code>offset</code></td>
+<td>Limit/offset</td>
+<td>Numeric offset pagination</td>
+</tr>
+<tr>
+<td><code>page</code></td>
+<td>Page number</td>
+<td>Page-based pagination</td>
+</tr>
+<tr>
+<td><code>link_header</code></td>
+<td>RFC 5988</td>
+<td>Link header parsing</td>
+</tr>
+</tbody>
+</table>
+<h3 id="45-user-extensible-plugins">4.5 User-Extensible Plugins</h3>
+<p>Future versions may support:</p>
+<ul>
+<li>Plugin directory for user-installed plugins</li>
+<li>Plugin manifest format</li>
+<li>Security sandboxing</li>
+<li>Plugin versioning and updates</li>
+</ul>
+<hr />
+<h2 id="references">References</h2>
+<ul>
+<li><a href="../../spec/plugin-contracts.html">Plugin Interface Contracts</a> (normative interfaces)</li>
+<li><a href="../../spec/adapter/element-type.html">Adapter Element Type Specification</a></li>
+<li><a href="runtime.html">Universal Adapter Runtime</a></li>
+<li><a href="../../spec/versions/v1.0.0-draft.html">MCP-AQL Specification</a></li>
+<li>GitHub Issue: <a href="https://github.com/MCPAQL/spec/issues/62">#62</a></li>
+</ul>
+
+          </div>
+        </section>
+        <nav class="page-nav" aria-label="Page navigation">
+  <a class="page-nav-link prev" href="overview.html">
+    <span class="page-nav-eyebrow">Previous page</span>
+    <strong class="page-nav-label">MCP-AQL Architecture Overview</strong>
+  </a>
+  <a class="page-nav-link next" href="runtime.html">
+    <span class="page-nav-eyebrow">Next page</span>
+    <strong class="page-nav-label">Universal Adapter Runtime Specification</strong>
+  </a>
+</nav>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.</p>
+      <div class="footer-links">
+        <a href="../../apis/index.html">Adapter Patterns</a><a href="../index.html">Reference Adapter Docs</a><a href="https://github.com/MCPAQL/mcpaql-adapter">Reference Adapter Repo</a><a href="https://dollhouseresearch.com">Dollhouse Research</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../js/search.js" defer></script>
+</body>
+</html>

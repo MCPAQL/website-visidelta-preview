@@ -577,6 +577,19 @@
     ]
   },
   {
+    "title": "Spec: MCP-AQL Aggregations",
+    "url": "/spec/features/aggregations.html",
+    "excerpt": "Document Status: This document is informative. For normative requirements, see MCP-AQL Specification v1.0.0.",
+    "keywords": [
+      "spec",
+      "features",
+      "docs",
+      "aggregations",
+      "mcp",
+      "aql"
+    ]
+  },
+  {
     "title": "Spec: MCP-AQL Collection Querying",
     "url": "/spec/features/collection-querying.html",
     "excerpt": "Document Status: This document is informative. For normative requirements, see MCP-AQL Specification v1.0.0.",
@@ -586,6 +599,20 @@
       "docs",
       "collection",
       "querying",
+      "mcp",
+      "aql"
+    ]
+  },
+  {
+    "title": "Spec: MCP-AQL Computed Fields",
+    "url": "/spec/features/computed-fields.html",
+    "excerpt": "Document Status: This document is informative. For normative requirements, see MCP-AQL Specification v1.0.0.",
+    "keywords": [
+      "spec",
+      "features",
+      "docs",
+      "computed",
+      "fields",
       "mcp",
       "aql"
     ]
@@ -618,6 +645,20 @@
     ]
   },
   {
+    "title": "Spec: MCP-AQL Relationship Queries",
+    "url": "/spec/features/relationship-queries.html",
+    "excerpt": "Document Status: This document is informative. For normative requirements, see MCP-AQL Specification v1.0.0.",
+    "keywords": [
+      "spec",
+      "features",
+      "docs",
+      "relationship",
+      "queries",
+      "mcp",
+      "aql"
+    ]
+  },
+  {
     "title": "Spec: Warnings Array Specification",
     "url": "/spec/features/warnings.html",
     "excerpt": "This document specifies the warnings array extension to MCP-AQL's discriminated response format. Warnings provide a mechanism to communicate non-fatal conditions to clients within successful responses, enabling proactive",
@@ -628,6 +669,20 @@
       "warnings",
       "array",
       "specification"
+    ]
+  },
+  {
+    "title": "Spec: Cross-Domain Implementation Guide",
+    "url": "/spec/guides/cross-domain-implementation.html",
+    "excerpt": "Document Status: This document is informative. For normative protocol requirements, see MCP-AQL Specification v1.0.0.",
+    "keywords": [
+      "spec",
+      "guides",
+      "docs",
+      "cross",
+      "domain",
+      "implementation",
+      "guide"
     ]
   },
   {

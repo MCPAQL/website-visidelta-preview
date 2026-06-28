@@ -70,8 +70,8 @@ projects_get , projects_list &mdash; required-param errors with our test-account
 triage_issue &mdash; "issue triage is not enabled for this repository" (Copilot feature; not enabled on a 5-minute-old test repo)
 Each of the above has the same official-side error and MCP-AQL-side error in the run report &mdash; check parity-all.json for the literal text on both sides.
 The 17 SKIPPED cases
-These were deliberately not exercised &mdash; the harness has no arg builder for them, with a documented reason. Three buckets:
-Token scope (4 ops)
+These were deliberately not exercised in this environment because their prerequisites were not available or safe to create. The suite records an explicit skip reason for each operation, and the four buckets below reconcile to all 17 skips.
+Token scope (6 ops)
 list_notifications , get_notification_details , mark_all_notifications_read , manage_repository_notification_subscription , manage_notification_subscription , dismiss_notification &mdash; gh CLI token lacks the notifications OAuth scope. gh auth refresh -s notifications would unlock these.
 Single-target writes that pollute global state (4 ops)
 create_repository &mdash; tested implicitly via fixture setup (the test repo itself)
@@ -142,7 +142,7 @@ The runner has one load-bearing property:
 It reads the operation list from the adapter's bundled schema.json , not from the suite.
 Any operation the adapter exposes that your suite has no arg builder for surfaces as SKIPPED with reason "no suite arg builder" in the report.
 Result: the harness physically cannot silently hide gaps in your coverage. Either you cover an operation, or it shows up missing in the audit.
-The reference suite for GitHub MCP &mdash; defining 89 arg builders and the throwaway-repo fixture lifecycle &mdash; landed in MCPAQL/examples#41 at MCPAQL/examples/.../parity-harness and is the model for writing your own.
+The reference suite for GitHub MCP &mdash; defining the 89-operation audit surface, exercised fixtures, and documented skip rationale &mdash; landed in MCPAQL/examples#41 at MCPAQL/examples/.../parity-harness and is the model for writing your own.
 Read The Receipts
 Full Case Study
 Per-operation results, classification breakdown, reproducibility commands, honest caveats.

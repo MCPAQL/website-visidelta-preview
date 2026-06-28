@@ -68,7 +68,7 @@ list_copilot_spaces &mdash; "twirp error not_found" (no Copilot Spaces exist on 
 github_support_docs_search &mdash; "Failed to perform support search" (likely upstream service issue at test time; both ends failed identically)
 projects_get &mdash; required project metadata unavailable in the test account; both calls symmetric
 triage_issue &mdash; "issue triage is not enabled for this repository" (Copilot feature; not enabled on a 5-minute-old test repo)
-Each of the above has the same official-side error and MCP-AQL-side error in the run report &mdash; check parity-all.json for the literal text on both sides.
+Each of the above is listed here with the shared root cause observed on both sides. The checked-in public harness publishes the suite and fixture logic, but not the account-specific parity-all.json run artifact.
 The 17 SKIPPED cases
 These were deliberately not exercised in this environment because their prerequisites were not available or safe to create. The suite records an explicit skip reason for each operation, and the four buckets below reconcile to all 17 skips.
 Token scope (6 ops)

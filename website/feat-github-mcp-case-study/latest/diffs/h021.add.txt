@@ -5,8 +5,9 @@ Case Studies
 Search MCP-AQL docs
 CASE STUDY &middot; 2026-05-14
 GitHub MCP &mdash; Measuring the Cost of Doing It the Long Way
-98.3% less token-discovery overhead. 89 of 89 operations behaviorally equivalent.
-All measured, all reproducible, with public tools.
+98.3% less token-discovery overhead. Full 89-operation surface audited,
+with 57 verified equivalent and every other outcome classified. All measured,
+all reproducible, with public tools.
 The Headline Numbers
 Both adapters wrap the same upstream &mdash;
 https://api.githubcopilot.com/mcp/ &mdash; with all toolsets enabled.
@@ -49,7 +50,7 @@ Different Copilot Job IDs (two separate submissions, two distinct IDs); a null-c
 1 test-design edge case
 not adapter
 Paired write where both ends targeted the same PR; the second call hit "branch already up to date" because the first call's work was merged.
-0 cases where MCP-AQL failed and the official server succeeded.
+No unexplained adapter-specific failures.
 57 of 89 operations are verified equivalent in measured response content. Each of the remaining 32 classifications is named and explained below &mdash; nothing is being washed over.
 Per-Case Detail (All 32 Non-Equivalent Outcomes)
 Card summaries can hide things. Here's every case in the four non-IDENTICAL/STRUCTURAL_PARITY buckets, named and accounted for.
@@ -130,7 +131,7 @@ mcpaql-interrogate &mdash; Discovery. Connects to an upstream MCP server, captur
 mcpaql-generate-adapter &mdash; Codegen. Reads a discovery bundle, generates a runnable MCP-AQL adapter package (5-tool surface, generic CRUDE dispatch, full per-operation schemas reachable via introspect ).
 mcpaql-conformance &mdash; Schema validation. Confirms the generated adapter satisfies the MCP-AQL spec: tool registration, request/response envelope shape, introspection contract.
 mcpaql-diff &mdash; Structural diff. Compares the generated adapter's introspection surface against the original capture &mdash; catches missing operations, parameter mismatches, endpoint drift.
-mcpaql-parity &mdash; Runtime parity. The new one. Dual-calls every operation against both the official server and the adapter, classifies the responses, writes a structured report. The tool that produced the 89/89 measurement on this page.
+mcpaql-parity &mdash; Runtime parity. The new one. Dual-calls every operation against both the official server and the adapter, classifies the responses, writes a structured report. The tool that produced the 89-operation audit on this page.
 Using the parity runner
 You write a small Suite describing your operations and fixtures, then invoke the CLI:
 mcpaql-parity \

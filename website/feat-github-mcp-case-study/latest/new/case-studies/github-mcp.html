@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Measured comparison of the official GitHub MCP server against an MCP-AQL adapter: 98.3% reduction in tool-discovery overhead and 89/89 operations behaviorally equivalent under dual-call testing.">
+  <meta name="description" content="Measured comparison of the official GitHub MCP server against an MCP-AQL adapter: 98.3% reduction in tool-discovery overhead and a full 89-operation parity audit.">
   <title>Case Study: GitHub MCP | MCP-AQL</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -41,8 +41,9 @@
           <span class="status-pill">CASE STUDY &middot; 2026-05-14</span>
           <h1>GitHub MCP &mdash; Measuring the Cost of Doing It the Long Way</h1>
           <p class="lede">
-            98.3% less token-discovery overhead. 89 of 89 operations behaviorally equivalent.
-            All measured, all reproducible, with public tools.
+            98.3% less token-discovery overhead. Full 89-operation surface audited,
+            with 57 verified equivalent and every other outcome classified. All measured,
+            all reproducible, with public tools.
           </p>
         </div>
       </section>
@@ -138,7 +139,7 @@
         </div>
         <div class="card">
           <p class="callout">
-            <strong>0 cases where MCP-AQL failed and the official server succeeded.</strong>
+            <strong>No unexplained adapter-specific failures.</strong>
             57 of 89 operations are verified equivalent in measured response content. Each of the remaining 32 classifications is named and explained below &mdash; nothing is being washed over.
           </p>
         </div>
@@ -310,7 +311,7 @@
             <li><strong><code>mcpaql-generate-adapter</code></strong> &mdash; <em>Codegen.</em> Reads a discovery bundle, generates a runnable MCP-AQL adapter package (5-tool surface, generic CRUDE dispatch, full per-operation schemas reachable via <code>introspect</code>).</li>
             <li><strong><code>mcpaql-conformance</code></strong> &mdash; <em>Schema validation.</em> Confirms the generated adapter satisfies the MCP-AQL spec: tool registration, request/response envelope shape, introspection contract.</li>
             <li><strong><code>mcpaql-diff</code></strong> &mdash; <em>Structural diff.</em> Compares the generated adapter's introspection surface against the original capture &mdash; catches missing operations, parameter mismatches, endpoint drift.</li>
-            <li><strong><code>mcpaql-parity</code></strong> &mdash; <em>Runtime parity.</em> The new one. Dual-calls every operation against both the official server and the adapter, classifies the responses, writes a structured report. The tool that produced the 89/89 measurement on this page.</li>
+            <li><strong><code>mcpaql-parity</code></strong> &mdash; <em>Runtime parity.</em> The new one. Dual-calls every operation against both the official server and the adapter, classifies the responses, writes a structured report. The tool that produced the 89-operation audit on this page.</li>
           </ul>
         </div>
 

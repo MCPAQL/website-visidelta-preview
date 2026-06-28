@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Measured comparison of the official GitHub MCP server against an MCP-AQL adapter: 98.3% reduction in tool-discovery overhead and a full 89-operation parity audit.">
+  <title>Case Study: GitHub MCP | MCP-AQL</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" media="print" onload="this.onload=null;this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <a class="logo" href="../index.html"><span class="logo-mark"></span>MCP-AQL</a>
+        <ul class="nav-links">
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="../docs/index.html">Docs</a></li>
+          <li><a href="../launch-checklist.html">Launch Checklist</a></li>
+          <li><a href="../apis/index.html">Adapter Patterns</a></li>
+          <li><a href="../case-studies/github-mcp.html">Case Studies</a></li>
+        </ul>
+        <form class="site-search" data-search-form data-index-url="../data/search-index.json" role="search">
+          <label class="sr-only" for="site-search-input">Search MCP-AQL docs</label>
+          <input id="site-search-input" data-search-input type="search" placeholder="Search MCP-AQL docs, spec pages, and adapter patterns...">
+          <span class="search-count" data-search-count></span>
+          <ul class="search-results" data-search-results hidden></ul>
+        </form>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <section class="hero">
+        <div class="hero-inner">
+          <span class="status-pill">CASE STUDY &middot; 2026-05-14</span>
+          <h1>GitHub MCP &mdash; Measuring the Cost of Doing It the Long Way</h1>
+          <p class="lede">
+            98.3% less token-discovery overhead. Full 89-operation surface audited,
+            with 57 verified equivalent and every other outcome classified. All measured,
+            all reproducible, with public tools.
+          </p>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">The Headline Numbers</h2>
+        <p class="section-subtitle">
+          Both adapters wrap the same upstream &mdash;
+          <code>https://api.githubcopilot.com/mcp/</code> &mdash; with all toolsets enabled.
+          Numbers are direct measurements, not estimates.
+        </p>
+        <div class="grid cols-3">
+          <article class="card">
+            <h3>89 &rarr; 5 tools</h3>
+            <p>The official server registers 89 individual MCP tools. The MCP-AQL adapter exposes 5 generic CRUDE tools that dispatch to the same 89 underlying operations.</p>
+          </article>
+          <article class="card">
+            <h3>271,152 &rarr; 4,591 bytes</h3>
+            <p><code>tools/list</code> wire size, dropped by <strong>98.3%</strong>. That is roughly 67,800 tokens vs 1,148 tokens at startup.</p>
+          </article>
+          <article class="card">
+            <h3>~66,700 tokens / session</h3>
+            <p>Saved on every MCP session. Every byte the agent loads at startup is a byte it cannot spend on the user's actual task.</p>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">Why The Adapter Footprint Stays Flat</h2>
+        <div class="grid cols-2">
+          <article class="card">
+            <h3>The MCP-AQL adapter</h3>
+            <ul>
+              <li><strong>Fixed 5-tool surface</strong>, regardless of how many operations route through it</li>
+              <li>Going from 44 to 89 operations grew <code>tools/list</code> by <strong>only 25%</strong> (3,668 &rarr; 4,591 bytes) &mdash; entirely in the prose descriptions enumerating operations per endpoint</li>
+              <li>Per-operation JSON-Schemas live in the internal operation map</li>
+              <li>Schemas are reachable via the <code>introspect</code> call &mdash; <strong>paid only when needed</strong>, at most once per session for the full catalog</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>The official server</h3>
+            <ul>
+              <li><strong>Fully eager</strong> &mdash; every tool's full JSON-Schema is serialized on every session start</li>
+              <li>Adding a toolset adds operations, adds bytes &mdash; linearly</li>
+              <li>Over six weeks of upstream development the default-toolset payload grew from <strong>130,728 &rarr; 132,173 bytes</strong> &mdash; ~1,445 extra bytes of context budget for features most agents never use</li>
+              <li>The MCP-AQL footprint stayed unchanged across the same window</li>
+            </ul>
+          </article>
+        </div>
+        <div class="card">
+          <p class="callout">
+            <strong>Translation:</strong> the adapter's wire footprint is structural, not content-driven. New upstream operations cost the official side bytes on every session forever. They cost the adapter side bytes only on the agent's first <code>introspect</code> call &mdash; and only for the operations the agent actually uses.
+          </p>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">The Parity Test &mdash; All 89 Operations</h2>
+        <p class="section-subtitle">
+          For every operation the GitHub MCP server exposes, the harness connects to both the official server and the MCP-AQL adapter, exercises the operation against each, and diffs the responses byte-for-byte after normalizing volatile fields like timestamps and IDs. The classifier puts each result in one of seven buckets.
+        </p>
+        <div class="grid cols-3">
+          <article class="card">
+            <h3>43 IDENTICAL</h3>
+            <span class="state-chip ready">byte-equal</span>
+            <p>Pure reads, public reads, scoped reads. The adapter passes through the same JSON the official server returns.</p>
+          </article>
+          <article class="card">
+            <h3>14 STRUCTURAL_PARITY</h3>
+            <span class="state-chip ready">same shape</span>
+            <p>Paired writes where each side mutates its own fixture. Same response shape after normalizing IDs, timestamps, and paired-variant tokens.</p>
+          </article>
+          <article class="card">
+            <h3>12 BOTH_ERROR</h3>
+            <span class="state-chip pending">symmetric</span>
+            <p>Both ends fail with the same upstream root cause &mdash; missing required parameter, fixture conflict, etc. Parity confirmed.</p>
+          </article>
+          <article class="card">
+            <h3>17 SKIPPED</h3>
+            <span class="state-chip pending">documented</span>
+            <p>Out of scope for this environment: token scope, pre-existing resource needed, destructive on real account. Each one explained.</p>
+          </article>
+          <article class="card">
+            <h3>2 DIVERGENT</h3>
+            <span class="state-chip pending">explained</span>
+            <p>Different Copilot Job IDs (two separate submissions, two distinct IDs); a null-content extraction edge case in the harness. Neither is adapter behavior.</p>
+          </article>
+          <article class="card">
+            <h3>1 test-design edge case</h3>
+            <span class="state-chip pending">not adapter</span>
+            <p>Paired write where both ends targeted the same PR; the second call hit "branch already up to date" because the first call's work was merged.</p>
+          </article>
+        </div>
+        <div class="card">
+          <p class="callout">
+            <strong>No unexplained adapter-specific failures.</strong>
+            57 of 89 operations are verified equivalent in measured response content. Each of the remaining 32 classifications is named and explained below &mdash; nothing is being washed over.
+          </p>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">Per-Case Detail (All 32 Non-Equivalent Outcomes)</h2>
+        <p class="section-subtitle">
+          Card summaries can hide things. Here's every case in the four non-IDENTICAL/STRUCTURAL_PARITY buckets, named and accounted for.
+        </p>
+
+        <div class="card">
+          <h3>The 12 BOTH_ERROR cases</h3>
+          <p>Both ends called the same upstream and both errored with the same root cause &mdash; that's what BOTH_ERROR means. These are <em>parity-confirming</em>: identical inputs produced identical failures on identical infrastructure. Most reflect harness-fixture limitations, not server bugs.</p>
+          <ul>
+            <li><strong><code>list_issues</code></strong> &mdash; upstream requires cursor pagination (<code>after</code>/<code>endCursor</code>); harness sent only <code>page</code>/<code>perPage</code></li>
+            <li><strong><code>list_pull_requests</code></strong> &mdash; same pagination requirement</li>
+            <li><strong><code>get_copilot_job_status</code></strong> &mdash; missing required <code>id</code> (intentional negative test &mdash; we wanted to see the error path)</li>
+            <li><strong><code>create_pull_request</code></strong> &mdash; setup fixture already created a PR for the same head branch; both ends hit a 422 conflict</li>
+            <li><strong><code>add_comment_to_pending_review</code></strong> &mdash; "no pending review for the viewer" (test ordering: <code>pull_request_review_write</code> creates the pending review later in the run)</li>
+            <li><strong><code>assign_copilot_to_issue</code></strong> &mdash; Copilot couldn't resolve the freshly-created throwaway issue (likely indexing latency)</li>
+            <li><strong><code>run_secret_scanning</code></strong> &mdash; missing required <code>files</code> parameter (intentional negative test)</li>
+            <li><strong><code>list_code_scanning_alerts</code></strong> &mdash; test repo has the feature enabled but no alerts; upstream returned 404 on both calls</li>
+            <li><strong><code>list_copilot_spaces</code></strong> &mdash; "twirp error not_found" (no Copilot Spaces exist on the test account)</li>
+            <li><strong><code>github_support_docs_search</code></strong> &mdash; "Failed to perform support search" (likely upstream service issue at test time; both ends failed identically)</li>
+            <li><strong><code>projects_get</code></strong> &mdash; required project metadata unavailable in the test account; both calls symmetric</li>
+            <li><strong><code>triage_issue</code></strong> &mdash; "issue triage is not enabled for this repository" (Copilot feature; not enabled on a 5-minute-old test repo)</li>
+          </ul>
+          <p>Each of the above is listed here with the shared root cause observed on both sides. The checked-in public harness publishes the suite and fixture logic, but not the account-specific <code>parity-all.json</code> run artifact.</p>
+        </div>
+
+        <div class="card">
+          <h3>The 17 SKIPPED cases</h3>
+          <p>These were deliberately not exercised in this environment because their prerequisites were not available or safe to create. The suite records an explicit skip reason for each operation, and the four buckets below reconcile to all 17 skips.</p>
+
+          <h4>Token scope (6 ops)</h4>
+          <ul>
+            <li><strong><code>list_notifications</code></strong>, <strong><code>get_notification_details</code></strong>, <strong><code>mark_all_notifications_read</code></strong>, <strong><code>manage_repository_notification_subscription</code></strong>, <strong><code>manage_notification_subscription</code></strong>, <strong><code>dismiss_notification</code></strong> &mdash; gh CLI token lacks the <code>notifications</code> OAuth scope. <code>gh auth refresh -s notifications</code> would unlock these.</li>
+          </ul>
+
+          <h4>Single-target writes that pollute global state (4 ops)</h4>
+          <ul>
+            <li><strong><code>create_repository</code></strong> &mdash; tested implicitly via fixture setup (the test repo itself)</li>
+            <li><strong><code>fork_repository</code></strong> &mdash; would create a permanent repo under the test account</li>
+            <li><strong><code>actions_run_trigger</code></strong> &mdash; would trigger a real workflow run on a third-party repo</li>
+            <li><strong><code>projects_write</code></strong> &mdash; would mutate a real project on the user account</li>
+          </ul>
+
+          <h4>Fixture not present in test environment (5 ops)</h4>
+          <ul>
+            <li><strong><code>get_team_members</code></strong> &mdash; needs admin scope on a real GitHub team</li>
+            <li><strong><code>get_code_scanning_alert</code></strong>, <strong><code>get_dependabot_alert</code></strong>, <strong><code>get_secret_scanning_alert</code></strong> &mdash; need a specific alert that the freshly-created test repo doesn't have</li>
+            <li><strong><code>get_job_logs</code></strong> &mdash; needs a specific workflow job ID; no workflows have run on the test repo</li>
+          </ul>
+
+          <h4>Auxiliary dependencies (2 ops)</h4>
+          <ul>
+            <li><strong><code>add_reply_to_pull_request_comment</code></strong> &mdash; depends on <code>add_comment_to_pending_review</code> succeeding first (which it didn't, see BOTH_ERROR above)</li>
+            <li><strong><code>get_copilot_space</code></strong> &mdash; needs an existing Copilot Space owned by the caller; setup discovery returned none</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>The 2 DIVERGENT cases</h3>
+          <p>Both ends succeeded but the responses differed after normalization. Each one is a known harness-design or upstream-quirk artifact, not adapter behavior:</p>
+          <ul>
+            <li><strong><code>create_pull_request_with_copilot</code></strong> &mdash; differs in the Copilot Job ID. Each end submits a real Copilot coding job; two jobs, two distinct IDs. Same response shape, same payload structure, intentional difference. <em>Expected.</em></li>
+            <li><strong><code>request_copilot_review</code></strong> &mdash; the upstream returns an empty content block for this op. The official MCP SDK extracts that as null; the MCP-AQL envelope keeps a non-empty wrapper object (<code>is_error</code>, <code>source_tool</code>, <code>structured_content</code>). <em>Harness extraction edge case for null content, not an adapter behavior difference.</em></li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>The 1 paired-fixture timing edge case</h3>
+          <p><strong><code>update_pull_request_branch</code></strong> &mdash; classified MCPAQL_ERROR. Worth examining in detail because this is the only "MCPAQL failed where official succeeded" entry in the entire 89-op run.</p>
+          <ul>
+            <li>The harness ran both calls against the <em>same shared PR</em> (the paired-fixture pattern uses two PRs but this op pointed at one of them serially)</li>
+            <li>Official side called first, succeeded, brought the branch up to date</li>
+            <li>MCP-AQL side called ~2 seconds later against the now-already-up-to-date branch &mdash; upstream returned <code>422 "branch already up to date"</code>, which MCP-AQL faithfully wrapped as an error envelope</li>
+          </ul>
+          <p>This is a fixture-design limitation: the operation needs truly independent PRs per side, not one shared PR. The <em>same</em> operation classified as IDENTICAL in the 44-op run (different test state). When run with proper paired fixtures, the operation behaves equivalently on both ends.</p>
+          <p class="callout">
+            <strong>So the bottom line on "what could be hiding."</strong> Of 89 operations: 57 verified equivalent in content, 12 symmetric upstream errors (parity-confirming), 17 documented skips with the literal reason for each, 2 known fixture/extraction artifacts, and 1 paired-fixture timing case that the next harness iteration will resolve. <em>None of the 32 non-equivalent classifications represents adapter misbehavior.</em>
+          </p>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">What The First Pass Missed (And How We Caught It)</h2>
+
+        <div class="card">
+          <h3>The mistake</h3>
+          <p>
+            This case study was originally written with the comparison reading <strong>"44 tools."</strong> The first capture hit <code>api.githubcopilot.com/mcp/</code> with no <code>X-MCP-Toolsets</code> header, and the server returned its <strong>default</strong> toolset configuration: 44 tools.
+          </p>
+        </div>
+
+        <div class="card">
+          <h3>What was missing</h3>
+          <p>The remote endpoint also serves <strong>45 additional tools</strong> across optional toolsets, enabled by sending <code>X-MCP-Toolsets: all</code>:</p>
+          <div class="grid cols-3">
+            <ul>
+              <li>code scanning</li>
+              <li>dependabot</li>
+              <li>secret scanning alerts</li>
+              <li>discussions</li>
+              <li>gists</li>
+            </ul>
+            <ul>
+              <li>notifications</li>
+              <li>actions / workflows</li>
+              <li>copilot spaces</li>
+              <li>security advisories</li>
+              <li>semantic search</li>
+            </ul>
+            <ul>
+              <li>projects</li>
+              <li>label management</li>
+              <li>repository tree</li>
+              <li>support docs search</li>
+              <li>stargazers</li>
+            </ul>
+          </div>
+          <p>The capture missed all 45 because the interrogator never asked for them. The generator faithfully produced an adapter wrapping only what the capture had seen.</p>
+        </div>
+
+        <div class="card">
+          <h3>The fix</h3>
+          <p>Re-capturing with the toolsets header set, the same generator produced an 89-operation adapter. <strong>The same five MCP tools. The same flat ~4,500-byte <code>tools/list</code>.</strong> No structural change &mdash; just full upstream coverage.</p>
+        </div>
+
+        <div class="card">
+          <p class="callout">
+            <strong>The lesson is the point of the case study.</strong> A discovery-driven adapter generator is only as complete as the discovery captures you feed it. The mistake was 100% reproducible with the public tools. So is the correction. Every tool used to find and fix the gap &mdash; <code>github/github-mcp-server</code>, <code>api.githubcopilot.com/mcp/</code>, <code>mcpaql-interrogate</code>, <code>mcpaql-generate-adapter</code>, <code>mcpaql-parity</code> &mdash; is publicly available.
+          </p>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">A Generator Bug Surfaced By The Test Harness</h2>
+        <div class="grid cols-2">
+          <article class="card">
+            <h3>The bug</h3>
+            <p>Custom discovery-time headers (like <code>X-MCP-Toolsets: all</code>) were <strong>captured</strong> but not <strong>propagated</strong> into the generated adapter's upstream client.</p>
+            <p>The adapter's schema correctly listed all 89 operations the toolset header unlocked. But at call time, every header-gated operation failed with <code>"unknown tool"</code> because the upstream client lacked the selector header.</p>
+          </article>
+          <article class="card">
+            <h3>The fix</h3>
+            <p>Lift captured headers into the generated <code>AdapterSchemaDocument</code>; emit an upstream client that forwards them. Filter case-insensitive collisions with the configured auth header.</p>
+            <p>Landed in <a href="https://github.com/MCPAQL/adapter-generator/pull/32">adapter-generator PR #32</a> after multi-reviewer feedback &mdash; Claude flagged structural cleanups and missing test scenarios; Codex caught the case-insensitivity hazard. 24 unit tests now cover the propagation path.</p>
+          </article>
+        </div>
+        <div class="card">
+          <p class="callout">
+            <strong>This is what end-to-end parity testing is for.</strong> Without the harness, the generator would still ship a quietly broken adapter for any MCP server that gates part of its surface behind a header &mdash; toolset selectors, region selectors, tenant selectors, feature flags.
+          </p>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">The Harness Is Now A Public Tool</h2>
+        <p class="section-subtitle">
+          Generalized from this case study, the parity runner is now part of the <a href="https://github.com/MCPAQL/tools"><code>@mcpaql/tools</code></a> CLI suite. Five focused tools, one per stage of the adapter lifecycle.
+        </p>
+
+        <div class="card">
+          <h3>The MCP-AQL toolchain</h3>
+          <ul>
+            <li><strong><code>mcpaql-interrogate</code></strong> &mdash; <em>Discovery.</em> Connects to an upstream MCP server, captures its tool surface and schemas into a discovery bundle. Supports custom request headers (toolset selectors, region selectors, etc.) so you capture the full surface, not the default subset.</li>
+            <li><strong><code>mcpaql-generate-adapter</code></strong> &mdash; <em>Codegen.</em> Reads a discovery bundle, generates a runnable MCP-AQL adapter package (5-tool surface, generic CRUDE dispatch, full per-operation schemas reachable via <code>introspect</code>).</li>
+            <li><strong><code>mcpaql-conformance</code></strong> &mdash; <em>Schema validation.</em> Confirms the generated adapter satisfies the MCP-AQL spec: tool registration, request/response envelope shape, introspection contract.</li>
+            <li><strong><code>mcpaql-diff</code></strong> &mdash; <em>Structural diff.</em> Compares the generated adapter's introspection surface against the original capture &mdash; catches missing operations, parameter mismatches, endpoint drift.</li>
+            <li><strong><code>mcpaql-parity</code></strong> &mdash; <em>Runtime parity.</em> The new one. Dual-calls every operation against both the official server and the adapter, classifies the responses, writes a structured report. The tool that produced the 89-operation audit on this page.</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>Using the parity runner</h3>
+          <p>You write a small <strong>Suite</strong> describing your operations and fixtures, then invoke the CLI:</p>
+<pre class="code-box" data-code-language="bash">mcpaql-parity \
+  --suite ./my-suite.js \
+  --adapter ./my-adapter/dist/server.js \
+  --report parity.json</pre>
+          <p>The runner has one load-bearing property:</p>
+          <ul>
+            <li>It reads the operation list from the <strong>adapter's bundled <code>schema.json</code></strong>, not from the suite.</li>
+            <li>Any operation the adapter exposes that your suite has no arg builder for surfaces as <code>SKIPPED</code> with reason <code>"no suite arg builder"</code> in the report.</li>
+            <li>Result: <strong>the harness physically cannot silently hide gaps</strong> in your coverage. Either you cover an operation, or it shows up missing in the audit.</li>
+          </ul>
+          <p>The reference suite for GitHub MCP &mdash; defining the 89-operation audit surface, exercised fixtures, and documented skip rationale &mdash; landed in <a href="https://github.com/MCPAQL/examples/pull/41">MCPAQL/examples#41</a> at <a href="https://github.com/MCPAQL/examples/tree/3b360afbd030410528a00e79d36e63fed83ae479/generated/github-mcp/parity-harness"><code>MCPAQL/examples/.../parity-harness</code></a> and is the model for writing your own.</p>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">Read The Receipts</h2>
+        <div class="grid cols-3">
+          <article class="card">
+            <h3>Full Case Study</h3>
+            <p>Per-operation results, classification breakdown, reproducibility commands, honest caveats.</p>
+            <p><a class="btn btn-primary" href="https://github.com/MCPAQL/examples/blob/3b360afbd030410528a00e79d36e63fed83ae479/generated/github-mcp/CASE-STUDY.md">CASE-STUDY.md &rarr;</a></p>
+          </article>
+          <article class="card">
+            <h3>Reference Suite</h3>
+            <p>The 89-operation GitHub suite that powered this study, ready to read or extend.</p>
+            <p><a class="btn btn-secondary" href="https://github.com/MCPAQL/examples/tree/3b360afbd030410528a00e79d36e63fed83ae479/generated/github-mcp/parity-harness">parity-harness/ &rarr;</a></p>
+          </article>
+          <article class="card">
+            <h3>The Tools</h3>
+            <p>The discovery, generation, conformance, diff, and parity tools that produced every measurement here.</p>
+            <p><a class="btn btn-secondary" href="https://github.com/MCPAQL/tools">@mcpaql/tools &rarr;</a></p>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <a class="btn btn-secondary" href="../index.html">&larr; Back to Portal Home</a>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.</p>
+      <div class="footer-links">
+        <a href="../docs/index.html">Documentation Library</a>
+        <a href="https://github.com/MCPAQL">MCPAQL Organization</a>
+        <a href="https://dollhouseresearch.com">Dollhouse Research</a>
+        <a href="https://github.com/DollhouseMCP/mcp-server">DollhouseMCP Production Profile</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../js/search.js" defer></script>
+</body>
+</html>

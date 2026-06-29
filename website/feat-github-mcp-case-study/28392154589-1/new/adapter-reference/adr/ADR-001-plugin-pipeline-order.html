@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Date: 2026-01-26">
+  <title>MCP-AQL Adapter Reference | ADR-001: Plugin Pipeline Order</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" media="print" onload="this.onload=null;this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <a class="logo" href="../../index.html"><span class="logo-mark"></span>MCP-AQL</a>
+        <ul class="nav-links">
+          <li><a href="../../index.html">Home</a></li>
+          <li><a href="../../docs/index.html">Docs</a></li>
+          <li><a href="../../launch-checklist.html">Launch Checklist</a></li>
+          <li><a href="../../apis/index.html">Adapter Patterns</a></li>
+
+          <li><a href="../../case-studies/github-mcp.html">Case Studies</a></li>
+        </ul>
+        <form class="site-search" data-search-form data-index-url="../../data/search-index.json" role="search">
+          <label class="sr-only" for="site-search-input">Search MCP-AQL docs</label>
+          <input id="site-search-input" data-search-input type="search" placeholder="Search MCP-AQL docs, spec pages, and adapter patterns...">
+          <span class="search-count" data-search-count></span>
+          <ul class="search-results" data-search-results hidden></ul>
+        </form>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container docs-shell">
+      <aside class="docs-side">
+        <h2>Reference Adapter Docs</h2>
+        <p class="docs-side-note">Generated from <code>MCPAQL/mcpaql-adapter</code> so the website carries the implementation architecture, guides, and ADRs too.</p>
+        <div class="docs-side-group">
+  <h3>Overview</h3>
+  <ul><li><a href="../repo/README.html">MCP-AQL Reference Adapter</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Architecture</h3>
+  <ul><li><a href="../architecture/dispatch.html">Schema-Driven Dispatch</a></li><li><a href="../architecture/overview.html">MCP-AQL Architecture Overview</a></li><li><a href="../architecture/plugin-system.html">Plugin System Implementation</a></li><li><a href="../architecture/runtime.html">Universal Adapter Runtime Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Guides</h3>
+  <ul><li><a href="../guides/development.html">MCP-AQL Adapter Development Guide</a></li><li><a href="../guides/migration.html">Migration Guide: MCP Server to MCP-AQL Adapter</a></li><li><a href="../guides/testing.html">MCP-AQL Adapter Testing Guide</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>ADRs</h3>
+  <ul><li><a class="current" aria-current="page" href="ADR-001-plugin-pipeline-order.html">ADR-001: Plugin Pipeline Order</a></li><li><a href="ADR-002-schema-driven-dispatch.html">ADR-002: Schema-Driven Dispatch over Code Generation</a></li><li><a href="ADR-003-stateless-plugins.html">ADR-003: Stateless Singleton Plugins</a></li><li><a href="README.html">Architecture Decision Records</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Examples</h3>
+  <ul><li><a href="../examples/README.html">Examples</a></li></ul>
+</div>
+      </aside>
+
+      <article class="docs-main">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+          <ol>
+            <li><a href="../../index.html">Home</a></li>
+            <li><a href="../../apis/index.html">Adapter Patterns</a></li><li><a href="../index.html">Reference Adapter Docs</a></li>
+            <li><span class="current">ADR-001: Plugin Pipeline Order</span></li>
+          </ol>
+        </nav>
+        <section class="hero docs-hero">
+          <div class="hero-inner">
+            <span class="status-pill">REPO-SYNCED ADAPTER DOC</span>
+            <h1>ADR-001: Plugin Pipeline Order</h1>
+            <p class="lede">Date: 2026-01-26</p>
+            <div class="spec-meta"><span class="state-chip live">Support document</span><span class="state-chip pending">Accepted</span></div>
+            <p class="spec-source">Source: <a href="https://github.com/MCPAQL/mcpaql-adapter/blob/main/docs/adr/ADR-001-plugin-pipeline-order.md">mcpaql-adapter/docs/adr/ADR-001-plugin-pipeline-order.md</a></p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="https://github.com/MCPAQL/mcpaql-adapter/blob/main/docs/adr/ADR-001-plugin-pipeline-order.md">Open Source Markdown</a><a class="btn btn-secondary" href="../index.html">Browse Reference Adapter Docs</a><a class="btn btn-secondary" href="../../apis/index.html">Adapter Patterns Hub</a>
+            </div>
+          </div>
+        </section>
+
+        <section class="page-toc-shell" data-page-toc>
+          <div class="card page-toc-card">
+            <div class="page-toc-head">
+              <p class="page-toc-kicker">On this page</p>
+              <h2>Jump to a section</h2>
+              <p class="page-toc-intro">Use the outline to move through longer pages without losing your place.</p>
+            </div>
+            <ol class="page-toc-list" data-page-toc-list>
+              <li class="page-toc-item level-2"><a href="#context" data-toc-target="context">Context</a></li><li class="page-toc-item level-2"><a href="#decision" data-toc-target="decision">Decision</a></li><li class="page-toc-item level-2"><a href="#consequences" data-toc-target="consequences">Consequences</a></li><li class="page-toc-item level-2"><a href="#references" data-toc-target="references">References</a></li>
+            </ol>
+          </div>
+        </section>
+
+
+        <section>
+          <div class="card spec-prose">
+            <p><strong>Status:</strong> Accepted <strong>Date:</strong> 2026-01-26</p>
+<h2 id="context">Context</h2>
+<p>The universal adapter runtime composes four plugin types (protocol, auth, serialization, transport) into a request pipeline. The order in which these plugins execute affects correctness:</p>
+<ul>
+<li>The protocol plugin must build the request structure before auth can attach credentials</li>
+<li>Auth must modify headers before serialization finalizes the body</li>
+<li>Serialization must set the Content-Type header before transport sends</li>
+<li>Transport is always last (it performs the actual I/O)</li>
+</ul>
+<p>Several orderings are possible, and getting this wrong causes subtle bugs (e.g., auth headers overwritten by serialization, or Content-Type set before the body is ready).</p>
+<h2 id="decision">Decision</h2>
+<p>The plugin pipeline executes in this fixed order:</p>
+<ol type="1">
+<li><strong>Protocol</strong> — builds <code>TransportRequest</code> from operation definition and parameters</li>
+<li><strong>Auth</strong> — attaches credentials (headers, query params) to the request</li>
+<li><strong>Serialization</strong> — encodes the request body and sets Content-Type</li>
+<li><strong>Transport</strong> — sends the request and returns raw response</li>
+</ol>
+<p>Response processing reverses the relevant steps:</p>
+<ol type="1">
+<li><strong>Serialization</strong> — decodes the response body</li>
+<li><strong>Protocol</strong> — parses the response into <code>ParsedResponse</code> format</li>
+</ol>
+<h2 id="consequences">Consequences</h2>
+<p><strong>Positive:</strong></p>
+<ul>
+<li>Auth plugins can set headers without worrying about serialization overwriting them</li>
+<li>Protocol plugins produce a complete request structure that downstream plugins augment</li>
+<li>The fixed order eliminates a class of composition bugs</li>
+<li>Easy to reason about and debug</li>
+</ul>
+<p><strong>Negative:</strong></p>
+<ul>
+<li>Less flexible than a fully configurable pipeline</li>
+<li>Auth plugins that need to sign the serialized body (e.g., AWS Signature V4) will need access to the post-serialization request — deferred to future specification</li>
+</ul>
+<h2 id="references">References</h2>
+<ul>
+<li><a href="../architecture/plugin-system.html">Plugin System Implementation</a></li>
+<li><a href="../../spec/plugin-contracts.html">Plugin Interface Contracts</a> (spec repo)</li>
+</ul>
+
+          </div>
+        </section>
+        <nav class="page-nav" aria-label="Page navigation">
+  <a class="page-nav-link prev" href="../guides/testing.html">
+    <span class="page-nav-eyebrow">Previous page</span>
+    <strong class="page-nav-label">MCP-AQL Adapter Testing Guide</strong>
+  </a>
+  <a class="page-nav-link next" href="ADR-002-schema-driven-dispatch.html">
+    <span class="page-nav-eyebrow">Next page</span>
+    <strong class="page-nav-label">ADR-002: Schema-Driven Dispatch over Code Generation</strong>
+  </a>
+</nav>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.</p>
+      <div class="footer-links">
+        <a href="../../apis/index.html">Adapter Patterns</a><a href="../index.html">Reference Adapter Docs</a><a href="https://github.com/MCPAQL/mcpaql-adapter">Reference Adapter Repo</a><a href="https://dollhouseresearch.com">Dollhouse Research</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../js/search.js" defer></script>
+</body>
+</html>

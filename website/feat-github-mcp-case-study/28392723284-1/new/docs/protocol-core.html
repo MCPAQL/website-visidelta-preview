@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="MCP-AQL protocol core: normative scope, CRUDE model, endpoint modes, introspection, and response contracts.">
+  <title>MCP-AQL Docs | Protocol Core</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" media="print" onload="this.onload=null;this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <a class="logo" href="../index.html"><span class="logo-mark"></span>MCP-AQL</a>
+        <ul class="nav-links">
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="index.html">Docs</a></li>
+          <li><a href="../launch-checklist.html">Launch Checklist</a></li>
+          <li><a href="../apis/index.html">Adapter Patterns</a></li>
+
+          <li><a href="../case-studies/github-mcp.html">Case Studies</a></li>
+        </ul>
+        <form class="site-search" data-search-form data-index-url="../data/search-index.json" role="search">
+          <label class="sr-only" for="site-search-input">Search MCP-AQL docs</label>
+          <input id="site-search-input" data-search-input type="search" placeholder="Search MCP-AQL docs, spec pages, and adapter patterns...">
+          <span class="search-count" data-search-count></span>
+          <ul class="search-results" data-search-results hidden></ul>
+        </form>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container docs-shell">
+      <aside class="docs-side">
+        <h2>In This Library</h2>
+        <ul>
+          <li><a href="getting-started.html">Getting Started</a></li>
+          <li><a class="current" href="protocol-core.html">Protocol Core</a></li>
+          <li><a href="error-model.html">Error Model</a></li>
+          <li><a href="security-model.html">Security Model</a></li>
+          <li><a href="conformance.html">Conformance</a></li>
+          <li><a href="adapter-contracts.html">Adapter Contracts</a></li>
+          <li><a href="implementation-profiles.html">Implementation Profiles</a></li>
+          <li><a href="roadmap.html">Roadmap</a></li>
+          <li><a href="release-notes.html">Release Notes</a></li>
+        </ul>
+      </aside>
+
+      <article class="docs-main">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+          <ol>
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="index.html">Docs</a></li>
+            <li><span class="current">Protocol Core</span></li>
+          </ol>
+        </nav>
+        <section class="hero docs-hero">
+          <div class="hero-inner">
+            <span class="status-pill">PROTOCOL CORE</span>
+            <h1>Normative Foundations</h1>
+            <p class="lede">
+              MCP-AQL defines a protocol layer for operation consolidation and runtime discovery. Canonical authority is the
+              versioned specification in <code>MCPAQL/spec</code>; this page is a readable map of the same core requirements.
+            </p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="../spec/versions/v1.0.0-draft.html">Normative Spec</a>
+              <a class="btn btn-secondary" href="../spec/README.html">Spec Docs Index</a>
+            </div>
+          </div>
+        </section>
+
+        <nav class="page-nav" aria-label="Page navigation">
+          <a class="page-nav-link prev" href="getting-started.html">
+            <span class="page-nav-eyebrow">Previous page</span>
+            <strong class="page-nav-label">Getting Started</strong>
+          </a>
+          <a class="page-nav-link next" href="error-model.html">
+            <span class="page-nav-eyebrow">Next page</span>
+            <strong class="page-nav-label">Error Model</strong>
+          </a>
+        </nav>
+
+        <section class="page-toc-shell" data-page-toc>
+          <div class="card page-toc-card">
+            <div class="page-toc-head">
+              <p class="page-toc-kicker">On this page</p>
+              <h2>Jump to a section</h2>
+              <p class="page-toc-intro">Use the outline to move through longer pages without losing your place.</p>
+            </div>
+            <ol class="page-toc-list" data-page-toc-list>
+              <li class="page-toc-item level-2"><a href="#protocol-scope" data-toc-target="protocol-scope">Protocol Scope</a></li><li class="page-toc-item level-2"><a href="#why-semantic-endpoints-matter" data-toc-target="why-semantic-endpoints-matter">Why semantic endpoints matter</a></li><li class="page-toc-item level-2"><a href="#crude-endpoint-model" data-toc-target="crude-endpoint-model">CRUDE Endpoint Model</a></li><li class="page-toc-item level-2"><a href="#endpoint-modes" data-toc-target="endpoint-modes">Endpoint Modes</a></li><li class="page-toc-item level-2"><a href="#request-and-response-contract" data-toc-target="request-and-response-contract">Request And Response Contract</a></li><li class="page-toc-item level-2"><a href="#runtime-discovery" data-toc-target="runtime-discovery">Runtime Discovery</a></li><li class="page-toc-item level-2"><a href="#operational-rules-readers-usually-miss" data-toc-target="operational-rules-readers-usually-miss">Operational rules readers usually miss</a></li>
+            </ol>
+          </div>
+        </section>
+
+        <section class="topic-bridge">
+          <h2 class="sr-only">Related reading</h2>
+          <div class="grid cols-2">
+            <article class="card">
+              <h3>Go Deeper In The Full Spec</h3>
+              <p>These pages contain the full protocol requirements, supporting detail, and normative references behind this summary.</p>
+              <ul>
+                <li><a href="../spec/versions/v1.0.0-draft.html">Normative Draft</a></li>
+                <li><a href="../spec/crude-pattern.html">CRUDE Pattern</a></li>
+                <li><a href="../spec/operations.html">Operations Specification</a></li>
+                <li><a href="../spec/introspection.html">Introspection Specification</a></li>
+              </ul>
+            </article>
+            <article class="card">
+              <h3>Related Summary Pages</h3>
+              <p>Read the companion summaries for onboarding context, error handling, and safety behavior.</p>
+              <ul>
+                <li><a href="getting-started.html">Getting Started</a></li>
+                <li><a href="error-model.html">Error Model</a></li>
+                <li><a href="security-model.html">Security Model</a></li>
+                <li><a href="index.html">Back to the docs library</a></li>
+              </ul>
+            </article>
+          </div>
+        </section>
+
+        <section>
+          <h2 class="section-title" id="protocol-scope">Protocol Scope</h2>
+          <div class="card">
+            <p>
+              MCP-AQL specifies wire-level operation request/response behavior, endpoint semantics, introspection shape,
+              and operation classification guidance. It intentionally does not prescribe domain-specific operation sets.
+            </p>
+            <ul>
+              <li>Authority source: versioned specification document</li>
+              <li>Informative docs: support design and implementation choices</li>
+              <li>Adapter-specific operations: declared by each implementation</li>
+            </ul>
+          </div>
+        </section>
+
+        <section>
+          <h2 class="section-title" id="why-semantic-endpoints-matter">Why semantic endpoints matter</h2>
+          <div class="grid cols-2">
+            <article class="card">
+              <h3>MCP tool calls are structurally flat</h3>
+              <p>
+                In plain MCP, all tools share the same call shape. A reader, client, or policy system cannot reliably distinguish
+                <code>get_user</code> from <code>drop_database</code> without inspecting descriptions and guessing from naming.
+              </p>
+            </article>
+            <article class="card">
+              <h3>MCP-AQL makes intent structural</h3>
+              <p>
+                In MCP-AQL, the endpoint is part of the contract. <code>READ</code> declares side-effect-free behavior,
+                <code>DELETE</code> declares destructive intent, and <code>EXECUTE</code> declares a lifecycle or stateful flow.
+              </p>
+            </article>
+          </div>
+          <p class="callout">
+            The CRUDE model is not just an organizational convenience. It gives clients, LLMs, and policy systems protocol-level safety
+            hints without relying on author-written descriptions.
+          </p>
+        </section>
+
+        <section>
+          <h2 class="section-title" id="crude-endpoint-model">CRUDE Endpoint Model</h2>
+          <div class="card table-card">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Endpoint</th>
+                  <th>Intent</th>
+                  <th>Safety posture</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Create</td>
+                  <td>Additive operations creating new state</td>
+                  <td>Non-destructive</td>
+                </tr>
+                <tr>
+                  <td>Read</td>
+                  <td>Safe queries without side effects</td>
+                  <td>Read-only</td>
+                </tr>
+                <tr>
+                  <td>Update</td>
+                  <td>Operations modifying existing state</td>
+                  <td>Mutating</td>
+                </tr>
+                <tr>
+                  <td>Delete</td>
+                  <td>Removal operations</td>
+                  <td>Destructive</td>
+                </tr>
+                <tr>
+                  <td>Execute</td>
+                  <td>Runtime lifecycle and side-effectful flows</td>
+                  <td>Stateful / non-idempotent</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section>
+          <h2 class="section-title" id="endpoint-modes">Endpoint Modes</h2>
+          <div class="grid code-example-stack">
+            <article class="card">
+              <h3>CRUDE Mode (5 endpoints)</h3>
+              <p>Semantic separation by operation effect category. Maximizes explicit routing intent.</p>
+              <pre class="code-box" data-code-language="text">mcp_aql_create
+mcp_aql_read
+mcp_aql_update
+mcp_aql_delete
+mcp_aql_execute</pre>
+            </article>
+            <article class="card">
+              <h3>Single Mode (1 endpoint)</h3>
+              <p>One entrypoint for all operations, with internal routing based on operation metadata.</p>
+              <pre class="code-box" data-code-language="text">mcp_aql</pre>
+            </article>
+          </div>
+        </section>
+
+        <section>
+          <h2 class="section-title" id="request-and-response-contract">Request And Response Contract</h2>
+          <div class="grid code-example-stack">
+            <article class="card">
+              <h3>Request Shape</h3>
+              <pre class="code-box" data-code-language="json">{
+  "operation": "introspect",
+  "params": { "query": "operations" }
+}</pre>
+              <p>
+                Public parameter names are snake_case. Runtime values are passed in <code>params</code> and aligned to
+                introspection-declared parameter definitions.
+              </p>
+            </article>
+            <article class="card">
+              <h3>Response Shape</h3>
+              <pre class="code-box" data-code-language="json">{ "success": true,  "data": { ... } }
+{ "success": false, "error": { ... } }</pre>
+              <p>
+                Conforming implementations use discriminated response unions so clients can branch behavior predictably.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <section>
+          <h2 class="section-title" id="runtime-discovery">Runtime Discovery</h2>
+          <div class="grid code-example-stack">
+            <article class="card">
+              <h3>Why it changes the economics</h3>
+              <p>
+                MCP-AQL keeps the public endpoint surface small and makes runtime discovery part of the protocol through
+                <code>introspect</code>. That means the protocol does not require a large up-front tool-definition payload in order to begin
+                operating. Some MCP clients already have progressive loading, but the benefit depends on which client you are using.
+                MCP-AQL makes on-demand discovery available in a client-agnostic way, so the practical benefit carries across MCP-speaking
+                clients instead of depending on a particular client implementation.
+              </p>
+              <ul>
+                <li><a href="../spec/introspection.html">Introspection specification</a></li>
+                <li><a href="../spec/operations.html">Operation design guide</a></li>
+                <li><a href="../spec/error-codes.html">Structured error model</a></li>
+              </ul>
+            </article>
+            <article class="card">
+              <h3>Typical discovery path</h3>
+              <pre class="code-box" data-code-language="json">{
+  "operation": "introspect",
+  "params": { "query": "operations" }
+}
+
+{
+  "operation": "introspect",
+  "params": {
+    "query": "operations",
+    "name": "create_user"
+  }
+}</pre>
+              <p>
+                The spec models this pattern as about <strong>50 tokens</strong> to list operations and about <strong>100 tokens</strong>
+                to fetch the details for one relevant operation.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <section>
+          <h2 class="section-title" id="operational-rules-readers-usually-miss">Operational rules readers usually miss</h2>
+          <div class="grid cols-2">
+            <article class="card">
+              <h3>Naming and parameter rules</h3>
+              <ul>
+                <li>Operation names are case-sensitive snake_case identifiers.</li>
+                <li>Public parameter names are snake_case, even if implementations accept aliases internally.</li>
+                <li>Unknown parameters should be rejected instead of ignored so clients can correct requests.</li>
+              </ul>
+            </article>
+            <article class="card">
+              <h3>Batch and payload considerations</h3>
+              <ul>
+                <li>Batch operations are first-class, but launch messaging should still treat resource-limit requirements as in progress.</li>
+                <li>Payload size, encoding, and response shape constraints are part of interoperability, not optional polish.</li>
+                <li><a href="https://github.com/MCPAQL/spec/issues/197">Issue #197</a> tracks the remaining batch-limit hardening work.</li>
+              </ul>
+            </article>
+          </div>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.</p>
+      <div class="footer-links">
+        <a href="index.html">Docs Library</a>
+        <a href="../index.html">Portal Home</a>
+        <a href="https://github.com/MCPAQL">MCPAQL Organization</a>
+        <a href="https://dollhouseresearch.com">Dollhouse Research</a>
+        <a href="https://github.com/DollhouseMCP/mcp-server">DollhouseMCP Production Profile</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../js/search.js" defer></script>
+</body>
+</html>

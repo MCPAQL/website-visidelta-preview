@@ -43,7 +43,7 @@
           <p class="lede">
             98.3% less token-discovery overhead. Full 89-operation surface classified,
             with 57 operations measured equivalent and every skipped, errored, or divergent
-            outcome accounted for. Reproducible with public tools.
+            outcome accounted for. Public tools and artifacts linked below.
           </p>
         </div>
       </section>
@@ -173,7 +173,7 @@
 
         <div class="card">
           <h3>The 17 SKIPPED cases</h3>
-          <p>These were deliberately not exercised in this environment because their prerequisites were not available or safe to create. The suite records an explicit skip reason for each operation, and the four buckets below reconcile to all 17 skips.</p>
+          <p>These were deliberately not exercised in the measured environment because their prerequisites were not available or safe to create. The historical run recorded an explicit skip reason for each operation, and the four buckets below reconcile to all 17 skips.</p>
 
           <h4>Token scope (6 ops)</h4>
           <ul>
@@ -328,7 +328,7 @@
             <li>Any operation the adapter exposes that your suite has no arg builder for surfaces as <code>SKIPPED</code> with reason <code>"no suite arg builder"</code> in the report.</li>
             <li>Result: <strong>the harness physically cannot silently hide gaps</strong> in your coverage. Either you cover an operation, or it shows up missing in the audit.</li>
           </ul>
-          <p>The reference suite for GitHub MCP &mdash; defining the 89-operation audit surface, exercised fixtures, and documented skip rationale &mdash; landed in <a href="https://github.com/MCPAQL/examples/pull/41">MCPAQL/examples#41</a> at <a href="https://github.com/MCPAQL/examples/tree/3b360afbd030410528a00e79d36e63fed83ae479/generated/github-mcp/parity-harness"><code>MCPAQL/examples/.../parity-harness</code></a>. Its <code>parity:all</code> command runs against the published <a href="https://github.com/MCPAQL/examples/tree/3b360afbd030410528a00e79d36e63fed83ae479/generated/github-mcp-all"><code>github-mcp-all</code></a> adapter and is the model for writing your own.</p>
+          <p>The current GitHub MCP reference suite landed in <a href="https://github.com/MCPAQL/examples/pull/41">MCPAQL/examples#41</a> at <a href="https://github.com/MCPAQL/examples/tree/3b360afbd030410528a00e79d36e63fed83ae479/generated/github-mcp/parity-harness"><code>MCPAQL/examples/.../parity-harness</code></a>. Its <code>parity:all</code> command runs against the published <a href="https://github.com/MCPAQL/examples/tree/3b360afbd030410528a00e79d36e63fed83ae479/generated/github-mcp-all"><code>github-mcp-all</code></a> adapter and is the model for writing your own; it is not a frozen copy of the unpublished historical run report used for the bucket counts above.</p>
         </div>
       </section>
 
@@ -341,13 +341,13 @@
             <p><a class="btn btn-primary" href="https://github.com/MCPAQL/examples/tree/3b360afbd030410528a00e79d36e63fed83ae479/generated/github-mcp-all">github-mcp-all/ &rarr;</a></p>
           </article>
           <article class="card">
-            <h3>Reference Suite</h3>
-            <p>The 89-operation GitHub suite that powered this study, ready to read or extend.</p>
+            <h3>Current Reference Suite</h3>
+            <p>Maintained 89-operation suite for rerunning parity against the all-toolsets adapter. It has evolved since the measured run, so it is not a bucket-level receipt for the counts above.</p>
             <p><a class="btn btn-secondary" href="https://github.com/MCPAQL/examples/tree/3b360afbd030410528a00e79d36e63fed83ae479/generated/github-mcp/parity-harness">parity-harness/ &rarr;</a></p>
           </article>
           <article class="card">
             <h3>The Tools</h3>
-            <p>The discovery, generation, conformance, diff, and parity tools that produced every measurement here.</p>
+            <p>The discovery, generation, conformance, diff, and parity tools used for the capture, adapter, validation, and parity workflow.</p>
             <p><a class="btn btn-secondary" href="https://github.com/MCPAQL/tools">@mcpaql/tools &rarr;</a></p>
           </article>
         </div>

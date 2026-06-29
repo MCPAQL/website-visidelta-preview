@@ -7,7 +7,7 @@ CASE STUDY &middot; 2026-05-14
 GitHub MCP &mdash; Measuring the Cost of Doing It the Long Way
 98.3% less token-discovery overhead. Full 89-operation surface classified,
 with 57 operations measured equivalent and every skipped, errored, or divergent
-outcome accounted for. Reproducible with public tools.
+outcome accounted for. Public tools and artifacts linked below.
 The Headline Numbers
 Both adapters wrap the same upstream &mdash;
 https://api.githubcopilot.com/mcp/ &mdash; with all toolsets enabled.
@@ -70,7 +70,7 @@ projects_get &mdash; required project metadata unavailable in the test account; 
 triage_issue &mdash; "issue triage is not enabled for this repository" (Copilot feature; not enabled on a 5-minute-old test repo)
 Each of the above is listed here with the shared root cause observed on both sides. The checked-in public harness publishes the suite and fixture logic, but not the account-specific parity-all.json run artifact.
 The 17 SKIPPED cases
-These were deliberately not exercised in this environment because their prerequisites were not available or safe to create. The suite records an explicit skip reason for each operation, and the four buckets below reconcile to all 17 skips.
+These were deliberately not exercised in the measured environment because their prerequisites were not available or safe to create. The historical run recorded an explicit skip reason for each operation, and the four buckets below reconcile to all 17 skips.
 Token scope (6 ops)
 list_notifications , get_notification_details , mark_all_notifications_read , manage_repository_notification_subscription , manage_notification_subscription , dismiss_notification &mdash; gh CLI token lacks the notifications OAuth scope. gh auth refresh -s notifications would unlock these.
 Single-target writes that pollute global state (4 ops)
@@ -142,16 +142,16 @@ The runner has one load-bearing property:
 It reads the operation list from the adapter's bundled schema.json , not from the suite.
 Any operation the adapter exposes that your suite has no arg builder for surfaces as SKIPPED with reason "no suite arg builder" in the report.
 Result: the harness physically cannot silently hide gaps in your coverage. Either you cover an operation, or it shows up missing in the audit.
-The reference suite for GitHub MCP &mdash; defining the 89-operation audit surface, exercised fixtures, and documented skip rationale &mdash; landed in MCPAQL/examples#41 at MCPAQL/examples/.../parity-harness . Its parity:all command runs against the published github-mcp-all adapter and is the model for writing your own.
+The current GitHub MCP reference suite landed in MCPAQL/examples#41 at MCPAQL/examples/.../parity-harness . Its parity:all command runs against the published github-mcp-all adapter and is the model for writing your own; it is not a frozen copy of the unpublished historical run report used for the bucket counts above.
 Read The Receipts
 Published Artifacts
 All-toolsets capture bundle, generated 89-operation adapter, schema, and server config. Raw account-specific parity JSON is not published.
 github-mcp-all/ &rarr;
-Reference Suite
-The 89-operation GitHub suite that powered this study, ready to read or extend.
+Current Reference Suite
+Maintained 89-operation suite for rerunning parity against the all-toolsets adapter. It has evolved since the measured run, so it is not a bucket-level receipt for the counts above.
 parity-harness/ &rarr;
 The Tools
-The discovery, generation, conformance, diff, and parity tools that produced every measurement here.
+The discovery, generation, conformance, diff, and parity tools used for the capture, adapter, validation, and parity workflow.
 @mcpaql/tools &rarr;
 &larr; Back to Portal Home
 &copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.

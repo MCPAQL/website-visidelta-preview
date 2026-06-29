@@ -328,7 +328,7 @@
             <li>Any operation the adapter exposes that your suite has no arg builder for surfaces as <code>SKIPPED</code> with reason <code>"no suite arg builder"</code> in the report.</li>
             <li>Result: <strong>the harness physically cannot silently hide gaps</strong> in your coverage. Either you cover an operation, or it shows up missing in the audit.</li>
           </ul>
-          <p>The reference suite for GitHub MCP &mdash; defining the 89-operation audit surface, exercised fixtures, and documented skip rationale &mdash; landed in <a href="https://github.com/MCPAQL/examples/pull/41">MCPAQL/examples#41</a> at <a href="https://github.com/MCPAQL/examples/tree/3b360afbd030410528a00e79d36e63fed83ae479/generated/github-mcp/parity-harness"><code>MCPAQL/examples/.../parity-harness</code></a> and is the model for writing your own.</p>
+          <p>The reference suite for GitHub MCP &mdash; defining the 89-operation audit surface, exercised fixtures, and documented skip rationale &mdash; landed in <a href="https://github.com/MCPAQL/examples/pull/41">MCPAQL/examples#41</a> at <a href="https://github.com/MCPAQL/examples/tree/3b360afbd030410528a00e79d36e63fed83ae479/generated/github-mcp/parity-harness"><code>MCPAQL/examples/.../parity-harness</code></a>. Its <code>parity:all</code> command runs against the published <a href="https://github.com/MCPAQL/examples/tree/3b360afbd030410528a00e79d36e63fed83ae479/generated/github-mcp-all"><code>github-mcp-all</code></a> adapter and is the model for writing your own.</p>
         </div>
       </section>
 
@@ -337,8 +337,8 @@
         <div class="grid cols-3">
           <article class="card">
             <h3>Published Artifacts</h3>
-            <p>Capture bundle, generated adapter, validation reports, and reproducibility notes. Raw account-specific parity JSON is not published.</p>
-            <p><a class="btn btn-primary" href="https://github.com/MCPAQL/examples/tree/3b360afbd030410528a00e79d36e63fed83ae479/generated/github-mcp">github-mcp/ &rarr;</a></p>
+            <p>All-toolsets capture bundle, generated 89-operation adapter, schema, and server config. Raw account-specific parity JSON is not published.</p>
+            <p><a class="btn btn-primary" href="https://github.com/MCPAQL/examples/tree/3b360afbd030410528a00e79d36e63fed83ae479/generated/github-mcp-all">github-mcp-all/ &rarr;</a></p>
           </article>
           <article class="card">
             <h3>Reference Suite</h3>

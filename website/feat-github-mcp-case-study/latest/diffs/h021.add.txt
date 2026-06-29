@@ -142,11 +142,11 @@ The runner has one load-bearing property:
 It reads the operation list from the adapter's bundled schema.json , not from the suite.
 Any operation the adapter exposes that your suite has no arg builder for surfaces as SKIPPED with reason "no suite arg builder" in the report.
 Result: the harness physically cannot silently hide gaps in your coverage. Either you cover an operation, or it shows up missing in the audit.
-The reference suite for GitHub MCP &mdash; defining the 89-operation audit surface, exercised fixtures, and documented skip rationale &mdash; landed in MCPAQL/examples#41 at MCPAQL/examples/.../parity-harness and is the model for writing your own.
+The reference suite for GitHub MCP &mdash; defining the 89-operation audit surface, exercised fixtures, and documented skip rationale &mdash; landed in MCPAQL/examples#41 at MCPAQL/examples/.../parity-harness . Its parity:all command runs against the published github-mcp-all adapter and is the model for writing your own.
 Read The Receipts
 Published Artifacts
-Capture bundle, generated adapter, validation reports, and reproducibility notes. Raw account-specific parity JSON is not published.
-github-mcp/ &rarr;
+All-toolsets capture bundle, generated 89-operation adapter, schema, and server config. Raw account-specific parity JSON is not published.
+github-mcp-all/ &rarr;
 Reference Suite
 The 89-operation GitHub suite that powered this study, ready to read or extend.
 parity-harness/ &rarr;

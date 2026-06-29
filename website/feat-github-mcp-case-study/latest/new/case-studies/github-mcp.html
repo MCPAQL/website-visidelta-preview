@@ -103,7 +103,7 @@
       <section>
         <h2 class="section-title">The Parity Test &mdash; All 89 Operations</h2>
         <p class="section-subtitle">
-          For every operation the GitHub MCP server exposes, the harness connects to both the official server and the MCP-AQL adapter, exercises the operation against each, and diffs the responses byte-for-byte after normalizing volatile fields like timestamps and IDs. The classifier puts each result in one of seven buckets.
+          The harness classifies every operation the GitHub MCP server exposes. For operations that could be exercised in this environment, it connects to both the official server and the MCP-AQL adapter, calls each side, and diffs the responses after normalizing volatile fields like timestamps and IDs. Operations blocked by scope, fixture, or safety prerequisites are recorded as <code>SKIPPED</code> with a documented reason.
         </p>
         <div class="grid cols-3">
           <article class="card">
@@ -336,9 +336,9 @@
         <h2 class="section-title">Read The Receipts</h2>
         <div class="grid cols-3">
           <article class="card">
-            <h3>Full Case Study</h3>
-            <p>Per-operation results, classification breakdown, reproducibility commands, honest caveats.</p>
-            <p><a class="btn btn-primary" href="https://github.com/MCPAQL/examples/blob/3b360afbd030410528a00e79d36e63fed83ae479/generated/github-mcp/CASE-STUDY.md">CASE-STUDY.md &rarr;</a></p>
+            <h3>Published Artifacts</h3>
+            <p>Capture bundle, generated adapter, validation reports, and reproducibility notes. Raw account-specific parity JSON is not published.</p>
+            <p><a class="btn btn-primary" href="https://github.com/MCPAQL/examples/tree/3b360afbd030410528a00e79d36e63fed83ae479/generated/github-mcp">github-mcp/ &rarr;</a></p>
           </article>
           <article class="card">
             <h3>Reference Suite</h3>

@@ -31,7 +31,7 @@ Over six weeks of upstream development the default-toolset payload grew from 130
 The MCP-AQL footprint stayed unchanged across the same window
 Translation: the adapter's wire footprint is structural, not content-driven. New upstream operations cost the official side bytes on every session forever. They cost the adapter side bytes only on the agent's first introspect call &mdash; and only for the operations the agent actually uses.
 The Parity Test &mdash; All 89 Operations
-For every operation the GitHub MCP server exposes, the harness connects to both the official server and the MCP-AQL adapter, exercises the operation against each, and diffs the responses byte-for-byte after normalizing volatile fields like timestamps and IDs. The classifier puts each result in one of seven buckets.
+The harness classifies every operation the GitHub MCP server exposes. For operations that could be exercised in this environment, it connects to both the official server and the MCP-AQL adapter, calls each side, and diffs the responses after normalizing volatile fields like timestamps and IDs. Operations blocked by scope, fixture, or safety prerequisites are recorded as SKIPPED with a documented reason.
 43 IDENTICAL
 byte-equal
 Pure reads, public reads, scoped reads. The adapter passes through the same JSON the official server returns.
@@ -144,9 +144,9 @@ Any operation the adapter exposes that your suite has no arg builder for surface
 Result: the harness physically cannot silently hide gaps in your coverage. Either you cover an operation, or it shows up missing in the audit.
 The reference suite for GitHub MCP &mdash; defining the 89-operation audit surface, exercised fixtures, and documented skip rationale &mdash; landed in MCPAQL/examples#41 at MCPAQL/examples/.../parity-harness and is the model for writing your own.
 Read The Receipts
-Full Case Study
-Per-operation results, classification breakdown, reproducibility commands, honest caveats.
-CASE-STUDY.md &rarr;
+Published Artifacts
+Capture bundle, generated adapter, validation reports, and reproducibility notes. Raw account-specific parity JSON is not published.
+github-mcp/ &rarr;
 Reference Suite
 The 89-operation GitHub suite that powered this study, ready to read or extend.
 parity-harness/ &rarr;

@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="This document defines the normative plugin interface contracts for the MCP-AQL adapter system. Plugins provide modular, composable functionality for transport, protocol, authentication, and serialization. This specificat">
+  <title>MCP-AQL Spec | Plugin Interface Contracts</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" media="print" onload="this.onload=null;this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <a class="logo" href="../index.html"><span class="logo-mark"></span>MCP-AQL</a>
+        <ul class="nav-links">
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="../docs/index.html">Docs</a></li>
+          <li><a href="../launch-checklist.html">Launch Checklist</a></li>
+          <li><a href="../apis/index.html">Adapter Patterns</a></li>
+
+          <li><a href="../case-studies/github-mcp.html">Case Studies</a></li>
+        </ul>
+        <form class="site-search" data-search-form data-index-url="../data/search-index.json" role="search">
+          <label class="sr-only" for="site-search-input">Search MCP-AQL docs</label>
+          <input id="site-search-input" data-search-input type="search" placeholder="Search MCP-AQL docs, spec pages, and adapter patterns...">
+          <span class="search-count" data-search-count></span>
+          <ul class="search-results" data-search-results hidden></ul>
+        </form>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container docs-shell">
+      <aside class="docs-side">
+        <h2>Repo-Synced Spec</h2>
+        <p class="docs-side-note">Generated from <code>MCPAQL/spec</code> so the website carries the deeper protocol material too.</p>
+        <div class="docs-side-group">
+  <h3>Core</h3>
+  <ul><li><a href="conformance-testing.html">MCP-AQL Conformance Testing Specification</a></li><li><a href="crude-pattern.html">MCP-AQL CRUDE Pattern Specification</a></li><li><a href="endpoint-modes.html">MCP-AQL Endpoint Modes Specification</a></li><li><a href="error-codes.html">Structured Error Codes Specification</a></li><li><a href="introspection.html">MCP-AQL Introspection Specification</a></li><li><a href="licensing-options.html">MCP-AQL Licensing Options (Working Notes)</a></li><li><a href="mcp-integration.html">MCP Integration Specification</a></li><li><a href="operations.html">MCP-AQL Operations Specification</a></li><li><a href="overview.html">MCP-AQL Protocol Overview</a></li><li><a class="current" aria-current="page" href="plugin-contracts.html">Plugin Interface Contracts</a></li><li><a href="README.html">MCP-AQL Specification Documentation</a></li><li><a href="repo/README.html">MCP-AQL Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Versions</h3>
+  <ul><li><a href="versions/v1.0.0-draft.html">MCP-AQL Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Adapter</h3>
+  <ul><li><a href="adapter/danger-levels.html">Dangerous Operation Classification Specification</a></li><li><a href="adapter/discovery-bundle.html">MCP Server Discovery Bundle</a></li><li><a href="adapter/element-type.html">Adapter Element Type Specification</a></li><li><a href="adapter/generator.html">Adapter Generator Specification</a></li><li><a href="adapter/rate-limiting.html">Rate Limiting and Quota Management Specification</a></li><li><a href="adapter/trust-levels.html">Trust Levels Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Security</h3>
+  <ul><li><a href="security/confirmation-tokens.html">Confirmation Token Specification</a></li><li><a href="security/execution-safety-loop.html">Execution Safety Loop Specification</a></li><li><a href="security/gatekeeper.html">Security Model: Gatekeeper Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Features</h3>
+  <ul><li><a href="features/aggregations.html">MCP-AQL Aggregations</a></li><li><a href="features/collection-querying.html">MCP-AQL Collection Querying</a></li><li><a href="features/computed-fields.html">MCP-AQL Computed Fields</a></li><li><a href="features/field-selection.html">Field Selection Specification</a></li><li><a href="features/pagination.html">Cursor-Based Pagination Specification</a></li><li><a href="features/relationship-queries.html">MCP-AQL Relationship Queries</a></li><li><a href="features/warnings.html">Warnings Array Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Guides</h3>
+  <ul><li><a href="guides/cross-domain-implementation.html">Cross-Domain Implementation Guide</a></li><li><a href="guides/protocol-comparison.html">Protocol Comparison Guide</a></li><li><a href="guides/README.html">Developer Guides</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Process</h3>
+  <ul><li><a href="process/breaking-changes.html">MCP-AQL Breaking Change Policy</a></li><li><a href="process/preliminary-public-launch-checklist.html">Preliminary Public Launch Checklist</a></li><li><a href="process/rfc-process.html">RFC Process for MCP-AQL Specification</a></li><li><a href="process/versioning.html">Versioning Strategy</a></li><li><a href="repo/CHANGELOG.html">Changelog</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Architecture</h3>
+  <ul><li><a href="architecture/README.html">Architecture Documentation</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Research</h3>
+  <ul><li><a href="research/mcp-vs-mcpaql-vs-a2a.html">Protocol Landscape: MCP vs MCP-AQL vs A2A</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Reference</h3>
+  <ul><li><a href="reference/README.html">Reference Documentation</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>ADRs</h3>
+  <ul><li><a href="adr/ADR-001-crude-pattern.html">ADR-001: CRUDE Pattern (Extending CRUD with Execute)</a></li><li><a href="adr/ADR-002-graphql-style-input.html">ADR-002: GraphQL-Style Input Objects for Updates</a></li><li><a href="adr/ADR-003-snake-case-parameters.html">ADR-003: snake_case Parameter Convention</a></li><li><a href="adr/ADR-004-schema-driven-operations.html">ADR-004: Schema-Driven Operation Definitions</a></li><li><a href="adr/ADR-005-introspection-system.html">ADR-005: GraphQL-Style Introspection System</a></li><li><a href="adr/ADR-006-discriminated-responses.html">ADR-006: Discriminated Response Format</a></li><li><a href="adr/index.html">Architecture Decision Records</a></li><li><a href="adr/README.html">Architecture Decision Records</a></li></ul>
+</div>
+      </aside>
+
+      <article class="docs-main">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+          <ol>
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="index.html">Full Spec</a></li>
+            <li><span class="current">Plugin Interface Contracts</span></li>
+          </ol>
+        </nav>
+        <section class="hero docs-hero">
+          <div class="hero-inner">
+            <span class="status-pill">REPO-SYNCED SPEC DOC</span>
+            <h1>Plugin Interface Contracts</h1>
+            <p class="lede">This document defines the normative plugin interface contracts for the MCP-AQL adapter system. Plugins provide modular, composable functionality for transport, protocol, authentication, and serialization. This specificat</p>
+            <div class="spec-meta"><span class="state-chip live">Support document</span><span class="state-chip pending">Draft (MVP)</span><span class="state-chip">1.0.0-draft</span><span class="state-chip">2026-01-27</span></div>
+            <p class="spec-source">Source: <a href="https://github.com/MCPAQL/spec/blob/main/docs/plugin-contracts.md">spec/docs/plugin-contracts.md</a></p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="https://github.com/MCPAQL/spec/blob/main/docs/plugin-contracts.md">Open Source Markdown</a><a class="btn btn-secondary" href="index.html">Browse Full Spec Reference</a>
+            </div>
+          </div>
+        </section>
+
+        <section class="page-toc-shell" data-page-toc>
+          <div class="card page-toc-card">
+            <div class="page-toc-head">
+              <p class="page-toc-kicker">On this page</p>
+              <h2>Jump to a section</h2>
+              <p class="page-toc-intro">Use the outline to move through longer pages without losing your place.</p>
+            </div>
+            <ol class="page-toc-list" data-page-toc-list>
+              <li class="page-toc-item level-2"><a href="#abstract" data-toc-target="abstract">Abstract</a></li><li class="page-toc-item level-2"><a href="#1-overview" data-toc-target="1-overview">1. Overview</a></li><li class="page-toc-item level-2"><a href="#2-plugin-categories" data-toc-target="2-plugin-categories">2. Plugin Categories</a></li><li class="page-toc-item level-2"><a href="#3-base-plugin-interface" data-toc-target="3-base-plugin-interface">3. Base Plugin Interface</a></li><li class="page-toc-item level-2"><a href="#4-transport-plugin-interface" data-toc-target="4-transport-plugin-interface">4. Transport Plugin Interface</a></li><li class="page-toc-item level-2"><a href="#5-protocol-plugin-interface" data-toc-target="5-protocol-plugin-interface">5. Protocol Plugin Interface</a></li><li class="page-toc-item level-2"><a href="#6-serialization-plugin-interface" data-toc-target="6-serialization-plugin-interface">6. Serialization Plugin Interface</a></li><li class="page-toc-item level-2"><a href="#7-authentication-plugin-interface" data-toc-target="7-authentication-plugin-interface">7. Authentication Plugin Interface</a></li><li class="page-toc-item level-2"><a href="#8-error-code-contracts" data-toc-target="8-error-code-contracts">8. Error Code Contracts</a></li><li class="page-toc-item level-2"><a href="#references" data-toc-target="references">References</a></li>
+            </ol>
+          </div>
+        </section>
+
+
+        <section>
+          <div class="card spec-prose">
+            <p><strong>Version:</strong> 1.0.0-draft <strong>Status:</strong> Draft (MVP) <strong>Last Updated:</strong> 2026-01-27</p>
+<h2 id="abstract">Abstract</h2>
+<p>This document defines the normative plugin interface contracts for the MCP-AQL adapter system. Plugins provide modular, composable functionality for transport, protocol, authentication, and serialization. This specification defines <strong>what</strong> each plugin type MUST provide; implementation details of specific plugins and the composition pipeline are documented in the <a href="https://github.com/MCPAQL/mcpaql-adapter">mcpaql-adapter</a> repository.</p>
+<hr />
+<h2 id="1-overview">1. Overview</h2>
+<h3 id="11-purpose">1.1 Purpose</h3>
+<p>Plugins enable the universal adapter runtime to support different communication patterns without adapter-specific code. Each adapter schema references plugins declaratively:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">target</span><span class="kw">:</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">transport</span><span class="kw">:</span><span class="at"> http</span><span class="co">        # Transport plugin</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">protocol</span><span class="kw">:</span><span class="at"> rest</span><span class="co">         # Protocol plugin</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">serialization</span><span class="kw">:</span><span class="at"> json</span><span class="co">    # Serialization plugin</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">auth</span><span class="kw">:</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">type</span><span class="kw">:</span><span class="at"> bearer</span><span class="co">           # Auth plugin</span></span></code></pre></div>
+<p>The runtime loads and composes these plugins to handle API communication.</p>
+<h3 id="12-design-principles">1.2 Design Principles</h3>
+<ol type="1">
+<li><strong>Declarative composition</strong> - Adapters reference plugins by name, runtime composes them</li>
+<li><strong>Single responsibility</strong> - Each plugin handles one concern</li>
+<li><strong>Testable in isolation</strong> - Plugins can be unit tested independently</li>
+<li><strong>Built-in only (MVP)</strong> - No user-extensible plugins in V1</li>
+<li><strong>Future extensibility</strong> - Interfaces designed for later extension</li>
+</ol>
+<h3 id="13-mvp-scope">1.3 MVP Scope</h3>
+<p>This specification covers the Minimum Viable Product plugins:</p>
+<p><strong>Included:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Plugins</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Transport</td>
+<td><code>http</code></td>
+</tr>
+<tr>
+<td>Protocol</td>
+<td><code>rest</code></td>
+</tr>
+<tr>
+<td>Serialization</td>
+<td><code>json</code></td>
+</tr>
+<tr>
+<td>Auth</td>
+<td><code>none</code>, <code>api_key</code>, <code>bearer</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Deferred to future specifications:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Deferred Plugins</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Transport</td>
+<td><code>websocket</code>, <code>serial</code>, <code>native-*</code></td>
+</tr>
+<tr>
+<td>Protocol</td>
+<td><code>graphql</code>, <code>grpc</code>, <code>jsonrpc</code>, <code>custom</code></td>
+</tr>
+<tr>
+<td>Serialization</td>
+<td><code>xml</code>, <code>protobuf</code>, <code>msgpack</code>, <code>form</code>, <code>multipart</code></td>
+</tr>
+<tr>
+<td>Auth</td>
+<td><code>basic</code>, <code>oauth</code>, <code>mtls</code>, <code>aws-sig4</code></td>
+</tr>
+<tr>
+<td>Pagination</td>
+<td>All pagination plugins (see #37)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="14-requirement-levels">1.4 Requirement Levels</h3>
+<p>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <a href="https://www.ietf.org/rfc/rfc2119.txt">RFC 2119</a>.</p>
+<hr />
+<h2 id="2-plugin-categories">2. Plugin Categories</h2>
+<h3 id="21-category-summary">2.1 Category Summary</h3>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Responsibility</th>
+<th>MVP Plugin</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Transport</td>
+<td>Communication channel</td>
+<td><code>http</code></td>
+</tr>
+<tr>
+<td>Protocol</td>
+<td>Request/response structure</td>
+<td><code>rest</code></td>
+</tr>
+<tr>
+<td>Serialization</td>
+<td>Data encoding/decoding</td>
+<td><code>json</code></td>
+</tr>
+<tr>
+<td>Auth</td>
+<td>Credential attachment</td>
+<td><code>none</code>, <code>api_key</code>, <code>bearer</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="22-plugin-resolution">2.2 Plugin Resolution</h3>
+<p>Plugins are resolved by name at runtime. Implementations:</p>
+<ol type="1">
+<li>MUST check built-in plugins (shipped with runtime)</li>
+<li>MUST return a plugin instance for known names</li>
+<li>MUST fail with <code>PLUGIN_NOT_FOUND</code> error if the plugin name is unknown</li>
+</ol>
+<hr />
+<h2 id="3-base-plugin-interface">3. Base Plugin Interface</h2>
+<h3 id="31-common-interface">3.1 Common Interface</h3>
+<p>All plugins MUST implement a common base interface:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> <span class="bu">Plugin</span> {</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">/**</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">   * Unique identifier for this plugin</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">   */</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">readonly</span> name<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="co">/**</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co">   * Plugin category</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co">   */</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="kw">readonly</span> category<span class="op">:</span> PluginCategory<span class="op">;</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="co">/**</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co">   * Human-readable description</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co">   */</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  <span class="kw">readonly</span> description<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  <span class="co">/**</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="co">   * Semantic version of the plugin</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="co">   */</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>  <span class="kw">readonly</span> version<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> PluginCategory <span class="op">=</span> <span class="st">&#39;transport&#39;</span> <span class="op">|</span> <span class="st">&#39;protocol&#39;</span> <span class="op">|</span> <span class="st">&#39;serialization&#39;</span> <span class="op">|</span> <span class="st">&#39;auth&#39;</span><span class="op">;</span></span></code></pre></div>
+<h3 id="32-plugin-lifecycle">3.2 Plugin Lifecycle</h3>
+<p>Plugins are stateless singletons. The runtime:</p>
+<ol type="1">
+<li>Resolves plugins by name at adapter load time</li>
+<li>Validates plugin compatibility</li>
+<li>Composes plugins into a request pipeline</li>
+<li>Invokes pipeline for each operation</li>
+</ol>
+<p>Plugins MUST NOT maintain request-specific state between calls.</p>
+<hr />
+<h2 id="4-transport-plugin-interface">4. Transport Plugin Interface</h2>
+<h3 id="41-purpose">4.1 Purpose</h3>
+<p>Transport plugins handle the underlying communication channel between the runtime and target API.</p>
+<h3 id="42-interface">4.2 Interface</h3>
+<div class="sourceCode" id="cb3"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> TransportPlugin <span class="kw">extends</span> <span class="bu">Plugin</span> {</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">readonly</span> category<span class="op">:</span> <span class="st">&#39;transport&#39;</span><span class="op">;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">/**</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">   * Send a request and receive a response</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">   *</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">   * </span><span class="an">@param</span><span class="co"> </span><span class="cv">request</span><span class="co"> - The prepared request</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">   * </span><span class="an">@param</span><span class="co"> </span><span class="cv">options</span><span class="co"> - Transport-specific options</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co">   * </span><span class="an">@returns</span><span class="co"> The raw response</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co">   */</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">send</span>(request<span class="op">:</span> TransportRequest<span class="op">,</span> options<span class="op">:</span> TransportOptions)<span class="op">:</span> <span class="bu">Promise</span><span class="op">&lt;</span>TransportResponse<span class="op">&gt;;</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> TransportRequest {</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  <span class="co">/**</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co">   * Full URL including query parameters</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co">   */</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  url<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>  <span class="co">/**</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="co">   * HTTP method (for HTTP-based transports)</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="co">   */</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>  method<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>  <span class="co">/**</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="co">   * Request headers</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a><span class="co">   */</span></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>  headers<span class="op">:</span> <span class="bu">Record</span><span class="op">&lt;</span><span class="dt">string</span><span class="op">,</span> <span class="dt">string</span><span class="op">&gt;;</span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>  <span class="co">/**</span></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a><span class="co">   * Serialized request body (may be undefined)</span></span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="co">   */</span></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>  body<span class="op">?:</span> <span class="dt">string</span> <span class="op">|</span> <span class="bu">Buffer</span><span class="op">;</span></span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> TransportOptions {</span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>  <span class="co">/**</span></span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a><span class="co">   * Request timeout in milliseconds</span></span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a><span class="co">   */</span></span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>  timeout<span class="op">?:</span> <span class="dt">number</span><span class="op">;</span></span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>  <span class="co">/**</span></span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a><span class="co">   * Number of retry attempts</span></span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a><span class="co">   */</span></span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>  retries<span class="op">?:</span> <span class="dt">number</span><span class="op">;</span></span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>  <span class="co">/**</span></span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a><span class="co">   * Base delay between retries in milliseconds</span></span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a><span class="co">   */</span></span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>  retryDelay<span class="op">?:</span> <span class="dt">number</span><span class="op">;</span></span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> TransportResponse {</span>
+<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a>  <span class="co">/**</span></span>
+<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a><span class="co">   * HTTP status code</span></span>
+<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a><span class="co">   */</span></span>
+<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a>  status<span class="op">:</span> <span class="dt">number</span><span class="op">;</span></span>
+<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a>  <span class="co">/**</span></span>
+<span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a><span class="co">   * Status text (e.g., &quot;OK&quot;, &quot;Not Found&quot;)</span></span>
+<span id="cb3-61"><a href="#cb3-61" aria-hidden="true" tabindex="-1"></a><span class="co">   */</span></span>
+<span id="cb3-62"><a href="#cb3-62" aria-hidden="true" tabindex="-1"></a>  statusText<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb3-63"><a href="#cb3-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-64"><a href="#cb3-64" aria-hidden="true" tabindex="-1"></a>  <span class="co">/**</span></span>
+<span id="cb3-65"><a href="#cb3-65" aria-hidden="true" tabindex="-1"></a><span class="co">   * Response headers</span></span>
+<span id="cb3-66"><a href="#cb3-66" aria-hidden="true" tabindex="-1"></a><span class="co">   */</span></span>
+<span id="cb3-67"><a href="#cb3-67" aria-hidden="true" tabindex="-1"></a>  headers<span class="op">:</span> <span class="bu">Record</span><span class="op">&lt;</span><span class="dt">string</span><span class="op">,</span> <span class="dt">string</span><span class="op">&gt;;</span></span>
+<span id="cb3-68"><a href="#cb3-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-69"><a href="#cb3-69" aria-hidden="true" tabindex="-1"></a>  <span class="co">/**</span></span>
+<span id="cb3-70"><a href="#cb3-70" aria-hidden="true" tabindex="-1"></a><span class="co">   * Raw response body</span></span>
+<span id="cb3-71"><a href="#cb3-71" aria-hidden="true" tabindex="-1"></a><span class="co">   */</span></span>
+<span id="cb3-72"><a href="#cb3-72" aria-hidden="true" tabindex="-1"></a>  body<span class="op">:</span> <span class="dt">string</span> <span class="op">|</span> <span class="bu">Buffer</span><span class="op">;</span></span>
+<span id="cb3-73"><a href="#cb3-73" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<hr />
+<h2 id="5-protocol-plugin-interface">5. Protocol Plugin Interface</h2>
+<h3 id="51-purpose">5.1 Purpose</h3>
+<p>Protocol plugins translate MCP-AQL operation definitions into protocol-specific requests and parse responses into a standard format.</p>
+<h3 id="52-interface">5.2 Interface</h3>
+<div class="sourceCode" id="cb4"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> ProtocolPlugin <span class="kw">extends</span> <span class="bu">Plugin</span> {</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">readonly</span> category<span class="op">:</span> <span class="st">&#39;protocol&#39;</span><span class="op">;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">/**</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">   * Build a transport request from an operation definition</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co">   *</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">   * </span><span class="an">@param</span><span class="co"> </span><span class="cv">operation</span><span class="co"> - The operation to execute</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co">   * </span><span class="an">@param</span><span class="co"> </span><span class="cv">params</span><span class="co"> - Resolved parameter values</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co">   * </span><span class="an">@param</span><span class="co"> </span><span class="cv">config</span><span class="co"> - Target configuration from adapter</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co">   * </span><span class="an">@returns</span><span class="co"> A request ready for the transport plugin</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co">   */</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">buildRequest</span>(</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    operation<span class="op">:</span> OperationDefinition<span class="op">,</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    params<span class="op">:</span> <span class="bu">Record</span><span class="op">&lt;</span><span class="dt">string</span><span class="op">,</span> <span class="dt">unknown</span><span class="op">&gt;,</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    config<span class="op">:</span> TargetConfig</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  )<span class="op">:</span> TransportRequest<span class="op">;</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>  <span class="co">/**</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="co">   * Parse a transport response into standard format</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="co">   *</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="co">   * </span><span class="an">@param</span><span class="co"> </span><span class="cv">response</span><span class="co"> - Raw response from transport</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="co">   * </span><span class="an">@param</span><span class="co"> </span><span class="cv">operation</span><span class="co"> - The operation that was executed</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="co">   * </span><span class="an">@returns</span><span class="co"> Parsed response data</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a><span class="co">   */</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">parseResponse</span>(</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>    response<span class="op">:</span> TransportResponse<span class="op">,</span></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>    operation<span class="op">:</span> OperationDefinition</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>  )<span class="op">:</span> ParsedResponse<span class="op">;</span></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> OperationDefinition {</span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>  name<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>  maps_to<span class="op">:</span> <span class="dt">string</span><span class="op">;</span>          <span class="co">// e.g., &quot;GET /repos/{owner}/{repo}&quot;</span></span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>  params<span class="op">?:</span> <span class="bu">Record</span><span class="op">&lt;</span><span class="dt">string</span><span class="op">,</span> ParamDefinition<span class="op">&gt;;</span></span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> TargetConfig {</span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>  base_url<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>  transport<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>  protocol<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>  serialization<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> ParsedResponse {</span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a>  <span class="co">/**</span></span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a><span class="co">   * Whether the request was successful (2xx status)</span></span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a><span class="co">   */</span></span>
+<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a>  ok<span class="op">:</span> <span class="dt">boolean</span><span class="op">;</span></span>
+<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a>  <span class="co">/**</span></span>
+<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a><span class="co">   * HTTP status code</span></span>
+<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a><span class="co">   */</span></span>
+<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a>  status<span class="op">:</span> <span class="dt">number</span><span class="op">;</span></span>
+<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a>  <span class="co">/**</span></span>
+<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a><span class="co">   * Deserialized response data</span></span>
+<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a><span class="co">   */</span></span>
+<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a>  data<span class="op">:</span> <span class="dt">unknown</span><span class="op">;</span></span>
+<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a>  <span class="co">/**</span></span>
+<span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a><span class="co">   * Error information (if not ok)</span></span>
+<span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a><span class="co">   */</span></span>
+<span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a>  error<span class="op">?:</span> {</span>
+<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a>    message<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb4-65"><a href="#cb4-65" aria-hidden="true" tabindex="-1"></a>    code<span class="op">?:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb4-66"><a href="#cb4-66" aria-hidden="true" tabindex="-1"></a>  }<span class="op">;</span></span>
+<span id="cb4-67"><a href="#cb4-67" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<hr />
+<h2 id="6-serialization-plugin-interface">6. Serialization Plugin Interface</h2>
+<h3 id="61-purpose">6.1 Purpose</h3>
+<p>Serialization plugins handle encoding request bodies and decoding response bodies.</p>
+<h3 id="62-interface">6.2 Interface</h3>
+<div class="sourceCode" id="cb5"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> SerializationPlugin <span class="kw">extends</span> <span class="bu">Plugin</span> {</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">readonly</span> category<span class="op">:</span> <span class="st">&#39;serialization&#39;</span><span class="op">;</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">/**</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">   * Content-Type header value for this format</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">   */</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">readonly</span> contentType<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="co">/**</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co">   * Serialize data to string/buffer</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co">   *</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co">   * </span><span class="an">@param</span><span class="co"> </span><span class="cv">data</span><span class="co"> - Data to serialize</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co">   * </span><span class="an">@returns</span><span class="co"> Serialized string or buffer</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="co">   */</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">serialize</span>(data<span class="op">:</span> <span class="dt">unknown</span>)<span class="op">:</span> <span class="dt">string</span> <span class="op">|</span> <span class="bu">Buffer</span><span class="op">;</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  <span class="co">/**</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="co">   * Deserialize string/buffer to data</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="co">   *</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="co">   * </span><span class="an">@param</span><span class="co"> </span><span class="cv">raw</span><span class="co"> - Raw response body</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="co">   * </span><span class="an">@returns</span><span class="co"> Deserialized data</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="co">   */</span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">deserialize</span>(raw<span class="op">:</span> <span class="dt">string</span> <span class="op">|</span> <span class="bu">Buffer</span>)<span class="op">:</span> <span class="dt">unknown</span><span class="op">;</span></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<hr />
+<h2 id="7-authentication-plugin-interface">7. Authentication Plugin Interface</h2>
+<h3 id="71-purpose">7.1 Purpose</h3>
+<p>Authentication plugins attach credentials to outgoing requests.</p>
+<h3 id="72-interface">7.2 Interface</h3>
+<div class="sourceCode" id="cb6"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> AuthPlugin <span class="kw">extends</span> <span class="bu">Plugin</span> {</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">readonly</span> category<span class="op">:</span> <span class="st">&#39;auth&#39;</span><span class="op">;</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">/**</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">   * Attach authentication to a request</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">   *</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">   * </span><span class="an">@param</span><span class="co"> </span><span class="cv">request</span><span class="co"> - Request to modify</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co">   * </span><span class="an">@param</span><span class="co"> </span><span class="cv">config</span><span class="co"> - Auth configuration from adapter</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co">   * </span><span class="an">@param</span><span class="co"> </span><span class="cv">context</span><span class="co"> - Runtime context for credential resolution</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co">   * </span><span class="an">@returns</span><span class="co"> Modified request with auth attached</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co">   */</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">authenticate</span>(</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    request<span class="op">:</span> TransportRequest<span class="op">,</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    config<span class="op">:</span> AuthConfig<span class="op">,</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    context<span class="op">:</span> AuthContext</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>  )<span class="op">:</span> TransportRequest<span class="op">;</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> AuthConfig {</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>  type<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Type-specific fields</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>  token_env<span class="op">?:</span> <span class="dt">string</span><span class="op">;</span>      <span class="co">// For bearer</span></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>  header_name<span class="op">?:</span> <span class="dt">string</span><span class="op">;</span>    <span class="co">// For api_key</span></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>  key_env<span class="op">?:</span> <span class="dt">string</span><span class="op">;</span>        <span class="co">// For api_key</span></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> AuthContext {</span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>  <span class="co">/**</span></span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a><span class="co">   * Resolve an environment variable</span></span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a><span class="co">   */</span></span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">getEnv</span>(name<span class="op">:</span> <span class="dt">string</span>)<span class="op">:</span> <span class="dt">string</span> <span class="op">|</span> <span class="dt">undefined</span><span class="op">;</span></span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<hr />
+<h2 id="8-error-code-contracts">8. Error Code Contracts</h2>
+<h3 id="81-error-code-convention">8.1 Error Code Convention</h3>
+<p>Plugin errors MUST use a namespaced code format:</p>
+<pre><code>{CATEGORY}_{ERROR_TYPE}</code></pre>
+<p>Examples:</p>
+<ul>
+<li><code>TRANSPORT_TIMEOUT</code></li>
+<li><code>AUTH_CREDENTIAL_MISSING</code></li>
+<li><code>SERIALIZATION_PARSE_ERROR</code></li>
+<li><code>PROTOCOL_INVALID_MAPPING</code></li>
+</ul>
+<h3 id="82-error-propagation">8.2 Error Propagation</h3>
+<p>Errors thrown by plugins MUST include:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> PluginError <span class="kw">extends</span> <span class="bu">Error</span> {</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  code<span class="op">:</span> <span class="dt">string</span><span class="op">;</span>           <span class="co">// Error code</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  plugin<span class="op">:</span> <span class="dt">string</span><span class="op">;</span>         <span class="co">// Plugin name</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  category<span class="op">:</span> <span class="dt">string</span><span class="op">;</span>       <span class="co">// Plugin category</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  cause<span class="op">?:</span> <span class="bu">Error</span><span class="op">;</span>          <span class="co">// Underlying error</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="83-mvp-error-codes">8.3 MVP Error Codes</h3>
+<table>
+<thead>
+<tr>
+<th>Code</th>
+<th>Category</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>PLUGIN_NOT_FOUND</code></td>
+<td>Runtime</td>
+<td>Requested plugin does not exist</td>
+</tr>
+<tr>
+<td><code>TRANSPORT_DNS_ERROR</code></td>
+<td>Transport</td>
+<td>DNS resolution failed</td>
+</tr>
+<tr>
+<td><code>TRANSPORT_CONNECTION_REFUSED</code></td>
+<td>Transport</td>
+<td>Connection refused</td>
+</tr>
+<tr>
+<td><code>TRANSPORT_TIMEOUT</code></td>
+<td>Transport</td>
+<td>Request timed out</td>
+</tr>
+<tr>
+<td><code>TRANSPORT_TLS_ERROR</code></td>
+<td>Transport</td>
+<td>TLS/SSL error</td>
+</tr>
+<tr>
+<td><code>TRANSPORT_NETWORK_ERROR</code></td>
+<td>Transport</td>
+<td>General network error</td>
+</tr>
+<tr>
+<td><code>PROTOCOL_INVALID_MAPPING</code></td>
+<td>Protocol</td>
+<td>Invalid maps_to format</td>
+</tr>
+<tr>
+<td><code>PROTOCOL_MISSING_PARAM</code></td>
+<td>Protocol</td>
+<td>Path parameter missing</td>
+</tr>
+<tr>
+<td><code>SERIALIZATION_CIRCULAR_REF</code></td>
+<td>Serialization</td>
+<td>Circular reference in data</td>
+</tr>
+<tr>
+<td><code>SERIALIZATION_PARSE_ERROR</code></td>
+<td>Serialization</td>
+<td>Failed to parse response</td>
+</tr>
+<tr>
+<td><code>AUTH_CONFIG_INVALID</code></td>
+<td>Auth</td>
+<td>Invalid auth configuration</td>
+</tr>
+<tr>
+<td><code>AUTH_CREDENTIAL_MISSING</code></td>
+<td>Auth</td>
+<td>Credential not found</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="references">References</h2>
+<ul>
+<li><a href="adapter/element-type.html">Adapter Element Type Specification</a></li>
+<li><a href="error-codes.html">Error Codes Specification</a></li>
+<li><a href="versions/v1.0.0-draft.html">MCP-AQL Specification</a></li>
+<li><a href="https://github.com/MCPAQL/mcpaql-adapter/blob/develop/docs/architecture/plugin-system.md">Plugin System Implementation</a> (implementation details)</li>
+<li>GitHub Issue: <a href="https://github.com/MCPAQL/spec/issues/62">#62</a></li>
+</ul>
+
+          </div>
+        </section>
+        <nav class="page-nav" aria-label="Page navigation">
+  <a class="page-nav-link prev" href="overview.html">
+    <span class="page-nav-eyebrow">Previous page</span>
+    <strong class="page-nav-label">MCP-AQL Protocol Overview</strong>
+  </a>
+  <a class="page-nav-link next" href="README.html">
+    <span class="page-nav-eyebrow">Next page</span>
+    <strong class="page-nav-label">MCP-AQL Specification Documentation</strong>
+  </a>
+</nav>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.</p>
+      <div class="footer-links">
+        <a href="../docs/index.html">Docs Library</a><a href="index.html">Repo-Synced Spec</a><a href="https://github.com/MCPAQL">MCPAQL Organization</a><a href="https://dollhouseresearch.com">Dollhouse Research</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../js/search.js" defer></script>
+</body>
+</html>

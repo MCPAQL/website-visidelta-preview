@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "If you use materials from this site, please cite it as below."
+title: "MCP-AQL Website"
+type: website
+authors:
+  - family-names: "Darling"
+    given-names: "Mick"
+    email: "mick@mickdarling.com"
+url: "https://github.com/MCPAQL/website"
+license: "AGPL-3.0"
+

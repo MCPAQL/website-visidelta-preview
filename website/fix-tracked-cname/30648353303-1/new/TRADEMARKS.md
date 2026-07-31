@@ -1,0 +1,9 @@
+# Trademarks
+
+This repository is part of the MCP-AQL project.
+
+`MCP-AQL`, `MCPAQL`, `DollhouseMCP`, and `Dollhouse Research` are trademarks of Dollhouse MCP Incorporated.
+
+For MCP-AQL trademark and attribution guidelines, see `spec/TRADEMARKS.md` in the MCP-AQL spec repository:
+
+- <https://github.com/MCPAQL/spec/blob/main/TRADEMARKS.md>

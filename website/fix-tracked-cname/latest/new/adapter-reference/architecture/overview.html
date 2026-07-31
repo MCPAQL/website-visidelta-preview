@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="This document describes the architecture of MCP-AQL adapters, explaining how they transform existing APIs and services into MCP-AQL compliant endpoints. It covers the core components, request flow, and design principles ">
+  <title>MCP-AQL Adapter Reference | MCP-AQL Architecture Overview</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" media="print" onload="this.onload=null;this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <a class="logo" href="../../index.html"><span class="logo-mark"></span>MCP-AQL</a>
+        <ul class="nav-links">
+          <li><a href="../../index.html">Home</a></li>
+          <li><a href="../../docs/index.html">Docs</a></li>
+          <li><a href="../../launch-checklist.html">Launch Checklist</a></li>
+          <li><a href="../../apis/index.html">Adapter Patterns</a></li>
+
+          <li><a href="../../case-studies/github-mcp.html">Case Studies</a></li>
+        </ul>
+        <form class="site-search" data-search-form data-index-url="../../data/search-index.json" role="search">
+          <label class="sr-only" for="site-search-input">Search MCP-AQL docs</label>
+          <input id="site-search-input" data-search-input type="search" placeholder="Search MCP-AQL docs, spec pages, and adapter patterns...">
+          <span class="search-count" data-search-count></span>
+          <ul class="search-results" data-search-results hidden></ul>
+        </form>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container docs-shell">
+      <aside class="docs-side">
+        <h2>Reference Adapter Docs</h2>
+        <p class="docs-side-note">Generated from <code>MCPAQL/mcpaql-adapter</code> so the website carries the implementation architecture, guides, and ADRs too.</p>
+        <div class="docs-side-group">
+  <h3>Overview</h3>
+  <ul><li><a href="../repo/README.html">MCP-AQL Reference Adapter</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Architecture</h3>
+  <ul><li><a href="dispatch.html">Schema-Driven Dispatch</a></li><li><a class="current" aria-current="page" href="overview.html">MCP-AQL Architecture Overview</a></li><li><a href="plugin-system.html">Plugin System Implementation</a></li><li><a href="runtime.html">Universal Adapter Runtime Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Guides</h3>
+  <ul><li><a href="../guides/development.html">MCP-AQL Adapter Development Guide</a></li><li><a href="../guides/migration.html">Migration Guide: MCP Server to MCP-AQL Adapter</a></li><li><a href="../guides/testing.html">MCP-AQL Adapter Testing Guide</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>ADRs</h3>
+  <ul><li><a href="../adr/ADR-001-plugin-pipeline-order.html">ADR-001: Plugin Pipeline Order</a></li><li><a href="../adr/ADR-002-schema-driven-dispatch.html">ADR-002: Schema-Driven Dispatch over Code Generation</a></li><li><a href="../adr/ADR-003-stateless-plugins.html">ADR-003: Stateless Singleton Plugins</a></li><li><a href="../adr/README.html">Architecture Decision Records</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Examples</h3>
+  <ul><li><a href="../examples/README.html">Examples</a></li></ul>
+</div>
+      </aside>
+
+      <article class="docs-main">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+          <ol>
+            <li><a href="../../index.html">Home</a></li>
+            <li><a href="../../apis/index.html">Adapter Patterns</a></li><li><a href="../index.html">Reference Adapter Docs</a></li>
+            <li><span class="current">MCP-AQL Architecture Overview</span></li>
+          </ol>
+        </nav>
+        <section class="hero docs-hero">
+          <div class="hero-inner">
+            <span class="status-pill">REPO-SYNCED ADAPTER DOC</span>
+            <h1>MCP-AQL Architecture Overview</h1>
+            <p class="lede">This document describes the architecture of MCP-AQL adapters, explaining how they transform existing APIs and services into MCP-AQL compliant endpoints. It covers the core components, request flow, and design principles </p>
+            <div class="spec-meta"><span class="state-chip live">Support document</span><span class="state-chip pending">Draft</span><span class="state-chip">1.0.0-draft</span><span class="state-chip">2026-01-26</span></div>
+            <p class="spec-source">Source: <a href="https://github.com/MCPAQL/mcpaql-adapter/blob/main/docs/architecture/overview.md">mcpaql-adapter/docs/architecture/overview.md</a></p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="https://github.com/MCPAQL/mcpaql-adapter/blob/main/docs/architecture/overview.md">Open Source Markdown</a><a class="btn btn-secondary" href="../index.html">Browse Reference Adapter Docs</a><a class="btn btn-secondary" href="../../apis/index.html">Adapter Patterns Hub</a>
+            </div>
+          </div>
+        </section>
+
+        <section class="page-toc-shell" data-page-toc>
+          <div class="card page-toc-card">
+            <div class="page-toc-head">
+              <p class="page-toc-kicker">On this page</p>
+              <h2>Jump to a section</h2>
+              <p class="page-toc-intro">Use the outline to move through longer pages without losing your place.</p>
+            </div>
+            <ol class="page-toc-list" data-page-toc-list>
+              <li class="page-toc-item level-2"><a href="#abstract" data-toc-target="abstract">Abstract</a></li><li class="page-toc-item level-2"><a href="#1-introduction" data-toc-target="1-introduction">1. Introduction</a></li><li class="page-toc-item level-2"><a href="#2-architecture-components" data-toc-target="2-architecture-components">2. Architecture Components</a></li><li class="page-toc-item level-2"><a href="#3-request-flow" data-toc-target="3-request-flow">3. Request Flow</a></li><li class="page-toc-item level-2"><a href="#4-adapter-patterns" data-toc-target="4-adapter-patterns">4. Adapter Patterns</a></li><li class="page-toc-item level-2"><a href="#5-design-principles" data-toc-target="5-design-principles">5. Design Principles</a></li><li class="page-toc-item level-2"><a href="#references" data-toc-target="references">References</a></li>
+            </ol>
+          </div>
+        </section>
+
+
+        <section>
+          <div class="card spec-prose">
+            <p><strong>Version:</strong> 1.0.0-draft <strong>Status:</strong> Draft <strong>Last Updated:</strong> 2026-01-26 <strong>Moved from:</strong> <a href="https://github.com/MCPAQL/spec">MCPAQL/spec</a> (formerly <code>docs/architecture/overview.md</code>)</p>
+<blockquote>
+<p><strong>Note:</strong> This document describes the <strong>implementation architecture</strong> for MCP-AQL adapters. For normative protocol specifications, see the <a href="https://github.com/MCPAQL/spec">spec repository</a>.</p>
+</blockquote>
+<h2 id="abstract">Abstract</h2>
+<p>This document describes the architecture of MCP-AQL adapters, explaining how they transform existing APIs and services into MCP-AQL compliant endpoints. It covers the core components, request flow, and design principles that guide adapter implementation.</p>
+<hr />
+<h2 id="1-introduction">1. Introduction</h2>
+<h3 id="11-purpose">1.1 Purpose</h3>
+<p>MCP-AQL adapters serve as a translation layer between the MCP-AQL protocol and domain-specific backends. They enable any service to expose its functionality through the unified CRUDE interface while maintaining semantic consistency and token efficiency.</p>
+<h3 id="12-what-mcp-aql-provides">1.2 What MCP-AQL Provides</h3>
+<p>MCP-AQL is a <strong>protocol layer</strong> that defines:</p>
+<ul>
+<li>The CRUDE endpoint pattern (5 semantic endpoints)</li>
+<li>Request/response formats</li>
+<li>Introspection mechanism</li>
+<li>Operation routing rules</li>
+</ul>
+<h3 id="13-what-adapters-provide">1.3 What Adapters Provide</h3>
+<p>Each adapter defines its own:</p>
+<ul>
+<li><strong>Operations</strong> - The actions available (create_user, run_report, etc.)</li>
+<li><strong>Parameters</strong> - What each operation accepts</li>
+<li><strong>Types</strong> - Domain-specific data structures</li>
+<li><strong>Classification</strong> - Which operations go to which CRUDE endpoint</li>
+</ul>
+<h3 id="14-adapter-role">1.4 Adapter Role</h3>
+<pre><code>┌─────────────────────────────────────────────────────────────────┐
+│                     LLM / MCP Client                            │
+└─────────────────────────┬───────────────────────────────────────┘
+                          │ MCP Protocol
+                          ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                    MCP-AQL Adapter                              │
+│  ┌────────────────────────────────────────────────────────────┐ │
+│  │ CRUDE Endpoints: CREATE | READ | UPDATE | DELETE | EXECUTE │ │
+│  └────────────────────────────────────────────────────────────┘ │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────────────┐   │
+│  │ Op Router    │→ │ Dispatcher   │→ │ Introspection       │   │
+│  └──────────────┘  └──────────────┘  └──────────────────────┘   │
+└─────────────────────────┬───────────────────────────────────────┘
+                          │ Domain API
+                          ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                    Domain Backend                               │
+│          (Database, API, File System, etc.)                     │
+└─────────────────────────────────────────────────────────────────┘</code></pre>
+<hr />
+<h2 id="2-architecture-components">2. Architecture Components</h2>
+<h3 id="21-operation-router">2.1 Operation Router</h3>
+<p>Maps incoming operations to their designated CRUDE endpoint and handler.</p>
+<p><strong>Responsibilities:</strong></p>
+<ul>
+<li>Validate operation exists</li>
+<li>Verify endpoint routing (in CRUDE mode)</li>
+<li>Look up handler reference</li>
+<li>Return routing metadata</li>
+</ul>
+<p><strong>Implementation Pattern:</strong></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> OperationRoute {</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  operation<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  endpoint<span class="op">:</span> CRUDEndpoint<span class="op">;</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  handler<span class="op">:</span> <span class="dt">string</span><span class="op">;</span>       <span class="co">// Handler reference</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  description<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co">// Each adapter defines its own routes</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> OPERATION_ROUTES<span class="op">:</span> <span class="bu">Record</span><span class="op">&lt;</span><span class="dt">string</span><span class="op">,</span> OperationRoute<span class="op">&gt;</span> <span class="op">=</span> {</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  create_user<span class="op">:</span> {</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    endpoint<span class="op">:</span> <span class="st">&#39;CREATE&#39;</span><span class="op">,</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    handler<span class="op">:</span> <span class="st">&#39;Users.create&#39;</span><span class="op">,</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    description<span class="op">:</span> <span class="st">&#39;Create a new user account&#39;</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  }<span class="op">,</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  list_users<span class="op">:</span> {</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    endpoint<span class="op">:</span> <span class="st">&#39;READ&#39;</span><span class="op">,</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    handler<span class="op">:</span> <span class="st">&#39;Users.list&#39;</span><span class="op">,</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    description<span class="op">:</span> <span class="st">&#39;List users with filtering&#39;</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  }<span class="op">,</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>  <span class="co">// ... adapter-specific operations</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>}<span class="op">;</span></span></code></pre></div>
+<h3 id="22-introspection-resolver">2.2 Introspection Resolver</h3>
+<p>Provides runtime discovery of operations and types.</p>
+<p><strong>Responsibilities:</strong></p>
+<ul>
+<li>Generate operation listings</li>
+<li>Provide operation details on request</li>
+<li>Return type definitions</li>
+<li>Cache responses for efficiency</li>
+</ul>
+<p><strong>Query Types:</strong></p>
+<ul>
+<li><code>operations</code> - List all available operations</li>
+<li><code>types</code> - List all available types</li>
+<li>Operation/type details by name</li>
+</ul>
+<p>See <a href="../../spec/introspection.html">Introspection Specification</a> for detailed specification.</p>
+<h3 id="23-response-formatter">2.3 Response Formatter</h3>
+<p>Ensures consistent response structure.</p>
+<p><strong>Responsibilities:</strong></p>
+<ul>
+<li>Wrap results in discriminated union</li>
+<li>Format error responses</li>
+<li>Add metadata when appropriate</li>
+</ul>
+<h3 id="24-security-layer-optional">2.4 Security Layer (Optional)</h3>
+<p>Enforces access control and security policies.</p>
+<p><strong>Responsibilities:</strong></p>
+<ul>
+<li>Validate operation permissions</li>
+<li>Apply endpoint-level restrictions</li>
+<li>Manage confirmation requirements</li>
+<li>Log security events</li>
+</ul>
+<p>See <a href="../../spec/security/gatekeeper.html">Security Model</a> for detailed specification.</p>
+<hr />
+<h2 id="3-request-flow">3. Request Flow</h2>
+<h3 id="31-standard-request-processing">3.1 Standard Request Processing</h3>
+<pre><code>1. RECEIVE     Client sends request to CRUDE endpoint
+                │
+2. PARSE       Extract operation and params
+                │
+3. ROUTE       Look up operation in routes
+                │
+4. VALIDATE    Check endpoint match (CRUDE mode)
+                │
+5. DISPATCH    Invoke handler with params
+                │
+6. FORMAT      Wrap in OperationResult
+                │
+7. RETURN      Send response to client</code></pre>
+<h3 id="32-introspection-request-flow">3.2 Introspection Request Flow</h3>
+<pre><code>1. RECEIVE     { operation: &quot;introspect&quot;, params: { query: &quot;operations&quot; } }
+                │
+2. ROUTE       Route to IntrospectionResolver
+                │
+3. RESOLVE     Determine query type
+                │
+4. GENERATE    Build response from routes
+                │
+5. RETURN      Return operation listing</code></pre>
+<h3 id="33-error-flow">3.3 Error Flow</h3>
+<pre><code>1. RECEIVE     Request with unknown operation
+                │
+2. ROUTE       Operation not found
+                │
+3. FORMAT      Create error response
+                │
+4. RETURN      { success: false, error: &quot;Unknown operation: xyz&quot; }</code></pre>
+<hr />
+<h2 id="4-adapter-patterns">4. Adapter Patterns</h2>
+<h3 id="41-crud-adapter">4.1 CRUD Adapter</h3>
+<p>For systems managing discrete resources (documents, records, entities).</p>
+<p><strong>Characteristics:</strong></p>
+<ul>
+<li>Clear resource types</li>
+<li>Standard CRUD operations</li>
+<li>May not need EXECUTE endpoint</li>
+</ul>
+<p><strong>Example Operations:</strong></p>
+<ul>
+<li><code>create_user</code>, <code>get_user</code>, <code>update_user</code>, <code>delete_user</code></li>
+<li><code>create_document</code>, <code>list_documents</code>, <code>search_documents</code></li>
+</ul>
+<h3 id="42-api-gateway-adapter">4.2 API Gateway Adapter</h3>
+<p>For wrapping external REST/GraphQL APIs.</p>
+<p><strong>Characteristics:</strong></p>
+<ul>
+<li>Maps CRUDE to HTTP methods</li>
+<li>Operation discovery from OpenAPI/GraphQL schema</li>
+<li>Pass-through parameters</li>
+</ul>
+<p><strong>Mapping Pattern:</strong></p>
+<pre><code>CREATE → POST
+READ   → GET
+UPDATE → PUT/PATCH
+DELETE → DELETE</code></pre>
+<h3 id="43-workflow-adapter">4.3 Workflow Adapter</h3>
+<p>For systems with executable processes.</p>
+<p><strong>Characteristics:</strong></p>
+<ul>
+<li>Heavy use of EXECUTE endpoint</li>
+<li>Lifecycle operations (start, stop, status)</li>
+<li>Long-running operations</li>
+</ul>
+<p><strong>Example Operations:</strong></p>
+<ul>
+<li><code>run_job</code>, <code>cancel_job</code>, <code>get_job_status</code></li>
+<li><code>start_pipeline</code>, <code>pause_pipeline</code>, <code>resume_pipeline</code></li>
+</ul>
+<h3 id="44-database-adapter">4.4 Database Adapter</h3>
+<p>For direct database access.</p>
+<p><strong>Characteristics:</strong></p>
+<ul>
+<li>Tables/collections as resource types</li>
+<li>SQL/NoSQL query translation</li>
+<li>Transaction support</li>
+</ul>
+<p><strong>Example Operations:</strong></p>
+<ul>
+<li><code>query</code>, <code>insert</code>, <code>update</code>, <code>delete</code></li>
+<li>May use generic operations with type parameter</li>
+</ul>
+<h3 id="45-composite-adapter">4.5 Composite Adapter</h3>
+<p>Aggregates multiple backends.</p>
+<p><strong>Characteristics:</strong></p>
+<ul>
+<li>Unified interface over heterogeneous sources</li>
+<li>Operation routing by type or prefix</li>
+<li>Cross-backend search</li>
+</ul>
+<hr />
+<h2 id="5-design-principles">5. Design Principles</h2>
+<h3 id="51-server-side-authority">5.1 Server-Side Authority</h3>
+<blockquote>
+<p>"LLM instructions are suggestions. Adapter policies are enforcement."</p>
+</blockquote>
+<p>The adapter is the authoritative source for:</p>
+<ul>
+<li>Operation routing</li>
+<li>Security enforcement</li>
+<li>Parameter validation</li>
+<li>Response formatting</li>
+</ul>
+<p>Clients cannot bypass server-side policies through endpoint selection.</p>
+<h3 id="52-token-efficiency">5.2 Token Efficiency</h3>
+<p>Minimize context consumed by tool definitions:</p>
+<ul>
+<li>Consolidate operations into semantic endpoints</li>
+<li>Provide introspection for on-demand discovery</li>
+<li>Support field selection for payload reduction (optional)</li>
+<li>Enable single-endpoint mode for maximum savings</li>
+</ul>
+<h3 id="53-semantic-clarity">5.3 Semantic Clarity</h3>
+<p>Operations are grouped by their effect on state:</p>
+<ul>
+<li>CREATE: Adds without removing</li>
+<li>READ: Queries without modifying</li>
+<li>UPDATE: Modifies existing</li>
+<li>DELETE: Removes permanently</li>
+<li>EXECUTE: Runtime lifecycle</li>
+</ul>
+<h3 id="54-self-description">5.4 Self-Description</h3>
+<p>Adapters describe themselves via introspection:</p>
+<ul>
+<li>All operations discoverable</li>
+<li>All parameters documented</li>
+<li>All types defined</li>
+<li>No external documentation required</li>
+</ul>
+<h3 id="55-fail-safe-defaults">5.5 Fail-Safe Defaults</h3>
+<ul>
+<li>Unknown operations return clear errors</li>
+<li>Missing parameters identified specifically</li>
+<li>Route mismatches explain correct endpoint</li>
+<li>Security defaults to restrictive</li>
+</ul>
+<hr />
+<h2 id="references">References</h2>
+<ul>
+<li><a href="../../spec/versions/v1.0.0-draft.html">MCP-AQL Specification</a></li>
+<li><a href="../../spec/crude-pattern.html">CRUDE Pattern Specification</a></li>
+<li><a href="../../spec/introspection.html">Introspection Specification</a></li>
+<li><a href="../../spec/operations.html">Operations Guide</a></li>
+</ul>
+
+          </div>
+        </section>
+        <nav class="page-nav" aria-label="Page navigation">
+  <a class="page-nav-link prev" href="dispatch.html">
+    <span class="page-nav-eyebrow">Previous page</span>
+    <strong class="page-nav-label">Schema-Driven Dispatch</strong>
+  </a>
+  <a class="page-nav-link next" href="plugin-system.html">
+    <span class="page-nav-eyebrow">Next page</span>
+    <strong class="page-nav-label">Plugin System Implementation</strong>
+  </a>
+</nav>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.</p>
+      <div class="footer-links">
+        <a href="../../apis/index.html">Adapter Patterns</a><a href="../index.html">Reference Adapter Docs</a><a href="https://github.com/MCPAQL/mcpaql-adapter">Reference Adapter Repo</a><a href="https://dollhouseresearch.com">Dollhouse Research</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../js/search.js" defer></script>
+</body>
+</html>

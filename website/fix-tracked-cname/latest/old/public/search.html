@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Search MCP-AQL website content across protocol docs, repo-synced spec pages, reference adapter docs, adapters, and launch guidance.">
+  <title>MCP-AQL Search</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" media="print" onload="this.onload=null;this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <a class="logo" href="index.html"><span class="logo-mark"></span>MCP-AQL</a>
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="docs/index.html">Docs</a></li>
+          <li><a href="launch-checklist.html">Launch Checklist</a></li>
+          <li><a href="apis/index.html">Adapter Patterns</a></li>
+
+          <li><a href="case-studies/github-mcp.html">Case Studies</a></li>
+        </ul>
+        <form class="site-search" data-search-form data-index-url="data/search-index.json" role="search">
+          <label class="sr-only" for="site-search-input">Search MCP-AQL docs</label>
+          <input id="site-search-input" data-search-input type="search" placeholder="Search MCP-AQL docs, spec pages, and adapter patterns...">
+          <span class="search-count" data-search-count></span>
+          <ul class="search-results" data-search-results hidden></ul>
+        </form>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container" data-search-page data-index-url="data/search-index.json">
+      <section class="hero">
+        <div class="hero-inner">
+          <span class="status-pill">SEARCH RESULTS</span>
+          <h1>Results for <span data-search-query>all docs</span></h1>
+          <p class="lede">Search spans the summary docs, the repo-synced full spec reference, the mirrored reference adapter docs, launch pages, adapter patterns, and key repository surfaces.</p>
+          <p class="search-page-count" data-search-page-count>Loading results...</p>
+        </div>
+      </section>
+
+      <section>
+        <div class="search-page-layout">
+          <div class="card search-page-help">
+            <h2>Search Tips</h2>
+            <ul>
+              <li>Try protocol terms like <code>crude</code>, <code>introspect</code>, <code>gatekeeper</code>, or <code>conformance</code>.</li>
+              <li>Search also covers the full website-hosted spec mirror under <a href="spec/index.html">Full Spec</a>.</li>
+              <li>Implementation queries also cover <a href="adapter-reference/index.html">Reference Adapter Docs</a>.</li>
+              <li>If you are looking for the normative draft, try <code>v1.0.0</code> or <code>versions</code>.</li>
+            </ul>
+          </div>
+
+          <div>
+            <div class="card search-page-empty" data-search-page-empty hidden>
+              <h2>No results yet</h2>
+              <p>Try a broader term or use protocol vocabulary from the docs and spec.</p>
+            </div>
+            <ul class="search-page-results" data-search-page-results></ul>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.</p>
+      <div class="footer-links">
+        <a href="docs/index.html">Documentation Library</a>
+        <a href="spec/index.html">Repo-Synced Spec</a>
+        <a href="adapter-reference/index.html">Reference Adapter Docs</a>
+        <a href="https://github.com/MCPAQL">MCPAQL Organization</a>
+        <a href="https://dollhouseresearch.com">Dollhouse Research</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/search.js" defer></script>
+</body>
+</html>

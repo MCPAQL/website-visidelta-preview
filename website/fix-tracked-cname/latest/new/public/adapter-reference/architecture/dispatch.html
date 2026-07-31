@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="This document specifies the schema-driven dispatch pattern that enables declarative operation definitions with automatic parameter resolution, validation, and handler invocation. This is an optional but recommended patte">
+  <title>MCP-AQL Adapter Reference | Schema-Driven Dispatch</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" media="print" onload="this.onload=null;this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <a class="logo" href="../../index.html"><span class="logo-mark"></span>MCP-AQL</a>
+        <ul class="nav-links">
+          <li><a href="../../index.html">Home</a></li>
+          <li><a href="../../docs/index.html">Docs</a></li>
+          <li><a href="../../launch-checklist.html">Launch Checklist</a></li>
+          <li><a href="../../apis/index.html">Adapter Patterns</a></li>
+
+          <li><a href="../../case-studies/github-mcp.html">Case Studies</a></li>
+        </ul>
+        <form class="site-search" data-search-form data-index-url="../../data/search-index.json" role="search">
+          <label class="sr-only" for="site-search-input">Search MCP-AQL docs</label>
+          <input id="site-search-input" data-search-input type="search" placeholder="Search MCP-AQL docs, spec pages, and adapter patterns...">
+          <span class="search-count" data-search-count></span>
+          <ul class="search-results" data-search-results hidden></ul>
+        </form>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container docs-shell">
+      <aside class="docs-side">
+        <h2>Reference Adapter Docs</h2>
+        <p class="docs-side-note">Generated from <code>MCPAQL/mcpaql-adapter</code> so the website carries the implementation architecture, guides, and ADRs too.</p>
+        <div class="docs-side-group">
+  <h3>Overview</h3>
+  <ul><li><a href="../repo/README.html">MCP-AQL Reference Adapter</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Architecture</h3>
+  <ul><li><a class="current" aria-current="page" href="dispatch.html">Schema-Driven Dispatch</a></li><li><a href="overview.html">MCP-AQL Architecture Overview</a></li><li><a href="plugin-system.html">Plugin System Implementation</a></li><li><a href="runtime.html">Universal Adapter Runtime Specification</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Guides</h3>
+  <ul><li><a href="../guides/development.html">MCP-AQL Adapter Development Guide</a></li><li><a href="../guides/migration.html">Migration Guide: MCP Server to MCP-AQL Adapter</a></li><li><a href="../guides/testing.html">MCP-AQL Adapter Testing Guide</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>ADRs</h3>
+  <ul><li><a href="../adr/ADR-001-plugin-pipeline-order.html">ADR-001: Plugin Pipeline Order</a></li><li><a href="../adr/ADR-002-schema-driven-dispatch.html">ADR-002: Schema-Driven Dispatch over Code Generation</a></li><li><a href="../adr/ADR-003-stateless-plugins.html">ADR-003: Stateless Singleton Plugins</a></li><li><a href="../adr/README.html">Architecture Decision Records</a></li></ul>
+</div><div class="docs-side-group">
+  <h3>Examples</h3>
+  <ul><li><a href="../examples/README.html">Examples</a></li></ul>
+</div>
+      </aside>
+
+      <article class="docs-main">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+          <ol>
+            <li><a href="../../index.html">Home</a></li>
+            <li><a href="../../apis/index.html">Adapter Patterns</a></li><li><a href="../index.html">Reference Adapter Docs</a></li>
+            <li><span class="current">Schema-Driven Dispatch</span></li>
+          </ol>
+        </nav>
+        <section class="hero docs-hero">
+          <div class="hero-inner">
+            <span class="status-pill">REPO-SYNCED ADAPTER DOC</span>
+            <h1>Schema-Driven Dispatch</h1>
+            <p class="lede">This document specifies the schema-driven dispatch pattern that enables declarative operation definitions with automatic parameter resolution, validation, and handler invocation. This is an optional but recommended patte</p>
+            <div class="spec-meta"><span class="state-chip live">Support document</span><span class="state-chip pending">Draft</span><span class="state-chip">1.0.0-draft</span><span class="state-chip">2026-01-26</span></div>
+            <p class="spec-source">Source: <a href="https://github.com/MCPAQL/mcpaql-adapter/blob/main/docs/architecture/dispatch.md">mcpaql-adapter/docs/architecture/dispatch.md</a></p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="https://github.com/MCPAQL/mcpaql-adapter/blob/main/docs/architecture/dispatch.md">Open Source Markdown</a><a class="btn btn-secondary" href="../index.html">Browse Reference Adapter Docs</a><a class="btn btn-secondary" href="../../apis/index.html">Adapter Patterns Hub</a>
+            </div>
+          </div>
+        </section>
+
+        <section class="page-toc-shell" data-page-toc>
+          <div class="card page-toc-card">
+            <div class="page-toc-head">
+              <p class="page-toc-kicker">On this page</p>
+              <h2>Jump to a section</h2>
+              <p class="page-toc-intro">Use the outline to move through longer pages without losing your place.</p>
+            </div>
+            <ol class="page-toc-list" data-page-toc-list>
+              <li class="page-toc-item level-2"><a href="#abstract" data-toc-target="abstract">Abstract</a></li><li class="page-toc-item level-2"><a href="#1-introduction" data-toc-target="1-introduction">1. Introduction</a></li><li class="page-toc-item level-3"><a href="#11-purpose" data-toc-target="11-purpose">1.1 Purpose</a></li><li class="page-toc-item level-3"><a href="#12-benefits" data-toc-target="12-benefits">1.2 Benefits</a></li><li class="page-toc-item level-3"><a href="#13-when-to-use" data-toc-target="13-when-to-use">1.3 When to Use</a></li><li class="page-toc-item level-2"><a href="#2-operation-schema" data-toc-target="2-operation-schema">2. Operation Schema</a></li><li class="page-toc-item level-3"><a href="#21-schema-structure" data-toc-target="21-schema-structure">2.1 Schema Structure</a></li><li class="page-toc-item level-3"><a href="#22-parameter-definition" data-toc-target="22-parameter-definition">2.2 Parameter Definition</a></li><li class="page-toc-item level-3"><a href="#23-example-schema-definition" data-toc-target="23-example-schema-definition">2.3 Example Schema Definition</a></li><li class="page-toc-item level-2"><a href="#3-parameter-resolution" data-toc-target="3-parameter-resolution">3. Parameter Resolution</a></li><li class="page-toc-item level-3"><a href="#31-resolution-algorithm" data-toc-target="31-resolution-algorithm">3.1 Resolution Algorithm</a></li><li class="page-toc-item level-3"><a href="#32-source-path-syntax" data-toc-target="32-source-path-syntax">3.2 Source Path Syntax</a></li><li class="page-toc-item level-3"><a href="#33-resolution-examples" data-toc-target="33-resolution-examples">3.3 Resolution Examples</a></li><li class="page-toc-item level-2"><a href="#4-handler-invocation" data-toc-target="4-handler-invocation">4. Handler Invocation</a></li><li class="page-toc-item level-3"><a href="#41-parameter-styles" data-toc-target="41-parameter-styles">4.1 Parameter Styles</a></li><li class="page-toc-item level-3"><a href="#42-handler-reference" data-toc-target="42-handler-reference">4.2 Handler Reference</a></li><li class="page-toc-item level-2"><a href="#5-security-considerations" data-toc-target="5-security-considerations">5. Security Considerations</a></li><li class="page-toc-item level-3"><a href="#51-path-traversal-protection" data-toc-target="51-path-traversal-protection">5.1 Path Traversal Protection</a></li><li class="page-toc-item level-3"><a href="#52-input-validation" data-toc-target="52-input-validation">5.2 Input Validation</a></li><li class="page-toc-item level-3"><a href="#53-value-validation" data-toc-target="53-value-validation">5.3 Value Validation</a></li><li class="page-toc-item level-2"><a href="#6-introspection-integration" data-toc-target="6-introspection-integration">6. Introspection Integration</a></li><li class="page-toc-item level-3"><a href="#61-auto-generated-responses" data-toc-target="61-auto-generated-responses">6.1 Auto-Generated Responses</a></li><li class="page-toc-item level-3"><a href="#62-single-source-of-truth" data-toc-target="62-single-source-of-truth">6.2 Single Source of Truth</a></li><li class="page-toc-item level-2"><a href="#references" data-toc-target="references">References</a></li>
+            </ol>
+          </div>
+        </section>
+
+
+        <section>
+          <div class="card spec-prose">
+            <p><strong>Version:</strong> 1.0.0-draft <strong>Status:</strong> Draft <strong>Last Updated:</strong> 2026-01-26 <strong>Moved from:</strong> <a href="https://github.com/MCPAQL/spec">MCPAQL/spec</a> (formerly <code>docs/architecture/schema-driven-dispatch.md</code>)</p>
+<blockquote>
+<p><strong>Note:</strong> This document describes an <strong>implementation pattern</strong> for adapter dispatch. For normative protocol specifications, see the <a href="https://github.com/MCPAQL/spec">spec repository</a>.</p>
+</blockquote>
+<h2 id="abstract">Abstract</h2>
+<p>This document specifies the schema-driven dispatch pattern that enables declarative operation definitions with automatic parameter resolution, validation, and handler invocation. This is an optional but recommended pattern for adapter implementation.</p>
+<hr />
+<h2 id="1-introduction">1. Introduction</h2>
+<h3 id="11-purpose">1.1 Purpose</h3>
+<p>Schema-driven dispatch separates the <em>definition</em> of operations from their <em>implementation</em>, providing:</p>
+<ul>
+<li><strong>Declarative configuration</strong> - Operations defined as data, not code</li>
+<li><strong>Automatic validation</strong> - Parameters validated against schema</li>
+<li><strong>Flexible resolution</strong> - Parameters found from multiple sources</li>
+<li><strong>Generated documentation</strong> - Introspection responses auto-generated</li>
+<li><strong>Consistent behavior</strong> - All operations follow same patterns</li>
+</ul>
+<h3 id="12-benefits">1.2 Benefits</h3>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Traditional</th>
+<th>Schema-Driven</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Adding operations</td>
+<td>Code changes</td>
+<td>Schema entry</td>
+</tr>
+<tr>
+<td>Parameter validation</td>
+<td>Manual code</td>
+<td>Automatic</td>
+</tr>
+<tr>
+<td>Introspection</td>
+<td>Manual sync</td>
+<td>Auto-generated</td>
+</tr>
+<tr>
+<td>Documentation</td>
+<td>Separate files</td>
+<td>Single source</td>
+</tr>
+<tr>
+<td>Testing</td>
+<td>Per-operation</td>
+<td>Schema-based</td>
+</tr>
+</tbody>
+</table>
+<h3 id="13-when-to-use">1.3 When to Use</h3>
+<p>Schema-driven dispatch is recommended when:</p>
+<ul>
+<li>Adapter has many operations</li>
+<li>Operations have similar parameter patterns</li>
+<li>Introspection accuracy is critical</li>
+<li>Consistency is valued over flexibility</li>
+</ul>
+<hr />
+<h2 id="2-operation-schema">2. Operation Schema</h2>
+<h3 id="21-schema-structure">2.1 Schema Structure</h3>
+<div class="sourceCode" id="cb1"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> OperationSchema {</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Identity</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  operation<span class="op">:</span> <span class="dt">string</span><span class="op">;</span>           <span class="co">// Operation name (snake_case)</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  endpoint<span class="op">:</span> CRUDEndpoint<span class="op">;</span>      <span class="co">// CRUDE endpoint routing</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Handler</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  handler<span class="op">:</span> HandlerReference<span class="op">;</span>   <span class="co">// How to invoke handler</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  paramStyle<span class="op">:</span> ParamStyle<span class="op">;</span>      <span class="co">// Argument passing pattern</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Parameters</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  params<span class="op">:</span> ParamDefinition[]<span class="op">;</span>   <span class="co">// Parameter specifications</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Documentation</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  description<span class="op">:</span> <span class="dt">string</span><span class="op">;</span>         <span class="co">// Operation description</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  examples<span class="op">?:</span> Example[]<span class="op">;</span>        <span class="co">// Usage examples</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> CRUDEndpoint <span class="op">=</span> <span class="st">&#39;CREATE&#39;</span> <span class="op">|</span> <span class="st">&#39;READ&#39;</span> <span class="op">|</span> <span class="st">&#39;UPDATE&#39;</span> <span class="op">|</span> <span class="st">&#39;DELETE&#39;</span> <span class="op">|</span> <span class="st">&#39;EXECUTE&#39;</span><span class="op">;</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> ParamStyle <span class="op">=</span> <span class="st">&#39;single&#39;</span> <span class="op">|</span> <span class="st">&#39;named&#39;</span> <span class="op">|</span> <span class="st">&#39;spread&#39;</span><span class="op">;</span></span></code></pre></div>
+<h3 id="22-parameter-definition">2.2 Parameter Definition</h3>
+<div class="sourceCode" id="cb2"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> ParamDefinition {</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Identity</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  name<span class="op">:</span> <span class="dt">string</span><span class="op">;</span>               <span class="co">// Parameter name (snake_case)</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Type</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  type<span class="op">:</span> ParamType<span class="op">;</span>            <span class="co">// string, number, boolean, object, array</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Requirements</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  required<span class="op">:</span> <span class="dt">boolean</span><span class="op">;</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">default</span><span class="op">?:</span> <span class="dt">unknown</span><span class="op">;</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Resolution</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  sources<span class="op">:</span> <span class="dt">string</span>[]<span class="op">;</span>          <span class="co">// Resolution paths in priority order</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Validation</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  enum<span class="op">?:</span> <span class="dt">string</span>[]<span class="op">;</span>            <span class="co">// Allowed values</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  minLength<span class="op">?:</span> <span class="dt">number</span><span class="op">;</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  maxLength<span class="op">?:</span> <span class="dt">number</span><span class="op">;</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  min<span class="op">?:</span> <span class="dt">number</span><span class="op">;</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>  max<span class="op">?:</span> <span class="dt">number</span><span class="op">;</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>  pattern<span class="op">?:</span> <span class="dt">string</span><span class="op">;</span>           <span class="co">// Regex pattern</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Documentation</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>  description<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> ParamType <span class="op">=</span> <span class="st">&#39;string&#39;</span> <span class="op">|</span> <span class="st">&#39;number&#39;</span> <span class="op">|</span> <span class="st">&#39;boolean&#39;</span> <span class="op">|</span> <span class="st">&#39;object&#39;</span> <span class="op">|</span> <span class="st">&#39;array&#39;</span><span class="op">;</span></span></code></pre></div>
+<h3 id="23-example-schema-definition">2.3 Example Schema Definition</h3>
+<div class="sourceCode" id="cb3"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> CREATE_USER_SCHEMA<span class="op">:</span> OperationSchema <span class="op">=</span> {</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  operation<span class="op">:</span> <span class="st">&#39;create_user&#39;</span><span class="op">,</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  endpoint<span class="op">:</span> <span class="st">&#39;CREATE&#39;</span><span class="op">,</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  handler<span class="op">:</span> <span class="st">&#39;Users.create&#39;</span><span class="op">,</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  paramStyle<span class="op">:</span> <span class="st">&#39;named&#39;</span><span class="op">,</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  params<span class="op">:</span> [</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>      name<span class="op">:</span> <span class="st">&#39;email&#39;</span><span class="op">,</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>      type<span class="op">:</span> <span class="st">&#39;string&#39;</span><span class="op">,</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>      required<span class="op">:</span> <span class="kw">true</span><span class="op">,</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>      sources<span class="op">:</span> [<span class="st">&#39;params.email&#39;</span><span class="op">,</span> <span class="st">&#39;email&#39;</span>]<span class="op">,</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>      description<span class="op">:</span> <span class="st">&#39;User email address&#39;</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    }<span class="op">,</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>      name<span class="op">:</span> <span class="st">&#39;name&#39;</span><span class="op">,</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>      type<span class="op">:</span> <span class="st">&#39;string&#39;</span><span class="op">,</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>      required<span class="op">:</span> <span class="kw">true</span><span class="op">,</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>      sources<span class="op">:</span> [<span class="st">&#39;params.name&#39;</span><span class="op">,</span> <span class="st">&#39;name&#39;</span>]<span class="op">,</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>      description<span class="op">:</span> <span class="st">&#39;User display name&#39;</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    }<span class="op">,</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>      name<span class="op">:</span> <span class="st">&#39;role&#39;</span><span class="op">,</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>      type<span class="op">:</span> <span class="st">&#39;string&#39;</span><span class="op">,</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>      required<span class="op">:</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>      sources<span class="op">:</span> [<span class="st">&#39;params.role&#39;</span><span class="op">,</span> <span class="st">&#39;role&#39;</span>]<span class="op">,</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>      <span class="cf">default</span><span class="op">:</span> <span class="st">&#39;user&#39;</span><span class="op">,</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>      enum<span class="op">:</span> [<span class="st">&#39;admin&#39;</span><span class="op">,</span> <span class="st">&#39;user&#39;</span><span class="op">,</span> <span class="st">&#39;guest&#39;</span>]<span class="op">,</span></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>      description<span class="op">:</span> <span class="st">&#39;User role&#39;</span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>  ]<span class="op">,</span></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>  description<span class="op">:</span> <span class="st">&#39;Create a new user account&#39;</span><span class="op">,</span></span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>  examples<span class="op">:</span> [</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>      name<span class="op">:</span> <span class="st">&#39;Basic user&#39;</span><span class="op">,</span></span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>      request<span class="op">:</span> {</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>        operation<span class="op">:</span> <span class="st">&#39;create_user&#39;</span><span class="op">,</span></span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>        params<span class="op">:</span> {</span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>          email<span class="op">:</span> <span class="st">&#39;alice@example.com&#39;</span><span class="op">,</span></span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>          name<span class="op">:</span> <span class="st">&#39;Alice&#39;</span></span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>  ]</span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>}<span class="op">;</span></span></code></pre></div>
+<hr />
+<h2 id="3-parameter-resolution">3. Parameter Resolution</h2>
+<h3 id="31-resolution-algorithm">3.1 Resolution Algorithm</h3>
+<p>For each parameter defined in the schema:</p>
+<pre><code>1. FOR each source in param.sources (in order):
+     a. Parse source path (e.g., &quot;params.email&quot;)
+     b. Traverse input object along path
+     c. IF value found AND not undefined:
+          RETURN value
+
+2. IF no value found:
+     a. IF param.default defined:
+          RETURN param.default
+     b. IF param.required:
+          THROW MissingParameterError
+     c. ELSE:
+          RETURN undefined</code></pre>
+<h3 id="32-source-path-syntax">3.2 Source Path Syntax</h3>
+<p>Source paths use dot notation to traverse the input object:</p>
+<table>
+<thead>
+<tr>
+<th>Path</th>
+<th>Resolves From</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>email</code></td>
+<td><code>input.email</code></td>
+</tr>
+<tr>
+<td><code>params.email</code></td>
+<td><code>input.params.email</code></td>
+</tr>
+<tr>
+<td><code>params.options.format</code></td>
+<td><code>input.params.options.format</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="33-resolution-examples">3.3 Resolution Examples</h3>
+<p><strong>Input:</strong></p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">operation</span><span class="op">:</span> <span class="st">&quot;create_user&quot;</span><span class="op">,</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">params</span><span class="op">:</span> {</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">email</span><span class="op">:</span> <span class="st">&quot;alice@example.com&quot;</span><span class="op">,</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;Alice&quot;</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><strong>Resolution with sources <code>['params.email', 'email']</code>:</strong></p>
+<ol type="1">
+<li>Check <code>input.params.email</code> → "<a href="mailto:alice@example.com">alice@example.com</a>" ✓</li>
+<li>Return "<a href="mailto:alice@example.com">alice@example.com</a>"</li>
+</ol>
+<p><strong>Resolution with sources <code>['params.role', 'role']</code> and default "user":</strong></p>
+<ol type="1">
+<li>Check <code>input.params.role</code> → undefined</li>
+<li>Check <code>input.role</code> → undefined</li>
+<li>Return default "user"</li>
+</ol>
+<hr />
+<h2 id="4-handler-invocation">4. Handler Invocation</h2>
+<h3 id="41-parameter-styles">4.1 Parameter Styles</h3>
+<p>The <code>paramStyle</code> field determines how resolved parameters are passed to handlers.</p>
+<h4 id="411-named-style">4.1.1 Named Style</h4>
+<p>Pass all parameters as a single object.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Schema: paramStyle: &#39;named&#39;</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">// Invocation:</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">handler</span>({ email<span class="op">,</span> name<span class="op">,</span> role })</span></code></pre></div>
+<p><strong>Use case:</strong> Most common - handlers with multiple parameters.</p>
+<h4 id="412-single-style">4.1.2 Single Style</h4>
+<p>Pass parameters as individual arguments in schema order.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Schema: paramStyle: &#39;single&#39;, params: [email, name, role]</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co">// Invocation:</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">handler</span>(email<span class="op">,</span> name<span class="op">,</span> role)</span></code></pre></div>
+<p><strong>Use case:</strong> Simple handlers with fixed signatures.</p>
+<h4 id="413-spread-style">4.1.3 Spread Style</h4>
+<p>Pass primary parameter separately from options object.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Schema: paramStyle: &#39;spread&#39;, params: [query, limit, offset]</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co">// Invocation:</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">handler</span>(query<span class="op">,</span> { limit<span class="op">,</span> offset })</span></code></pre></div>
+<p><strong>Use case:</strong> Search operations with query + options.</p>
+<h3 id="42-handler-reference">4.2 Handler Reference</h3>
+<p>Handlers are referenced using strings that the adapter resolves:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Common patterns:</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;Users.create&quot;</span>           <span class="co">// Module.method</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;handlers/users:create&quot;</span>  <span class="co">// Path:method</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;createUser&quot;</span>             <span class="co">// Direct function name</span></span></code></pre></div>
+<p>The resolution mechanism is adapter-specific.</p>
+<hr />
+<h2 id="5-security-considerations">5. Security Considerations</h2>
+<h3 id="51-path-traversal-protection">5.1 Path Traversal Protection</h3>
+<p>Source paths MUST be validated to prevent prototype pollution:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> SAFE_PATH_PATTERN <span class="op">=</span> <span class="ss">/</span><span class="sc">^[a-zA-Z_$][a-zA-Z0-9_$.]*$</span><span class="ss">/</span><span class="op">;</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> FORBIDDEN_PATHS <span class="op">=</span> <span class="kw">new</span> <span class="bu">Set</span>([</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">&#39;__proto__&#39;</span><span class="op">,</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">&#39;constructor&#39;</span><span class="op">,</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">&#39;prototype&#39;</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>])<span class="op">;</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">validatePath</span>(path<span class="op">:</span> <span class="dt">string</span>)<span class="op">:</span> <span class="dt">boolean</span> {</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="op">!</span>SAFE_PATH_PATTERN<span class="op">.</span><span class="fu">test</span>(path)) <span class="cf">return</span> <span class="kw">false</span><span class="op">;</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> segments <span class="op">=</span> path<span class="op">.</span><span class="fu">split</span>(<span class="st">&#39;.&#39;</span>)<span class="op">;</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (<span class="kw">const</span> segment <span class="kw">of</span> segments) {</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (FORBIDDEN_PATHS<span class="op">.</span><span class="fu">has</span>(segment)) <span class="cf">return</span> <span class="kw">false</span><span class="op">;</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="kw">true</span><span class="op">;</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="52-input-validation">5.2 Input Validation</h3>
+<p>Before resolution, input MUST be validated:</p>
+<ol type="1">
+<li><strong>Type check</strong> - Input is object</li>
+<li><strong>Operation check</strong> - <code>operation</code> field is string</li>
+<li><strong>Depth limit</strong> - Nested objects limited (default: 10 levels)</li>
+<li><strong>Size limit</strong> - Total input size limited</li>
+</ol>
+<h3 id="53-value-validation">5.3 Value Validation</h3>
+<p>After resolution, values MUST be validated against schema:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">validateValue</span>(value<span class="op">:</span> <span class="dt">unknown</span><span class="op">,</span> param<span class="op">:</span> ParamDefinition)<span class="op">:</span> <span class="dt">void</span> {</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Type validation</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (param<span class="op">.</span><span class="at">type</span> <span class="op">===</span> <span class="st">&#39;string&#39;</span> <span class="op">&amp;&amp;</span> <span class="kw">typeof</span> value <span class="op">!==</span> <span class="st">&#39;string&#39;</span>) {</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">throw</span> <span class="kw">new</span> <span class="fu">ValidationError</span>(<span class="vs">`</span><span class="sc">${</span>param<span class="op">.</span><span class="at">name</span><span class="sc">}</span><span class="vs"> must be string`</span>)<span class="op">;</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Enum validation</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (param<span class="op">.</span><span class="at">enum</span> <span class="op">&amp;&amp;</span> <span class="op">!</span>param<span class="op">.</span><span class="at">enum</span><span class="op">.</span><span class="fu">includes</span>(value <span class="im">as</span> <span class="dt">string</span>)) {</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">throw</span> <span class="kw">new</span> <span class="fu">ValidationError</span>(<span class="vs">`</span><span class="sc">${</span>param<span class="op">.</span><span class="at">name</span><span class="sc">}</span><span class="vs"> must be one of: </span><span class="sc">${</span>param<span class="op">.</span><span class="at">enum</span><span class="op">.</span><span class="fu">join</span>(<span class="st">&#39;, &#39;</span>)<span class="sc">}</span><span class="vs">`</span>)<span class="op">;</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Length validation</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (param<span class="op">.</span><span class="at">minLength</span> <span class="op">&amp;&amp;</span> (value <span class="im">as</span> <span class="dt">string</span>)<span class="op">.</span><span class="at">length</span> <span class="op">&lt;</span> param<span class="op">.</span><span class="at">minLength</span>) {</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">throw</span> <span class="kw">new</span> <span class="fu">ValidationError</span>(<span class="vs">`</span><span class="sc">${</span>param<span class="op">.</span><span class="at">name</span><span class="sc">}</span><span class="vs"> must be at least </span><span class="sc">${</span>param<span class="op">.</span><span class="at">minLength</span><span class="sc">}</span><span class="vs"> characters`</span>)<span class="op">;</span></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<hr />
+<h2 id="6-introspection-integration">6. Introspection Integration</h2>
+<h3 id="61-auto-generated-responses">6.1 Auto-Generated Responses</h3>
+<p>Operation schemas directly generate introspection responses:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">generateOperationInfo</span>(schema<span class="op">:</span> OperationSchema)<span class="op">:</span> OperationInfo {</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> {</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    name<span class="op">:</span> schema<span class="op">.</span><span class="at">operation</span><span class="op">,</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    endpoint<span class="op">:</span> schema<span class="op">.</span><span class="at">endpoint</span><span class="op">,</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    description<span class="op">:</span> schema<span class="op">.</span><span class="at">description</span><span class="op">,</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    parameters<span class="op">:</span> schema<span class="op">.</span><span class="at">params</span><span class="op">.</span><span class="fu">map</span>(p <span class="kw">=&gt;</span> ({</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>      name<span class="op">:</span> p<span class="op">.</span><span class="at">name</span><span class="op">,</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>      type<span class="op">:</span> p<span class="op">.</span><span class="at">type</span><span class="op">,</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>      required<span class="op">:</span> p<span class="op">.</span><span class="at">required</span><span class="op">,</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>      <span class="cf">default</span><span class="op">:</span> p<span class="op">.</span><span class="at">default</span><span class="op">,</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>      description<span class="op">:</span> p<span class="op">.</span><span class="at">description</span><span class="op">,</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>      enum<span class="op">:</span> p<span class="op">.</span><span class="at">enum</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>    }))<span class="op">,</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>    examples<span class="op">:</span> schema<span class="op">.</span><span class="at">examples</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>  }<span class="op">;</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="62-single-source-of-truth">6.2 Single Source of Truth</h3>
+<p>The operation schema serves as the canonical source for:</p>
+<ul>
+<li>Parameter definitions</li>
+<li>Validation rules</li>
+<li>Introspection responses</li>
+<li>Documentation generation</li>
+</ul>
+<p>Changes to the schema automatically propagate to all consumers.</p>
+<hr />
+<h2 id="references">References</h2>
+<ul>
+<li><a href="overview.html">Architecture Overview</a></li>
+<li><a href="../../spec/operations.html">Operations Guide</a></li>
+<li><a href="../../spec/introspection.html">Introspection Specification</a></li>
+</ul>
+
+          </div>
+        </section>
+        <nav class="page-nav" aria-label="Page navigation">
+  <a class="page-nav-link prev" href="../repo/README.html">
+    <span class="page-nav-eyebrow">Previous page</span>
+    <strong class="page-nav-label">MCP-AQL Reference Adapter</strong>
+  </a>
+  <a class="page-nav-link next" href="overview.html">
+    <span class="page-nav-eyebrow">Next page</span>
+    <strong class="page-nav-label">MCP-AQL Architecture Overview</strong>
+  </a>
+</nav>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 DollhouseMCP Inc. d/b/a Dollhouse Research. MCP-AQL public draft documentation portal.</p>
+      <div class="footer-links">
+        <a href="../../apis/index.html">Adapter Patterns</a><a href="../index.html">Reference Adapter Docs</a><a href="https://github.com/MCPAQL/mcpaql-adapter">Reference Adapter Repo</a><a href="https://dollhouseresearch.com">Dollhouse Research</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../js/search.js" defer></script>
+</body>
+</html>

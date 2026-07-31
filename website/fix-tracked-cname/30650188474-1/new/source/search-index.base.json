@@ -1,0 +1,140 @@
+[
+  {
+    "title": "MCP-AQL Portal Home",
+    "url": "/index.html",
+    "excerpt": "Public draft portal overview, launch posture, repository map, and start-here navigation.",
+    "keywords": ["home", "overview", "public draft", "portal", "launch"]
+  },
+  {
+    "title": "Case Study: GitHub MCP — Measured Comparison",
+    "url": "/case-studies/github-mcp.html",
+    "excerpt": "Dual-call parity test of the official GitHub MCP server vs an MCP-AQL adapter: 98.3% reduction in tool-discovery overhead, 57 operations measured equivalent, and all 89 outcomes classified.",
+    "keywords": ["case study", "github", "parity", "measurement", "token efficiency", "dual call", "harness", "mcpaql-parity", "evidence"]
+  },
+  {
+    "title": "Docs Library",
+    "url": "/docs/index.html",
+    "excerpt": "Structured documentation map for normative spec, implementation guidance, examples, tooling, and governance.",
+    "keywords": ["docs", "documentation", "library", "spec map", "reference"]
+  },
+  {
+    "title": "Getting Started",
+    "url": "/docs/getting-started.html",
+    "excerpt": "Quick-start overview of MCP-AQL, token efficiency, request shape, and reading order for the draft.",
+    "keywords": ["getting started", "overview", "quickstart", "token efficiency", "intro"]
+  },
+  {
+    "title": "Protocol Core",
+    "url": "/docs/protocol-core.html",
+    "excerpt": "Normative foundations: CRUDE model, endpoint modes, request and response contracts, introspection, and operation routing.",
+    "keywords": ["crude", "single mode", "request", "response", "introspect", "operation"]
+  },
+  {
+    "title": "Error Model",
+    "url": "/docs/error-model.html",
+    "excerpt": "Structured error envelopes, machine-readable codes, and the current draft work to align error surfaces.",
+    "keywords": ["error", "structured error", "code", "message", "details", "issue 199"]
+  },
+  {
+    "title": "Security Model",
+    "url": "/docs/security-model.html",
+    "excerpt": "Gatekeeper trust levels, danger handling, confirmation token flows, and execution safety boundaries.",
+    "keywords": ["security", "gatekeeper", "danger", "confirmation token", "trust", "safety"]
+  },
+  {
+    "title": "Conformance And Validation",
+    "url": "/docs/conformance.html",
+    "excerpt": "Current conformance requirements, validation scope, and planned validator tooling for implementers.",
+    "keywords": ["conformance", "validator", "validation", "testing", "compliance", "on-spec"]
+  },
+  {
+    "title": "Adapter Contracts",
+    "url": "/docs/adapter-contracts.html",
+    "excerpt": "Adapter schema, plugin contracts, generator outputs, and implementation expectations across the MCP-AQL stack.",
+    "keywords": ["adapter contracts", "plugin", "element type", "generator", "schema", "runtime"]
+  },
+  {
+    "title": "Implementation Profiles",
+    "url": "/docs/implementation-profiles.html",
+    "excerpt": "Canonical protocol vs practical profile boundaries across spec, adapter runtime, examples, and production references.",
+    "keywords": ["profile", "dollhouse", "reference", "adapter", "runtime", "implementation"]
+  },
+  {
+    "title": "Roadmap",
+    "url": "/docs/roadmap.html",
+    "excerpt": "Protocol and ecosystem roadmap with current execution focus and phased delivery tracks.",
+    "keywords": ["roadmap", "phase", "launch", "readiness", "ecosystem", "timeline"]
+  },
+  {
+    "title": "Release Notes",
+    "url": "/docs/release-notes.html",
+    "excerpt": "Recent draft changes and launch-relevant notes distilled from the MCP-AQL specification changelog.",
+    "keywords": ["release notes", "changelog", "draft changes", "launch", "issue 194"]
+  },
+  {
+    "title": "Launch Checklist",
+    "url": "/launch-checklist.html",
+    "excerpt": "Public-facing preliminary launch checklist for readiness visibility and scope control.",
+    "keywords": ["launch", "checklist", "readiness", "public draft"]
+  },
+  {
+    "title": "Adapter Patterns",
+    "url": "/apis/index.html",
+    "excerpt": "Top-level guide to MCP-AQL adapter patterns across MCP servers, applications, cloud services, operating systems, and website-facing workflows.",
+    "keywords": ["adapter patterns", "pattern hub", "integration", "implementation guidance", "apis"]
+  },
+  {
+    "title": "MCP Server Adapter Pattern",
+    "url": "/apis/mcp-server.html",
+    "excerpt": "Draft guidance for adapting MCP servers to MCP-AQL through introspection and CRUDE operation mapping.",
+    "keywords": ["mcp server", "adapter pattern", "mapping", "introspection"]
+  },
+  {
+    "title": "Operating System Adapter Pattern",
+    "url": "/apis/operating-system.html",
+    "excerpt": "Draft guidance for operating-system integrations with permission and safety-aware boundaries.",
+    "keywords": ["operating system", "permissions", "local operations", "safety"]
+  },
+  {
+    "title": "Application Adapter Pattern",
+    "url": "/apis/application.html",
+    "excerpt": "Draft guidance for desktop and application API integration into MCP-AQL contracts.",
+    "keywords": ["application", "desktop", "app api", "integration"]
+  },
+  {
+    "title": "Cloud Service Adapter Pattern",
+    "url": "/apis/cloud-service.html",
+    "excerpt": "Draft guidance for cloud API adaptation, rate limits, and resilient operation handling.",
+    "keywords": ["cloud", "service", "rate limit", "external api"]
+  },
+  {
+    "title": "Website Adapter Pattern",
+    "url": "/apis/website.html",
+    "excerpt": "Draft guidance for website and web API integrations, including retrieval/action patterns and structured web workflows.",
+    "keywords": ["website", "web", "web api", "retrieval", "action"]
+  },
+  {
+    "title": "Spec Repository",
+    "url": "https://github.com/MCPAQL/spec",
+    "excerpt": "Canonical source for normative protocol text, schemas, and versioned specification draft.",
+    "keywords": ["spec", "normative", "schema", "version", "protocol"]
+  },
+  {
+    "title": "Adapter Runtime Repository",
+    "url": "https://github.com/MCPAQL/mcpaql-adapter",
+    "excerpt": "Reference implementation guidance for schema-driven dispatch and plugin runtime architecture.",
+    "keywords": ["runtime", "plugin", "dispatch", "implementation"]
+  },
+  {
+    "title": "Examples Repository",
+    "url": "https://github.com/MCPAQL/examples",
+    "excerpt": "Reference adapter examples demonstrating practical API adaptation patterns.",
+    "keywords": ["examples", "reference adapters", "sample"]
+  },
+  {
+    "title": "Tools Repository",
+    "url": "https://github.com/MCPAQL/tools",
+    "excerpt": "Planned conformance and on-spec validator tooling for MCP-AQL implementations.",
+    "keywords": ["tools", "validator", "conformance cli", "on-spec"]
+  }
+]

@@ -1,0 +1,14 @@
+{
+  "name": "mcpaql-website",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "generate:page-toc": "node scripts/generate-page-toc.mjs",
+    "generate:page-toc:check": "node scripts/generate-page-toc.mjs --check",
+    "generate:repo-docs": "node scripts/generate-repo-docs.mjs && node scripts/generate-page-toc.mjs",
+    "generate:repo-docs:check": "node scripts/generate-repo-docs.mjs --check && node scripts/generate-page-toc.mjs --check",
+    "generate:spec-docs": "npm run generate:repo-docs",
+    "generate:spec-docs:check": "npm run generate:repo-docs:check",
+    "validate:toc": "node scripts/validate-toc.mjs"
+  }
+}
